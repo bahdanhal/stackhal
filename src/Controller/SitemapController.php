@@ -16,12 +16,16 @@ final readonly class SitemapController
             ['/', '/pl/'],
             ['/geo-audit', '/pl/audyt-geo'],
             ['/seo-audit', '/pl/audyt-seo'],
+            ['/favicon-suite', '/pl/generator-favicon'],
+            ['/cors-sandbox', '/pl/piaskownica-cors'],
             ['/bimi-studio', '/pl/bimi-studio'],
             ['/domain-inspector', '/pl/inspektor-domen'],
             ['/caddy-transpiler', '/pl/konwerter-caddyfile'],
-            ['/apple-pkpass-inspector', '/pl/inspektor-pkpass'],
             ['/cidr-subnet-matrix', '/pl/matryca-cidr'],
             ['/regex-transpiler', '/pl/konwerter-regex'],
+            ['/dns-dag-tracer', '/pl/tracer-dns-dag'],
+            ['/apple-pkpass-inspector', '/pl/inspektor-pkpass'],
+            ['/app-links-validator', '/pl/weryfikator-app-links'],
         ];
 
         $entries = [];
