@@ -31,20 +31,21 @@
   <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'WebSite','@id':'https://stackhal.com/#website','url':'https://stackhal.com/','name':'StackHal','inLanguage':['en'],'publisher':{'@id':'https://stackhal.com/#stackhal'},'author':{'@id':'https://stackhal.com/#stackhal'},'dateModified':'2026-08-22'}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
   {% block head_scripts %}{% endblock %}
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="stackhal-site {% block body_class %}{% endblock %}">
   <header class="site-header">
     <div class="topbar">
       <div class="brand-lockup">
         {% block brand_lockup %}
         <a class="brand" href="{{ path('home', {_locale: app.request.locale}) }}" aria-label="{{ 'base.home_label'|trans }}">
-          <span class="brand-mark">↗</span>
+          <span class="brand-mark">SH</span>
           <span class="brand-name"><span class="brand-name-full">StackHal</span><span class="brand-name-short">StackHal</span></span>
+          <span class="brand-signal">Developer utilities</span>
         </a>
         {% endblock %}
       </div>
       <div class="topbar-actions">
         <nav class="primary-nav" aria-label="{{ 'base.navigation'|trans }}">
-          <a href="https://ileza.pl" target="_blank" rel="noopener">IleZa.pl</a>
+          <a href="{{ path('home', {_locale: app.request.locale}) }}">{{ 'common.all_tools'|trans }}</a>
           <a href="{{ path('geo_home', {_locale: app.request.locale}) }}">{{ 'base.nav.geo'|trans }}</a>
           <a href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">{{ 'base.nav.seo'|trans }}</a>
         </nav>
@@ -52,13 +53,13 @@
           <summary>{{ 'base.nav.more'|trans }}</summary>
           <nav class="tool-menu-panel" aria-label="{{ 'base.nav.more'|trans }}">
             <a href="{{ path('home', {_locale: app.request.locale}) }}">{{ 'common.all_tools'|trans }}</a>
-            <a href="https://ileza.pl" target="_blank" rel="noopener">Price Radar</a>
             <a href="{{ path('bimi_studio', {_locale: app.request.locale}) }}">{{ 'base.nav.bimi'|trans }}</a>
             <a href="{{ path('domain_inspector_home', {_locale: app.request.locale}) }}">{{ 'base.nav.domain_inspector'|trans }}</a>
             <a href="{{ path('caddy_transpiler', {_locale: app.request.locale}) }}">{{ 'base.nav.caddy_transpiler'|trans }}</a>
             <a href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">{{ 'base.nav.pkpass'|trans }}</a>
           </nav>
         </details>
+        <a class="ecosystem-link" href="https://ileza.pl" target="_blank" rel="noopener">IleZa ↗</a>
         {% block language_switch %}
           <a class="language-switch" href="{{ path('home', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
         {% endblock %}

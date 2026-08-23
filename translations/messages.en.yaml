@@ -1,8 +1,8 @@
 base:
-    default_title: "Bahdan’s Toolbox"
-    home_label: "Bahdan’s Toolbox home"
-    brand: "Bahdan’s Toolbox"
-    brand_short: "Toolbox"
+    default_title: "StackHal Developer Tools"
+    home_label: "StackHal home"
+    brand: "StackHal"
+    brand_short: "StackHal"
     by: "by Bahdan Hal"
     navigation: "Tools and language"
     nav:
@@ -32,12 +32,12 @@ common:
 
 home:
     meta:
-        title: "Bahdan’s Toolbox · Free Online Developer, SEO & Business Tools"
-        description: "Free, fast and transparent tools: Apple Wallet PKPass inspector, Nginx to Caddy converter, BIMI SVG studio, domain email security inspector, technical SEO audit, and Polish salary calculator."
-    eyebrow: "SMALL TOOLS, REAL ANSWERS"
-    heading_start: "Useful things,"
-    heading_emphasis: "built properly."
-    lede: "A growing set of focused tools for calculations, websites, and the awkward practical questions that should not require an account or a sales call."
+        title: "StackHal · Free Developer, SEO and Infrastructure Tools"
+        description: "Focused developer utilities for technical SEO, GEO, Apple Wallet, Caddy, email security and CIDR analysis. No signup required."
+    eyebrow: "OPEN DEVELOPER TOOLBOX · NO SIGNUP"
+    heading_start: "Developer tools for real infrastructure work"
+    heading_emphasis: ""
+    lede: "Inspect, validate and convert without creating an account. Each utility solves one concrete web, email or infrastructure problem and shows its evidence."
     available: "READY"
     open: "Open tool"
     categories:
@@ -909,5 +909,4 @@ cidr_matrix:
         a1: "CIDR overlap occurs when two or more network subnets share one or more IP addresses, leading to routing conflicts in VPC peering, Kubernetes pods/services, or VPN connections."
         q2: "How does free subnet allocation work?"
         a2: "Given a parent block and target prefix size, the algorithm scans for the first contiguous IP block of that size that does not overlap with any existing assigned subnets."
-
 

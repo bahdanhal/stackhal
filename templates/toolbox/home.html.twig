@@ -8,32 +8,25 @@
 
 {% block body %}
 <section class="hero toolbox-hero">
-  <div class="eyebrow">StackHal Developer Toolbox & AI Endpoint</div>
-  <h1>Dev & Infrastructure Tools<br><em>Engineered for Speed</em></h1>
-  <p class="lede">Deterministic SEO audits, PassKit validation, Caddy transpilation, email security & CIDR calculation.</p>
+  <div class="eyebrow">{{ 'home.eyebrow'|trans }}</div>
+  <h1>{{ 'home.heading_start'|trans }}</h1>
+  <p class="lede">{{ 'home.lede'|trans }}</p>
+  <ul class="toolbox-status" aria-label="Toolbox characteristics">
+    <li>Browser-first</li>
+    <li>No signup</li>
+    <li>Observable results</li>
+  </ul>
 
   <div class="tool-catalog">
-    <section class="tool-category" aria-labelledby="category-ileza">
-      <header class="tool-category-header"><h2 id="category-ileza">IleZa.pl Ecosystem</h2></header>
-      <div class="tool-grid">
-        <a class="tool-card tool-card-primary" href="https://ileza.pl" target="_blank" rel="noopener">
-          <span class="tool-number">01</span>
-          <h3>Used Price Radar & Tax Calculator</h3>
-          <p>Polish market price index for used tech and B2B vs UoP salary calculator.</p>
-          <strong>Open IleZa.pl →</strong>
-        </a>
-      </div>
-    </section>
-
     <section class="tool-category" aria-labelledby="category-web">
       <header class="tool-category-header"><h2 id="category-web">{{ 'home.categories.web'|trans }}</h2></header>
       <div class="tool-grid">
         <a class="tool-card" href="{{ path('geo_home', {_locale: app.request.locale}) }}">
-          <span class="tool-number">02</span>
+          <span class="tool-number">01</span>
           <h3>{{ 'home.geo.title'|trans }}</h3><p>{{ 'home.geo.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">
-          <span class="tool-number">03</span>
+          <span class="tool-number">02</span>
           <h3>{{ 'home.seo.title'|trans }}</h3><p>{{ 'home.seo.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>
@@ -43,11 +36,11 @@
       <header class="tool-category-header"><h2 id="category-email">{{ 'home.categories.email'|trans }}</h2></header>
       <div class="tool-grid">
         <a class="tool-card" href="{{ path('bimi_studio', {_locale: app.request.locale}) }}">
-          <span class="tool-number">04</span>
+          <span class="tool-number">03</span>
           <h3>{{ 'home.bimi.title'|trans }}</h3><p>{{ 'home.bimi.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('domain_inspector_home', {_locale: app.request.locale}) }}">
-          <span class="tool-number">05</span>
+          <span class="tool-number">04</span>
           <h3>{{ 'home.domain_inspector.title'|trans }}</h3><p>{{ 'home.domain_inspector.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>
@@ -57,11 +50,11 @@
       <header class="tool-category-header"><h2 id="category-infrastructure">{{ 'home.categories.infrastructure'|trans }}</h2></header>
       <div class="tool-grid">
         <a class="tool-card" href="{{ path('caddy_transpiler', {_locale: app.request.locale}) }}">
-          <span class="tool-number">06</span>
+          <span class="tool-number">05</span>
           <h3>{{ 'home.caddy_transpiler.title'|trans }}</h3><p>{{ 'home.caddy_transpiler.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('cidr_matrix', {_locale: app.request.locale}) }}">
-          <span class="tool-number">07</span>
+          <span class="tool-number">06</span>
           <h3>{{ 'home.cidr_matrix.title'|trans }}</h3><p>{{ 'home.cidr_matrix.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>
@@ -71,7 +64,7 @@
       <header class="tool-category-header"><h2 id="category-mobile">{{ 'home.categories.mobile'|trans }}</h2></header>
       <div class="tool-grid">
         <a class="tool-card tool-card-wide" href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">
-          <span class="tool-number">08</span>
+          <span class="tool-number">07</span>
           <h3>{{ 'home.pkpass.title'|trans }}</h3><p>{{ 'home.pkpass.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>

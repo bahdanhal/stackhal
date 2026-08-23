@@ -1,8 +1,8 @@
 base:
-    default_title: "Narzędzia Bahdana"
-    home_label: "Strona główna Narzędzi Bahdana"
-    brand: "Narzędzia Bahdana"
-    brand_short: "Narzędzia"
+    default_title: "Narzędzia programistyczne StackHal"
+    home_label: "Strona główna StackHal"
+    brand: "StackHal"
+    brand_short: "StackHal"
     by: "autor: Bahdan Hal"
     navigation: "Narzędzia i język"
     nav:
@@ -32,12 +32,12 @@ common:
 
 home:
     meta:
-        title: "Narzędzia Bahdana · Darmowe narzędzia online dla programistów, SEO i biznesu"
-        description: "Darmowe, szybkie i przejrzyste narzędzia: inspektor Apple Wallet PKPass, konwerter Nginx do Caddy, BIMI SVG Studio, inspektor domen, audyt technicznego SEO i kalkulator wynagrodzeń."
-    eyebrow: "MAŁE NARZĘDZIA, KONKRETNE ODPOWIEDZI"
-    heading_start: "Przydatne rzeczy,"
-    heading_emphasis: "zrobione porządnie."
-    lede: "Rosnący zestaw konkretnych narzędzi do obliczeń, stron internetowych i praktycznych pytań, które nie powinny wymagać konta ani rozmowy sprzedażowej."
+        title: "StackHal · Darmowe narzędzia dla programistów, SEO i infrastruktury"
+        description: "Konkretne narzędzia do technicznego SEO, GEO, Apple Wallet, Caddy, bezpieczeństwa e-mail i analizy CIDR. Bez rejestracji."
+    eyebrow: "OTWARTY ZESTAW NARZĘDZI · BEZ REJESTRACJI"
+    heading_start: "Narzędzia do prawdziwej pracy z infrastrukturą"
+    heading_emphasis: ""
+    lede: "Sprawdzaj, waliduj i konwertuj bez zakładania konta. Każde narzędzie rozwiązuje jeden konkretny problem i pokazuje dane stojące za wynikiem."
     available: "GOTOWE"
     open: "Otwórz narzędzie"
     categories:

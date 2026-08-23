@@ -7,10 +7,10 @@
 .topbar {
   position: relative;
   top: auto;
-  min-height: 72px;
+  min-height: 64px;
   height: auto;
   gap: 24px;
-  padding-block: 12px;
+  padding-block: 10px;
 }
 
 .brand-lockup,
@@ -22,6 +22,30 @@
 
 .brand-lockup {
   min-width: 0;
+}
+
+.brand-signal {
+  margin-left: 10px;
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.stackhal-site .brand-mark {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(115, 183, 255, .45);
+  border-radius: 8px;
+  background: #10243d;
+  box-shadow: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: -.04em;
 }
 
 .brand-name-short {
@@ -44,7 +68,8 @@
 .primary-nav a,
 .tool-menu a,
 .tool-menu summary,
-.language-switch {
+.language-switch,
+.ecosystem-link {
   color: var(--ink);
   font-size: 12px;
   font-weight: 800;
@@ -53,7 +78,8 @@
 }
 
 .primary-nav a:hover,
-.tool-menu a:hover {
+.tool-menu a:hover,
+.ecosystem-link:hover {
   color: var(--orange);
 }
 
@@ -71,6 +97,12 @@
   border-radius: 999px;
   background: rgba(17, 29, 47, .72);
   cursor: pointer;
+}
+
+.ecosystem-link {
+  padding-left: 14px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
 }
 
 .tool-menu summary {
@@ -158,13 +190,55 @@
 }
 
 .toolbox-hero {
-  padding-top: 72px;
+  padding-top: 56px;
+}
+
+.toolbox-hero > .eyebrow {
+  margin-bottom: 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+.stackhal-site .toolbox-hero > h1 {
+  max-width: 940px;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 760;
+  line-height: 1.02;
+  letter-spacing: -.045em;
+}
+
+.stackhal-site .toolbox-hero > .lede {
+  max-width: 720px;
+  margin: 22px 0 0;
+  font-size: 18px;
+}
+
+.toolbox-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toolbox-status li {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(13, 24, 40, .52);
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  text-transform: uppercase;
 }
 
 .tool-catalog {
   display: grid;
   gap: 44px;
-  margin-top: 52px;
+  margin-top: 38px;
 }
 
 .tool-category-header {
@@ -197,10 +271,10 @@
 .tool-card {
   display: grid;
   grid-template-columns: 1fr auto;
-  min-height: 250px;
+  min-height: 218px;
   padding: 24px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 10px;
   background: var(--panel);
   color: var(--ink);
   text-decoration: none;
@@ -234,10 +308,11 @@
 
 .tool-card h3 {
   grid-column: 1 / -1;
-  margin: 32px 0 8px;
-  font-family: Georgia, serif;
-  font-size: 31px;
-  line-height: 1.05;
+  margin: 28px 0 8px;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 24px;
+  line-height: 1.12;
+  letter-spacing: -.025em;
 }
 
 .tool-card p {
@@ -298,6 +373,11 @@
     display: none;
   }
 
+  .brand-signal,
+  .ecosystem-link {
+    display: none;
+  }
+
   .tool-context-bar {
     padding-inline: 18px;
   }
@@ -336,7 +416,11 @@
   }
 
   .toolbox-hero {
-    padding-top: 48px;
+    padding-top: 40px;
+  }
+
+  .stackhal-site .toolbox-hero > h1 {
+    font-size: 40px;
   }
 
   .tool-grid,
@@ -347,6 +431,6 @@
   .tool-card,
   .tool-card-wide {
     grid-column: auto;
-    min-height: 220px;
+    min-height: 200px;
   }
 }
