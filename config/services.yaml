@@ -127,6 +127,10 @@ services:
     arguments:
       $auditQuota: '@App\Shared\Application\DailyQuota'
 
+  App\Controller\Admin\StackhalAdminController:
+    arguments:
+      $secret: '%env(APP_SECRET)%'
+
   App\Shared\Application\DailyQuota:
     arguments:
       $limiter: '@limiter.audit'
@@ -154,6 +158,7 @@ services:
     decorates: mcp.server.controller
     arguments:
       $inner: '@.inner'
+      $sessionStore: '@mcp.session.store'
     public: true
     tags:
       - { name: controller.service_arguments }

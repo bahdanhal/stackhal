@@ -1,26 +1,27 @@
 {% extends 'base.html.twig' %}
-{% block tool_name %}Market Admin{% endblock %}
-{% block title %}Market Admin Login · Bahdan’s Toolbox{% endblock %}
+{% block tool_name %}StackHal Admin{% endblock %}
+{% block title %}StackHal Admin Login · Developer Utilities{% endblock %}
 {% block robots %}<meta name="robots" content="noindex,nofollow">{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/market.css"><link rel="stylesheet" href="/market-extra.css">{% endblock %}
 {% block body %}
-    <section class="tool-shell market-shell" style="max-width: 540px; margin: 40px auto;">
-        <div class="eyebrow">ADMIN AUTHENTICATION</div>
-        <h1>Market <em>Admin</em></h1>
-        <p class="lede">Enter your admin passphrase or access token to manage catalog prices and review product requests.</p>
+    <section class="tool-shell" style="max-width: 520px; margin: 60px auto 100px; padding: 0 20px;">
+        <div style="background: var(--panel, #12141c); border: 1px solid var(--line, #232736); border-radius: 16px; padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.4);">
+            <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent, #6366f1); margin-bottom: 8px;">ADMINISTRATIVE ACCESS</div>
+            <h1 style="font-size: 26px; font-weight: 800; margin: 0 0 12px; color: var(--ink, #ffffff);">StackHal <em style="font-style: normal; color: var(--accent, #6366f1);">Admin</em></h1>
+            <p style="font-size: 14px; line-height: 1.5; color: var(--muted, #94a3b8); margin: 0 0 24px;">Enter your admin token or passphrase to inspect developer tool metrics, traffic, and recent security & SEO audits.</p>
 
-        {% if error is defined and error %}
-            <div style="background: rgba(255, 125, 138, 0.15); border: 1px solid var(--red); color: var(--red); padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 700;">
-                {{ error }}
-            </div>
-        {% endif %}
+            {% if error is defined and error %}
+                <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #f87171; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; font-weight: 700;">
+                    {{ error }}
+                </div>
+            {% endif %}
 
-        <form method="post" action="{{ path('market_admin_login') }}" style="display: flex; flex-direction: column; gap: 16px; background: var(--panel); padding: 28px; border: 1px solid var(--line); border-radius: 14px;">
-            <div>
-                <label for="admin-password" style="display: block; font-weight: 800; font-size: 13px; margin-bottom: 8px;">Admin Passphrase / Token</label>
-                <input id="admin-password" name="password" type="password" required autofocus placeholder="Enter APP_SECRET or ADMIN_TOKEN" style="width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font: inherit;">
-            </div>
-            <button type="submit" style="background: var(--orange); color: #fff; border: 0; padding: 12px 20px; font-weight: 800; border-radius: 8px; cursor: pointer; font: inherit; font-size: 15px;">Login to Admin Panel</button>
-        </form>
+            <form method="post" action="{{ path('stackhal_admin_login') }}" style="display: flex; flex-direction: column; gap: 16px;">
+                <div>
+                    <label for="admin-password" style="display: block; font-weight: 700; font-size: 13px; margin-bottom: 8px; color: var(--ink, #ffffff);">Admin Token / Passphrase</label>
+                    <input id="admin-password" name="password" type="password" required autofocus placeholder="Enter ADMIN_TOKEN or APP_SECRET" style="width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid var(--line, #232736); border-radius: 8px; font: inherit; font-size: 14px; background: #0c0e14; color: #fff;">
+                </div>
+                <button type="submit" style="background: var(--accent, #6366f1); color: #fff; border: 0; padding: 12px 20px; font-weight: 700; font-size: 14px; border-radius: 8px; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Sign In</button>
+            </form>
+        </div>
     </section>
 {% endblock %}

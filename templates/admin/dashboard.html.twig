@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+{% block tool_name %}StackHal Admin{% endblock %}
+{% block title %}Admin Dashboard · StackHal Developer Utilities{% endblock %}
+{% block robots %}<meta name="robots" content="noindex,nofollow">{% endblock %}
+{% block body %}
+    <div style="max-width: 1100px; margin: 30px auto 80px; padding: 0 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--line, #232736); padding-bottom: 16px;">
+            <div>
+                <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent, #6366f1);">ADMINISTRATION</div>
+                <h1 style="font-size: 28px; font-weight: 800; margin: 4px 0 0; color: var(--ink, #ffffff);">StackHal <em style="font-style: normal; color: var(--accent, #6366f1);">Dashboard</em></h1>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <a href="{{ path('stackhal_admin_logout') }}" style="font-size: 13px; font-weight: 700; color: var(--muted, #94a3b8); text-decoration: none; padding: 8px 14px; border: 1px solid var(--line, #232736); border-radius: 6px; background: #12141c;">Logout</a>
+            </div>
+        </div>
+
+        {# Metric Cards #}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 30px;">
+            <div style="background: #12141c; border: 1px solid var(--line, #232736); border-radius: 12px; padding: 20px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--muted, #94a3b8); text-transform: uppercase;">Total Audits</div>
+                <div style="font-size: 32px; font-weight: 800; color: var(--ink, #ffffff); margin-top: 4px;">{{ total_audits }}</div>
+            </div>
+            <div style="background: #12141c; border: 1px solid var(--line, #232736); border-radius: 12px; padding: 20px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--muted, #94a3b8); text-transform: uppercase;">Audits (7 Days)</div>
+                <div style="font-size: 32px; font-weight: 800; color: var(--accent, #6366f1); margin-top: 4px;">{{ audits_last_7_days }}</div>
+            </div>
+            <div style="background: #12141c; border: 1px solid var(--line, #232736); border-radius: 12px; padding: 20px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--muted, #94a3b8); text-transform: uppercase;">Views (7 Days)</div>
+                <div style="font-size: 32px; font-weight: 800; color: var(--ink, #ffffff); margin-top: 4px;">{{ traffic.last_7_days.page_views }}</div>
+            </div>
+            <div style="background: #12141c; border: 1px solid var(--line, #232736); border-radius: 12px; padding: 20px;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--muted, #94a3b8); text-transform: uppercase;">Visitors (7 Days)</div>
+                <div style="font-size: 32px; font-weight: 800; color: var(--ink, #ffffff); margin-top: 4px;">{{ traffic.last_7_days.unique_visitors }}</div>
+            </div>
+        </div>
+
+        {# Tool Traffic Breakdown #}
+        <div style="background: #12141c; border: 1px solid var(--line, #232736); border-radius: 12px; padding: 24px; margin-bottom: 30px;">
+            <h2 style="font-size: 18px; font-weight: 800; margin: 0 0 16px; color: var(--ink, #ffffff);">Developer Tools & Traffic Overview</h2>
+
+            {# Daily Bar Chart #}
+            <div style="margin-bottom: 24px; padding: 16px 0; border-bottom: 1px solid var(--line, #232736);">
+                <div style="font-size: 12px; font-weight: 700; color: var(--muted, #94a3b8); margin-bottom: 12px;">Daily Activity (Last 30 Days)</div>
+                <div style="display: flex; align-items: flex-end; gap: 4px; height: 120px;">
+                    {% for day in traffic.daily %}
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end;" title="{{ day.date }}: {{ day.page_views }} views, {{ day.unique_visitors }} visitors">
+                            <div style="width: 100%; min-width: 4px; background: var(--accent, #6366f1); border-radius: 2px 2px 0 0; height: {{ day.height_percent }}%;"></div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                <div>
+                    <h3 style="font-size: 14px; font-weight: 700; margin: 0 0 10px; color: var(--ink, #ffffff);">Top Tool Routes (30 Days)</h3>
+                    <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                        {% for path, count in traffic.last_30_days.top_paths %}
+                            <tr style="border-bottom: 1px solid #1a1d28;">
+                                <td style="padding: 6px 0; font-family: monospace; color: #e2e8f0;">{{ path }}</td>
+                                <td style="padding: 6px 0; text-align: right; font-weight: 700; color: #fff;">{{ count }}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td style="color: var(--muted, #94a3b8);">No views recorded</td></tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div>
+                    <h3 style="font-size: 14px; font-weight: 700; margin: 0 0 10px; color: var(--ink, #ffffff);">Traffic Sources (30 Days)</h3>
+                    <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                        {% for src, count in traffic.last_30_days.sources %}
+                            <tr style="border-bottom: 1px solid #1a1d28;">
+                                <td style="padding: 6px 0; color: #e2e8f0; text-transform: capitalize;">{{ src }}</td>
+                                <td style="padding: 6px 0; text-align: right; font-weight: 700; color: #fff;">{{ count }}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td style="color: var(--muted, #94a3b8);">No views recorded</td></tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div>
+                    <h3 style="font-size: 14px; font-weight: 700; margin: 0 0 10px; color: var(--ink, #ffffff);">Referring Domains (30 Days)</h3>
+                    <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                        {% for domain, count in traffic.last_30_days.referring_domains %}
+                            <tr style="border-bottom: 1px solid #1a1d28;">
+                                <td style="padding: 6px 0; font-family: monospace; color: #e2e8f0;">{{ domain }}</td>
+                                <td style="padding: 6px 0; text-align: right; font-weight: 700; color: #fff;">{{ count }}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td style="color: var(--muted, #94a3b8);">No external referrers</td></tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {# Recent Audits Section #}
+        <div style="background: #12141c; border: 1px solid var(--line, #232736); border-radius: 12px; padding: 24px;">
+            <h2 style="font-size: 18px; font-weight: 800; margin: 0 0 16px; color: var(--ink, #ffffff);">Recent Audit Runs ({{ recent_audits|length }})</h2>
+
+            {% if recent_audits is empty %}
+                <div style="padding: 30px; text-align: center; color: var(--muted, #94a3b8); font-size: 14px;">
+                    No recent audit logs recorded in this period.
+                </div>
+            {% else %}
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--line, #232736); color: var(--muted, #94a3b8);">
+                                <th style="padding: 10px 12px; font-weight: 700;">Date</th>
+                                <th style="padding: 10px 12px; font-weight: 700;">Target Domain / URL</th>
+                                <th style="padding: 10px 12px; font-weight: 700;">Status</th>
+                                <th style="padding: 10px 12px; font-weight: 700;">Score</th>
+                                <th style="padding: 10px 12px; font-weight: 700;">Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for audit in recent_audits %}
+                                <tr style="border-bottom: 1px solid #1a1d28;">
+                                    <td style="padding: 12px; white-space: nowrap; color: var(--muted, #94a3b8);">
+                                        {{ audit.requested_at ?? audit.completed_at ?? '—' }}
+                                    </td>
+                                    <td style="padding: 12px; font-family: monospace; color: #e2e8f0;">
+                                        {{ audit.target ?? '—' }}
+                                    </td>
+                                    <td style="padding: 12px; white-space: nowrap;">
+                                        {% if audit.status == 'completed' %}
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 12px; background: rgba(34, 197, 94, 0.15); color: #4ade80; font-size: 11px; font-weight: 700; text-transform: uppercase;">Completed</span>
+                                        {% elseif audit.status == 'failed' %}
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 12px; background: rgba(239, 68, 68, 0.15); color: #f87171; font-size: 11px; font-weight: 700; text-transform: uppercase;">Failed</span>
+                                        {% else %}
+                                            <span style="display: inline-block; padding: 2px 8px; border-radius: 12px; background: rgba(234, 179, 8, 0.15); color: #facc15; font-size: 11px; font-weight: 700; text-transform: uppercase;">Running</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 12px; font-weight: 700; color: #fff;">
+                                        {{ audit.score is defined ? audit.score ~ '/100' : '—' }}
+                                    </td>
+                                    <td style="padding: 12px; color: var(--muted, #94a3b8);">
+                                        {{ audit.duration_ms is defined ? audit.duration_ms ~ ' ms' : '—' }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
