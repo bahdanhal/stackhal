@@ -55,12 +55,13 @@
         <details class="tool-menu">
           <summary>{{ 'base.nav.more'|trans }}</summary>
           <nav class="tool-menu-panel" aria-label="{{ 'base.nav.more'|trans }}">
-            <a href="{{ path('landing', {_locale: app.request.locale}) }}">{{ 'common.all_tools'|trans }}</a>
+            <a href="{{ path('favicon_suite', {_locale: app.request.locale}) }}">{{ 'base.nav.favicon_suite'|trans }}</a>
             <a href="{{ path('bimi_studio', {_locale: app.request.locale}) }}">{{ 'base.nav.bimi'|trans }}</a>
             <a href="{{ path('domain_inspector_home', {_locale: app.request.locale}) }}">{{ 'base.nav.domain_inspector'|trans }}</a>
             <a href="{{ path('caddy_transpiler', {_locale: app.request.locale}) }}">{{ 'base.nav.caddy_transpiler'|trans }}</a>
             <a href="{{ path('cidr_matrix', {_locale: app.request.locale}) }}">{{ 'base.nav.cidr_matrix'|trans }}</a>
             <a href="{{ path('regex_transpiler', {_locale: app.request.locale}) }}">{{ 'base.nav.regex_transpiler'|trans }}</a>
+            <a href="{{ path('dns_dag_tracer', {_locale: app.request.locale}) }}">{{ 'base.nav.dns_dag_tracer'|trans }}</a>
             <a href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">{{ 'base.nav.pkpass'|trans }}</a>
           </nav>
         </details>

@@ -104,6 +104,77 @@ final class SpecificationComplianceTest extends TestCase
         self::assertNotEmpty($spec['test_vectors']);
     }
 
+    public function testFaviconSuiteSpecCompliance(): void
+    {
+        $specPath = dirname(__DIR__, 2) . '/specs/favicon-suite.spec.json';
+        self::assertFileExists($specPath);
+
+        $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
+        $generator = new \App\FaviconSuite\Domain\Engine\FaviconGenerator();
+
+        foreach ($spec['test_vectors'] as $vector) {
+            if (isset($vector['svg_input'])) {
+                $result = $generator->generateFromSvg($vector['svg_input']);
+                self::assertSame(
+                    $vector['expected_valid'],
+                    $result->isValid,
+                    "Valid match failed for vector: {$vector['description']}"
+                );
+
+                if (isset($vector['expected_dark_mode_injected'])) {
+                    self::assertSame(
+                        $vector['expected_dark_mode_injected'],
+                        $result->darkModeInjected,
+                        "Dark mode injection mismatch for: {$vector['description']}"
+                    );
+                }
+
+                if (isset($vector['expected_contains_media_query'])) {
+                    self::assertStringContainsString(
+                        'prefers-color-scheme',
+                        $result->svgContent ?? '',
+                        "Missing prefers-color-scheme in: {$vector['description']}"
+                    );
+                }
+
+                if (isset($vector['expected_manifest_name'])) {
+                    self::assertStringContainsString(
+                        $vector['expected_manifest_name'],
+                        $result->htmlTags[3] ?? '',
+                        "Manifest tag mismatch in: {$vector['description']}"
+                    );
+                }
+
+                if (isset($vector['expected_error_codes'])) {
+                    foreach ($vector['expected_error_codes'] as $expectedCode) {
+                        self::assertContains(
+                            $expectedCode,
+                            $result->getErrorCodes(),
+                            "Missing error code {$expectedCode} in: {$vector['description']}"
+                        );
+                    }
+                }
+            } elseif (isset($vector['raster_metadata'])) {
+                $result = $generator->generateFromRasterMetadata($vector['raster_metadata']);
+                self::assertSame(
+                    $vector['expected_valid'],
+                    $result->isValid,
+                    "Raster valid match failed for vector: {$vector['description']}"
+                );
+
+                if (isset($vector['expected_warnings'])) {
+                    foreach ($vector['expected_warnings'] as $expectedWarning) {
+                        self::assertContains(
+                            $expectedWarning,
+                            $result->getWarningCodes(),
+                            "Missing warning code {$expectedWarning} in: {$vector['description']}"
+                        );
+                    }
+                }
+            }
+        }
+    }
+
     public function testDnsDagTracerSpecStructure(): void
     {
         $specPath = dirname(__DIR__, 2) . '/specs/dns-dag-tracer.spec.json';
@@ -116,6 +187,71 @@ final class SpecificationComplianceTest extends TestCase
         self::assertNotEmpty($spec['presets']);
         self::assertNotEmpty($spec['test_vectors']);
     }
+
+    public function testDnsDagTracerSpecCompliance(): void
+    {
+        $specPath = dirname(__DIR__, 2) . '/specs/dns-dag-tracer.spec.json';
+        self::assertFileExists($specPath);
+
+        $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
+        $engine = new \App\DnsDagTracer\Domain\Engine\DnsDagEngine();
+
+        foreach ($spec['test_vectors'] as $vector) {
+            $queryType = \App\DnsDagTracer\Domain\Model\QueryType::fromString($vector['query_type'] ?? 'A');
+            $result = $engine->trace($vector['domain'], $queryType);
+
+            self::assertSame(
+                $vector['expected_status'],
+                $result->status,
+                "Status mismatch for vector: {$vector['description']}"
+            );
+
+            if (isset($vector['expected_dnssec_status'])) {
+                self::assertSame(
+                    $vector['expected_dnssec_status'],
+                    $result->dnssecStatus->value,
+                    "DNSSEC status mismatch for: {$vector['description']}"
+                );
+            }
+
+            if (isset($vector['expected_layer_count'])) {
+                self::assertSame(
+                    $vector['expected_layer_count'],
+                    $result->layerCount,
+                    "Layer count mismatch for: {$vector['description']}"
+                );
+            }
+
+            if (isset($vector['expected_divergence'])) {
+                self::assertSame(
+                    $vector['expected_divergence'],
+                    $result->hasDivergence,
+                    "Divergence mismatch for: {$vector['description']}"
+                );
+            }
+
+            if (isset($vector['expected_error_codes'])) {
+                foreach ($vector['expected_error_codes'] as $expectedCode) {
+                    self::assertContains(
+                        $expectedCode,
+                        $result->getErrorCodes(),
+                        "Missing error code {$expectedCode} in: {$vector['description']}"
+                    );
+                }
+            }
+
+            if (isset($vector['expected_warning_codes'])) {
+                foreach ($vector['expected_warning_codes'] as $expectedWarning) {
+                    self::assertContains(
+                        $expectedWarning,
+                        $result->getWarningCodes(),
+                        "Missing warning code {$expectedWarning} in: {$vector['description']}"
+                    );
+                }
+            }
+        }
+    }
+
 
     public function testPkpassInspectorSpecCompliance(): void
     {

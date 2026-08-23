@@ -15,6 +15,8 @@ base:
         caddy_transpiler: "Caddyfile Transpiler"
         cidr_matrix: "CIDR Matrix"
         regex_transpiler: "Regex Transpiler"
+        favicon_suite: "Favicon Suite"
+        dns_dag_tracer: "DNS DAG Tracer"
         pkpass: "PKPass Inspector"
         more: "Tools"
     context:
@@ -27,6 +29,8 @@ base:
         caddy_transpiler: "Nginx & Apache to Caddyfile Transpiler"
         cidr_matrix: "Visual CIDR & Subnet Overlap Matrix"
         regex_transpiler: "Regex Dialect Transpiler & Compatibility Matrix"
+        favicon_suite: "Modern Favicon Kitchen & Dark-Mode SVG Suite"
+        dns_dag_tracer: "Visual DNS Propagation DAG & Delegation Chain Tracer"
         pkpass: "Apple Wallet (.pkpass) Inspector & Emulator"
     footer: "Useful, transparent tools · No signup · No tracking pixel"
     contact: "Contact"
@@ -37,7 +41,7 @@ common:
 home:
     meta:
         title: "StackHal · Free Developer, SEO and Infrastructure Tools"
-        description: "Focused developer utilities for technical SEO, GEO, Apple Wallet, Caddy, email security and CIDR analysis. No signup required."
+        description: "Focused developer utilities for technical SEO, GEO, Apple Wallet, Caddy, email security, DNS delegation and CIDR analysis. No signup required."
     eyebrow: "OPEN DEVELOPER TOOLBOX · NO SIGNUP"
     heading_start: "Developer tools for real infrastructure work"
     heading_emphasis: ""
@@ -62,6 +66,9 @@ home:
     market:
         title: "Poland used-goods price index"
         text: "Follow Bahdan’s manually reviewed snapshots of comparable second-hand asking prices, with history and transparent limitations."
+    favicon_suite:
+        title: "Favicon Kitchen & Dark-Mode SVG Suite"
+        text: "Generate dark-mode adaptive vector favicons, multi-resolution ICOs, Apple touch icons, and Android PWA bundles with safe-zone masking."
     bimi:
         title: "BIMI Studio & Live Inbox Simulator"
         text: "Prepare strict SVG Tiny 1.2 PS brand marks with safe-zone padding and live inbox simulator for Gmail, Apple Mail, and Yahoo."
@@ -77,6 +84,9 @@ home:
     regex_transpiler:
         title: "Regex Dialect Transpiler & Compatibility Matrix"
         text: "Transpile PCRE regex to Go RE2, JavaScript, Python, and Rust, analyze lookaround/backreference safety, and guarantee linear O(N) ReDoS protection."
+    dns_dag_tracer:
+        title: "Visual DNS Propagation DAG & Delegation Chain"
+        text: "Trace hierarchical DNS delegation chains across Root, TLD, Authoritative NS and Global Anycast resolvers with DNSSEC trust validation."
     pkpass:
         title: "Apple Wallet (.pkpass) Inspector & Debugger"
         text: "Pixel-perfect Apple Wallet & Google Wallet emulator, SHA-1 manifest validator, PKCS#7 certificate inspector, and 1-click package repair."
@@ -972,5 +982,61 @@ regex_transpiler:
         a3: "Atomic groups and possessive quantifiers exist in PCRE to suppress backtracking. Since RE2 never backtracks by default, atomic groups are converted into non-capturing groups (?:...), and possessive quantifiers (++) are simplified to standard greedy quantifiers (+)."
         q4: "Is regex transpilation and test matching performed securely?"
         a4: "Yes! 100% of the transpilation, AST parsing, matrix evaluation, and live regex matching runs entirely in your browser using client-side JavaScript. No regex patterns or test strings are sent to our servers."
+
+favicon_suite:
+    meta:
+        title: "Modern Favicon Suite & Dark-Mode SVG Generator · StackHal"
+        description: "Generate dark-mode adaptive SVG favicons, multi-resolution ICOs, Apple touch icons, and PWA manifests with safe-zone masking."
+    eyebrow: "FAVICON & PWA ASSET SUITE"
+    heading: "Modern Favicon Kitchen & Dark-Mode SVG Suite"
+    lede: "Transform SVG brand marks into complete, multi-platform favicon suites with automatic dark-mode CSS injection, Apple safe zones, and webmanifests."
+    presets_label: "Presets"
+    input_title: "1. Source SVG Markup"
+    input_placeholder: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\">...</svg>"
+    strategy_label: "Dark Mode Strategy:"
+    strategy_invert: "Auto-Invert Fill (css_invert_fill)"
+    strategy_class_swap: "CSS Class Swap (css_class_swap)"
+    strategy_preserve: "Preserve Colors (preserve_colors)"
+    generate_btn: "Generate Suite"
+    preview_title: "2. Live Preview & HTML Code"
+    tab_preview_title: "Browser Tab Theme Preview"
+    html_tags_title: "Recommended HTML Link Tags"
+    copy_html_btn: "Copy HTML Link Tags"
+    bundle_title: "3. Generated Multi-Platform Assets"
+    faq:
+        title: "Frequently Asked Questions"
+        q1: "Why use an SVG favicon with embedded dark-mode CSS?"
+        q1_a: "Modern browsers (Chrome, Safari, Firefox, Edge) support SVG favicons with CSS @media (prefers-color-scheme: dark), allowing your brand icon to dynamically adjust its fill and contrast to match the user's OS and browser chrome theme."
+        q2: "What is the Android Adaptive Icon safe-zone ratio?"
+        q2_a: "Android Adaptive / Maskable icons require a 10% outer safe-zone margin (inner 80% canvas) so that the icon is never clipped by circular or squircle launcher masks."
+        q3: "Do I still need a favicon.ico file in 2026?"
+        q3_a: "Yes. Legacy desktop browsers, RSS readers, bookmarking tools, and crawlers still look for /favicon.ico at the domain root."
+        q4: "Is my SVG uploaded or stored on any server?"
+        q4_a: "No. The generator runs deterministically in memory and does not persist or retain your uploaded artwork."
+
+dns_dag_tracer:
+    meta:
+        title: "Visual DNS Propagation DAG & Delegation Chain Tracer · StackHal"
+        description: "Trace hierarchical DNS delegation chains (Root -> TLD -> Authoritative -> Edge Resolvers), validate DNSSEC trust chains and diagnose propagation stalls."
+    eyebrow: "HIERARCHICAL DNS DELEGATION & DAG TRACER"
+    heading: "Visual DNS Propagation DAG & Delegation Chain Tracer"
+    lede: "Trace DNS resolution down the entire delegation tree—from IANA Root and TLD registries to Authoritative nameservers and global anycast resolvers."
+    presets_label: "Example Scenarios"
+    domain_label: "Target Domain Name:"
+    record_type_label: "Record Type:"
+    trace_btn: "Trace Delegation DAG"
+    dag_title: "Hierarchical Delegation DAG (4 Layers)"
+    diagnostics_title: "Delegation & DNSSEC Diagnostics"
+    faq:
+        title: "Frequently Asked Questions"
+        q1: "How does hierarchical DNS delegation work?"
+        q1_a: "DNS resolution traverses from the 13 IANA Root Clusters (.) to the TLD nameservers (e.g. .com or .pl), then to the domain's Authoritative nameservers, and finally to public recursive resolvers at the edge."
+        q2: "What does DNSSEC validation verify?"
+        q2_a: "DNSSEC verifies the cryptographic chain of trust by matching the parent zone's Delegation Signer (DS) record against the child zone's DNSKEY and verifying RRSIG digital signatures."
+        q3: "What causes DNS propagation divergence during migrations?"
+        q3_a: "High TTL values (>14,400s / 4 hours) cause caching recursive resolvers to retain stale records until their TTL expires, resulting in divergent answers across global regions."
+        q4: "What is a Lame Delegation?"
+        q4_a: "A lame delegation occurs when a parent zone designates a nameserver that refuses queries or is not configured as authoritative for the zone."
+
 
 

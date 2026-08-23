@@ -140,4 +140,67 @@ final class ToolsController extends AbstractController
     {
         return $this->redirectToRoute('regex_transpiler', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
     }
+
+    #[Route(
+        path: ['en' => '/favicon-suite', 'pl' => '/pl/generator-favicon'],
+        name: 'favicon_suite',
+        methods: ['GET', 'POST']
+    )]
+    public function faviconSuite(Request $request, \App\FaviconSuite\Application\FaviconSuiteService $service): Response
+    {
+        $presets = $service->getPresets();
+        $defaultSvg = $presets[0]['sample_svg'];
+        $svgInput = (string) $request->request->get('svg_content', $request->query->get('svg_content', $defaultSvg));
+        $strategy = (string) $request->request->get('dark_mode_strategy', $request->query->get('dark_mode_strategy', 'css_invert_fill'));
+
+        $result = $service->generate($svgInput, $strategy);
+
+        return $this->render('tools/favicon_suite.html.twig', [
+            'raw_svg' => $svgInput,
+            'selected_strategy' => $strategy,
+            'result' => $result,
+            'presets' => $presets,
+        ]);
+    }
+
+    #[Route(
+        path: ['en' => '/tools/favicon-suite', 'pl' => '/pl/narzedzia/generator-favicon'],
+        name: 'legacy_favicon_suite',
+        methods: ['GET']
+    )]
+    public function legacyFaviconSuite(Request $request): Response
+    {
+        return $this->redirectToRoute('favicon_suite', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
+    }
+
+    #[Route(
+        path: ['en' => '/dns-dag-tracer', 'pl' => '/pl/tracer-dns-dag'],
+        name: 'dns_dag_tracer',
+        methods: ['GET', 'POST']
+    )]
+    public function dnsDagTracer(Request $request, \App\DnsDagTracer\Application\DnsDagTracerService $service): Response
+    {
+        $domain = (string) $request->request->get('domain', $request->query->get('domain', 'stackhal.com'));
+        $queryType = (string) $request->request->get('query_type', $request->query->get('query_type', 'A'));
+
+        $result = $service->trace($domain, $queryType);
+        $presets = $service->getPresets();
+
+        return $this->render('tools/dns_dag_tracer.html.twig', [
+            'domain' => $domain,
+            'query_type' => $queryType,
+            'result' => $result,
+            'presets' => $presets,
+        ]);
+    }
+
+    #[Route(
+        path: ['en' => '/tools/dns-dag-tracer', 'pl' => '/pl/narzedzia/tracer-dns-dag'],
+        name: 'legacy_dns_dag_tracer',
+        methods: ['GET']
+    )]
+    public function legacyDnsDagTracer(Request $request): Response
+    {
+        return $this->redirectToRoute('dns_dag_tracer', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
+    }
 }

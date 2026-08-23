@@ -9,6 +9,9 @@ Privacy-focused developer and DevOps toolbox, deployed at [stackhal.com](https:/
 - **`/caddy-transpiler`**: Real-time Nginx server blocks and Apache `.htaccess` to modern Caddyfile converter.
 - **`/apple-pkpass-inspector`**: Apple Wallet (`.pkpass`) archive parser, SHA-1 manifest integrity checker, PKCS#7 certificate inspector, and Google Wallet converter.
 - **`/cidr-subnet-matrix`**: Visual IPv4/IPv6 CIDR overlap calculator, collision detector, and 2D binary tree matrix.
+- **`/regex-transpiler`**: Regex dialect transpiler across PCRE, Go RE2, JavaScript, Python and Rust with linear ReDoS protection.
+- **`/favicon-suite`**: Modern favicon kitchen, dark-mode SVG generator, multi-resolution ICO, Apple Touch Icon, and PWA manifest suite.
+- **`/dns-dag-tracer`**: Visual hierarchical DNS delegation chain tracer (Root -> TLD -> Authoritative -> Edge Anycast) with DNSSEC validation.
 - **`/seo-audit`**: Technical SEO crawler, canonical auditor, redirect loop detector, and crawl trap identifier with SSRF protection.
 - **`/geo-audit`**: Generative Engine Optimization (GEO) readiness analyzer (13 deterministic criteria for AI search engines like Perplexity, ChatGPT, Gemini).
 - **`/domain-inspector`**: Domain email security analyzer for DMARC, BIMI, MTA-STS, TLS-RPT, SPF, and MX records.

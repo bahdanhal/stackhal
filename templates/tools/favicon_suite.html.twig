@@ -1,0 +1,192 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'favicon_suite.meta.title'|trans }}{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}<meta name="description" content="{{ 'favicon_suite.meta.description'|trans }}">{% endblock %}
+{% block canonical %}
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/generator-favicon' : 'https://stackhal.com/favicon-suite' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/favicon-suite">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/generator-favicon">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/favicon-suite">
+{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/tools.css">
+{% endblock %}
+{% block language_switch %}
+  <a class="language-switch" href="{{ path('favicon_suite', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
+{% endblock %}
+{% block tool_name %}{{ 'favicon_suite.heading'|trans }}{% endblock %}
+
+{% block body %}
+<section class="tool-page-shell favicon-suite-shell">
+  {% include 'tools/_tool_intro.html.twig' with {
+    eyebrow: 'favicon_suite.eyebrow'|trans,
+    heading: 'favicon_suite.heading'|trans,
+    lede: 'favicon_suite.lede'|trans
+  } only %}
+
+  <div class="transpiler-container" id="favicon-suite-app" data-locale="{{ app.request.locale }}">
+    <!-- Presets Toolbar -->
+    <div class="transpiler-toolbar ui-panel">
+      <div class="preset-group">
+        <span class="preset-label">{{ 'favicon_suite.presets_label'|trans }}:</span>
+        {% for preset in presets %}
+          <button type="button" class="btn-preset" data-preset-id="{{ preset.id }}" data-strategy="{{ preset.dark_mode_strategy }}" data-svg="{{ preset.sample_svg|e('html_attr') }}">
+            {{ preset.name }}
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Workspace Grid -->
+    <div class="transpiler-workspace">
+      <!-- Left: SVG Input & Controls -->
+      <div class="workspace-panel input-panel ui-panel">
+        <div class="panel-header">
+          <span class="panel-title">{{ 'favicon_suite.input_title'|trans }}</span>
+          <div class="panel-actions">
+            <button type="button" class="btn-panel-action" id="btn-clear-svg">✕ Clear</button>
+          </div>
+        </div>
+        
+        <form method="post" action="{{ path('favicon_suite', {_locale: app.request.locale}) }}" id="favicon-form">
+          <div class="form-group" style="padding: 1rem 1rem 0;">
+            <label for="dark_mode_strategy" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ 'favicon_suite.strategy_label'|trans }}</label>
+            <select name="dark_mode_strategy" id="dark_mode_strategy" class="form-control" style="width: 100%; padding: 0.5rem; background: var(--bg-surface, #1e293b); color: inherit; border: 1px solid var(--border-color, #334155); border-radius: 4px;">
+              <option value="css_invert_fill" {% if selected_strategy == 'css_invert_fill' %}selected{% endif %}>{{ 'favicon_suite.strategy_invert'|trans }}</option>
+              <option value="css_class_swap" {% if selected_strategy == 'css_class_swap' %}selected{% endif %}>{{ 'favicon_suite.strategy_class_swap'|trans }}</option>
+              <option value="preserve_colors" {% if selected_strategy == 'preserve_colors' %}selected{% endif %}>{{ 'favicon_suite.strategy_preserve'|trans }}</option>
+            </select>
+          </div>
+
+          <div class="editor-wrap" style="padding: 1rem;">
+            <textarea name="svg_content" id="svg-input" class="config-textarea" rows="10" spellcheck="false" placeholder="{{ 'favicon_suite.input_placeholder'|trans }}" style="width: 100%; min-height: 220px;">{{ raw_svg }}</textarea>
+          </div>
+
+          <div class="panel-footer" style="padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <button type="submit" class="btn-submit" style="padding: 0.5rem 1rem; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer;">{{ 'favicon_suite.generate_btn'|trans }}</button>
+            <span class="privacy-badge">🔒 100% Deterministic & Private</span>
+          </div>
+        </form>
+      </div>
+
+      <!-- Right: Live Preview & HTML Tags -->
+      <div class="workspace-panel output-panel ui-panel">
+        <div class="panel-header">
+          <span class="panel-title">{{ 'favicon_suite.preview_title'|trans }}</span>
+          <div class="panel-actions">
+            <button type="button" class="btn-panel-action btn-copy" id="btn-copy-html">📋 {{ 'favicon_suite.copy_html_btn'|trans }}</button>
+          </div>
+        </div>
+
+        <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+          <!-- Browser Tab Simulator -->
+          <div>
+            <h4 style="margin: 0 0 0.75rem;">{{ 'favicon_suite.tab_preview_title'|trans }}</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <!-- Light Tab -->
+              <div style="background: #e2e8f0; color: #0f172a; padding: 0.75rem 1rem; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 0.75rem; border: 1px solid #cbd5e1;">
+                <div id="tab-icon-light" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                  {% if result.svgContent %}
+                    {{ result.svgContent|raw }}
+                  {% endif %}
+                </div>
+                <span style="font-size: 0.85rem; font-weight: 500;">Light Tab · StackHal</span>
+              </div>
+              <!-- Dark Tab -->
+              <div style="background: #0f172a; color: #f8fafc; padding: 0.75rem 1rem; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 0.75rem; border: 1px solid #334155;">
+                <div id="tab-icon-dark" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                  {% if result.svgContent %}
+                    {{ result.svgContent|raw }}
+                  {% endif %}
+                </div>
+                <span style="font-size: 0.85rem; font-weight: 500;">Dark Tab · StackHal</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- HTML Link Tags -->
+          <div>
+            <h4 style="margin: 0 0 0.5rem;">{{ 'favicon_suite.html_tags_title'|trans }}</h4>
+            <pre class="caddy-output-pre" style="margin: 0; padding: 1rem; background: #090a0f; border-radius: 6px; overflow-x: auto;"><code id="html-tags-code" class="language-html">{% for tag in result.htmlTags %}{{ tag }}{{ "\n" }}{% endfor %}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Bundle Assets & Diagnostics -->
+    <div class="transpiler-insights ui-panel" style="margin-top: 1.5rem;">
+      <div class="insights-header">
+        <h3>{{ 'favicon_suite.bundle_title'|trans }}</h3>
+      </div>
+
+      <div style="padding: 1rem;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 1px solid #334155;">
+              <th style="padding: 0.5rem;">File</th>
+              <th style="padding: 0.5rem;">Type</th>
+              <th style="padding: 0.5rem;">Size / Purpose</th>
+              <th style="padding: 0.5rem;">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for file in result.files %}
+              <tr style="border-bottom: 1px solid #1e293b;">
+                <td style="padding: 0.5rem; font-family: monospace; font-weight: 600;">{{ file.filename }}</td>
+                <td style="padding: 0.5rem; font-size: 0.85rem; color: #94a3b8;">{{ file.mimeType }}</td>
+                <td style="padding: 0.5rem; font-size: 0.85rem;">
+                  {% if file.width and file.height %}
+                    {{ file.width }}x{{ file.height }}
+                  {% elseif file.dimensions %}
+                    16x16, 32x32, 48x48
+                  {% else %}
+                    vector / json
+                  {% endif %}
+                  {% if file.purpose %}
+                    <span style="display: inline-block; padding: 2px 6px; background: #334155; border-radius: 3px; font-size: 0.75rem; margin-left: 4px;">{{ file.purpose }}</span>
+                  {% endif %}
+                </td>
+                <td style="padding: 0.5rem; font-size: 0.85rem;">{{ file.description }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if result.diagnostics is not empty %}
+        <div style="padding: 1rem; border-top: 1px solid #334155;">
+          <h4 style="margin: 0 0 0.75rem;">Diagnostics</h4>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            {% for diag in result.diagnostics %}
+              <div style="padding: 0.5rem 0.75rem; border-radius: 4px; font-size: 0.85rem; background: {% if diag.severity == 'error' %}#451a1a{% elseif diag.severity == 'warning' %}#422006{% else %}#172554{% endif %}; border: 1px solid {% if diag.severity == 'error' %}#dc2626{% elseif diag.severity == 'warning' %}#d97706{% else %}#2563eb{% endif %};">
+                <strong>[{{ diag.code }}]</strong> {{ diag.title }}: {{ diag.description }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="transpiler-faq ui-panel" style="margin-top: 1.5rem;">
+      <div class="section-title-wrap">
+        <h2>{{ 'favicon_suite.faq.title'|trans }}</h2>
+      </div>
+      <div class="faq-list">
+        {% for idx in ['q1', 'q2', 'q3', 'q4'] %}
+          <details class="faq-item" {% if loop.first %}open{% endif %}>
+            <summary class="faq-question"><strong>{{ ('favicon_suite.faq.' ~ idx)|trans }}</strong></summary>
+            <div class="faq-answer">
+              <p>{{ ('favicon_suite.faq.' ~ idx ~ '_a')|trans }}</p>
+            </div>
+          </details>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/favicon-suite.js"></script>
+{% endblock %}

@@ -15,6 +15,8 @@ base:
         caddy_transpiler: "Konwerter Caddyfile"
         cidr_matrix: "Matryca CIDR"
         regex_transpiler: "Konwerter Regex"
+        favicon_suite: "Generator Favicon"
+        dns_dag_tracer: "Tracer DNS DAG"
         pkpass: "Inspektor PKPass"
         more: "Narzędzia"
     context:
@@ -27,6 +29,8 @@ base:
         caddy_transpiler: "Transpiler Nginx i Apache do Caddyfile"
         cidr_matrix: "Wizualna Matryca CIDR i Nachodzenia Podsieci"
         regex_transpiler: "Transpiler dialektów Regex i matryca zgodności"
+        favicon_suite: "Generator pakietu Favicon i SVG Dark-Mode"
+        dns_dag_tracer: "Wizualny DAG propagacji DNS i łańcuch delegacji"
         pkpass: "Inspektor i emulator Apple Wallet (.pkpass)"
     footer: "Przydatne i przejrzyste narzędzia · Bez rejestracji · Bez pikseli śledzących"
     contact: "Kontakt"
@@ -62,6 +66,9 @@ home:
     market:
         title: "Indeks cen używanych w Polsce"
         text: "Śledź ręcznie weryfikowane przez Bahdana obserwacje porównywalnych cen ofertowych z historią i jawnymi ograniczeniami."
+    favicon_suite:
+        title: "Generator Favicon & SVG Dark-Mode"
+        text: "Generuj adaptacyjne wektorowe ikony SVG dla trybu ciemnego, pliki ICO o wielu rozdzielczościach, Apple Touch Icon i pakiety PWA."
     bimi:
         title: "BIMI Studio i symulator skrzynek pocztowych"
         text: "Przygotuj zgodne logo SVG Tiny 1.2 PS z marginesami bezpiecznymi i przetestuj awatar na żywo w Gmailu, Apple Mail i Yahoo."
@@ -77,6 +84,9 @@ home:
     regex_transpiler:
         title: "Transpiler dialektów Regex i matryca zgodności"
         text: "Konwertuj wyrażenia regularne PCRE do Go RE2, JavaScript, Pythona i Rusta, weryfikuj bezpieczeństwo asercji i eliminuj podatności ReDoS w czasie liniowym O(N)."
+    dns_dag_tracer:
+        title: "Wizualny DAG propagacji DNS i łańcuch delegacji"
+        text: "Śledź hierarchiczną delegację DNS przez strefę Root, TLD, serwery autorytatywne i globalne resolwery Anycast z walidacją DNSSEC."
     pkpass:
         title: "Inspektor i debugger Apple Wallet (.pkpass)"
         text: "Wierny emulator kart Apple Wallet i Google Wallet, weryfikator sum kontrolnych SHA-1 w manifest.json, podgląd certyfikatów PKCS#7 i naprawa archiwum w 1 kliknięcie."
@@ -972,4 +982,60 @@ regex_transpiler:
         a3: "Grupy atomowe i kwantyfikatory zaborcze służą w PCRE do ograniczania backtrackingu. Ponieważ RE2 w ogóle nie nawraca, grupy atomowe są zamieniane na grupy nieprzechwytujące (?:...), a kwantyfikatory ++ na standardowe zachłanne (+)."
         q4: "Czy przetwarzanie regex i tekstu jest bezpieczne?"
         a4: "Tak! 100% parsowania AST, oceny matrycy i dopasowywania wzorców wykonuje się lokalnie w Twojej przeglądarce za pomocą JavaScriptu. Żadne dane nie trafiają na nasze serwery."
+
+favicon_suite:
+    meta:
+        title: "Generator Favicon & SVG Dark-Mode · StackHal"
+        description: "Generuj adaptacyjne wektorowe ikony SVG dla trybu ciemnego, pliki ICO o wielu rozdzielczościach, Apple Touch Icon i manifesty PWA."
+    eyebrow: "PAKIET IKON FAVICON & PWA"
+    heading: "Generator Favicon & SVG Dark-Mode"
+    lede: "Przekształcaj logo SVG w kompletny, wieloplatformowy pakiet favicon z automatycznym wstrzykiwaniem stylów CSS dla trybu ciemnego, bezpiecznymi marginesami Apple i manifestami."
+    presets_label: "Przykłady"
+    input_title: "1. Źródłowy kod SVG"
+    input_placeholder: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\">...</svg>"
+    strategy_label: "Strategia trybu ciemnego:"
+    strategy_invert: "Automatyczne odwrócenie kolorów (css_invert_fill)"
+    strategy_class_swap: "Przełączanie klas CSS (css_class_swap)"
+    strategy_preserve: "Zachowaj oryginalne kolory (preserve_colors)"
+    generate_btn: "Generuj pakiet"
+    preview_title: "2. Podgląd na żywo i kod HTML"
+    tab_preview_title: "Podgląd w kartach przeglądarki"
+    html_tags_title: "Zalecane tagi HTML link"
+    copy_html_btn: "Kopiuj tagi HTML"
+    bundle_title: "3. Wygenerowane zasoby wieloplatformowe"
+    faq:
+        title: "Najczęściej zadawane pytania"
+        q1: "Dlaczego warto używać favicon SVG z wbudowanym CSS dla trybu ciemnego?"
+        q1_a: "Współczesne przeglądarki (Chrome, Safari, Firefox, Edge) obsługują ikony SVG z regułą @media (prefers-color-scheme: dark), co pozwala ikonie automatycznie dostosowywać kontrast do motywu systemu i paska kart przeglądarki."
+        q2: "Czym jest margines bezpieczeństwa Android Adaptive Icon?"
+        q2_a: "Ikony adaptacyjne / maskowalne Androida wymagają 10% zewnętrznego marginesu bezpieczeństwa (rdzeń 80% obszaru), aby grafika nie została obcięta przez okrągłe lub zaokrąglone maski launchera."
+        q3: "Czy plik favicon.ico jest nadal potrzebny w 2026 roku?"
+        q3_a: "Tak. Starsze przeglądarki desktopowe, czytniki RSS, narzędzia do zakładek i boty nadal odpytują o plik /favicon.ico w katalogu głównym domeny."
+        q4: "Czy mój plik SVG jest zapisywany na serwerze?"
+        q4_a: "Nie. Generator działa deterministycznie w pamięci roboczej i nie zapisuje ani nie przetwarza przekazywanych grafik w celach innych niż jednorazowy zwrot odpowiedzi."
+
+dns_dag_tracer:
+    meta:
+        title: "Wizualny DAG propagacji DNS i łańcuch delegacji · StackHal"
+        description: "Śledź hierarchiczną delegację DNS (Root -> TLD -> Autorytatywne -> Resolwery Anycast), weryfikuj łańcuch zaufania DNSSEC i diagnozuj opóźnienia propagacji."
+    eyebrow: "HIERARCHICZNA DELEGACJA DNS & TRACER DAG"
+    heading: "Wizualny DAG propagacji DNS i łańcuch delegacji"
+    lede: "Śledź rozwiązywanie nazw DNS w dół całego drzewa delegacji — od rejestrów głównych IANA Root i TLD, przez serwery autorytatywne, aż po globalne resolwery Anycast."
+    presets_label: "Przykładowe scenariusze"
+    domain_label: "Nazwa domeny:"
+    record_type_label: "Typ rekordu:"
+    trace_btn: "Śledź delegację DAG"
+    dag_title: "Hierarchiczny DAG delegacji (4 warstwy)"
+    diagnostics_title: "Diagnostyka delegacji i DNSSEC"
+    faq:
+        title: "Najczęściej zadawane pytania"
+        q1: "Jak działa hierarchiczna delegacja DNS?"
+        q1_a: "Rozwiązywanie nazw rozpoczyna się od 13 klastrów IANA Root (.), przechodzi do serwerów TLD (np. .com lub .pl), następnie do serwerów autorytatywnych danej domeny i kończy na publicznych resolwerach rekurencyjnych."
+        q2: "Co weryfikuje walidacja DNSSEC?"
+        q2_a: "DNSSEC weryfikuje kryptograficzny łańcuch zaufania, porównując rekord DS ze strefy nadrzędnej z kluczem DNSKEY strefy podrzędnej oraz sprawdzając podpisy cyfrowe RRSIG."
+        q3: "Co powoduje rozbieżności w propagacji DNS podczas migracji?"
+        q3_a: "Wysokie wartości TTL (>14 400s / 4 godziny) sprawiają, że buforujące resolwery przetrzymują nieaktualne rekordy aż do wygaśnięcia ich czasu ważności, co prowadzi do różnych odpowiedzi w poszczególnych regionach."
+        q4: "Czym jest Lame Delegation?"
+        q4_a: "Lame delegation występuje, gdy strefa nadrzędna wskazuje serwer nazw, który odrzuca zapytania lub nie jest skonfigurowany jako autorytatywny dla danej domeny."
+
 
