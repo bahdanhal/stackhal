@@ -20,5 +20,6 @@ final class SitemapControllerTest extends TestCase
         self::assertStringContainsString('<urlset', $content);
         self::assertStringContainsString('https://stackhal.com/', $content);
         self::assertStringContainsString('https://stackhal.com/caddy-transpiler', $content);
+        self::assertStringContainsString('https://stackhal.com/regex-transpiler', $content);
     }
 }

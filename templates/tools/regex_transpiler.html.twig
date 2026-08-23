@@ -1,0 +1,313 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'regex_transpiler.meta.title'|trans }}{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}<meta name="description" content="{{ 'regex_transpiler.meta.description'|trans }}">{% endblock %}
+{% block canonical %}
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/konwerter-regex' : 'https://stackhal.com/regex-transpiler' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/regex-transpiler">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/konwerter-regex">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/regex-transpiler">
+{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/tools.css">
+  <link rel="stylesheet" href="/regex-transpiler.css">
+{% endblock %}
+{% block head_scripts %}
+  <script type="application/ld+json">{{ {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebApplication',
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/konwerter-regex#app' : 'https://stackhal.com/regex-transpiler#app'),
+        'name': 'regex_transpiler.heading'|trans,
+        'description': 'regex_transpiler.meta.description'|trans,
+        'url': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/konwerter-regex' : 'https://stackhal.com/regex-transpiler'),
+        'applicationCategory': 'DeveloperApplication',
+        'operatingSystem': 'Any',
+        'offers': {
+          '@type': 'Offer',
+          'price': '0',
+          'priceCurrency': 'USD'
+        },
+        'author': {'@id': 'https://stackhal.com/#stackhal'},
+        'publisher': {'@id': 'https://stackhal.com/#stackhal'}
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/konwerter-regex#faq' : 'https://stackhal.com/regex-transpiler#faq'),
+        'inLanguage': app.request.locale,
+        'mainEntity': [
+          {'@type': 'Question', 'name': 'regex_transpiler.faq.q1'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'regex_transpiler.faq.a1'|trans}},
+          {'@type': 'Question', 'name': 'regex_transpiler.faq.q2'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'regex_transpiler.faq.a2'|trans}},
+          {'@type': 'Question', 'name': 'regex_transpiler.faq.q3'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'regex_transpiler.faq.a3'|trans}},
+          {'@type': 'Question', 'name': 'regex_transpiler.faq.q4'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'regex_transpiler.faq.a4'|trans}}
+        ]
+      }
+    ]
+  }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+{% endblock %}
+{% block language_switch %}
+  <a class="language-switch" href="{{ path('regex_transpiler', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
+{% endblock %}
+{% block tool_name %}{{ 'regex_transpiler.heading'|trans }}{% endblock %}
+
+{% block body %}
+<section class="tool-page-shell regex-transpiler-shell">
+  {% include 'tools/_tool_intro.html.twig' with {
+    eyebrow: 'regex_transpiler.eyebrow'|trans,
+    heading: 'regex_transpiler.heading'|trans,
+    lede: 'regex_transpiler.lede'|trans
+  } only %}
+
+  <div class="transpiler-container" id="regex-transpiler-app" data-locale="{{ app.request.locale }}">
+    <!-- Source & Target Dialect Selectors & Presets Toolbar -->
+    <div class="transpiler-toolbar ui-panel">
+      <div class="engine-selectors-row">
+        <!-- Source Engine Selector -->
+        <div class="engine-selector-group">
+          <span class="selector-label">{{ 'regex_transpiler.source_label'|trans }}:</span>
+          <div class="engine-btn-group" role="group" aria-label="{{ 'regex_transpiler.source_label'|trans }}">
+            <button type="button" class="btn-engine active" data-source-engine="pcre">PCRE (PHP/Nginx)</button>
+            <button type="button" class="btn-engine" data-source-engine="go_re2">Go RE2</button>
+            <button type="button" class="btn-engine" data-source-engine="javascript">JavaScript</button>
+            <button type="button" class="btn-engine" data-source-engine="python">Python</button>
+            <button type="button" class="btn-engine" data-source-engine="rust">Rust</button>
+          </div>
+        </div>
+
+        <div class="conversion-arrow" aria-hidden="true">➔</div>
+
+        <!-- Target Engine Selector -->
+        <div class="engine-selector-group">
+          <span class="selector-label">{{ 'regex_transpiler.target_label'|trans }}:</span>
+          <div class="engine-btn-group" role="group" aria-label="{{ 'regex_transpiler.target_label'|trans }}">
+            <button type="button" class="btn-engine active" data-target-engine="go_re2">Go RE2</button>
+            <button type="button" class="btn-engine" data-target-engine="pcre">PCRE</button>
+            <button type="button" class="btn-engine" data-target-engine="javascript">JavaScript</button>
+            <button type="button" class="btn-engine" data-target-engine="python">Python</button>
+            <button type="button" class="btn-engine" data-target-engine="rust">Rust</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Presets -->
+      <div class="preset-group">
+        <span class="preset-label">{{ 'regex_transpiler.presets_label'|trans }}:</span>
+        <button type="button" class="btn-preset" data-preset="password_lookahead">{{ 'regex_transpiler.preset_password'|trans }}</button>
+        <button type="button" class="btn-preset" data-preset="named_log_parser">{{ 'regex_transpiler.preset_log'|trans }}</button>
+        <button type="button" class="btn-preset" data-preset="quoted_string_possessive">{{ 'regex_transpiler.preset_possessive'|trans }}</button>
+        <button type="button" class="btn-preset" data-preset="multiline_case_insensitive">{{ 'regex_transpiler.preset_slug'|trans }}</button>
+      </div>
+    </div>
+
+    <!-- Split Screen Workspace -->
+    <div class="transpiler-workspace">
+      <!-- Left: Source Regex Pattern & Test String -->
+      <div class="workspace-panel input-panel ui-panel">
+        <div class="panel-header">
+          <span class="panel-title" id="source-panel-title">{{ 'regex_transpiler.source_pattern_title'|trans }}</span>
+          <div class="panel-actions">
+            <button type="button" class="btn-panel-action" id="btn-clear-input" title="Clear input">✕ {{ 'regex_transpiler.clear_btn'|trans }}</button>
+          </div>
+        </div>
+        <div class="editor-wrap">
+          <textarea id="source-pattern-input" class="regex-textarea" spellcheck="false" placeholder="{{ 'regex_transpiler.pattern_placeholder'|trans }}"></textarea>
+
+          <div class="sublabel">{{ 'regex_transpiler.test_string_label'|trans }}</div>
+          <textarea id="test-text-input" class="test-textarea" spellcheck="false" placeholder="{{ 'regex_transpiler.test_string_placeholder'|trans }}"></textarea>
+        </div>
+        <div class="panel-footer">
+          <span id="input-stats">0 chars</span>
+          <span class="privacy-badge">🔒 100% Client-side · Zero Data Transmitted</span>
+        </div>
+      </div>
+
+      <!-- Right: Transpiled Pattern & Live Match Results -->
+      <div class="workspace-panel output-panel ui-panel">
+        <div class="panel-header">
+          <span class="panel-title">{{ 'regex_transpiler.target_pattern_title'|trans }}</span>
+          <div class="panel-actions">
+            <button type="button" class="btn-panel-action btn-copy" id="btn-copy-pattern">
+              📋 {{ 'regex_transpiler.copy_pattern_btn'|trans }}
+            </button>
+            <button type="button" class="btn-panel-action" id="btn-copy-snippet">
+              📄 {{ 'regex_transpiler.copy_snippet_btn'|trans }}
+            </button>
+          </div>
+        </div>
+        <div class="editor-wrap">
+          <pre class="regex-output-pre"><code id="target-output-code"></code></pre>
+
+          <div class="sublabel">{{ 'regex_transpiler.match_results_label'|trans }}: <span id="match-status-badge"></span></div>
+          <div id="match-results-preview" class="live-match-box"></div>
+        </div>
+        <div class="panel-footer">
+          <span id="target-stats"><span class="status-pill status-success">✓ 100% Compatible</span></span>
+          <span class="caddy-version-badge">AST Transpiled</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5-Engine Live Compatibility Matrix -->
+    <div class="matrix-section ui-panel">
+      <div class="section-header-wrap">
+        <h3>{{ 'regex_transpiler.matrix_title'|trans }}</h3>
+        <p>{{ 'regex_transpiler.matrix_subtitle'|trans }}</p>
+      </div>
+      <div id="compatibility-matrix-grid" class="matrix-grid">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- Migration Advisories & Syntax Diagnostics -->
+    <div class="transpiler-insights ui-panel">
+      <div class="insights-header">
+        <h3>{{ 'regex_transpiler.diagnostics_title'|trans }}</h3>
+      </div>
+      <div id="advisories-container" class="advisories-grid">
+        <div class="advisory-card advisory-empty">
+          <p>{{ 'regex_transpiler.diagnostics_empty'|trans }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why Go RE2 & ReDoS Elimination -->
+    <section class="why-re2-section ui-panel">
+      <div class="section-title-wrap">
+        <h2>{{ 'regex_transpiler.why_re2_title'|trans }}</h2>
+        <p class="section-subtitle">{{ 'regex_transpiler.why_re2_intro'|trans }}</p>
+      </div>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon">🛡️</div>
+          <h3>{{ 'regex_transpiler.benefits.redos.title'|trans }}</h3>
+          <p>{{ 'regex_transpiler.benefits.redos.text'|trans }}</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">⚡</div>
+          <h3>{{ 'regex_transpiler.benefits.linear.title'|trans }}</h3>
+          <p>{{ 'regex_transpiler.benefits.linear.text'|trans }}</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🔒</div>
+          <h3>{{ 'regex_transpiler.benefits.security.title'|trans }}</h3>
+          <p>{{ 'regex_transpiler.benefits.security.text'|trans }}</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">📦</div>
+          <h3>{{ 'regex_transpiler.benefits.syntax.title'|trans }}</h3>
+          <p>{{ 'regex_transpiler.benefits.syntax.text'|trans }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dialect Compatibility Cheatsheet -->
+    <div class="cheatsheet-section ui-panel">
+      <div class="cheatsheet-header">
+        <h3>{{ 'regex_transpiler.cheatsheet_title'|trans }}</h3>
+      </div>
+      <div class="cheatsheet-table-wrap">
+        <table class="cheatsheet-table">
+          <thead>
+            <tr>
+              <th>{{ 'regex_transpiler.table.feature'|trans }}</th>
+              <th>PCRE / PHP</th>
+              <th>Go RE2</th>
+              <th>JavaScript</th>
+              <th>Python re</th>
+              <th>Rust regex</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Lookahead <code>(?=...)</code></strong></td>
+              <td><span class="tag-support">✓ Supported</span></td>
+              <td><span class="tag-forbidden">⛔ Forbidden (ReDoS risk)</span></td>
+              <td><span class="tag-support">✓ Supported</span></td>
+              <td><span class="tag-support">✓ Supported</span></td>
+              <td><span class="tag-forbidden">⛔ Forbidden</span></td>
+            </tr>
+            <tr>
+              <td><strong>Lookbehind <code>(?&lt;=...)</code></strong></td>
+              <td><span class="tag-support">✓ Supported</span></td>
+              <td><span class="tag-forbidden">⛔ Forbidden</span></td>
+              <td><span class="tag-support">✓ Supported</span></td>
+              <td><span class="tag-support">✓ Fixed-width</span></td>
+              <td><span class="tag-forbidden">⛔ Forbidden</span></td>
+            </tr>
+            <tr>
+              <td><strong>Backreferences <code>\1</code></strong></td>
+              <td><span class="tag-support">✓ Supported</span></td>
+              <td><span class="tag-forbidden">⛔ Forbidden (NP-complete)</span></td>
+              <td><span class="tag-support">✓ Supported</span></td>
+              <td><span class="tag-support">✓ Supported</span></td>
+              <td><span class="tag-forbidden">⛔ Forbidden</span></td>
+            </tr>
+            <tr>
+              <td><strong>Named Groups</strong></td>
+              <td><code>(?P&lt;n&gt;..)</code> or <code>(?&lt;n&gt;..)</code></td>
+              <td><code>(?P&lt;n&gt;..)</code></td>
+              <td><code>(?&lt;n&gt;..)</code></td>
+              <td><code>(?P&lt;n&gt;..)</code></td>
+              <td><code>(?P&lt;n&gt;..)</code></td>
+            </tr>
+            <tr>
+              <td><strong>Atomic Groups <code>(?&gt;...)</code></strong></td>
+              <td><span class="tag-support">✓ Native</span></td>
+              <td><span class="tag-adapted">➔ <code>(?:...)</code> non-capturing</span></td>
+              <td><span class="tag-adapted">➔ <code>(?:...)</code></span></td>
+              <td><span class="tag-adapted">➔ <code>(?:...)</code></span></td>
+              <td><span class="tag-adapted">➔ <code>(?:...)</code></span></td>
+            </tr>
+            <tr>
+              <td><strong>Possessive Quantifiers <code>*+</code>, <code>++</code></strong></td>
+              <td><span class="tag-support">✓ Native</span></td>
+              <td><span class="tag-adapted">➔ <code>*</code>, <code>+</code> greedy</span></td>
+              <td><span class="tag-adapted">➔ <code>*</code>, <code>+</code></span></td>
+              <td><span class="tag-adapted">➔ <code>*</code>, <code>+</code></span></td>
+              <td><span class="tag-adapted">➔ <code>*</code>, <code>+</code></span></td>
+            </tr>
+            <tr>
+              <td><strong>Recursion <code>(?R)</code></strong></td>
+              <td><span class="tag-support">✓ Native</span></td>
+              <td><span class="tag-forbidden">⛔ Unsupported</span></td>
+              <td><span class="tag-forbidden">⛔ Unsupported</span></td>
+              <td><span class="tag-forbidden">⛔ Unsupported</span></td>
+              <td><span class="tag-forbidden">⛔ Unsupported</span></td>
+            </tr>
+            <tr>
+              <td><strong>Time Complexity</strong></td>
+              <td>\(O(2^N)\) Exponential worst-case</td>
+              <td>\(O(N)\) Guaranteed Linear</td>
+              <td>\(O(2^N)\) Exponential worst-case</td>
+              <td>\(O(2^N)\) Exponential worst-case</td>
+              <td>\(O(N)\) Guaranteed Linear</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="transpiler-faq ui-panel">
+      <div class="section-title-wrap">
+        <h2>{{ 'regex_transpiler.faq.title'|trans }}</h2>
+      </div>
+      <div class="faq-list">
+        {% for idx in ['q1', 'q2', 'q3', 'q4'] %}
+          <details class="faq-item" {% if loop.first %}open{% endif %}>
+            <summary class="faq-question"><strong>{{ ('regex_transpiler.faq.' ~ idx)|trans }}</strong></summary>
+            <div class="faq-answer">
+              <p>{{ ('regex_transpiler.faq.a' ~ loop.index)|trans }}</p>
+            </div>
+          </details>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/regex-transpiler.js"></script>
+{% endblock %}

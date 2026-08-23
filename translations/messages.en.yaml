@@ -13,6 +13,8 @@ base:
         bimi: "BIMI Studio"
         domain_inspector: "Domain inspector"
         caddy_transpiler: "Caddyfile Transpiler"
+        cidr_matrix: "CIDR Matrix"
+        regex_transpiler: "Regex Transpiler"
         pkpass: "PKPass Inspector"
         more: "Tools"
     context:
@@ -23,6 +25,8 @@ base:
         bimi: "BIMI Studio & SVG Converter"
         domain_inspector: "Domain email security inspector"
         caddy_transpiler: "Nginx & Apache to Caddyfile Transpiler"
+        cidr_matrix: "Visual CIDR & Subnet Overlap Matrix"
+        regex_transpiler: "Regex Dialect Transpiler & Compatibility Matrix"
         pkpass: "Apple Wallet (.pkpass) Inspector & Emulator"
     footer: "Useful, transparent tools · No signup · No tracking pixel"
     contact: "Contact"
@@ -70,6 +74,9 @@ home:
     cidr_matrix:
         title: "Visual CIDR & Subnet Overlap Matrix"
         text: "Analyze IPv4/IPv6 CIDR blocks, detect IP range overlap collisions, view 2D spatial tree partitions, and find available free subnets."
+    regex_transpiler:
+        title: "Regex Dialect Transpiler & Compatibility Matrix"
+        text: "Transpile PCRE regex to Go RE2, JavaScript, Python, and Rust, analyze lookaround/backreference safety, and guarantee linear O(N) ReDoS protection."
     pkpass:
         title: "Apple Wallet (.pkpass) Inspector & Debugger"
         text: "Pixel-perfect Apple Wallet & Google Wallet emulator, SHA-1 manifest validator, PKCS#7 certificate inspector, and 1-click package repair."
@@ -909,4 +916,61 @@ cidr_matrix:
         a1: "CIDR overlap occurs when two or more network subnets share one or more IP addresses, leading to routing conflicts in VPC peering, Kubernetes pods/services, or VPN connections."
         q2: "How does free subnet allocation work?"
         a2: "Given a parent block and target prefix size, the algorithm scans for the first contiguous IP block of that size that does not overlap with any existing assigned subnets."
+
+regex_transpiler:
+    meta:
+        title: "Regex Dialect Transpiler & Compatibility Matrix · PCRE to Go RE2"
+        description: "Transpile and validate regular expressions across PCRE, Go RE2, JavaScript, Python, and Rust. Eliminate ReDoS with guaranteed O(N) linear time analysis."
+    eyebrow: "REGEX ENGINE · PCRE ➔ GO RE2"
+    heading: "Regex Dialect Transpiler & Compatibility Matrix"
+    lede: "Transpile complex regular expressions between PCRE, Go RE2, JavaScript, Python, and Rust. Detect lookaround errors, convert possessive & atomic groups, and verify ReDoS linear-time safety."
+    source_label: "Source dialect"
+    target_label: "Target engine"
+    presets_label: "Presets"
+    preset_password: "Password Lookaheads"
+    preset_log: "HTTP Log (Named Groups)"
+    preset_possessive: "Possessive Quotes"
+    preset_slug: "Case-Insensitive Slug"
+    source_pattern_title: "Source Regular Expression"
+    target_pattern_title: "Transpiled Regular Expression"
+    clear_btn: "Clear"
+    pattern_placeholder: "Enter regular expression (e.g. (?<name>[a-z]+) or (?>foo++))..."
+    test_string_label: "Test String (Live Match Preview)"
+    test_string_placeholder: "Enter sample test string to test live pattern matches..."
+    copy_pattern_btn: "Copy Pattern"
+    copy_snippet_btn: "Copy Code Snippet"
+    match_results_label: "Live Match Highlights"
+    matrix_title: "5-Engine Cross-Dialect Compatibility Matrix"
+    matrix_subtitle: "Real-time evaluation of syntax support, time complexity, and AST transformations across all major regex engines."
+    diagnostics_title: "Syntax Diagnostics & Engine Advisories"
+    diagnostics_empty: "No syntax warnings or incompatibility issues found."
+    cheatsheet_title: "Regex Engine Feature & Complexity Comparison"
+    table:
+        feature: "Feature / Capability"
+    why_re2_title: "Why Go RE2 & Rust Eliminate ReDoS Entirely"
+    why_re2_intro: "Traditional regex engines (PCRE, JS, Python) use recursive backtracking, making them vulnerable to Regular Expression Denial of Service (ReDoS). Go RE2 and Rust use deterministic finite automata (DFA/NFA) with guaranteed linear execution time."
+    benefits:
+        redos:
+            title: "Zero Catastrophic Backtracking"
+            text: "RE2 guarantees execution in time proportional to the length of the input text O(N), completely eliminating CPU freeze vulnerabilities."
+        linear:
+            title: "Predictable Microsecond Latency"
+            text: "Whether the input text is 10 bytes or 10 megabytes, RE2 matches in strict linear passes without unbounded stack memory usage."
+        security:
+            title: "Untrusted User Input Safe"
+            text: "You can safely allow end users to supply custom regex search filters in Kubernetes, Envoy, and cloud microservices without risking server outage."
+        syntax:
+            title: "Standardized Named Groups"
+            text: "Uses Go standard syntax (?P<name>...) matching Python and Rust conventions."
+    faq:
+        title: "Frequently Asked Questions"
+        q1: "Why does Go RE2 reject lookahead (?=...) and lookbehind (?<=...)?"
+        a1: "Lookaround assertions require backtracking to verify conditions ahead or behind without consuming characters. To mathematically guarantee linear O(N) runtime and prevent ReDoS attacks, RE2 strictly forbids all lookaround syntax."
+        q2: "Why are backreferences forbidden in RE2?"
+        a2: "Matching regular expressions with backreferences (like \\1 or \\k<name>) is proven to be NP-complete, requiring exponential worst-case time in backtracking engines. RE2 disallows backreferences to maintain strict linear performance."
+        q3: "How does the transpiler handle atomic groups (?>...) and possessive quantifiers ++?"
+        a3: "Atomic groups and possessive quantifiers exist in PCRE to suppress backtracking. Since RE2 never backtracks by default, atomic groups are converted into non-capturing groups (?:...), and possessive quantifiers (++) are simplified to standard greedy quantifiers (+)."
+        q4: "Is regex transpilation and test matching performed securely?"
+        a4: "Yes! 100% of the transpilation, AST parsing, matrix evaluation, and live regex matching runs entirely in your browser using client-side JavaScript. No regex patterns or test strings are sent to our servers."
+
 

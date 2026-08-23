@@ -21,6 +21,7 @@ final readonly class SitemapController
             ['/caddy-transpiler', '/pl/konwerter-caddyfile'],
             ['/apple-pkpass-inspector', '/pl/inspektor-pkpass'],
             ['/cidr-subnet-matrix', '/pl/matryca-cidr'],
+            ['/regex-transpiler', '/pl/konwerter-regex'],
         ];
 
         $entries = [];

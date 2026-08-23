@@ -81,6 +81,63 @@
           "required": false
         }
       ]
+    },
+    {
+      "name": "transpile_regex_engine",
+      "description": "Transpile and analyze regular expressions across engines (PCRE, Go RE2, JavaScript, Python re, Rust regex) with compatibility checks and ReDoS safety analysis.",
+      "parameters": [
+        {
+          "name": "pattern",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "source_engine",
+          "type": "string",
+          "required": false,
+          "enum": ["pcre", "go_re2", "javascript", "python", "rust"]
+        },
+        {
+          "name": "target_engine",
+          "type": "string",
+          "required": false,
+          "enum": ["go_re2", "pcre", "javascript", "python", "rust"]
+        }
+      ]
+    },
+    {
+      "name": "generate_favicon_suite",
+      "description": "Generate modern multi-platform favicon bundle (adaptive dark-mode SVG, multi-resolution ICO, Apple Touch Icon, Android PWA icons, webmanifest) and minimal HTML tags from SVG or image input.",
+      "parameters": [
+        {
+          "name": "svg_content",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "dark_mode_strategy",
+          "type": "string",
+          "required": false,
+          "enum": ["css_invert_fill", "css_class_swap", "preserve_colors"]
+        }
+      ]
+    },
+    {
+      "name": "trace_dns_delegation",
+      "description": "Trace hierarchical DNS delegation chain (Root -> TLD -> Authoritative NS -> Global Resolvers) with DNSSEC trust chain validation and propagation consistency diagnostics.",
+      "parameters": [
+        {
+          "name": "domain",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "query_type",
+          "type": "string",
+          "required": false,
+          "enum": ["A", "AAAA", "CNAME", "TXT", "MX", "NS", "SOA", "CAA", "DS", "DNSKEY"]
+        }
+      ]
     }
   ]
 }

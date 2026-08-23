@@ -120,4 +120,24 @@ final class ToolsController extends AbstractController
     {
         return $this->redirectToRoute('cidr_matrix', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
     }
+
+    #[Route(
+        path: ['en' => '/regex-transpiler', 'pl' => '/pl/konwerter-regex'],
+        name: 'regex_transpiler',
+        methods: ['GET']
+    )]
+    public function regexTranspiler(): Response
+    {
+        return $this->render('tools/regex_transpiler.html.twig');
+    }
+
+    #[Route(
+        path: ['en' => '/tools/regex-transpiler', 'pl' => '/pl/narzedzia/konwerter-regex'],
+        name: 'legacy_regex_transpiler',
+        methods: ['GET']
+    )]
+    public function legacyRegexTranspiler(Request $request): Response
+    {
+        return $this->redirectToRoute('regex_transpiler', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
+    }
 }

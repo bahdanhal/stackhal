@@ -51,7 +51,7 @@ final class SpecificationComplianceTest extends TestCase
         self::assertFileExists($specPath);
 
         $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
-        self::assertCount(6, $spec['tools']);
+        self::assertCount(9, $spec['tools']);
 
         $names = array_column($spec['tools'], 'name');
         self::assertContains('audit_website_seo', $names);
@@ -60,6 +60,9 @@ final class SpecificationComplianceTest extends TestCase
         self::assertContains('transpile_to_caddyfile', $names);
         self::assertContains('inspect_apple_pkpass', $names);
         self::assertContains('calculate_cidr_overlap', $names);
+        self::assertContains('transpile_regex_engine', $names);
+        self::assertContains('generate_favicon_suite', $names);
+        self::assertContains('trace_dns_delegation', $names);
     }
 
     public function testCidrMatrixSpecStructure(): void
@@ -69,6 +72,46 @@ final class SpecificationComplianceTest extends TestCase
 
         $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
         self::assertNotEmpty($spec['supported_ip_versions']);
+        self::assertNotEmpty($spec['diagnostic_codes']);
+        self::assertNotEmpty($spec['presets']);
+        self::assertNotEmpty($spec['test_vectors']);
+    }
+
+    public function testRegexTranspilerSpecStructure(): void
+    {
+        $specPath = dirname(__DIR__, 2) . '/specs/regex-transpiler.spec.json';
+        self::assertFileExists($specPath);
+
+        $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
+        self::assertNotEmpty($spec['supported_engines']);
+        self::assertNotEmpty($spec['engine_metadata']);
+        self::assertNotEmpty($spec['diagnostic_codes']);
+        self::assertNotEmpty($spec['presets']);
+        self::assertNotEmpty($spec['test_vectors']);
+    }
+
+    public function testFaviconSuiteSpecStructure(): void
+    {
+        $specPath = dirname(__DIR__, 2) . '/specs/favicon-suite.spec.json';
+        self::assertFileExists($specPath);
+
+        $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
+        self::assertNotEmpty($spec['supported_input_formats']);
+        self::assertNotEmpty($spec['output_bundle_files']);
+        self::assertNotEmpty($spec['recommended_html_tags']);
+        self::assertNotEmpty($spec['diagnostic_codes']);
+        self::assertNotEmpty($spec['presets']);
+        self::assertNotEmpty($spec['test_vectors']);
+    }
+
+    public function testDnsDagTracerSpecStructure(): void
+    {
+        $specPath = dirname(__DIR__, 2) . '/specs/dns-dag-tracer.spec.json';
+        self::assertFileExists($specPath);
+
+        $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
+        self::assertNotEmpty($spec['supported_query_types']);
+        self::assertNotEmpty($spec['delegation_hierarchy']);
         self::assertNotEmpty($spec['diagnostic_codes']);
         self::assertNotEmpty($spec['presets']);
         self::assertNotEmpty($spec['test_vectors']);
@@ -224,6 +267,65 @@ final class SpecificationComplianceTest extends TestCase
                     $result->freeSubnetCidr,
                     "Free CIDR allocation mismatch for: {$vector['description']}"
                 );
+            }
+        }
+    }
+
+    public function testRegexTranspilerSpecCompliance(): void
+    {
+        $specPath = dirname(__DIR__, 2) . '/specs/regex-transpiler.spec.json';
+        self::assertFileExists($specPath);
+
+        $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
+        self::assertNotEmpty($spec['supported_engines']);
+        self::assertNotEmpty($spec['engine_metadata']);
+        self::assertNotEmpty($spec['diagnostic_codes']);
+        self::assertNotEmpty($spec['presets']);
+        self::assertNotEmpty($spec['test_vectors']);
+
+        $service = new \App\RegexTranspiler\Application\RegexTranspilerService();
+
+        foreach ($spec['test_vectors'] as $vector) {
+            $source = $vector['source_engine'];
+            $target = $vector['target_engine'];
+            $pattern = $vector['pattern'];
+
+            $result = $service->transpile($pattern, $source, $target);
+
+            self::assertSame(
+                $vector['expected_compatible'],
+                $result->isCompatible,
+                "Compatibility mismatch for: {$vector['description']}"
+            );
+
+            if (isset($vector['expected_pattern'])) {
+                self::assertSame(
+                    $vector['expected_pattern'],
+                    $result->transpiledPattern,
+                    "Pattern mismatch for: {$vector['description']}"
+                );
+            }
+
+            if (isset($vector['expected_warnings'])) {
+                $warningCodes = array_map(static fn ($d) => $d->code, $result->diagnostics);
+                foreach ($vector['expected_warnings'] as $expectedWarning) {
+                    self::assertContains(
+                        $expectedWarning,
+                        $warningCodes,
+                        "Missing expected warning {$expectedWarning} in: {$vector['description']}"
+                    );
+                }
+            }
+
+            if (isset($vector['expected_error_codes'])) {
+                $errorCodes = array_map(static fn ($d) => $d->code, $result->diagnostics);
+                foreach ($vector['expected_error_codes'] as $expectedError) {
+                    self::assertContains(
+                        $expectedError,
+                        $errorCodes,
+                        "Missing expected error {$expectedError} in: {$vector['description']}"
+                    );
+                }
             }
         }
     }
