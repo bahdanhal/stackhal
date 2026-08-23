@@ -14,38 +14,10 @@ on:
 jobs:
   test:
     name: Verification Gate
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build Docker Test Image
-        run: docker build --target test -t stackhal-test .
-
-      - name: Run PHPUnit Test Suite
-        run: docker run --rm --env-file .env.example -e APP_ENV=test stackhal-test vendor/bin/phpunit --fail-on-phpunit-notice
-
-      - name: Run JavaScript Test Suites
-        run: docker run --rm -v "$PWD:/app" -w /app node:24-alpine sh -lc 'for test in tests/js/*.test.js; do node "$test" || exit 1; done'
-
-      - name: Run PSR-12 Code Style
-        run: docker run --rm stackhal-test vendor/bin/phpcs
-
-      - name: Run PHPStan Level 8 Analysis
-        run: docker run --rm stackhal-test vendor/bin/phpstan analyse --no-progress --memory-limit=512M
-
-      - name: Lint Twig & YAML
-        run: |
-          docker run --rm stackhal-test php bin/console lint:twig templates
-          docker run --rm stackhal-test php bin/console lint:yaml translations config
-
-      - name: Composer Validate & Audit
-        run: |
-          docker run --rm stackhal-test composer validate --strict --no-check-publish
-          docker run --rm stackhal-test composer audit --locked --no-interaction
+    uses: ./.github/workflows/ci.yml
 
   deploy:
-    name: Deploy to Server
+    name: Deploy to Production
     needs: test
     runs-on: ubuntu-latest
     environment: production
@@ -53,7 +25,7 @@ jobs:
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_USER: ${{ secrets.SSH_USER }}
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install SSH Key
@@ -78,7 +50,7 @@ jobs:
             --exclude='vendor/' \
             ./ "$SSH_USER@$SSH_HOST:/home/apps/stackhal/"
 
-      - name: Rebuild & Restart StackHal Container
+      - name: Rebuild & Restart Container
         run: |
           ssh "$SSH_USER@$SSH_HOST" \
             'cd /home/apps/infra && docker compose -f docker-compose.prod.yml --env-file production.env up -d --build --no-deps stackhal-app'
