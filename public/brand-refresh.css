@@ -1,0 +1,524 @@
+:root {
+  color-scheme: dark;
+  --ink: #f1f3ff;
+  --paper: #090a0f;
+  --panel: #12141c;
+  --muted: #989cac;
+  --line: #292c38;
+  --orange: #b8ff5a;
+  --blue: #78a7ff;
+  --green: #7bf0c3;
+  --red: #ff8296;
+  --amber: #ffcc66;
+}
+
+html {
+  background: #090a0f;
+}
+
+body.stackhal-site {
+  background:
+    radial-gradient(circle at 88% 7%, rgba(120, 83, 255, .19), transparent 31rem),
+    radial-gradient(circle at 7% 25%, rgba(49, 197, 174, .11), transparent 27rem),
+    linear-gradient(rgba(255, 255, 255, .026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .026) 1px, transparent 1px),
+    #090a0f;
+  background-attachment: fixed;
+  background-size: auto, auto, 40px 40px, 40px 40px, auto;
+  color: var(--ink);
+  font-family: Inter, "SF Pro Display", "Segoe UI", sans-serif;
+}
+
+.stackhal-site ::selection {
+  background: #b8ff5a;
+  color: #0a0b0f;
+}
+
+.stackhal-site .site-header {
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, #b8ff5a, #78a7ff, #c985ff) 1;
+}
+
+.stackhal-site .topbar {
+  min-height: 72px;
+  padding-block: 12px;
+  border-bottom-color: rgba(255, 255, 255, .09);
+  background: rgba(9, 10, 15, .78);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, .28);
+  backdrop-filter: blur(20px);
+}
+
+.stackhal-site .brand {
+  gap: 12px;
+  font-size: 17px;
+  letter-spacing: -.035em;
+}
+
+.stackhal-site .brand-mark {
+  position: relative;
+  width: 39px;
+  height: 39px;
+  border: 1px solid #b8ff5a;
+  border-radius: 50%;
+  background: #11140f;
+  box-shadow: 0 0 24px rgba(184, 255, 90, .16);
+  color: #b8ff5a;
+  font-size: 10px;
+}
+
+.stackhal-site .brand-mark::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  bottom: 2px;
+  width: 7px;
+  height: 7px;
+  border: 2px solid #090a0f;
+  border-radius: 50%;
+  background: #b8ff5a;
+}
+
+.stackhal-site .brand-signal {
+  color: #7e8291;
+  font-size: 9px;
+  letter-spacing: .12em;
+}
+
+.stackhal-site .primary-nav a,
+.stackhal-site .tool-menu a,
+.stackhal-site .tool-menu summary,
+.stackhal-site .language-switch,
+.stackhal-site .ecosystem-link {
+  color: #d4d7e4;
+  font-weight: 650;
+}
+
+.stackhal-site .primary-nav a:hover,
+.stackhal-site .tool-menu a:hover,
+.stackhal-site .ecosystem-link:hover {
+  color: #b8ff5a;
+}
+
+.stackhal-site .tool-menu summary,
+.stackhal-site .language-switch {
+  border-color: #343744;
+  background: rgba(20, 22, 30, .78);
+}
+
+.stackhal-site .tool-menu-panel {
+  border-color: #393c49;
+  background: rgba(14, 15, 21, .98);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, .5);
+}
+
+.stackhal-site .tool-context-bar {
+  border-bottom-color: #262936;
+  background: rgba(13, 14, 20, .96);
+}
+
+.stackhal-site .hero,
+.stackhal-site .report-shell,
+.stackhal-site .tool-page-shell {
+  max-width: 1180px;
+}
+
+.stackhal-site .toolbox-hero {
+  position: relative;
+  min-height: 690px;
+  padding-top: 92px;
+}
+
+.stackhal-site .toolbox-hero::before {
+  content: "STACK / HAL";
+  position: absolute;
+  top: 40px;
+  right: 22px;
+  color: rgba(255, 255, 255, .035);
+  font-size: clamp(70px, 11vw, 156px);
+  font-weight: 900;
+  line-height: .8;
+  letter-spacing: -.09em;
+  pointer-events: none;
+}
+
+.stackhal-site .toolbox-hero > .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  color: #b8ff5a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+}
+
+.stackhal-site .toolbox-hero > .eyebrow::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: #b8ff5a;
+  box-shadow: 0 0 10px #b8ff5a;
+}
+
+.stackhal-site .toolbox-hero > h1 {
+  position: relative;
+  z-index: 1;
+  max-width: 790px;
+  font-size: clamp(56px, 7.7vw, 102px);
+  font-weight: 720;
+  line-height: .91;
+  letter-spacing: -.075em;
+  text-wrap: balance;
+}
+
+.stackhal-site .toolbox-hero > .lede {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+  margin-top: 32px;
+  color: #a7aab7;
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.toolbox-orbit {
+  position: absolute;
+  top: 115px;
+  right: 20px;
+  width: 340px;
+  height: 340px;
+  border: 1px solid rgba(137, 120, 255, .28);
+  border-radius: 50%;
+  box-shadow: inset 0 0 70px rgba(100, 77, 238, .06), 0 0 90px rgba(100, 77, 238, .09);
+}
+
+.toolbox-orbit::before,
+.toolbox-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.toolbox-orbit::before {
+  width: 225px;
+  height: 225px;
+  border: 1px dashed rgba(184, 255, 90, .24);
+}
+
+.toolbox-orbit::after {
+  width: 115px;
+  height: 115px;
+  border: 1px solid rgba(120, 167, 255, .32);
+  background: radial-gradient(circle, rgba(120, 167, 255, .15), transparent 65%);
+}
+
+.toolbox-orbit strong {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  color: #f3f5ff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 20px;
+  letter-spacing: -.08em;
+  transform: translate(-50%, -50%);
+}
+
+.toolbox-orbit span {
+  position: absolute;
+  padding: 5px 8px;
+  border: 1px solid #343744;
+  border-radius: 2px;
+  background: #11131a;
+  color: #9ea2b1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 9px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .34);
+}
+
+.toolbox-orbit span:nth-child(1) { top: 15px; left: 138px; }
+.toolbox-orbit span:nth-child(2) { top: 88px; right: -16px; }
+.toolbox-orbit span:nth-child(3) { right: 18px; bottom: 58px; }
+.toolbox-orbit span:nth-child(4) { bottom: 5px; left: 105px; }
+.toolbox-orbit span:nth-child(5) { top: 120px; left: -24px; }
+
+.stackhal-site .toolbox-status {
+  position: relative;
+  z-index: 1;
+  gap: 0;
+  margin-top: 36px;
+}
+
+.stackhal-site .toolbox-status li {
+  padding: 8px 14px;
+  border-color: #30333f;
+  border-right: 0;
+  border-radius: 0;
+  background: rgba(16, 18, 25, .68);
+  color: #8f93a1;
+  letter-spacing: .06em;
+}
+
+.stackhal-site .toolbox-status li:first-child {
+  border-radius: 3px 0 0 3px;
+}
+
+.stackhal-site .toolbox-status li:last-child {
+  border-right: 1px solid #30333f;
+  border-radius: 0 3px 3px 0;
+}
+
+.stackhal-site .tool-catalog {
+  position: relative;
+  z-index: 2;
+  gap: 58px;
+  margin-top: 100px;
+}
+
+.stackhal-site .tool-category-header {
+  margin-bottom: 17px;
+}
+
+.stackhal-site .tool-category-header h2 {
+  color: #8d91a1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 9px;
+  letter-spacing: .17em;
+}
+
+.stackhal-site .tool-category-header::after {
+  background: linear-gradient(90deg, #343744, transparent);
+}
+
+.stackhal-site .tool-grid {
+  gap: 12px;
+}
+
+.stackhal-site .tool-card {
+  position: relative;
+  isolation: isolate;
+  min-height: 285px;
+  padding: 30px;
+  overflow: hidden;
+  border: 1px solid #2b2e39;
+  border-radius: 4px;
+  background: linear-gradient(145deg, rgba(22, 24, 33, .96), rgba(14, 16, 23, .96));
+  box-shadow: 0 18px 55px rgba(0, 0, 0, .25);
+  transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+}
+
+.stackhal-site .tool-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -85px;
+  right: -70px;
+  width: 220px;
+  height: 220px;
+  border: 1px solid rgba(120, 167, 255, .13);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(120, 167, 255, .12), transparent 67%);
+  transition: transform 350ms ease, opacity 350ms ease;
+}
+
+.stackhal-site .tool-card:nth-child(even)::before {
+  border-color: rgba(184, 255, 90, .12);
+  background: radial-gradient(circle, rgba(184, 255, 90, .09), transparent 67%);
+}
+
+.stackhal-site .tool-card::after {
+  content: "↗";
+  position: absolute;
+  top: 25px;
+  right: 27px;
+  color: #5e6270;
+  font-size: 20px;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.stackhal-site .tool-card:hover {
+  border-color: #727788;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .38), 0 0 40px rgba(120, 167, 255, .05);
+  transform: translateY(-5px);
+}
+
+.stackhal-site .tool-card:hover::before {
+  transform: scale(1.18);
+}
+
+.stackhal-site .tool-card:hover::after {
+  color: #b8ff5a;
+  transform: translate(2px, -2px);
+}
+
+.stackhal-site .tool-number {
+  color: #b8ff5a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+}
+
+.stackhal-site .tool-card h3 {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+  margin: 56px 0 12px;
+  font-size: clamp(25px, 3vw, 34px);
+  font-weight: 650;
+  letter-spacing: -.045em;
+}
+
+.stackhal-site .tool-card p {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  color: #9da1af;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.stackhal-site .tool-card strong {
+  color: #d8dbe7;
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+
+.stackhal-site .tool-card-wide {
+  min-height: 260px;
+  background:
+    linear-gradient(100deg, rgba(20, 22, 30, .98), rgba(23, 20, 38, .94)),
+    #151720;
+}
+
+.stackhal-site .tool-card-wide::before {
+  top: -180px;
+  right: 5%;
+  width: 470px;
+  height: 470px;
+  border-color: rgba(201, 133, 255, .16);
+  background: radial-gradient(circle, rgba(201, 133, 255, .13), transparent 64%);
+}
+
+.stackhal-site .toolbox-principles {
+  gap: 0;
+  margin-top: 110px;
+  border-block: 1px solid #2b2e39;
+}
+
+.stackhal-site .toolbox-principles > div {
+  min-height: 210px;
+  padding: 28px;
+  border-top: 0;
+  border-right: 1px solid #2b2e39;
+}
+
+.stackhal-site .toolbox-principles > div:last-child {
+  border-right: 0;
+}
+
+.stackhal-site .toolbox-principles b {
+  color: #b8ff5a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.stackhal-site .toolbox-principles h2 {
+  margin-top: 40px;
+  font-size: 19px;
+  font-weight: 650;
+}
+
+.stackhal-site .toolbox-principles p {
+  color: #969aa8;
+}
+
+.stackhal-site .ui-panel,
+.stackhal-site .audit-form,
+.stackhal-site .content-card,
+.stackhal-site .code-card,
+.stackhal-site .table-wrap,
+.stackhal-site .metrics,
+.stackhal-site .help-dialog,
+.stackhal-site .geo-check,
+.stackhal-site .crawler-grid > div {
+  border-color: #2b2e39;
+  border-radius: 4px;
+  background: rgba(17, 19, 27, .94);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .28);
+}
+
+.stackhal-site .ui-button,
+.stackhal-site button,
+.stackhal-site input,
+.stackhal-site select,
+.stackhal-site textarea {
+  border-radius: 3px;
+}
+
+.stackhal-site .ui-button-primary,
+.stackhal-site .audit-form button,
+.stackhal-site .lead-row button {
+  background: #b8ff5a;
+  color: #0b0d0a;
+}
+
+.stackhal-site .tool-page-intro h1,
+.stackhal-site .tool-intro h1,
+.stackhal-site .report-head h1,
+.stackhal-site .geo-home h1 {
+  font-family: Inter, "SF Pro Display", "Segoe UI", sans-serif;
+  font-weight: 680;
+  letter-spacing: -.055em;
+}
+
+.stackhal-site footer {
+  margin-top: 55px;
+  border-top: 1px solid #252832;
+  background: rgba(8, 9, 13, .78);
+  color: #7f8390;
+}
+
+@media (max-width: 980px) {
+  .toolbox-orbit {
+    width: 280px;
+    height: 280px;
+    opacity: .55;
+  }
+
+  .toolbox-orbit::before { width: 185px; height: 185px; }
+  .toolbox-orbit::after { width: 95px; height: 95px; }
+}
+
+@media (max-width: 800px) {
+  .stackhal-site .toolbox-hero {
+    min-height: 0;
+    padding-top: 58px;
+  }
+
+  .stackhal-site .toolbox-hero::before {
+    top: 28px;
+    right: 12px;
+    font-size: 80px;
+  }
+
+  .toolbox-orbit {
+    display: none;
+  }
+
+  .stackhal-site .toolbox-hero > h1 {
+    font-size: clamp(50px, 14.5vw, 72px);
+  }
+
+  .stackhal-site .tool-catalog {
+    margin-top: 72px;
+  }
+
+  .stackhal-site .toolbox-principles > div {
+    border-right: 0;
+    border-bottom: 1px solid #2b2e39;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; }
+}
