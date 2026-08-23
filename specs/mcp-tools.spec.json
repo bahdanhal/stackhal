@@ -138,6 +138,43 @@
           "enum": ["A", "AAAA", "CNAME", "TXT", "MX", "NS", "SOA", "CAA", "DS", "DNSKEY"]
         }
       ]
+    },
+    {
+      "name": "validate_app_links",
+      "description": "Inspect and validate Apple App Site Association (apple-app-site-association) and Android Digital Asset Links (assetlinks.json) files, HTTPS hosting rules, and test URL path routing.",
+      "parameters": [
+        {
+          "name": "domain",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "test_url",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "diagnose_cors_policy",
+      "description": "Analyze CORS HTTP request and response headers for wildcard/credential security violations, missing Vary: Origin, preflight OPTIONS handling, and header exposure.",
+      "parameters": [
+        {
+          "name": "request_origin",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "response_headers",
+          "type": "array",
+          "required": true
+        },
+        {
+          "name": "with_credentials",
+          "type": "boolean",
+          "required": false
+        }
+      ]
     }
   ]
 }

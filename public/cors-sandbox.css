@@ -1,0 +1,55 @@
+/* CORS & Preflight Sandbox Styles */
+.cors-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.banner-error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+}
+
+.banner-error .banner-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: #ef4444;
+  color: #0f172a;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.cors-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .cors-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ceiling-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.ceiling-table th, .ceiling-table td {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #334155;
+  text-align: left;
+}
+
+.ceiling-table th {
+  background: #1e293b;
+  color: #94a3b8;
+}

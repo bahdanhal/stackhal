@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'app_links.meta.title'|trans }}{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}<meta name="description" content="{{ 'app_links.meta.description'|trans }}">{% endblock %}
+{% block canonical %}
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/weryfikator-app-links' : 'https://stackhal.com/app-links-validator' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/app-links-validator">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/weryfikator-app-links">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/app-links-validator">
+{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/tools.css">
+  <link rel="stylesheet" href="/app-links.css">
+{% endblock %}
+{% block language_switch %}
+  <a class="language-switch" href="{{ path('app_links_validator', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
+{% endblock %}
+{% block tool_name %}{{ 'app_links.heading'|trans }}{% endblock %}
+
+{% block body %}
+<section class="tool-page-shell app-links-shell">
+  {% include 'tools/_tool_intro.html.twig' with {
+    eyebrow: 'app_links.eyebrow'|trans,
+    heading: 'app_links.heading'|trans,
+    lede: 'app_links.lede'|trans
+  } only %}
+
+  <div class="transpiler-container" id="app-links-app" data-locale="{{ app.request.locale }}">
+    <!-- Presets Toolbar -->
+    <div class="transpiler-toolbar ui-panel">
+      <div class="preset-group">
+        <span class="preset-label">{{ 'app_links.presets_label'|trans }}:</span>
+        {% for preset in presets %}
+          <button
+            type="button"
+            class="btn-preset"
+            data-preset="{{ preset.id }}"
+            data-aasa="{{ preset.aasa_content is defined ? preset.aasa_content|json_encode : '' }}"
+            data-test-url="{{ preset.test_url }}"
+          >
+            {{ preset.name }}
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Test URL Simulator Input -->
+    <div class="ui-panel" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+      <form method="post" action="{{ path('app_links_validator', {_locale: app.request.locale}) }}" id="app-links-form">
+        <div style="display: grid; grid-template-columns: 3fr auto; gap: 1rem; align-items: flex-end;">
+          <div>
+            <label for="test-url-input" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              {{ 'app_links.test_url_label'|trans }}
+            </label>
+            <input
+              type="text"
+              name="test_url"
+              id="test-url-input"
+              value="{{ test_url }}"
+              placeholder="https://example.com/products/wireless-headphones"
+              style="width: 100%; padding: 0.65rem; background: var(--bg-surface, #1e293b); color: inherit; border: 1px solid var(--border-color, #334155); border-radius: 4px; font-family: monospace;"
+            >
+          </div>
+          <div>
+            <button
+              type="submit"
+              id="btn-validate-app-links"
+              class="btn-submit"
+              style="padding: 0.65rem 1.5rem; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;"
+            >
+              {{ 'app_links.test_btn'|trans }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Manifests Editor Grid -->
+        <div class="manifest-grid" style="margin-top: 1.5rem;">
+          <div>
+            <label for="aasa-editor" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              {{ 'app_links.aasa_label'|trans }}
+            </label>
+            <textarea
+              name="aasa_content"
+              id="aasa-editor"
+              class="code-editor-area"
+              placeholder="Apple apple-app-site-association JSON..."
+            >{{ raw_aasa }}</textarea>
+          </div>
+
+          <div>
+            <label for="assetlinks-editor" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              {{ 'app_links.assetlinks_label'|trans }}
+            </label>
+            <textarea
+              name="assetlinks_content"
+              id="assetlinks-editor"
+              class="code-editor-area"
+              placeholder="Android assetlinks.json JSON..."
+            >{{ raw_assetlinks }}</textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Live Decision Banner -->
+    <div
+      id="routing-decision-banner"
+      class="routing-banner {% if result.opensInApp is same as(true) %}banner-app{% elseif result.opensInApp is same as(false) %}banner-web{% endif %}"
+    >
+      {% if result.opensInApp is same as(true) %}
+        <div class="banner-badge">{{ 'app_links.badge_app'|trans }}</div>
+        <div class="banner-title">{{ 'app_links.matched_app_title'|trans }}</div>
+        <div class="banner-desc">{{ 'app_links.matched_pattern'|trans }}: <code>{{ result.matchedPattern }}</code></div>
+      {% elseif result.opensInApp is same as(false) %}
+        <div class="banner-badge">{{ 'app_links.badge_web'|trans }}</div>
+        <div class="banner-title">{{ 'app_links.matched_web_title'|trans }}</div>
+        <div class="banner-desc">
+          {% if result.matchedExclusion %}
+            {{ 'app_links.excluded_by_rule'|trans }}: <code>{{ result.matchedPattern }}</code>
+          {% else %}
+            {{ 'app_links.fallback_browser'|trans }}
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="banner-title">{{ 'app_links.enter_url_prompt'|trans }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Diagnostics Panel -->
+    <div class="ui-panel" style="padding: 1.5rem;">
+      <h3 style="margin-top: 0; margin-bottom: 1rem;">{{ 'app_links.diagnostics_title'|trans }}</h3>
+      <div id="app-links-diagnostics">
+        {% if result.diagnostics is empty %}
+          <div class="diag-item diag-success">{{ 'app_links.all_passed'|trans }}</div>
+        {% else %}
+          {% for diag in result.diagnostics %}
+            <div class="diag-item diag-{{ diag.severity }}">
+              <strong>{{ diag.title }}</strong>
+              <p>{{ diag.description }}</p>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="/app-links.js"></script>
+{% endblock %}

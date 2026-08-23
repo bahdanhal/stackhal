@@ -51,7 +51,7 @@ final class SpecificationComplianceTest extends TestCase
         self::assertFileExists($specPath);
 
         $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
-        self::assertCount(9, $spec['tools']);
+        self::assertCount(11, $spec['tools']);
 
         $names = array_column($spec['tools'], 'name');
         self::assertContains('audit_website_seo', $names);
@@ -63,6 +63,142 @@ final class SpecificationComplianceTest extends TestCase
         self::assertContains('transpile_regex_engine', $names);
         self::assertContains('generate_favicon_suite', $names);
         self::assertContains('trace_dns_delegation', $names);
+        self::assertContains('validate_app_links', $names);
+        self::assertContains('diagnose_cors_policy', $names);
+    }
+
+    public function testAppLinksSpecStructure(): void
+    {
+        $specPath = dirname(__DIR__, 2) . '/specs/app-links.spec.json';
+        self::assertFileExists($specPath);
+
+        $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
+        self::assertNotEmpty($spec['apple_aasa']);
+        self::assertNotEmpty($spec['android_assetlinks']);
+        self::assertNotEmpty($spec['diagnostic_codes']);
+        self::assertNotEmpty($spec['presets']);
+        self::assertNotEmpty($spec['test_vectors']);
+    }
+
+    public function testAppLinksSpecCompliance(): void
+    {
+        $specPath = dirname(__DIR__, 2) . '/specs/app-links.spec.json';
+        self::assertFileExists($specPath);
+
+        $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
+        $validator = new \App\AppLinks\Domain\Engine\AppLinksValidator();
+
+        foreach ($spec['test_vectors'] as $vector) {
+            $result = $validator->validate(
+                aasa: $vector['manifest'] ?? [],
+                testUrl: $vector['test_url'] ?? null
+            );
+
+            if (isset($vector['expected_valid'])) {
+                self::assertSame(
+                    $vector['expected_valid'],
+                    $result->isValid,
+                    "Valid match failed for vector: {$vector['description']}"
+                );
+            }
+
+            if (isset($vector['expected_opens_in_app'])) {
+                self::assertSame(
+                    $vector['expected_opens_in_app'],
+                    $result->opensInApp,
+                    "opensInApp mismatch for: {$vector['description']}"
+                );
+            }
+
+            if (isset($vector['expected_matched_pattern'])) {
+                self::assertSame(
+                    $vector['expected_matched_pattern'],
+                    $result->matchedPattern,
+                    "matchedPattern mismatch for: {$vector['description']}"
+                );
+            }
+
+            if (isset($vector['expected_matched_exclusion'])) {
+                self::assertSame(
+                    $vector['expected_matched_exclusion'],
+                    $result->matchedExclusion,
+                    "matchedExclusion mismatch for: {$vector['description']}"
+                );
+            }
+
+            if (isset($vector['expected_error_codes'])) {
+                foreach ($vector['expected_error_codes'] as $expectedCode) {
+                    self::assertContains(
+                        $expectedCode,
+                        $result->getErrorCodes(),
+                        "Missing error code {$expectedCode} in: {$vector['description']}"
+                    );
+                }
+            }
+        }
+    }
+
+    public function testCorsSandboxSpecStructure(): void
+    {
+        $specPath = dirname(__DIR__, 2) . '/specs/cors-sandbox.spec.json';
+        self::assertFileExists($specPath);
+
+        $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
+        self::assertNotEmpty($spec['inspected_request_headers']);
+        self::assertNotEmpty($spec['inspected_response_headers']);
+        self::assertNotEmpty($spec['diagnostic_codes']);
+        self::assertNotEmpty($spec['presets']);
+        self::assertNotEmpty($spec['test_vectors']);
+    }
+
+    public function testCorsSandboxSpecCompliance(): void
+    {
+        $specPath = dirname(__DIR__, 2) . '/specs/cors-sandbox.spec.json';
+        self::assertFileExists($specPath);
+
+        $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
+        $analyzer = new \App\Cors\Domain\Engine\CorsAnalyzer();
+
+        foreach ($spec['test_vectors'] as $vector) {
+            $req = $vector['request'];
+            $res = $vector['response'];
+
+            $result = $analyzer->analyze(
+                requestOrigin: $req['origin'] ?? '',
+                responseHeaders: $res,
+                withCredentials: $req['with_credentials'] ?? false,
+                requestMethod: $req['method'] ?? null,
+                requestHeaders: $req['headers'] ?? [],
+            );
+
+            if (isset($vector['expected_valid'])) {
+                self::assertSame(
+                    $vector['expected_valid'],
+                    $result->isValid,
+                    "Valid match failed for vector: {$vector['description']}"
+                );
+            }
+
+            if (isset($vector['expected_error_codes'])) {
+                foreach ($vector['expected_error_codes'] as $expectedCode) {
+                    self::assertContains(
+                        $expectedCode,
+                        $result->getErrorCodes(),
+                        "Missing error code {$expectedCode} in: {$vector['description']}"
+                    );
+                }
+            }
+
+            if (isset($vector['expected_warning_codes'])) {
+                foreach ($vector['expected_warning_codes'] as $expectedWarning) {
+                    self::assertContains(
+                        $expectedWarning,
+                        $result->getWarningCodes(),
+                        "Missing warning code {$expectedWarning} in: {$vector['description']}"
+                    );
+                }
+            }
+        }
     }
 
     public function testCidrMatrixSpecStructure(): void

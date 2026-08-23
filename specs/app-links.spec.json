@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Apple Universal Links (AASA) & Android App Links Specification",
+  "description": "Formal contract definition for validating Apple App Site Association (AASA) and Android Digital Asset Links (assetlinks.json) files, HTTPS hosting requirements, and URL path component pattern matching.",
+  "version": "1.0.0",
+  "apple_aasa": {
+    "standard_paths": [
+      "/.well-known/apple-app-site-association",
+      "/apple-app-site-association"
+    ],
+    "max_file_size_bytes": 131072,
+    "required_content_types": [
+      "application/json",
+      "application/pkcs7-mime"
+    ],
+    "disallowed_http_statuses": [
+      301,
+      302,
+      307,
+      308
+    ],
+    "app_id_format_regex": "^[A-Z0-9]{10}\\.[a-zA-Z0-9_.-]+$"
+  },
+  "android_assetlinks": {
+    "standard_path": "/.well-known/assetlinks.json",
+    "required_relation": "delegate_permission/common.handle_all_urls",
+    "target_namespace": "android_app",
+    "sha256_fingerprint_regex": "^([0-9A-F]{2}:){31}[0-9A-F]{2}$"
+  },
+  "diagnostic_codes": {
+    "ERR_AASA_NOT_FOUND": {
+      "severity": "error",
+      "title": "Apple AASA File Unreachable",
+      "description": "The apple-app-site-association file is missing or returns a non-200 HTTP status code."
+    },
+    "ERR_AASA_REDIRECT_FORBIDDEN": {
+      "severity": "error",
+      "title": "HTTP Redirect Forbidden on AASA",
+      "description": "Apple CDN and iOS strictly forbid HTTP 301/302 redirects when fetching AASA files."
+    },
+    "ERR_AASA_INVALID_JSON": {
+      "severity": "error",
+      "title": "Malformed AASA JSON",
+      "description": "The apple-app-site-association file is not valid JSON."
+    },
+    "ERR_AASA_INVALID_APP_ID": {
+      "severity": "error",
+      "title": "Invalid Apple App ID Format",
+      "description": "AppID must consist of a 10-character Team ID followed by a dot and Bundle Identifier (e.g. ABCDE12345.com.example.app)."
+    },
+    "ERR_AASA_SIZE_EXCEEDED": {
+      "severity": "error",
+      "title": "AASA Exceeds Maximum Size Limit",
+      "description": "File exceeds Apple's 128KB limit for uncompressed AASA manifests."
+    },
+    "ERR_ASSETLINKS_NOT_FOUND": {
+      "severity": "error",
+      "title": "Android AssetLinks File Missing",
+      "description": "The /.well-known/assetlinks.json file is unreachable or returns a non-200 HTTP status."
+    },
+    "ERR_ASSETLINKS_MISSING_RELATION": {
+      "severity": "error",
+      "title": "Missing Required AssetLinks Relation",
+      "description": "Android App Links require 'delegate_permission/common.handle_all_urls' in the relation array."
+    },
+    "ERR_ASSETLINKS_INVALID_FINGERPRINT": {
+      "severity": "error",
+      "title": "Invalid SHA-256 Fingerprint Format",
+      "description": "Android certificate fingerprints must be 32 colon-separated two-digit uppercase hex values."
+    },
+    "WARN_LEGACY_AASA_PATHS": {
+      "severity": "warning",
+      "title": "Legacy Paths Array Used",
+      "description": "Using legacy 'paths' array instead of modern iOS 13+ 'components' dictionary with pattern matching."
+    },
+    "WARN_CONTENT_TYPE_MISMATCH": {
+      "severity": "warning",
+      "title": "Non-Standard Content-Type",
+      "description": "Server returned text/plain or text/html instead of application/json."
+    },
+    "INFO_ROUTE_MATCHED_APP": {
+      "severity": "info",
+      "title": "URL Successfully Routes to Native App",
+      "description": "The queried URL matches universal link pattern rules and will open inside the native application."
+    },
+    "INFO_ROUTE_FALLS_BACK_WEB": {
+      "severity": "info",
+      "title": "URL Opens in Safari / Browser Fallback",
+      "description": "The queried URL does not match app route patterns or is explicitly excluded."
+    }
+  },
+  "presets": [
+    {
+      "id": "ecommerce_app_routing",
+      "name": "E-Commerce App (Product & Category in App, Checkout in Web)",
+      "aasa_content": {
+        "applinks": {
+          "apps": [],
+          "details": [
+            {
+              "appIDs": ["ABCDE12345.com.example.store"],
+              "components": [
+                {"/": "/products/*", "comment": "Open product pages in app"},
+                {"/": "/categories/*", "comment": "Open category listings in app"},
+                {"/": "/checkout/*", "exclude": true, "comment": "Keep checkout web-based for security"},
+                {"/": "/login*", "exclude": true, "comment": "Keep OAuth and login in browser"}
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "android_verified_package",
+      "name": "Android Digital Asset Links Verified Package",
+      "assetlinks_content": [
+        {
+          "relation": ["delegate_permission/common.handle_all_urls"],
+          "target": {
+            "namespace": "android_app",
+            "package_name": "com.example.store",
+            "sha256_cert_fingerprints": [
+              "14:6D:E9:DE:0F:45:79:F6:10:5A:12:60:2B:93:FC:7F:16:17:D6:31:02:61:00:EC:4F:60:9E:78:21:C6:0F:C0"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "test_vectors": [
+    {
+      "description": "Valid Modern AASA route matching product URL",
+      "manifest": {
+        "applinks": {
+          "details": [
+            {
+              "appIDs": ["ABCDE12345.com.example.app"],
+              "components": [
+                {"/": "/product/*"},
+                {"/": "/checkout/*", "exclude": true}
+              ]
+            }
+          ]
+        }
+      },
+      "test_url": "https://example.com/product/iphone-16-pro",
+      "expected_opens_in_app": true,
+      "expected_matched_pattern": "/product/*"
+    },
+    {
+      "description": "Valid Modern AASA route excluding checkout URL",
+      "manifest": {
+        "applinks": {
+          "details": [
+            {
+              "appIDs": ["ABCDE12345.com.example.app"],
+              "components": [
+                {"/": "/product/*"},
+                {"/": "/checkout/*", "exclude": true}
+              ]
+            }
+          ]
+        }
+      },
+      "test_url": "https://example.com/checkout/step1",
+      "expected_opens_in_app": false,
+      "expected_matched_exclusion": true
+    },
+    {
+      "description": "Invalid App ID format detection",
+      "manifest": {
+        "applinks": {
+          "details": [
+            {
+              "appIDs": ["invalid-app-id"],
+              "components": [{"/": "/*"}]
+            }
+          ]
+        }
+      },
+      "expected_valid": false,
+      "expected_error_codes": [
+        "ERR_AASA_INVALID_APP_ID"
+      ]
+    }
+  ]
+}

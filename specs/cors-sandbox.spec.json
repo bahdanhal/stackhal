@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cross-Origin Resource Sharing (CORS) & Preflight Diagnostic Specification",
+  "description": "Formal specification for analyzing and validating CORS headers, preflight OPTIONS requests, credential permissions, wildcard combinations, and cache poisoning prevention according to the W3C Fetch Standard.",
+  "version": "1.0.0",
+  "inspected_request_headers": [
+    "Origin",
+    "Access-Control-Request-Method",
+    "Access-Control-Request-Headers"
+  ],
+  "inspected_response_headers": [
+    "Access-Control-Allow-Origin",
+    "Access-Control-Allow-Methods",
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Credentials",
+    "Access-Control-Expose-Headers",
+    "Access-Control-Max-Age",
+    "Vary"
+  ],
+  "browser_max_age_ceilings": {
+    "chromium": 7200,
+    "firefox": 86400,
+    "safari": 600
+  },
+  "diagnostic_codes": {
+    "ERR_CORS_WILDCARD_WITH_CREDENTIALS": {
+      "severity": "error",
+      "title": "Wildcard Origin Forbidden with Credentials",
+      "description": "The response specifies 'Access-Control-Allow-Origin: *' while 'Access-Control-Allow-Credentials' is set to 'true'. Browsers reject this configuration for security reasons."
+    },
+    "ERR_CORS_ORIGIN_MISMATCH": {
+      "severity": "error",
+      "title": "Origin Mismatch",
+      "description": "The 'Access-Control-Allow-Origin' header value does not match the request 'Origin'."
+    },
+    "ERR_CORS_MISSING_ALLOW_ORIGIN": {
+      "severity": "error",
+      "title": "Missing Access-Control-Allow-Origin",
+      "description": "The server responded to a cross-origin request without an 'Access-Control-Allow-Origin' header."
+    },
+    "ERR_CORS_METHOD_DISALLOWED": {
+      "severity": "error",
+      "title": "HTTP Method Disallowed by CORS",
+      "description": "The requested HTTP method is not permitted in 'Access-Control-Allow-Methods'."
+    },
+    "ERR_CORS_HEADER_DISALLOWED": {
+      "severity": "error",
+      "title": "Header Not Allowed by CORS",
+      "description": "One or more custom request headers are not included in 'Access-Control-Allow-Headers'."
+    },
+    "WARN_CORS_MISSING_VARY_ORIGIN": {
+      "severity": "warning",
+      "title": "Missing 'Vary: Origin' Header",
+      "description": "When dynamically reflecting request Origin, omitting 'Vary: Origin' causes cache poisoning across CDNs and browser caches."
+    },
+    "WARN_CORS_EXCESSIVE_MAX_AGE": {
+      "severity": "warning",
+      "title": "Access-Control-Max-Age Exceeds Browser Ceiling",
+      "description": "Max-Age exceeds browser maximum limits (Chromium caps at 2 hours / 7200s, Safari at 10 minutes / 600s)."
+    },
+    "WARN_CORS_UNEXPOSED_CUSTOM_HEADERS": {
+      "severity": "warning",
+      "title": "Custom Response Headers Not Exposed",
+      "description": "Custom response headers are present on the response but not declared in 'Access-Control-Expose-Headers', preventing frontend JavaScript from reading them."
+    },
+    "INFO_CORS_PREFLIGHT_OK": {
+      "severity": "info",
+      "title": "Preflight OPTIONS Succeeded",
+      "description": "Preflight handshake conforms to W3C Fetch specification."
+    }
+  },
+  "presets": [
+    {
+      "id": "authenticated_api_credentials",
+      "name": "Authenticated Cookie/Session API",
+      "request": {
+        "origin": "https://app.example.com",
+        "method": "POST",
+        "with_credentials": true
+      },
+      "expected_response_headers": {
+        "Access-Control-Allow-Origin": "https://app.example.com",
+        "Access-Control-Allow-Credentials": "true",
+        "Vary": "Origin"
+      },
+      "description": "Frontend SPA communicating with backend API using cookies or session tokens."
+    },
+    {
+      "id": "public_static_assets_cdn",
+      "name": "Public Static Web Fonts / Assets CDN",
+      "request": {
+        "origin": "https://example.org",
+        "method": "GET",
+        "with_credentials": false
+      },
+      "expected_response_headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS"
+      },
+      "description": "Public CDN assets (fonts, images, WebAssembly) accessible from any origin without credentials."
+    }
+  ],
+  "test_vectors": [
+    {
+      "description": "Reject wildcard origin when credentials are requested",
+      "request": {
+        "origin": "https://app.example.com",
+        "with_credentials": true
+      },
+      "response": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "true"
+      },
+      "expected_valid": false,
+      "expected_error_codes": [
+        "ERR_CORS_WILDCARD_WITH_CREDENTIALS"
+      ]
+    },
+    {
+      "description": "Warn when dynamically echoing origin without Vary: Origin",
+      "request": {
+        "origin": "https://app.example.com",
+        "with_credentials": true
+      },
+      "response": {
+        "Access-Control-Allow-Origin": "https://app.example.com",
+        "Access-Control-Allow-Credentials": "true"
+      },
+      "expected_valid": true,
+      "expected_warning_codes": [
+        "WARN_CORS_MISSING_VARY_ORIGIN"
+      ]
+    },
+    {
+      "description": "Clean valid CORS preflight response",
+      "request": {
+        "origin": "https://app.example.com",
+        "method": "DELETE",
+        "headers": ["X-Custom-Auth"]
+      },
+      "response": {
+        "Access-Control-Allow-Origin": "https://app.example.com",
+        "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Custom-Auth, Content-Type",
+        "Vary": "Origin"
+      },
+      "expected_valid": true,
+      "expected_error_codes": []
+    }
+  ]
+}

@@ -203,4 +203,103 @@ final class ToolsController extends AbstractController
     {
         return $this->redirectToRoute('dns_dag_tracer', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
     }
+
+    #[Route(
+        path: ['en' => '/app-links-validator', 'pl' => '/pl/weryfikator-app-links'],
+        name: 'app_links_validator',
+        methods: ['GET', 'POST']
+    )]
+    public function appLinksValidator(Request $request, \App\AppLinks\Application\AppLinksService $service): Response
+    {
+        $presets = $service->getPresets();
+        $defaultAasa = is_string($encA = json_encode($presets[0]['aasa_content'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) ? $encA : '{}';
+        $defaultAssetLinks = is_string($encL = json_encode($presets[1]['assetlinks_content'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) ? $encL : '[]';
+        $defaultTestUrl = is_string($presets[0]['test_url'] ?? null) ? (string) $presets[0]['test_url'] : '';
+
+        $testUrl = (string) $request->request->get('test_url', $request->query->get('test_url', $defaultTestUrl));
+        $aasaContent = (string) $request->request->get('aasa_content', $request->query->get('aasa_content', $defaultAasa));
+        $assetLinksContent = (string) $request->request->get('assetlinks_content', $request->query->get('assetlinks_content', $defaultAssetLinks));
+
+        $result = $service->validate(
+            aasa: $aasaContent,
+            assetLinks: $assetLinksContent !== '' ? $assetLinksContent : null,
+            testUrl: $testUrl !== '' ? $testUrl : null,
+        );
+
+        return $this->render('tools/app_links.html.twig', [
+            'test_url' => $testUrl,
+            'raw_aasa' => $aasaContent,
+            'raw_assetlinks' => $assetLinksContent,
+            'result' => $result,
+            'presets' => $presets,
+        ]);
+    }
+
+    #[Route(
+        path: ['en' => '/tools/app-links-validator', 'pl' => '/pl/narzedzia/weryfikator-app-links'],
+        name: 'legacy_app_links_validator',
+        methods: ['GET']
+    )]
+    public function legacyAppLinksValidator(Request $request): Response
+    {
+        return $this->redirectToRoute('app_links_validator', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
+    }
+
+    #[Route(
+        path: ['en' => '/cors-sandbox', 'pl' => '/pl/piaskownica-cors'],
+        name: 'cors_sandbox',
+        methods: ['GET', 'POST']
+    )]
+    public function corsSandbox(Request $request, \App\Cors\Application\CorsSandboxService $service): Response
+    {
+        $presets = $service->getPresets();
+        $defaultReqOrigin = is_string($presets[0]['request']['origin'] ?? null) ? (string) $presets[0]['request']['origin'] : '';
+        $defaultMethod = is_string($presets[0]['request']['method'] ?? null) ? (string) $presets[0]['request']['method'] : 'GET';
+        /** @var array<string, string> $expectedHeaders */
+        $expectedHeaders = is_array($presets[0]['expected_response_headers'] ?? null) ? $presets[0]['expected_response_headers'] : [];
+        $headerLines = [];
+        foreach ($expectedHeaders as $k => $v) {
+            $headerLines[] = "{$k}: {$v}";
+        }
+        $defaultHeaders = implode("\n", $headerLines);
+
+        $reqOrigin = (string) $request->request->get('request_origin', $request->query->get('request_origin', $defaultReqOrigin));
+        $reqMethod = (string) $request->request->get('request_method', $request->query->get('request_method', $defaultMethod));
+        $reqHeadersRaw = (string) $request->request->get('request_headers', $request->query->get('request_headers', ''));
+        $withCredentials = $request->isMethod('POST')
+            ? $request->request->getBoolean('with_credentials')
+            : $request->query->getBoolean('with_credentials', true);
+        $resHeadersRaw = (string) $request->request->get('response_headers', $request->query->get('response_headers', $defaultHeaders));
+
+        $resHeadersList = array_values(array_filter(array_map('trim', explode("\n", str_replace("\r", '', $resHeadersRaw)))));
+        $reqHeadersList = array_values(array_filter(array_map('trim', explode(',', $reqHeadersRaw))));
+
+        $result = $service->analyze(
+            requestOrigin: $reqOrigin,
+            responseHeaders: $resHeadersList,
+            withCredentials: $withCredentials,
+            requestMethod: $reqMethod,
+            requestHeaders: $reqHeadersList,
+        );
+
+        return $this->render('tools/cors_sandbox.html.twig', [
+            'request_origin' => $reqOrigin,
+            'request_method' => $reqMethod,
+            'request_headers_raw' => $reqHeadersRaw,
+            'with_credentials' => $withCredentials,
+            'response_headers_raw' => $resHeadersRaw,
+            'result' => $result,
+            'presets' => $presets,
+        ]);
+    }
+
+    #[Route(
+        path: ['en' => '/tools/cors-sandbox', 'pl' => '/pl/narzedzia/piaskownica-cors'],
+        name: 'legacy_cors_sandbox',
+        methods: ['GET']
+    )]
+    public function legacyCorsSandbox(Request $request): Response
+    {
+        return $this->redirectToRoute('cors_sandbox', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
+    }
 }

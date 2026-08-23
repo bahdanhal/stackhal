@@ -1,0 +1,218 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'cors_sandbox.meta.title'|trans }}{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}<meta name="description" content="{{ 'cors_sandbox.meta.description'|trans }}">{% endblock %}
+{% block canonical %}
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/piaskownica-cors' : 'https://stackhal.com/cors-sandbox' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/cors-sandbox">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/piaskownica-cors">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/cors-sandbox">
+{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/tools.css">
+  <link rel="stylesheet" href="/app-links.css">
+  <link rel="stylesheet" href="/cors-sandbox.css">
+{% endblock %}
+{% block language_switch %}
+  <a class="language-switch" href="{{ path('cors_sandbox', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
+{% endblock %}
+{% block tool_name %}{{ 'cors_sandbox.heading'|trans }}{% endblock %}
+
+{% block body %}
+<section class="tool-page-shell cors-shell">
+  {% include 'tools/_tool_intro.html.twig' with {
+    eyebrow: 'cors_sandbox.eyebrow'|trans,
+    heading: 'cors_sandbox.heading'|trans,
+    lede: 'cors_sandbox.lede'|trans
+  } only %}
+
+  <div class="transpiler-container" id="cors-app" data-locale="{{ app.request.locale }}">
+    <!-- Presets Toolbar -->
+    <div class="transpiler-toolbar ui-panel">
+      <div class="preset-group">
+        <span class="preset-label">{{ 'cors_sandbox.presets_label'|trans }}:</span>
+        {% for preset in presets %}
+          <button
+            type="button"
+            class="btn-preset"
+            data-preset="{{ preset.id }}"
+            data-origin="{{ preset.request.origin }}"
+            data-method="{{ preset.request.method|default('GET') }}"
+            data-credentials="{{ preset.request.with_credentials|default(false) ? 'true' : 'false' }}"
+            data-response-headers="{{ preset.expected_response_headers|json_encode }}"
+          >
+            {{ preset.name }}
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- CORS Interactive Workbench -->
+    <div class="ui-panel" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+      <form method="post" action="{{ path('cors_sandbox', {_locale: app.request.locale}) }}" id="cors-form">
+        <div class="cors-grid">
+          <!-- Request Parameters -->
+          <div>
+            <h3 style="margin-top: 0; margin-bottom: 1rem;">{{ 'cors_sandbox.request_heading'|trans }}</h3>
+
+            <div style="margin-bottom: 1rem;">
+              <label for="cors-origin-input" style="display: block; margin-bottom: 0.4rem; font-weight: 600;">
+                Origin (Request Header)
+              </label>
+              <input
+                type="text"
+                name="request_origin"
+                id="cors-origin-input"
+                value="{{ request_origin }}"
+                placeholder="https://app.example.com"
+                style="width: 100%; padding: 0.6rem; background: var(--bg-surface, #1e293b); color: inherit; border: 1px solid var(--border-color, #334155); border-radius: 4px; font-family: monospace;"
+              >
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+              <div>
+                <label for="cors-method-select" style="display: block; margin-bottom: 0.4rem; font-weight: 600;">
+                  HTTP Method
+                </label>
+                <select
+                  name="request_method"
+                  id="cors-method-select"
+                  style="width: 100%; padding: 0.6rem; background: var(--bg-surface, #1e293b); color: inherit; border: 1px solid var(--border-color, #334155); border-radius: 4px;"
+                >
+                  {% for m in ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'] %}
+                    <option value="{{ m }}" {% if request_method == m %}selected{% endif %}>{{ m }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div>
+                <label for="cors-req-headers-input" style="display: block; margin-bottom: 0.4rem; font-weight: 600;">
+                  Request Headers
+                </label>
+                <input
+                  type="text"
+                  name="request_headers"
+                  id="cors-req-headers-input"
+                  value="{{ request_headers_raw }}"
+                  placeholder="X-Custom-Auth, Content-Type"
+                  style="width: 100%; padding: 0.6rem; background: var(--bg-surface, #1e293b); color: inherit; border: 1px solid var(--border-color, #334155); border-radius: 4px; font-family: monospace;"
+                >
+              </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input
+                  type="checkbox"
+                  name="with_credentials"
+                  id="cors-credentials-check"
+                  value="1"
+                  {% if with_credentials %}checked{% endif %}
+                >
+                <span><strong>withCredentials</strong> (Cookies & Authorization headers)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Response Headers Editor -->
+          <div>
+            <h3 style="margin-top: 0; margin-bottom: 1rem;">{{ 'cors_sandbox.response_heading'|trans }}</h3>
+
+            <div>
+              <label for="cors-response-headers" style="display: block; margin-bottom: 0.4rem; font-weight: 600;">
+                Response Headers (Key: Value)
+              </label>
+              <textarea
+                name="response_headers"
+                id="cors-response-headers"
+                class="code-editor-area"
+                placeholder="Access-Control-Allow-Origin: https://app.example.com&#10;Access-Control-Allow-Methods: GET, POST, OPTIONS&#10;Access-Control-Allow-Headers: X-Custom-Auth&#10;Vary: Origin"
+              >{{ response_headers_raw }}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: right;">
+          <button
+            type="submit"
+            id="btn-analyze-cors"
+            class="btn-submit"
+            style="padding: 0.65rem 1.75rem; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;"
+          >
+            {{ 'cors_sandbox.analyze_btn'|trans }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Live Decision Banner -->
+    <div
+      id="cors-decision-banner"
+      class="routing-banner {% if result.isValid %}banner-app{% else %}banner-error{% endif %}"
+    >
+      {% if result.isValid %}
+        <div class="banner-badge">{{ 'cors_sandbox.badge_valid'|trans }}</div>
+        <div class="banner-title">{{ 'cors_sandbox.valid_title'|trans }}</div>
+        <div class="banner-desc">{{ 'cors_sandbox.valid_desc'|trans }}</div>
+      {% else %}
+        <div class="banner-badge">{{ 'cors_sandbox.badge_blocked'|trans }}</div>
+        <div class="banner-title">{{ 'cors_sandbox.blocked_title'|trans }}</div>
+        <div class="banner-desc">{{ 'cors_sandbox.blocked_desc'|trans }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Diagnostics & Browser Limits -->
+    <div class="cors-grid">
+      <div class="ui-panel" style="padding: 1.5rem;">
+        <h3 style="margin-top: 0; margin-bottom: 1rem;">{{ 'cors_sandbox.diagnostics_title'|trans }}</h3>
+        <div id="cors-diagnostics">
+          {% for diag in result.diagnostics %}
+            <div class="diag-item diag-{{ diag.severity }}">
+              <strong>{{ diag.title }}</strong>
+              <p>{{ diag.description }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ui-panel" style="padding: 1.5rem;">
+        <h3 style="margin-top: 0; margin-bottom: 1rem;">{{ 'cors_sandbox.browser_ceilings_title'|trans }}</h3>
+        <p style="font-size: 0.85rem; opacity: 0.85; margin-top: 0;">
+          {{ 'cors_sandbox.browser_ceilings_intro'|trans }}
+        </p>
+
+        <table class="ceiling-table">
+          <thead>
+            <tr>
+              <th>Browser Engine</th>
+              <th>Max-Age Ceiling</th>
+              <th>Effective Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Chromium (Chrome, Edge, Brave)</strong></td>
+              <td><code>7,200s</code></td>
+              <td>2 hours max</td>
+            </tr>
+            <tr>
+              <td><strong>Apple Safari (WebKit)</strong></td>
+              <td><code>600s</code></td>
+              <td>10 minutes max</td>
+            </tr>
+            <tr>
+              <td><strong>Mozilla Firefox (Gecko)</strong></td>
+              <td><code>86,400s</code></td>
+              <td>24 hours max</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+  <script src="/cors-sandbox.js"></script>
+{% endblock %}

@@ -18,6 +18,8 @@ base:
         favicon_suite: "Favicon Suite"
         dns_dag_tracer: "DNS DAG Tracer"
         pkpass: "PKPass Inspector"
+        app_links: "App Links"
+        cors_sandbox: "CORS Sandbox"
         more: "Tools"
     context:
         income: "Polish income calculator"
@@ -32,6 +34,8 @@ base:
         favicon_suite: "Modern Favicon Kitchen & Dark-Mode SVG Suite"
         dns_dag_tracer: "Visual DNS Propagation DAG & Delegation Chain Tracer"
         pkpass: "Apple Wallet (.pkpass) Inspector & Emulator"
+        app_links: "Apple Universal Links & Android App Links Validator"
+        cors_sandbox: "CORS Policy & Preflight Diagnostic Sandbox"
     footer: "Useful, transparent tools · No signup · No tracking pixel"
     contact: "Contact"
 
@@ -90,6 +94,12 @@ home:
     pkpass:
         title: "Apple Wallet (.pkpass) Inspector & Debugger"
         text: "Pixel-perfect Apple Wallet & Google Wallet emulator, SHA-1 manifest validator, PKCS#7 certificate inspector, and 1-click package repair."
+    app_links:
+        title: "Apple Universal Links & Android App Links"
+        text: "Validate Apple AASA and Android AssetLinks manifests, test URL routing patterns, and diagnose deeplink failures."
+    cors_sandbox:
+        title: "CORS Policy & Preflight Sandbox"
+        text: "Diagnose cross-origin headers, preflight OPTIONS requests, wildcard credentials safety, and browser max-age limits."
     principles:
         private:
             title: "Private by default"
@@ -1037,6 +1047,51 @@ dns_dag_tracer:
         q3_a: "High TTL values (>14,400s / 4 hours) cause caching recursive resolvers to retain stale records until their TTL expires, resulting in divergent answers across global regions."
         q4: "What is a Lame Delegation?"
         q4_a: "A lame delegation occurs when a parent zone designates a nameserver that refuses queries or is not configured as authoritative for the zone."
+
+app_links:
+    meta:
+        title: "Apple Universal Links & Android App Links Validator · StackHal"
+        description: "Validate Apple App Site Association (AASA) and Android Digital Asset Links (assetlinks.json) manifests, test URL routing, and prevent broken deeplinks."
+    eyebrow: "UNIVERSAL & APP LINKS VALIDATOR"
+    heading: "Apple Universal Links & Android App Links Validator"
+    lede: "Inspect and validate Apple AASA and Android AssetLinks manifests, verify HTTPS hosting requirements, and simulate universal link routing."
+    presets_label: "Presets"
+    test_url_label: "Test URL Routing Path"
+    test_btn: "Test Route"
+    aasa_label: "Apple apple-app-site-association (JSON)"
+    assetlinks_label: "Android assetlinks.json (JSON)"
+    badge_app: "APP ROUTE MATCH"
+    matched_app_title: "URL opens directly inside Native App"
+    matched_pattern: "Matched pattern"
+    badge_web: "BROWSER FALLBACK"
+    matched_web_title: "URL opens in Safari / Browser"
+    excluded_by_rule: "Explicitly excluded by rule"
+    fallback_browser: "No matching universal link pattern found; falling back to web browser."
+    enter_url_prompt: "Enter a test URL above to simulate universal link route matching."
+    diagnostics_title: "Manifest & Routing Diagnostics"
+    all_passed: "All Apple AASA & Android AssetLinks validation checks passed!"
+
+cors_sandbox:
+    meta:
+        title: "CORS Policy & Preflight Diagnostic Sandbox · StackHal"
+        description: "Diagnose cross-origin headers, preflight OPTIONS requests, wildcard credentials safety, and browser max-age limits according to the W3C Fetch specification."
+    eyebrow: "CROSS-ORIGIN RESOURCE SHARING & PREFLIGHT SANDBOX"
+    heading: "CORS Policy & Preflight Diagnostic Sandbox"
+    lede: "Interactive CORS workbench to validate HTTP request/response headers, diagnose wildcard credential violations, check Vary: Origin caching safety, and simulate preflight OPTIONS."
+    presets_label: "Presets"
+    request_heading: "1. Cross-Origin Request"
+    response_heading: "2. Server Response Headers"
+    analyze_btn: "Diagnose CORS Policy"
+    badge_valid: "CORS VALID"
+    valid_title: "CORS Handshake Conforms to W3C Fetch Specification"
+    valid_desc: "Cross-origin requests are permitted safely without security violations."
+    badge_blocked: "CORS BLOCKED"
+    blocked_title: "Browser Will Block Cross-Origin Request"
+    blocked_desc: "One or more critical CORS security violations detected."
+    diagnostics_title: "Policy & Security Diagnostics"
+    browser_ceilings_title: "Browser Max-Age Ceilings"
+    browser_ceilings_intro: "Web browsers enforce hard maximum limits on Access-Control-Max-Age caching for preflight OPTIONS responses to prevent stale permission pinning."
+
 
 
 

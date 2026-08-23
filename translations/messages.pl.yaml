@@ -18,6 +18,8 @@ base:
         favicon_suite: "Generator Favicon"
         dns_dag_tracer: "Tracer DNS DAG"
         pkpass: "Inspektor PKPass"
+        app_links: "App Links"
+        cors_sandbox: "Piaskownica CORS"
         more: "Narzędzia"
     context:
         income: "Kalkulator wynagrodzeń"
@@ -32,6 +34,8 @@ base:
         favicon_suite: "Generator pakietu Favicon i SVG Dark-Mode"
         dns_dag_tracer: "Wizualny DAG propagacji DNS i łańcuch delegacji"
         pkpass: "Inspektor i emulator Apple Wallet (.pkpass)"
+        app_links: "Weryfikator Apple Universal Links i Android App Links"
+        cors_sandbox: "Piaskownica polityk CORS i zapytań Preflight"
     footer: "Przydatne i przejrzyste narzędzia · Bez rejestracji · Bez pikseli śledzących"
     contact: "Kontakt"
 
@@ -90,6 +94,12 @@ home:
     pkpass:
         title: "Inspektor i debugger Apple Wallet (.pkpass)"
         text: "Wierny emulator kart Apple Wallet i Google Wallet, weryfikator sum kontrolnych SHA-1 w manifest.json, podgląd certyfikatów PKCS#7 i naprawa archiwum w 1 kliknięcie."
+    app_links:
+        title: "Apple Universal Links & Android App Links"
+        text: "Waliduj manifesty Apple AASA i Android AssetLinks, testuj reguły routingu URL i diagnozuj błędy deeplinków."
+    cors_sandbox:
+        title: "Piaskownica polityk CORS i Preflight"
+        text: "Diagnozuj nagłówki cross-origin, zapytania OPTIONS, bezpieczeństwo wildcard z poświadczeniami oraz limity max-age."
     principles:
         private:
             title: "Prywatność domyślnie"
@@ -1037,5 +1047,50 @@ dns_dag_tracer:
         q3_a: "Wysokie wartości TTL (>14 400s / 4 godziny) sprawiają, że buforujące resolwery przetrzymują nieaktualne rekordy aż do wygaśnięcia ich czasu ważności, co prowadzi do różnych odpowiedzi w poszczególnych regionach."
         q4: "Czym jest Lame Delegation?"
         q4_a: "Lame delegation występuje, gdy strefa nadrzędna wskazuje serwer nazw, który odrzuca zapytania lub nie jest skonfigurowany jako autorytatywny dla danej domeny."
+
+app_links:
+    meta:
+        title: "Weryfikator Apple Universal Links & Android App Links · StackHal"
+        description: "Waliduj manifesty Apple App Site Association (AASA) i Android Digital Asset Links (assetlinks.json), testuj routing URL i unikaj błędów deeplinków."
+    eyebrow: "WERYFIKATOR UNIVERSAL & APP LINKS"
+    heading: "Weryfikator Apple Universal Links & Android App Links"
+    lede: "Inspekcja i walidacja manifestów Apple AASA oraz Android AssetLinks, weryfikacja wymogów hostingu HTTPS i symulacja reguł routingu Universal Links."
+    presets_label: "Presety"
+    test_url_label: "Ścieżka testowa URL"
+    test_btn: "Testuj trasę"
+    aasa_label: "Apple apple-app-site-association (JSON)"
+    assetlinks_label: "Android assetlinks.json (JSON)"
+    badge_app: "DOPASOWANIE DO APLIKACJI"
+    matched_app_title: "URL otwiera się bezpośrednio w aplikacji natywnej"
+    matched_pattern: "Dopasowany wzorzec"
+    badge_web: "FALLBACK DO PRZEGLĄDARKI"
+    matched_web_title: "URL otwiera się w Safari / przeglądarce"
+    excluded_by_rule: "Wykluczono explicite regułą"
+    fallback_browser: "Brak dopasowania do reguł aplikacji; otwarcie w przeglądarce."
+    enter_url_prompt: "Wpisz powyżej testowy adres URL, aby zasymulować routing Universal Links."
+    diagnostics_title: "Diagnostyka manifestu i routingu"
+    all_passed: "Wszystkie testy walidacji Apple AASA i Android AssetLinks zakończone sukcesem!"
+
+cors_sandbox:
+    meta:
+        title: "Piaskownica polityk CORS i zapytań Preflight · StackHal"
+        description: "Diagnozuj nagłówki cross-origin, zapytania OPTIONS, poświadczenia z wildcard oraz limity max-age przeglądarek zgodnie ze specyfikacją W3C Fetch."
+    eyebrow: "PIASKOWNICA CROSS-ORIGIN RESOURCE SHARING & PREFLIGHT"
+    heading: "Piaskownica polityk CORS i zapytań Preflight"
+    lede: "Interaktywne środowisko do testowania nagłówków HTTP żądania i odpowiedzi, diagnozowania kolizji wildcard z poświadczeniami oraz weryfikacji nagłówka Vary: Origin."
+    presets_label: "Presety"
+    request_heading: "1. Żądanie Cross-Origin"
+    response_heading: "2. Nagłówki odpowiedzi serwera"
+    analyze_btn: "Diagnozuj politykę CORS"
+    badge_valid: "CORS PRAWIDŁOWY"
+    valid_title: "Odpowiedź zgodna ze specyfikacją W3C Fetch"
+    valid_desc: "Żądania cross-origin są dozwolone bezpiecznie bez naruszeń reguł."
+    badge_blocked: "CORS ZABLOKOWANY"
+    blocked_title: "Przeglądarka zablokuje żądanie Cross-Origin"
+    blocked_desc: "Wykryto jedno lub więcej krytycznych naruszeń bezpieczeństwa CORS."
+    diagnostics_title: "Diagnostyka polityki i bezpieczeństwa"
+    browser_ceilings_title: "Limity Max-Age w przeglądarkach"
+    browser_ceilings_intro: "Przeglądarki internetowe narzucają sztywne górne limity czasu buforowania Access-Control-Max-Age dla zapytań preflight OPTIONS."
+
 
 
