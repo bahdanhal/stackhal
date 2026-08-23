@@ -68,8 +68,7 @@
 .primary-nav a,
 .tool-menu a,
 .tool-menu summary,
-.language-switch,
-.ecosystem-link {
+.language-switch {
   color: var(--ink);
   font-size: 12px;
   font-weight: 800;
@@ -78,8 +77,7 @@
 }
 
 .primary-nav a:hover,
-.tool-menu a:hover,
-.ecosystem-link:hover {
+.tool-menu a:hover {
   color: var(--orange);
 }
 
@@ -97,12 +95,6 @@
   border-radius: 999px;
   background: rgba(17, 29, 47, .72);
   cursor: pointer;
-}
-
-.ecosystem-link {
-  padding-left: 14px;
-  border-left: 1px solid var(--line);
-  color: var(--muted);
 }
 
 .tool-menu summary {
@@ -373,8 +365,7 @@
     display: none;
   }
 
-  .brand-signal,
-  .ecosystem-link {
+  .brand-signal {
     display: none;
   }
 

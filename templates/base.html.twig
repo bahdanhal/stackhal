@@ -62,7 +62,6 @@
             <a href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">{{ 'base.nav.pkpass'|trans }}</a>
           </nav>
         </details>
-        <a class="ecosystem-link" href="https://ileza.pl" target="_blank" rel="noopener">IleZa ↗</a>
         {% block language_switch %}
           <a class="language-switch" href="{{ path('home', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
         {% endblock %}
@@ -77,7 +76,7 @@
     {% endif %}
   </header>
   <main>{% block body %}{% endblock %}</main>
-  <footer>{{ 'base.footer'|trans }} · <a class="footer-contact" href="mailto:bahdan.hal@hotmail.com">{{ 'base.contact'|trans }}</a><br><span class="copyright">© {{ "now"|date("Y") }} StackHal · <a class="copyright-link" href="https://bahdanhal.pl/">Bahdan Hal</a></span></footer>
+  <footer>{{ 'base.footer'|trans }} · <a class="footer-contact" href="mailto:bahdan.hal@hotmail.com">{{ 'base.contact'|trans }}</a><br><span class="copyright">© {{ "now"|date("Y") }} StackHal · <a class="copyright-link" href="https://bahdanhal.pl/">Bahdan Hal</a> · <a class="copyright-link" href="https://ileza.pl/" target="_blank" rel="noopener">IleZa ↗</a></span></footer>
   {% block scripts %}{% endblock %}
 </body>
 </html>

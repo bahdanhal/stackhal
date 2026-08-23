@@ -87,15 +87,13 @@ body.stackhal-site {
 .stackhal-site .primary-nav a,
 .stackhal-site .tool-menu a,
 .stackhal-site .tool-menu summary,
-.stackhal-site .language-switch,
-.stackhal-site .ecosystem-link {
+.stackhal-site .language-switch {
   color: #d4d7e4;
   font-weight: 650;
 }
 
 .stackhal-site .primary-nav a:hover,
-.stackhal-site .tool-menu a:hover,
-.stackhal-site .ecosystem-link:hover {
+.stackhal-site .tool-menu a:hover {
   color: #b8ff5a;
 }
 
