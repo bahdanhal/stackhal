@@ -3,10 +3,10 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'bimi.meta.description'|trans }}">{% endblock %}
 {% block canonical %}
-  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/bimi-studio' : 'https://bahdanhal.pl/tools/bimi-studio' }}">
-  <link rel="alternate" hreflang="en" href="https://bahdanhal.pl/tools/bimi-studio">
-  <link rel="alternate" hreflang="pl" href="https://bahdanhal.pl/pl/narzedzia/bimi-studio">
-  <link rel="alternate" hreflang="x-default" href="https://bahdanhal.pl/tools/bimi-studio">
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/bimi-studio' : 'https://stackhal.com/bimi-studio' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/bimi-studio">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/bimi-studio">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/bimi-studio">
 {% endblock %}
 {% block stylesheets %}
   <link rel="stylesheet" href="/tools.css">
@@ -18,19 +18,19 @@
     '@graph': [
       {
         '@type': 'WebApplication',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/bimi-studio#app' : 'https://bahdanhal.pl/tools/bimi-studio#app'),
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/bimi-studio#app' : 'https://stackhal.com/bimi-studio#app'),
         'name': 'bimi.heading'|trans,
         'description': 'bimi.meta.description'|trans,
-        'url': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/bimi-studio' : 'https://bahdanhal.pl/tools/bimi-studio'),
+        'url': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/bimi-studio' : 'https://stackhal.com/bimi-studio'),
         'applicationCategory': 'MultimediaApplication',
         'operatingSystem': 'Any',
         'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'USD'},
-        'author': {'@id': 'https://bahdanhal.pl/#bahdan'},
-        'publisher': {'@id': 'https://bahdanhal.pl/#bahdan'}
+        'author': {'@id': 'https://stackhal.com/#stackhal'},
+        'publisher': {'@id': 'https://stackhal.com/#stackhal'}
       },
       {
         '@type': 'FAQPage',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/bimi-studio#faq' : 'https://bahdanhal.pl/tools/bimi-studio#faq'),
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/bimi-studio#faq' : 'https://stackhal.com/bimi-studio#faq'),
         'inLanguage': app.request.locale,
         'mainEntity': [
           {'@type': 'Question', 'name': 'bimi.faq.q1'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'bimi.faq.a1'|trans}},

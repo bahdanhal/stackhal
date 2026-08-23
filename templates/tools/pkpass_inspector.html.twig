@@ -3,10 +3,10 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'pkpass.meta.description'|trans }}">{% endblock %}
 {% block canonical %}
-  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/inspektor-pkpass' : 'https://bahdanhal.pl/tools/apple-pkpass-inspector' }}">
-  <link rel="alternate" hreflang="en" href="https://bahdanhal.pl/tools/apple-pkpass-inspector">
-  <link rel="alternate" hreflang="pl" href="https://bahdanhal.pl/pl/narzedzia/inspektor-pkpass">
-  <link rel="alternate" hreflang="x-default" href="https://bahdanhal.pl/tools/apple-pkpass-inspector">
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/inspektor-pkpass' : 'https://stackhal.com/apple-pkpass-inspector' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/apple-pkpass-inspector">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/inspektor-pkpass">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/apple-pkpass-inspector">
 {% endblock %}
 {% block stylesheets %}
   <link rel="stylesheet" href="/tools.css">
@@ -18,19 +18,19 @@
     '@graph': [
       {
         '@type': 'WebApplication',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/inspektor-pkpass#app' : 'https://bahdanhal.pl/tools/apple-pkpass-inspector#app'),
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/inspektor-pkpass#app' : 'https://stackhal.com/apple-pkpass-inspector#app'),
         'name': 'pkpass.heading'|trans,
         'description': 'pkpass.meta.description'|trans,
-        'url': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/inspektor-pkpass' : 'https://bahdanhal.pl/tools/apple-pkpass-inspector'),
+        'url': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/inspektor-pkpass' : 'https://stackhal.com/apple-pkpass-inspector'),
         'applicationCategory': 'DeveloperApplication',
         'operatingSystem': 'Any',
         'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'USD'},
-        'author': {'@id': 'https://bahdanhal.pl/#bahdan'},
-        'publisher': {'@id': 'https://bahdanhal.pl/#bahdan'}
+        'author': {'@id': 'https://stackhal.com/#stackhal'},
+        'publisher': {'@id': 'https://stackhal.com/#stackhal'}
       },
       {
         '@type': 'FAQPage',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/inspektor-pkpass#faq' : 'https://bahdanhal.pl/tools/apple-pkpass-inspector#faq'),
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/inspektor-pkpass#faq' : 'https://stackhal.com/apple-pkpass-inspector#faq'),
         'inLanguage': app.request.locale,
         'mainEntity': [
           {'@type': 'Question', 'name': 'pkpass.faq.q1'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'pkpass.faq.a1'|trans}},

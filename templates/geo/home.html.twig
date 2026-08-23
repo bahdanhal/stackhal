@@ -4,10 +4,10 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'geo.meta.description'|trans }}">{% endblock %}
 {% block canonical %}
-  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/audyt-geo' : 'https://bahdanhal.pl/tools/geo-audit' }}">
-  <link rel="alternate" hreflang="en" href="https://bahdanhal.pl/tools/geo-audit">
-  <link rel="alternate" hreflang="pl" href="https://bahdanhal.pl/pl/narzedzia/audyt-geo">
-  <link rel="alternate" hreflang="x-default" href="https://bahdanhal.pl/tools/geo-audit">
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/audyt-geo' : 'https://stackhal.com/geo-audit' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/geo-audit">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/audyt-geo">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/geo-audit">
 {% endblock %}
 {% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/geo.css">{% endblock %}
 {% block head_scripts %}
@@ -16,15 +16,15 @@
     '@graph': [
       {
         '@type': 'WebApplication',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/audyt-geo#app' : 'https://bahdanhal.pl/tools/geo-audit#app'),
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/audyt-geo#app' : 'https://stackhal.com/geo-audit#app'),
         'name': 'base.nav.geo'|trans,
         'description': 'geo.meta.description'|trans,
-        'url': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/audyt-geo' : 'https://bahdanhal.pl/tools/geo-audit'),
+        'url': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/audyt-geo' : 'https://stackhal.com/geo-audit'),
         'applicationCategory': 'DeveloperApplication',
         'operatingSystem': 'Any',
         'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'USD'},
-        'author': {'@id': 'https://bahdanhal.pl/#bahdan'},
-        'publisher': {'@id': 'https://bahdanhal.pl/#bahdan'}
+        'author': {'@id': 'https://stackhal.com/#stackhal'},
+        'publisher': {'@id': 'https://stackhal.com/#stackhal'}
       }
     ]
   }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>

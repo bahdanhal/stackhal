@@ -19,9 +19,9 @@ final class ToolsController extends AbstractController
     }
 
     #[Route(path: ['en' => '/tools', 'pl' => '/pl/narzedzia'], name: 'home', methods: ['GET'])]
-    public function home(): Response
+    public function home(Request $request): Response
     {
-        return $this->render('toolbox/home.html.twig');
+        return $this->redirectToRoute('landing', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     #[Route(

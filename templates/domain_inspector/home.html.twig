@@ -3,10 +3,10 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'domain_inspector.meta.description'|trans }}">{% endblock %}
 {% block canonical %}
-  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/inspektor-domen' : 'https://bahdanhal.pl/tools/domain-inspector' }}">
-  <link rel="alternate" hreflang="en" href="https://bahdanhal.pl/tools/domain-inspector">
-  <link rel="alternate" hreflang="pl" href="https://bahdanhal.pl/pl/narzedzia/inspektor-domen">
-  <link rel="alternate" hreflang="x-default" href="https://bahdanhal.pl/tools/domain-inspector">
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/inspektor-domen' : 'https://stackhal.com/domain-inspector' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/domain-inspector">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/inspektor-domen">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/domain-inspector">
 {% endblock %}
 {% block stylesheets %}
   <link rel="stylesheet" href="/tools.css">
@@ -18,19 +18,19 @@
     '@graph': [
       {
         '@type': 'WebApplication',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/inspektor-domen#app' : 'https://bahdanhal.pl/tools/domain-inspector#app'),
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/inspektor-domen#app' : 'https://stackhal.com/domain-inspector#app'),
         'name': 'domain_inspector.heading'|trans,
         'description': 'domain_inspector.meta.description'|trans,
-        'url': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/inspektor-domen' : 'https://bahdanhal.pl/tools/domain-inspector'),
+        'url': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/inspektor-domen' : 'https://stackhal.com/domain-inspector'),
         'applicationCategory': 'SecurityApplication',
         'operatingSystem': 'Any',
         'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'USD'},
-        'author': {'@id': 'https://bahdanhal.pl/#bahdan'},
-        'publisher': {'@id': 'https://bahdanhal.pl/#bahdan'}
+        'author': {'@id': 'https://stackhal.com/#stackhal'},
+        'publisher': {'@id': 'https://stackhal.com/#stackhal'}
       },
       {
         '@type': 'FAQPage',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/inspektor-domen#faq' : 'https://bahdanhal.pl/tools/domain-inspector#faq'),
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/inspektor-domen#faq' : 'https://stackhal.com/domain-inspector#faq'),
         'inLanguage': app.request.locale,
         'mainEntity': [
           {'@type': 'Question', 'name': 'domain_inspector.faq.q1'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'domain_inspector.faq.a1'|trans}},

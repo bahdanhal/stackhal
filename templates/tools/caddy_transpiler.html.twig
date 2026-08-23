@@ -3,10 +3,10 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'caddy_transpiler.meta.description'|trans }}">{% endblock %}
 {% block canonical %}
-  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/konwerter-caddyfile' : 'https://bahdanhal.pl/tools/caddy-transpiler' }}">
-  <link rel="alternate" hreflang="en" href="https://bahdanhal.pl/tools/caddy-transpiler">
-  <link rel="alternate" hreflang="pl" href="https://bahdanhal.pl/pl/narzedzia/konwerter-caddyfile">
-  <link rel="alternate" hreflang="x-default" href="https://bahdanhal.pl/tools/caddy-transpiler">
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/konwerter-caddyfile' : 'https://stackhal.com/caddy-transpiler' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/caddy-transpiler">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/konwerter-caddyfile">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/caddy-transpiler">
 {% endblock %}
 {% block stylesheets %}
   <link rel="stylesheet" href="/tools.css">
@@ -18,10 +18,10 @@
     '@graph': [
       {
         '@type': 'WebApplication',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/konwerter-caddyfile#app' : 'https://bahdanhal.pl/tools/caddy-transpiler#app'),
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/konwerter-caddyfile#app' : 'https://stackhal.com/caddy-transpiler#app'),
         'name': 'caddy_transpiler.heading'|trans,
         'description': 'caddy_transpiler.meta.description'|trans,
-        'url': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/konwerter-caddyfile' : 'https://bahdanhal.pl/tools/caddy-transpiler'),
+        'url': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/konwerter-caddyfile' : 'https://stackhal.com/caddy-transpiler'),
         'applicationCategory': 'DeveloperApplication',
         'operatingSystem': 'Any',
         'offers': {
@@ -29,12 +29,12 @@
           'price': '0',
           'priceCurrency': 'USD'
         },
-        'author': {'@id': 'https://bahdanhal.pl/#bahdan'},
-        'publisher': {'@id': 'https://bahdanhal.pl/#bahdan'}
+        'author': {'@id': 'https://stackhal.com/#stackhal'},
+        'publisher': {'@id': 'https://stackhal.com/#stackhal'}
       },
       {
         '@type': 'FAQPage',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/konwerter-caddyfile#faq' : 'https://bahdanhal.pl/tools/caddy-transpiler#faq'),
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/konwerter-caddyfile#faq' : 'https://stackhal.com/caddy-transpiler#faq'),
         'inLanguage': app.request.locale,
         'mainEntity': [
           {'@type': 'Question', 'name': 'caddy_transpiler.faq.q1'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'caddy_transpiler.faq.a1'|trans}},

@@ -12,22 +12,26 @@ final readonly class SitemapController
     #[Route('/sitemap.xml', name: 'sitemap', methods: ['GET'])]
     public function __invoke(): Response
     {
-        $urls = [
-            '/',
-            '/geo-audit',
-            '/seo-audit',
-            '/bimi-studio',
-            '/domain-inspector',
-            '/caddy-transpiler',
-            '/apple-pkpass-inspector',
-            '/cidr-subnet-matrix',
+        $pairs = [
+            ['/', '/pl/'],
+            ['/geo-audit', '/pl/audyt-geo'],
+            ['/seo-audit', '/pl/audyt-seo'],
+            ['/bimi-studio', '/pl/bimi-studio'],
+            ['/domain-inspector', '/pl/inspektor-domen'],
+            ['/caddy-transpiler', '/pl/konwerter-caddyfile'],
+            ['/apple-pkpass-inspector', '/pl/inspektor-pkpass'],
+            ['/cidr-subnet-matrix', '/pl/matryca-cidr'],
         ];
 
-        $entries = array_map(fn (string $path): string => sprintf('  <url><loc>https://stackhal.com%s</loc></url>', $path), $urls);
+        $entries = [];
+        foreach ($pairs as [$en, $pl]) {
+            $entries[] = $this->entry($en, $en, $pl);
+            $entries[] = $this->entry($pl, $en, $pl);
+        }
 
         $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             . "<?xml-stylesheet type=\"text/xsl\" href=\"/sitemap.xsl\"?>\n"
-            . "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
+            . "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">\n"
             . implode("\n", $entries) . "\n"
             . "</urlset>\n";
 
@@ -35,5 +39,23 @@ final readonly class SitemapController
             'Content-Type' => 'application/xml; charset=UTF-8',
             'Cache-Control' => 'public, max-age=300, must-revalidate',
         ]);
+    }
+
+    private function entry(string $location, string $english, string $polish): string
+    {
+        $base = 'https://stackhal.com';
+
+        $format = '  <url><loc>%s</loc>'
+            . '<xhtml:link rel="alternate" hreflang="en" href="%s"/>'
+            . '<xhtml:link rel="alternate" hreflang="pl" href="%s"/>'
+            . '<xhtml:link rel="alternate" hreflang="x-default" href="%s"/></url>';
+
+        return sprintf(
+            $format,
+            $base . $location,
+            $base . $english,
+            $base . $polish,
+            $base . $english
+        );
     }
 }

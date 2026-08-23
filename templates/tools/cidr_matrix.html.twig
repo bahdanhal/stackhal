@@ -3,10 +3,10 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'cidr_matrix.meta.description'|trans }}">{% endblock %}
 {% block canonical %}
-  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/matryca-cidr' : 'https://bahdanhal.pl/tools/cidr-subnet-matrix' }}">
-  <link rel="alternate" hreflang="en" href="https://bahdanhal.pl/tools/cidr-subnet-matrix">
-  <link rel="alternate" hreflang="pl" href="https://bahdanhal.pl/pl/narzedzia/matryca-cidr">
-  <link rel="alternate" hreflang="x-default" href="https://bahdanhal.pl/tools/cidr-subnet-matrix">
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/matryca-cidr' : 'https://stackhal.com/cidr-subnet-matrix' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/cidr-subnet-matrix">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/matryca-cidr">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/cidr-subnet-matrix">
 {% endblock %}
 {% block stylesheets %}
   <link rel="stylesheet" href="/tools.css">
@@ -17,10 +17,10 @@
     '@graph': [
       {
         '@type': 'WebApplication',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/matryca-cidr#app' : 'https://bahdanhal.pl/tools/cidr-subnet-matrix#app'),
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/matryca-cidr#app' : 'https://stackhal.com/cidr-subnet-matrix#app'),
         'name': 'cidr_matrix.heading'|trans,
         'description': 'cidr_matrix.meta.description'|trans,
-        'url': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/matryca-cidr' : 'https://bahdanhal.pl/tools/cidr-subnet-matrix'),
+        'url': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/matryca-cidr' : 'https://stackhal.com/cidr-subnet-matrix'),
         'applicationCategory': 'DeveloperApplication',
         'operatingSystem': 'Any',
         'offers': {
@@ -28,8 +28,8 @@
           'price': '0',
           'priceCurrency': 'USD'
         },
-        'author': {'@id': 'https://bahdanhal.pl/#bahdan'},
-        'publisher': {'@id': 'https://bahdanhal.pl/#bahdan'}
+        'author': {'@id': 'https://stackhal.com/#stackhal'},
+        'publisher': {'@id': 'https://stackhal.com/#stackhal'}
       }
     ]
   }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
