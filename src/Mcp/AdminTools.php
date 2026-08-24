@@ -6,8 +6,8 @@ namespace App\Mcp;
 
 use App\Analytics\Application\TrafficAnalytics;
 use App\Audit\Infrastructure\AuditLogger;
-use App\Lead\Domain\Lead;
-use App\Lead\Domain\LeadRepository;
+use Bahdan\LeadCaptureBundle\Domain\Lead;
+use Bahdan\LeadCaptureBundle\Domain\LeadRepository;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Attribute\Schema;
 
