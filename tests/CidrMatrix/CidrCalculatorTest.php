@@ -76,4 +76,25 @@ final class CidrCalculatorTest extends TestCase
         self::assertCount(1, $result->diagnostics);
         self::assertSame('ERR_INVALID_CIDR', $result->diagnostics[0]->code);
     }
+
+    public function testPairwiseMatrixAndSpatialPartitions(): void
+    {
+        $result = $this->calculator->analyze(['10.0.0.0/16', '10.0.32.0/20']);
+        self::assertNotEmpty($result->pairwiseMatrix);
+        self::assertCount(2, $result->pairwiseMatrix['headers']);
+        self::assertCount(2, $result->pairwiseMatrix['rows']);
+
+        // Check self cell
+        self::assertSame('self', $result->pairwiseMatrix['rows'][0]['cells'][0]['relation']);
+        // Check containment / overlap cell
+        self::assertSame('contains', $result->pairwiseMatrix['rows'][0]['cells'][1]['relation']);
+        self::assertSame('contained_by', $result->pairwiseMatrix['rows'][1]['cells'][0]['relation']);
+
+        // Check space partitions
+        self::assertNotEmpty($result->spacePartitions);
+        self::assertGreaterThanOrEqual(2, count($result->spacePartitions));
+
+        // Check tree nodes
+        self::assertNotEmpty($result->treeNodes);
+    }
 }

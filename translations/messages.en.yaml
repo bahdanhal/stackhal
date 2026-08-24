@@ -926,6 +926,21 @@ cidr_matrix:
         free_subnet_title: "Available Free Subnet Allocation"
         collisions_title: "Subnet Overlap Collisions"
         matrix_grid: "2D Subnet Tree Partition Matrix"
+        tabs:
+            space_map: "2D Space Map & Treemap"
+            cross_matrix: "NxN Cross-Overlap Matrix"
+            tree_view: "Subnet Partition Tree"
+        legend:
+            title: "Visual Status Legend"
+            assigned: "Assigned Subnet"
+            collision: "Collision / Conflict"
+            containment: "Containment (Nested)"
+            recommended: "Recommended Free Subnet"
+            disjoint: "Disjoint (Clean Separation)"
+        allocation_bar_title: "Address Space Allocation & Utilization"
+        matrix_table_title: "Pairwise NxN Cross-Overlap Matrix"
+        tree_view_title: "Hierarchical Subnet Binary Tree"
+        interactive_tip: "Hover over any cell or partition segment to inspect address ranges and cross-overlap details."
     table:
         subnet_a: "Subnet A"
         subnet_b: "Subnet B"

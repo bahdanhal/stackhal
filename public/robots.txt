@@ -2,9 +2,9 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /audit
-Disallow: /contact
+Disallow: /contact$
 Disallow: /pl/audyt
-Disallow: /pl/kontakt
+Disallow: /pl/kontakt$
 Disallow: /healthz
 Disallow: /mcp
 Disallow: /admin/
@@ -17,9 +17,9 @@ User-agent: Google-Extended
 Allow: /
 Disallow: /api/
 Disallow: /audit
-Disallow: /contact
+Disallow: /contact$
 Disallow: /pl/audyt
-Disallow: /pl/kontakt
+Disallow: /pl/kontakt$
 Disallow: /healthz
 Disallow: /mcp
 Disallow: /admin/

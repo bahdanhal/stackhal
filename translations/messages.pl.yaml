@@ -926,6 +926,21 @@ cidr_matrix:
         free_subnet_title: "Dostępna alokacja wolnej podsieci"
         collisions_title: "Kolizje nachodzenia podsieci"
         matrix_grid: "Dwuwymiarowa matryca podziału podsieci"
+        tabs:
+            space_map: "2D Mapa przestrzeni i Treemap"
+            cross_matrix: "Matryca kolizji NxN"
+            tree_view: "Drzewo podziału podsieci"
+        legend:
+            title: "Legenda statusów wizualnych"
+            assigned: "Przypisana podsieć"
+            collision: "Kolizja / Konflikt"
+            containment: "Zawieranie (Zagnieżdżenie)"
+            recommended: "Rekomendowana wolna podsieć"
+            disjoint: "Rozłączne (Brak kolizji)"
+        allocation_bar_title: "Alokacja i utylizacja przestrzeni adresowej"
+        matrix_table_title: "Dwuwymiarowa matryca relacji NxN"
+        tree_view_title: "Hierarchiczne binarne drzewo podsieci"
+        interactive_tip: "Najedź kursorem na komórkę lub segment, aby sprawdzić zakresy IP i szczegóły nachodzenia."
     table:
         subnet_a: "Podsieć A"
         subnet_b: "Podsieć B"

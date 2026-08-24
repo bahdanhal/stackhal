@@ -17,4 +17,11 @@ for (const vector of spec.test_vectors) {
   assert.ok(vector.cidrs.length > 0);
 }
 
+// Verify client-side interactive library
+const cidrMatrixModule = require('../../public/cidr-matrix.js');
+assert.ok(typeof cidrMatrixModule.init === 'function');
+assert.ok(typeof cidrMatrixModule.initTabs === 'function');
+assert.ok(typeof cidrMatrixModule.initMatrixCrosshair === 'function');
+
 console.log('Visual CIDR & Subnet Overlap Matrix JS spec test passed');
+

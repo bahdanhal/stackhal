@@ -1,0 +1,423 @@
+/* Visual CIDR & Subnet Overlap Matrix Styles */
+
+.cidr-visual-workspace {
+  margin-top: 2rem;
+  background: var(--surface-card, #1e293b);
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+.cidr-tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.cidr-tab-btn {
+  background: #0f172a;
+  color: #94a3b8;
+  border: 1px solid #334155;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.cidr-tab-btn:hover {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #475569;
+}
+
+.cidr-tab-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+.cidr-tab-pane {
+  display: none;
+  animation: fadeInPane 0.25s ease-in-out;
+}
+
+.cidr-tab-pane.active {
+  display: block;
+}
+
+@keyframes fadeInPane {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Legend */
+.cidr-matrix-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  background: #0f172a;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #334155;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #cbd5e1;
+}
+
+.legend-chip {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.legend-chip.assigned { background: #3b82f6; }
+.legend-chip.collision { background: #ef4444; }
+.legend-chip.containment { background: #f59e0b; }
+.legend-chip.recommended { background: #10b981; }
+.legend-chip.disjoint { background: #059669; }
+
+/* 2D Space Treemap & Proportional Map */
+.cidr-space-map {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cidr-allocation-bar-wrapper {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.cidr-allocation-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.cidr-allocation-bar {
+  display: flex;
+  width: 100%;
+  height: 38px;
+  background: #1e293b;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  border: 1px solid #334155;
+  gap: 2px;
+}
+
+.cidr-bar-segment {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-family: monospace;
+  font-weight: bold;
+  color: #ffffff;
+  padding: 0 4px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease;
+  position: relative;
+}
+
+.cidr-bar-segment:hover {
+  filter: brightness(1.2);
+  z-index: 2;
+}
+
+.cidr-bar-segment.assigned {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+}
+
+.cidr-bar-segment.collision {
+  background: repeating-linear-gradient(
+    -45deg,
+    #dc2626,
+    #dc2626 8px,
+    #991b1b 8px,
+    #991b1b 16px
+  );
+  animation: collisionPulse 2s infinite ease-in-out;
+}
+
+.cidr-bar-segment.recommended_free {
+  background: linear-gradient(135deg, #059669, #10b981);
+}
+
+@keyframes collisionPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+/* 2D Space Tiles Grid */
+.cidr-treemap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.cidr-map-card {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+}
+
+.cidr-map-card:hover {
+  transform: translateY(-2px);
+  border-color: #64748b;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.cidr-map-card.assigned {
+  border-left: 4px solid #3b82f6;
+}
+
+.cidr-map-card.collision {
+  border-left: 4px solid #ef4444;
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, #0f172a 100%);
+}
+
+.cidr-map-card.recommended_free {
+  border-left: 4px solid #10b981;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, #0f172a 100%);
+}
+
+.cidr-map-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cidr-map-title {
+  font-family: monospace;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #f8fafc;
+}
+
+.cidr-badge {
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.cidr-badge.assigned {
+  background: #1e3a8a;
+  color: #93c5fd;
+}
+
+.cidr-badge.collision {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+
+.cidr-badge.recommended_free {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+.cidr-map-meta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.cidr-map-meta code {
+  color: #e2e8f0;
+  background: #1e293b;
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+}
+
+.cidr-collision-alert {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  color: #fca5a5;
+}
+
+/* N x N Overlap Cross-Matrix Table */
+.cidr-matrix-table-wrapper {
+  overflow-x: auto;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.cidr-matrix-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 4px;
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+.cidr-matrix-table th {
+  background: #1e293b;
+  color: #cbd5e1;
+  padding: 0.6rem 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+}
+
+.cidr-matrix-table th.row-label {
+  text-align: left;
+  background: #1e293b;
+}
+
+.matrix-cell {
+  padding: 0.6rem 0.8rem;
+  text-align: center;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  position: relative;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.matrix-cell:hover {
+  transform: scale(1.05);
+  z-index: 3;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.matrix-cell.status-self {
+  background: #1e293b;
+  color: #94a3b8;
+  border: 1px dashed #475569;
+}
+
+.matrix-cell.status-disjoint {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.matrix-cell.status-containment {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.matrix-cell.status-collision {
+  background: rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  font-weight: bold;
+}
+
+.matrix-cell-info {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+/* Subnet Partition Tree */
+.cidr-tree-view {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.tree-node {
+  margin-bottom: 1rem;
+}
+
+.tree-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #1e293b;
+  border: 1px solid #334155;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  font-family: monospace;
+}
+
+.tree-card.root {
+  border-color: #3b82f6;
+  background: #1e3a8a33;
+}
+
+.tree-card.child {
+  border-color: #475569;
+}
+
+.tree-card.recommended {
+  border-color: #10b981;
+  background: #064e3b33;
+}
+
+.tree-children {
+  margin-left: 2rem;
+  padding-left: 1rem;
+  border-left: 2px dashed #334155;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .cidr-allocation-bar {
+    height: 28px;
+  }
+  .cidr-matrix-table th, .matrix-cell {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}

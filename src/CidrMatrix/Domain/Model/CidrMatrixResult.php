@@ -13,6 +13,9 @@ final readonly class CidrMatrixResult
      * @param list<CidrDiagnostic> $diagnostics
      * @param list<array<string, mixed>> $matrixGrid
      * @param list<string> $warnings
+     * @param array<string, mixed> $pairwiseMatrix
+     * @param list<array<string, mixed>> $spacePartitions
+     * @param list<array<string, mixed>> $treeNodes
      */
     public function __construct(
         public array $parsedBlocks,
@@ -24,6 +27,9 @@ final readonly class CidrMatrixResult
         public array $matrixGrid,
         public array $diagnostics,
         public array $warnings,
+        public array $pairwiseMatrix = [],
+        public array $spacePartitions = [],
+        public array $treeNodes = [],
     ) {
     }
 
@@ -40,6 +46,9 @@ final readonly class CidrMatrixResult
             'free_subnet_cidr' => $this->freeSubnetCidr,
             'parsed_blocks' => array_map(static fn (CidrBlock $b) => $b->toArray(), $this->parsedBlocks),
             'matrix_grid' => $this->matrixGrid,
+            'pairwise_matrix' => $this->pairwiseMatrix,
+            'space_partitions' => $this->spacePartitions,
+            'tree_nodes' => $this->treeNodes,
             'diagnostics' => array_map(static fn (CidrDiagnostic $d) => $d->toArray(), $this->diagnostics),
             'warnings' => $this->warnings,
         ];

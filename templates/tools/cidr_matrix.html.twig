@@ -10,6 +10,7 @@
 {% endblock %}
 {% block stylesheets %}
   <link rel="stylesheet" href="/tools.css">
+  <link rel="stylesheet" href="/cidr-matrix.css">
 {% endblock %}
 {% block head_scripts %}
   <script type="application/ld+json">{{ {
@@ -136,23 +137,139 @@
         {% endif %}
 
         {% if result.matrixGrid|length > 0 %}
-          <div class="matrix-grid-section">
-            <h3>{{ 'cidr_matrix.results.matrix_grid'|trans }}</h3>
-            <div class="matrix-tiles" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem;">
-              {% for tile in result.matrixGrid %}
-                <div class="matrix-tile" style="padding: 1rem; border-radius: 0.5rem; border: 1px solid {{ tile.status == 'collision' ? '#ef4444' : '#334155' }}; background: {{ tile.status == 'collision' ? 'rgba(239, 68, 68, 0.1)' : '#0f172a' }};">
-                  <div style="display: flex; justify-space-between; align-items: center;">
-                    <span style="font-family: monospace; font-weight: bold; font-size: 1.1rem; color: {{ tile.status == 'collision' ? '#f87171' : '#60a5fa' }};">{{ tile.cidr }}</span>
-                    <span style="padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; text-transform: uppercase; background: {{ tile.status == 'collision' ? '#991b1b' : '#1e3a8a' }}; color: #ffffff;">
-                      {{ tile.status }}
-                    </span>
+          <div class="cidr-visual-workspace">
+            <div class="cidr-matrix-legend">
+              <strong style="color: #f8fafc;">{{ 'cidr_matrix.results.legend.title'|trans }}:</strong>
+              <div class="legend-item"><span class="legend-chip assigned"></span> {{ 'cidr_matrix.results.legend.assigned'|trans }}</div>
+              <div class="legend-item"><span class="legend-chip collision"></span> {{ 'cidr_matrix.results.legend.collision'|trans }}</div>
+              <div class="legend-item"><span class="legend-chip containment"></span> {{ 'cidr_matrix.results.legend.containment'|trans }}</div>
+              <div class="legend-item"><span class="legend-chip recommended"></span> {{ 'cidr_matrix.results.legend.recommended'|trans }}</div>
+              <div class="legend-item"><span class="legend-chip disjoint"></span> {{ 'cidr_matrix.results.legend.disjoint'|trans }}</div>
+            </div>
+
+            <div class="cidr-tabs-nav" role="tablist">
+              <button type="button" class="cidr-tab-btn active" data-tab="tab-space-map" role="tab">
+                <span>🗺️</span> {{ 'cidr_matrix.results.tabs.space_map'|trans }}
+              </button>
+              <button type="button" class="cidr-tab-btn" data-tab="tab-cross-matrix" role="tab">
+                <span>🔢</span> {{ 'cidr_matrix.results.tabs.cross_matrix'|trans }}
+              </button>
+              <button type="button" class="cidr-tab-btn" data-tab="tab-partition-tree" role="tab">
+                <span>🌳</span> {{ 'cidr_matrix.results.tabs.tree_view'|trans }}
+              </button>
+            </div>
+
+            <!-- Tab 1: 2D Address Space Map & Proportional Treemap -->
+            <div id="tab-space-map" class="cidr-tab-pane active" role="tabpanel">
+              <div class="cidr-space-map">
+                {% if result.spacePartitions|length > 0 %}
+                  <div class="cidr-allocation-bar-wrapper">
+                    <div class="cidr-allocation-bar-header">
+                      <strong>{{ 'cidr_matrix.results.allocation_bar_title'|trans }}</strong>
+                      <span>{{ 'cidr_matrix.results.interactive_tip'|trans }}</span>
+                    </div>
+                    <div class="cidr-allocation-bar">
+                      {% for part in result.spacePartitions %}
+                        <div class="cidr-bar-segment {{ part.type }}" style="flex: {{ part.percentage }} 0 auto; min-width: 48px;" title="{{ part.cidr }} ({{ part.status_label }}) - {{ part.network_ip }} .. {{ part.broadcast_ip }} [{{ part.total_hosts }} hosts]">
+                          {{ part.cidr }}
+                        </div>
+                      {% endfor %}
+                    </div>
                   </div>
-                  <div style="font-size: 0.85rem; color: #94a3b8; margin-top: 0.5rem;">
-                    <div><strong>Range:</strong> <code style="color: #cbd5e1;">{{ tile.network_ip }} - {{ tile.broadcast_ip }}</code></div>
-                    <div><strong>Total Hosts:</strong> {{ tile.total_hosts }}</div>
-                  </div>
+                {% endif %}
+
+                <div class="cidr-treemap-grid">
+                  {% for part in result.spacePartitions %}
+                    <div class="cidr-map-card {{ part.type }}">
+                      <div class="cidr-map-card-header">
+                        <span class="cidr-map-title">{{ part.cidr }}</span>
+                        <span class="cidr-badge {{ part.type }}">{{ part.status_label }}</span>
+                      </div>
+                      <div class="cidr-map-meta">
+                        <div><strong>Range:</strong> <code>{{ part.network_ip }} - {{ part.broadcast_ip }}</code></div>
+                        <div><strong>Prefix:</strong> /{{ part.prefix_length }} (<strong>{{ part.total_hosts }}</strong> hosts)</div>
+                        <div><strong>Address Space Weight:</strong> ~{{ part.percentage }}%</div>
+                      </div>
+                      {% if part.conflicting_cidrs|length > 0 %}
+                        <div class="cidr-collision-alert">
+                          ⚠️ Collides with: <strong>{{ part.conflicting_cidrs|join(', ') }}</strong>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
                 </div>
-              {% endfor %}
+              </div>
+            </div>
+
+            <!-- Tab 2: NxN Pairwise Cross-Overlap Matrix -->
+            <div id="tab-cross-matrix" class="cidr-tab-pane" role="tabpanel">
+              <div class="cidr-matrix-table-wrapper">
+                <div style="margin-bottom: 0.75rem; font-size: 0.85rem; color: #94a3b8;">
+                  <strong>{{ 'cidr_matrix.results.matrix_table_title'|trans }}</strong> &mdash; {{ 'cidr_matrix.results.interactive_tip'|trans }}
+                </div>
+                <table class="cidr-matrix-table">
+                  <thead>
+                    <tr>
+                      <th class="row-label">CIDR \ CIDR</th>
+                      {% for h in result.pairwiseMatrix.headers %}
+                        <th data-col-header="{{ h.index }}">{{ h.label }}</th>
+                      {% endfor %}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for row in result.pairwiseMatrix.rows %}
+                      <tr>
+                        <th class="row-label" data-row-header="{{ row.index }}">{{ row.label }}</th>
+                        {% for cell in row.cells %}
+                          <td class="matrix-cell status-{{ cell.status }}"
+                              data-row="{{ cell.row_idx }}"
+                              data-col="{{ cell.col_idx }}"
+                              data-badge="{{ cell.badge }}"
+                              data-desc="{{ cell.description }}"
+                              data-row-cidr="{{ row.cidr }}"
+                              data-col-cidr="{{ result.pairwiseMatrix.headers[cell.col_idx].cidr }}"
+                              title="{{ cell.description }}">
+                            {{ cell.badge }}
+                          </td>
+                        {% endfor %}
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <div id="matrix-cell-info-display" class="matrix-cell-info">
+                  <em>{{ 'cidr_matrix.results.interactive_tip'|trans }}</em>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 3: Subnet Partition Tree -->
+            <div id="tab-partition-tree" class="cidr-tab-pane" role="tabpanel">
+              <div class="cidr-tree-view">
+                <h4 style="margin-top: 0; margin-bottom: 1rem;">{{ 'cidr_matrix.results.tree_view_title'|trans }}</h4>
+                {% for node in result.treeNodes %}
+                  <div class="tree-node">
+                    <div class="tree-card {{ node.type == 'parent' ? 'root' : 'child' }}">
+                      <span style="font-weight: bold; color: {{ node.type == 'parent' ? '#60a5fa' : '#f8fafc' }};">{{ node.cidr }}</span>
+                      <span style="color: #94a3b8; font-size: 0.8rem;">(<code>{{ node.network_ip }} - {{ node.broadcast_ip }}</code> &bull; {{ node.total_hosts }} hosts)</span>
+                    </div>
+                    {% if node.children|length > 0 %}
+                      <div class="tree-children">
+                        {% for child in node.children %}
+                          <div class="tree-card {{ child.type == 'recommended_free' ? 'recommended' : 'child' }}">
+                            <span style="font-weight: bold; color: {{ child.type == 'recommended_free' ? '#34d399' : (child.type == 'contained' ? '#fbbf24' : '#93c5fd') }};">{{ child.cidr }}</span>
+                            <span style="color: #94a3b8; font-size: 0.8rem;">(<code>{{ child.network_ip }} - {{ child.broadcast_ip }}</code> &bull; {{ child.total_hosts }} hosts)</span>
+                            {% if child.type == 'recommended_free' %}
+                              <span class="cidr-badge recommended_free">{{ 'cidr_matrix.results.legend.recommended'|trans }}</span>
+                            {% elseif child.type == 'contained' %}
+                              <span class="cidr-badge" style="background: #78350f; color: #fde68a;">{{ 'cidr_matrix.results.legend.containment'|trans }}</span>
+                            {% endif %}
+                          </div>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
             </div>
           </div>
         {% endif %}
@@ -172,4 +289,5 @@
     </section>
   </div>
 </section>
+<script src="/cidr-matrix.js" defer></script>
 {% endblock %}
