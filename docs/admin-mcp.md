@@ -1,6 +1,6 @@
 # Administrative MCP access
 
-The same HTTPS MCP endpoint at `https://bahdanhal.pl/mcp` exposes public tools and a small set of administrative tools. Administrative calls fail closed unless the request contains a valid Bearer token.
+The same HTTPS MCP endpoint at `https://stackhal.com/mcp` exposes public tools and a small set of administrative tools. Administrative calls fail closed unless the request contains a valid Bearer token.
 
 ## Configuration
 
@@ -20,15 +20,13 @@ Never pass the token as a tool argument, place it in a prompt, commit it to the 
 
 ## Read-only administrative tools
 
-- `get_admin_dashboard_statistics`: privacy-preserving traffic for seven and thirty days, submission totals, SEO audit outcomes, popular lead sources and requests, active price-tip counts, observation coverage, missing histories, and products not reviewed in thirty days.
+- `get_admin_dashboard_statistics`: privacy-preserving traffic for seven and thirty days, consultation submission totals, SEO audit outcomes, and lead-source frequencies.
 - `list_admin_contact_leads`: recent consultation requests with email, phone, message, source, and timestamp.
-- `list_admin_product_requests`: recent products requested for the price index.
-- `list_admin_price_tips`: active normalized listing links awaiting manual review, including their automatic expiry dates.
 - `list_admin_recent_audits`: recent SEO audit runs with sanitized targets, completion status, score, pages crawled, cache state, and duration.
 
-The four list tools accept an optional `limit` from 1 to 100. They never return stored IP hashes.
+The list tools accept an optional `limit` from 1 to 100. They never return stored IP hashes. The Stackhal MCP server has no mutating administrative tools.
 
-`update_polish_used_price_observation` remains the only mutating administrative MCP tool. It uses the same Bearer authorization and writes only aggregate manually reviewed observations.
+`seo_audits.total` counts unique audit IDs, including validation failures that can occur before an `audit_requested` event is written. `completed` and `failed` count final run states. A blocked local or internal hostname is an expected `UnsafeUrlException` security outcome, not an application crash.
 
 ## Privacy and operations
 
