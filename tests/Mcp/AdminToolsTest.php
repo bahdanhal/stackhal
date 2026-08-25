@@ -69,6 +69,12 @@ final class AdminToolsTest extends TestCase
             'request_duration_ms' => 1200,
             'cache_hit' => false,
         ]);
+        $auditLogger->log('audit_failed', [
+            'audit_id' => 'audit-unsafe',
+            'request_duration_ms' => 0,
+            'error_type' => 'App\\Exception\\UnsafeUrlException',
+            'error' => 'Local and internal hostnames are not allowed.',
+        ]);
 
         $tools = $this->tools(true, $leadRepository, $auditLogger);
         $statistics = json_decode($tools->statistics(), true, flags: JSON_THROW_ON_ERROR);
@@ -76,10 +82,15 @@ final class AdminToolsTest extends TestCase
         $audits = json_decode($tools->recentAudits(10), true, flags: JSON_THROW_ON_ERROR);
 
         self::assertSame(1, $statistics['submissions']['contact_leads']['total']);
+        self::assertSame(2, $statistics['seo_audits']['total']);
+        self::assertSame(2, $statistics['seo_audits']['last_7_days']);
         self::assertSame(1, $statistics['seo_audits']['completed']);
+        self::assertSame(1, $statistics['seo_audits']['failed']);
         self::assertSame(0, $statistics['traffic']['last_30_days']['page_views']);
         self::assertSame('person@example.com', $leads['items'][0]['email']);
-        self::assertSame(91, $audits['items'][0]['score']);
+        self::assertSame(2, $audits['total']);
+        self::assertSame('failed', $audits['items'][0]['status']);
+        self::assertSame(91, $audits['items'][1]['score']);
         self::assertArrayNotHasKey('ip_hash', $leads['items'][0]);
     }
 

@@ -69,43 +69,12 @@ final readonly class AdminTools
             return $this->invalidLimit();
         }
 
-        $runs = [];
-        foreach (array_reverse($this->auditLogger->events()) as $event) {
-            $auditId = (string) ($event['audit_id'] ?? '');
-            if ($auditId === '') {
-                continue;
-            }
-            $runs[$auditId] ??= ['audit_id' => $auditId, 'status' => 'running'];
-            if ($event['event'] === 'audit_requested') {
-                $runs[$auditId]['requested_at'] = (string) $event['timestamp'];
-                $runs[$auditId]['target'] = (string) ($event['target'] ?? '');
-            }
-            if ($event['event'] === 'audit_completed') {
-                $runs[$auditId] = [
-                    ...$runs[$auditId],
-                    'status' => 'completed',
-                    'completed_at' => (string) $event['timestamp'],
-                    'target' => (string) ($event['target'] ?? $runs[$auditId]['target'] ?? ''),
-                    'score' => (int) ($event['score'] ?? 0),
-                    'pages_crawled' => (int) ($event['pages_crawled'] ?? 0),
-                    'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
-                    'cache_hit' => (bool) ($event['cache_hit'] ?? false),
-                ];
-            }
-            if ($event['event'] === 'audit_failed') {
-                $runs[$auditId] = [
-                    ...$runs[$auditId],
-                    'status' => 'failed',
-                    'completed_at' => (string) $event['timestamp'],
-                    'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
-                    'error_type' => (string) ($event['error_type'] ?? ''),
-                    'error' => (string) ($event['error'] ?? ''),
-                ];
-            }
-        }
-
-        $runs = array_values($runs);
-        usort($runs, static fn (array $left, array $right): int => ($right['requested_at'] ?? '') <=> ($left['requested_at'] ?? ''));
+        $runs = array_values($this->auditRuns($this->auditLogger->events()));
+        usort(
+            $runs,
+            static fn (array $left, array $right): int => ($right['requested_at'] ?? $right['completed_at'] ?? '')
+                <=> ($left['requested_at'] ?? $left['completed_at'] ?? ''),
+        );
 
         return $this->json([
             'retention_note' => 'Audit logs are retained for the configured short operational window.',
@@ -168,27 +137,71 @@ final readonly class AdminTools
         \DateTimeImmutable $sevenDaysAgo,
         \DateTimeImmutable $thirtyDaysAgo,
     ): array {
-        $requested = array_values(array_filter(
-            $events,
-            static fn (array $event): bool => $event['event'] === 'audit_requested',
-        ));
+        $runs = array_values($this->auditRuns($events));
 
         return [
             ...$this->submissionStats(
-                $requested,
-                static fn (array $event): \DateTimeImmutable => new \DateTimeImmutable((string) $event['timestamp']),
+                $runs,
+                static fn (array $run): \DateTimeImmutable => new \DateTimeImmutable(
+                    (string) ($run['requested_at'] ?? $run['completed_at']),
+                ),
                 $sevenDaysAgo,
                 $thirtyDaysAgo,
             ),
             'completed' => count(array_filter(
-                $events,
-                static fn (array $event): bool => $event['event'] === 'audit_completed',
+                $runs,
+                static fn (array $run): bool => $run['status'] === 'completed',
             )),
             'failed' => count(array_filter(
-                $events,
-                static fn (array $event): bool => $event['event'] === 'audit_failed',
+                $runs,
+                static fn (array $run): bool => $run['status'] === 'failed',
             )),
         ];
+    }
+
+    /**
+     * @param list<array<string, mixed>> $events
+     * @return array<string, array<string, mixed>>
+     */
+    private function auditRuns(array $events): array
+    {
+        $runs = [];
+        foreach ($events as $event) {
+            $auditId = (string) ($event['audit_id'] ?? '');
+            if ($auditId === '') {
+                continue;
+            }
+
+            $runs[$auditId] ??= ['audit_id' => $auditId, 'status' => 'running'];
+            if ($event['event'] === 'audit_requested') {
+                $runs[$auditId]['requested_at'] = (string) $event['timestamp'];
+                $runs[$auditId]['target'] = (string) ($event['target'] ?? '');
+            }
+            if ($event['event'] === 'audit_completed') {
+                $runs[$auditId] = [
+                    ...$runs[$auditId],
+                    'status' => 'completed',
+                    'completed_at' => (string) $event['timestamp'],
+                    'target' => (string) ($event['target'] ?? $runs[$auditId]['target'] ?? ''),
+                    'score' => (int) ($event['score'] ?? 0),
+                    'pages_crawled' => (int) ($event['pages_crawled'] ?? 0),
+                    'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
+                    'cache_hit' => (bool) ($event['cache_hit'] ?? false),
+                ];
+            }
+            if ($event['event'] === 'audit_failed') {
+                $runs[$auditId] = [
+                    ...$runs[$auditId],
+                    'status' => 'failed',
+                    'completed_at' => (string) $event['timestamp'],
+                    'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
+                    'error_type' => (string) ($event['error_type'] ?? ''),
+                    'error' => (string) ($event['error'] ?? ''),
+                ];
+            }
+        }
+
+        return $runs;
     }
 
     /**
