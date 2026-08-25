@@ -6,6 +6,8 @@ Fast, privacy-focused tools for developers, infrastructure engineers, and techni
 
 **Related projects:** [Bahdan Hal — software engineering consulting](https://bahdanhal.pl/) · [IleZa.pl — used electronics price intelligence](https://ileza.pl/)
 
+**Shared Packagist packages:** [`bahdan/symfony-safe-http-client`](https://packagist.org/packages/bahdan/symfony-safe-http-client) · [`bahdan/symfony-privacy-analytics-bundle`](https://packagist.org/packages/bahdan/symfony-privacy-analytics-bundle) · [`bahdan/lead-capture-bundle`](https://packagist.org/packages/bahdan/lead-capture-bundle)
+
 ---
 
 ## 1. Included Tools & Canonical Routes
