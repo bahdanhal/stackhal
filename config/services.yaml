@@ -180,3 +180,8 @@ services:
     public: true
     tags:
       - { name: controller.service_arguments }
+
+  App\Twig\AdminCsrfExtension:
+    arguments:
+      $secret: '%env(APP_SECRET)%'
+    tags: ['twig.extension']

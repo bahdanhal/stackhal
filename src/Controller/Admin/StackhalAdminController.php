@@ -101,6 +101,15 @@ final class StackhalAdminController extends AbstractController
         $adminToken = (string) ($_ENV['ADMIN_TOKEN'] ?? ($_ENV['MARKET_ADMIN_TOKEN'] ?? $this->secret));
 
         if (
+            !$this->isHeaderAuthenticated($request)
+            && !$this->isCsrfTokenValid('stackhal_admin_login', (string) $request->request->get('_token'))
+        ) {
+            return $this->render('admin/login.html.twig', [
+                'error' => 'Invalid or expired CSRF token.',
+            ]);
+        }
+
+        if (
             hash_equals($adminToken, $password)
             || hash_equals($this->secret, $password)
             || (isset($_ENV['MARKET_ADMIN_TOKEN']) && hash_equals((string) $_ENV['MARKET_ADMIN_TOKEN'], $password))
@@ -138,7 +147,7 @@ final class StackhalAdminController extends AbstractController
         return $response;
     }
 
-    private function isAuthenticated(Request $request): bool
+    private function isHeaderAuthenticated(Request $request): bool
     {
         $token = $request->headers->get('X-Admin-Token');
         if ($token === null || $token === '') {
@@ -150,13 +159,16 @@ final class StackhalAdminController extends AbstractController
 
         $adminToken = (string) ($_ENV['ADMIN_TOKEN'] ?? ($_ENV['MARKET_ADMIN_TOKEN'] ?? $this->secret));
 
-        if (
-            $token !== null
+        return $token !== null
             && $token !== ''
             && (hash_equals($adminToken, $token)
                 || hash_equals($this->secret, $token)
-                || (isset($_ENV['MARKET_ADMIN_TOKEN']) && hash_equals((string) $_ENV['MARKET_ADMIN_TOKEN'], $token)))
-        ) {
+                || (isset($_ENV['MARKET_ADMIN_TOKEN']) && hash_equals((string) $_ENV['MARKET_ADMIN_TOKEN'], $token)));
+    }
+
+    private function isAuthenticated(Request $request): bool
+    {
+        if ($this->isHeaderAuthenticated($request)) {
             return true;
         }
 
@@ -167,5 +179,16 @@ final class StackhalAdminController extends AbstractController
         }
 
         return false;
+    }
+
+    protected function isCsrfTokenValid(string $id, #[\SensitiveParameter] ?string $token): bool
+    {
+        if ($token === null || $token === '') {
+            return false;
+        }
+
+        $expected = hash_hmac('sha256', 'csrf:' . $id, $this->secret);
+
+        return hash_equals($expected, $token);
     }
 }
