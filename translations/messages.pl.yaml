@@ -19,6 +19,7 @@ base:
         dns_dag_tracer: "Tracer DNS DAG"
         pkpass: "Inspektor PKPass"
         app_links: "App Links"
+        ai_studio_extension: "Lokalna synchronizacja AI Studio"
         cors_sandbox: "Piaskownica CORS"
         more: "Narzędzia"
     context:
@@ -35,6 +36,7 @@ base:
         dns_dag_tracer: "Wizualny DAG propagacji DNS i łańcuch delegacji"
         pkpass: "Inspektor i emulator Apple Wallet (.pkpass)"
         app_links: "Weryfikator Apple Universal Links i Android App Links"
+        ai_studio_extension: "Lokalna synchronizacja plików i kontekstu z AI Studio"
         cors_sandbox: "Piaskownica polityk CORS i zapytań Preflight"
     footer: "Przydatne i przejrzyste narzędzia · Bez rejestracji · Bez pikseli śledzących"
     contact: "Kontakt"
@@ -58,6 +60,7 @@ home:
         email: "E-mail i identyfikacja"
         infrastructure: "Infrastruktura"
         mobile: "Mobilne i Portfel"
+        ai_coding: "Programowanie z AI"
     income:
         title: "Kalkulator form zatrudnienia"
         text: "Porównaj wypłatę z tego samego budżetu firmy dla UoP, umowy zlecenia, umowy o dzieło i B2B."
@@ -100,6 +103,9 @@ home:
     cors_sandbox:
         title: "Piaskownica polityk CORS i Preflight"
         text: "Diagnozuj nagłówki cross-origin, zapytania OPTIONS, bezpieczeństwo wildcard z poświadczeniami oraz limity max-age."
+    ai_studio_extension:
+        title: "AI Studio Local File Sync & Codebase Context"
+        text: "Otwarte rozszerzenie Chrome do pakowania kontekstu repozytorium, przeglądania diffów wygenerowanych przez AI i synchronizacji zatwierdzonych zmian z lokalnym projektem."
     principles:
         private:
             title: "Prywatność domyślnie"
@@ -110,6 +116,70 @@ home:
         fast:
             title: "Jedno konkretne zadanie"
             text: "Każde narzędzie rozwiązuje jeden problem — bez rejestracji i sztucznego oczekiwania."
+
+ai_studio_extension:
+    meta:
+        title: "AI Studio Local File Sync & Codebase Context · Rozszerzenie Chrome"
+        description: "Otwarte rozszerzenie Chrome dla Google AI Studio. Pakuj lokalny kontekst kodu, przeglądaj diffy, zapisuj zatwierdzone pliki i cofaj zmiany bez zewnętrznego serwera."
+    eyebrow: "OTWARTE ROZSZERZENIE CHROME · LOCAL-FIRST"
+    heading: "Daj Google AI Studio dostęp do prawdziwego lokalnego projektu"
+    lede: "Pakuj potrzebny kod do promptu, przeglądaj wygenerowane zmiany jako wizualne diffy i zapisuj na dysku tylko zatwierdzone pliki. Bez backendu, telemetrii i dodatkowego konta."
+    status: "Weryfikacja w Chrome Web Store w toku"
+    github_cta: "Zobacz kod i zainstaluj z GitHub"
+    guide_cta: "Instrukcja instalacji"
+    github_note: "Licencja MIT · Manifest V3 · Zero zależności uruchomieniowych"
+    visual_alt: "Rozszerzenie AI Studio Local File Sync z widokiem zmian w wielu plikach"
+    trust_label: "Charakterystyka rozszerzenia"
+    features_label: "Funkcje rozszerzenia"
+    trust:
+        local: "Dostęp do lokalnych plików"
+        review: "Weryfikacja przed każdym zapisem"
+        private: "Bez telemetrii i backendu"
+    problem:
+        label: "PO CO TO POWSTAŁO"
+        title: "AI Studio ma kontekst. Edytor ma pliki."
+        text: "Rozszerzenie łączy te dwa światy bez kolejnego hostowanego agenta. Wybierasz katalog projektu w przeglądarce, decydujesz, co trafi do promptu, i zachowujesz kontrolę nad każdą wracającą zmianą."
+    features:
+        context:
+            number: "01"
+            title: "Pakuj kontekst repozytorium świadomie"
+            text: "Przeglądaj drzewo plików posortowane według liczby tokenów, stosuj wykluczenia i dodawaj tylko pliki potrzebne w danym zadaniu."
+        diff:
+            number: "02"
+            title: "Sprawdzaj zmiany przed zapisem"
+            text: "Zobacz dodane i usunięte linie, edytuj wynik, pomijaj niebezpieczne patche i synchronizuj tylko wybrane pliki."
+        sync:
+            number: "03"
+            title: "Zachowaj odwracalny proces"
+            text: "Zapisuj przez File System Access API, unikaj zbędnych operacji i cofaj ostatnią synchronizację jednym kliknięciem."
+    gallery:
+        label: "PRZEBIEG PRACY"
+        title: "Od dużego repozytorium do czytelnego patcha"
+        diff_alt: "Podgląd dziesięciu zmienionych plików przed synchronizacją"
+        toolbar_alt: "Przyciski Sync to Disk i Context w Google AI Studio"
+        context_alt: "Pakowanie kontekstu kodu posortowanego według liczby tokenów"
+        diff_caption: "Sprawdź każdy plik i edytuj treść przed zapisem."
+        toolbar_caption: "Synchronizuj odpowiedź lub otwórz ustawienia kontekstu bez opuszczania AI Studio."
+        context_caption: "Sprawdź wagę tokenów, wyklucz szum i wybierz dokładny kontekst repozytorium."
+    install:
+        label: "ZAINSTALUJ TERAZ"
+        title: "Użyj wersji open source w czasie weryfikacji w Store"
+        intro: "Aktualną wersję można zainstalować bezpośrednio z GitHub w Chrome lub innej przeglądarce Chromium."
+        step_one_title: "Sklonuj lub pobierz"
+        step_one_text: "Pobierz repozytorium z GitHub i rozpakuj je w stałym katalogu lokalnym."
+        step_two_title: "Otwórz rozszerzenia"
+        step_two_text: "Wejdź na chrome://extensions i włącz Tryb dewelopera."
+        step_three_title: "Załaduj rozszerzenie"
+        step_three_text: "Kliknij Załaduj rozpakowane, wybierz katalog repozytorium, a następnie odśwież Google AI Studio."
+        command_label: "Polecenie klonowania"
+        store_note: "Po akceptacji w Chrome Web Store ta strona będzie prowadzić bezpośrednio do zweryfikowanej oferty."
+    privacy:
+        label: "LOCAL-FIRST Z ZAŁOŻENIA"
+        title: "Repozytorium nie trafia na serwer rozszerzenia"
+        text: "Pliki są odczytywane dopiero po wybraniu katalogu i uruchomieniu funkcji. Wybrany kontekst trafia do strony AI Studio i podlega zasadom Google oraz ustawieniom Twojego konta. Rozszerzenie nie ma backendu, analityki, trackerów ani zdalnego kodu."
+        privacy_cta: "Przeczytaj politykę prywatności"
+        issues_cta: "Zgłoś problem"
+    disclaimer: "Rozszerzenie nie jest powiązane, wspierane ani sponsorowane przez Google. Google AI Studio jest znakiem towarowym Google LLC."
 
 bimi:
     meta:
@@ -761,5 +831,3 @@ cors_sandbox:
     diagnostics_title: "Diagnostyka polityki i bezpieczeństwa"
     browser_ceilings_title: "Limity Max-Age w przeglądarkach"
     browser_ceilings_intro: "Przeglądarki internetowe narzucają sztywne górne limity czasu buforowania Access-Control-Max-Age dla zapytań preflight OPTIONS."
-
-

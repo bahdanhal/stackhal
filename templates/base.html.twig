@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="/theme-dark.css">
   <link rel="stylesheet" href="/brand-refresh.css">
   <script src="/contact.js" defer></script>
-  <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'WebSite','@id':'https://stackhal.com/#website','url':'https://stackhal.com/','name':'StackHal','inLanguage':['en', 'pl'],'publisher':{'@id':'https://stackhal.com/#stackhal'},'author':{'@id':'https://stackhal.com/#stackhal'},'dateModified':'2026-08-23'}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+  <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'WebSite','@id':'https://stackhal.com/#website','url':'https://stackhal.com/','name':'StackHal','inLanguage':['en', 'pl'],'publisher':{'@id':'https://stackhal.com/#stackhal'},'author':{'@id':'https://stackhal.com/#stackhal'},'dateModified':'2026-08-27'}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
   {% block head_scripts %}{% endblock %}
 </head>
 <body class="stackhal-site {% block body_class %}{% endblock %}">
@@ -65,6 +65,7 @@
             <a href="{{ path('dns_dag_tracer', {_locale: app.request.locale}) }}">{{ 'base.nav.dns_dag_tracer'|trans }}</a>
             <a href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">{{ 'base.nav.pkpass'|trans }}</a>
             <a href="{{ path('app_links_validator', {_locale: app.request.locale}) }}">{{ 'base.nav.app_links'|trans }}</a>
+            <a href="{{ path('ai_studio_extension', {_locale: app.request.locale}) }}">{{ 'base.nav.ai_studio_extension'|trans }}</a>
           </nav>
         </details>
         {% block language_switch %}

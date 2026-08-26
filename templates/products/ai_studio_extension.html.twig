@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+{% block tool_name %}{{ 'base.context.ai_studio_extension'|trans }}{% endblock %}
+{% block title %}{{ 'ai_studio_extension.meta.title'|trans }}{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}<meta name="description" content="{{ 'ai_studio_extension.meta.description'|trans }}">{% endblock %}
+{% block canonical %}
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/synchronizacja-plikow-ai-studio' : 'https://stackhal.com/ai-studio-local-file-sync' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/ai-studio-local-file-sync">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/synchronizacja-plikow-ai-studio">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/ai-studio-local-file-sync">
+{% endblock %}
+{% block opengraph %}
+  {{ parent() }}
+  <meta property="og:description" content="{{ 'ai_studio_extension.meta.description'|trans }}">
+  <meta property="og:url" content="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/synchronizacja-plikow-ai-studio' : 'https://stackhal.com/ai-studio-local-file-sync' }}">
+  <meta property="og:image" content="https://stackhal.com/ai-studio-extension/marquee-promo-1400x560.png">
+  <meta property="og:image:width" content="1400">
+  <meta property="og:image:height" content="560">
+  <meta name="twitter:description" content="{{ 'ai_studio_extension.meta.description'|trans }}">
+  <meta name="twitter:image" content="https://stackhal.com/ai-studio-extension/marquee-promo-1400x560.png">
+{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="/ai-studio-extension.css">{% endblock %}
+{% block language_switch %}
+  <a class="language-switch" href="{{ path('ai_studio_extension', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
+{% endblock %}
+{% block head_scripts %}
+  <script type="application/ld+json">{{ {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    'name': 'AI Studio Local File Sync & Codebase Context',
+    'applicationCategory': 'DeveloperApplication',
+    'operatingSystem': 'Chrome, Chromium',
+    'url': app.request.locale == 'pl' ? 'https://stackhal.com/pl/synchronizacja-plikow-ai-studio' : 'https://stackhal.com/ai-studio-local-file-sync',
+    'downloadUrl': 'https://github.com/bahdanhal/gemini-ai-studio-sync-extension',
+    'codeRepository': 'https://github.com/bahdanhal/gemini-ai-studio-sync-extension',
+    'license': 'https://opensource.org/license/mit',
+    'isAccessibleForFree': true,
+    'description': 'ai_studio_extension.meta.description'|trans,
+    'author': {'@type': 'Person', 'name': 'Bahdan Hal', 'url': 'https://bahdanhal.pl/'}
+  }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+{% endblock %}
+
+{% block body %}
+<article class="ai-extension-page">
+  <section class="ai-extension-hero">
+    <div class="ai-extension-copy">
+      <div class="eyebrow">{{ 'ai_studio_extension.eyebrow'|trans }}</div>
+      <h1>{{ 'ai_studio_extension.heading'|trans }}</h1>
+      <p class="ai-extension-lede">{{ 'ai_studio_extension.lede'|trans }}</p>
+      <div class="ai-extension-actions">
+        <a class="ai-extension-button ai-extension-button-primary" href="https://github.com/bahdanhal/gemini-ai-studio-sync-extension" target="_blank" rel="noopener noreferrer">{{ 'ai_studio_extension.github_cta'|trans }} <span aria-hidden="true">↗</span></a>
+        <a class="ai-extension-button ai-extension-button-secondary" href="#install">{{ 'ai_studio_extension.guide_cta'|trans }} <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="ai-extension-status"><span aria-hidden="true"></span>{{ 'ai_studio_extension.status'|trans }}</div>
+      <p class="ai-extension-note">{{ 'ai_studio_extension.github_note'|trans }}</p>
+    </div>
+    <figure class="ai-extension-hero-visual">
+      <img src="/ai-studio-extension/workspace-sync-review-1280x800.png" width="1280" height="800" alt="{{ 'ai_studio_extension.visual_alt'|trans }}" fetchpriority="high">
+    </figure>
+  </section>
+
+  <ul class="ai-extension-trust" aria-label="{{ 'ai_studio_extension.trust_label'|trans }}">
+    <li>{{ 'ai_studio_extension.trust.local'|trans }}</li>
+    <li>{{ 'ai_studio_extension.trust.review'|trans }}</li>
+    <li>{{ 'ai_studio_extension.trust.private'|trans }}</li>
+  </ul>
+
+  <section class="ai-extension-problem">
+    <div>
+      <span class="ai-extension-label">{{ 'ai_studio_extension.problem.label'|trans }}</span>
+      <h2>{{ 'ai_studio_extension.problem.title'|trans }}</h2>
+    </div>
+    <p>{{ 'ai_studio_extension.problem.text'|trans }}</p>
+  </section>
+
+  <section class="ai-extension-features" aria-label="{{ 'ai_studio_extension.features_label'|trans }}">
+    <article><span>{{ 'ai_studio_extension.features.context.number'|trans }}</span><h2>{{ 'ai_studio_extension.features.context.title'|trans }}</h2><p>{{ 'ai_studio_extension.features.context.text'|trans }}</p></article>
+    <article><span>{{ 'ai_studio_extension.features.diff.number'|trans }}</span><h2>{{ 'ai_studio_extension.features.diff.title'|trans }}</h2><p>{{ 'ai_studio_extension.features.diff.text'|trans }}</p></article>
+    <article><span>{{ 'ai_studio_extension.features.sync.number'|trans }}</span><h2>{{ 'ai_studio_extension.features.sync.title'|trans }}</h2><p>{{ 'ai_studio_extension.features.sync.text'|trans }}</p></article>
+  </section>
+
+  <section class="ai-extension-gallery">
+    <header>
+      <span class="ai-extension-label">{{ 'ai_studio_extension.gallery.label'|trans }}</span>
+      <h2>{{ 'ai_studio_extension.gallery.title'|trans }}</h2>
+    </header>
+    <figure class="ai-extension-shot ai-extension-shot-wide">
+      <img src="/ai-studio-extension/workspace-sync-review-1280x800.png" width="1280" height="800" loading="lazy" alt="{{ 'ai_studio_extension.gallery.diff_alt'|trans }}">
+      <figcaption>{{ 'ai_studio_extension.gallery.diff_caption'|trans }}</figcaption>
+    </figure>
+    <div class="ai-extension-shot-grid">
+      <figure class="ai-extension-shot">
+        <img src="/ai-studio-extension/sync-toolbar-1280x800.png" width="1280" height="800" loading="lazy" alt="{{ 'ai_studio_extension.gallery.toolbar_alt'|trans }}">
+        <figcaption>{{ 'ai_studio_extension.gallery.toolbar_caption'|trans }}</figcaption>
+      </figure>
+      <figure class="ai-extension-shot">
+        <img src="/ai-studio-extension/context-packer-1280x800.png" width="1280" height="800" loading="lazy" alt="{{ 'ai_studio_extension.gallery.context_alt'|trans }}">
+        <figcaption>{{ 'ai_studio_extension.gallery.context_caption'|trans }}</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="ai-extension-install" id="install">
+    <div class="ai-extension-install-copy">
+      <span class="ai-extension-label">{{ 'ai_studio_extension.install.label'|trans }}</span>
+      <h2>{{ 'ai_studio_extension.install.title'|trans }}</h2>
+      <p>{{ 'ai_studio_extension.install.intro'|trans }}</p>
+      <div class="ai-extension-command">
+        <span>{{ 'ai_studio_extension.install.command_label'|trans }}</span>
+        <code>git clone https://github.com/bahdanhal/gemini-ai-studio-sync-extension.git</code>
+      </div>
+      <a class="ai-extension-button ai-extension-button-primary" href="https://github.com/bahdanhal/gemini-ai-studio-sync-extension" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      <p class="ai-extension-store-note">{{ 'ai_studio_extension.install.store_note'|trans }}</p>
+    </div>
+    <ol class="ai-extension-steps">
+      <li><span>01</span><div><h3>{{ 'ai_studio_extension.install.step_one_title'|trans }}</h3><p>{{ 'ai_studio_extension.install.step_one_text'|trans }}</p></div></li>
+      <li><span>02</span><div><h3>{{ 'ai_studio_extension.install.step_two_title'|trans }}</h3><p>{{ 'ai_studio_extension.install.step_two_text'|trans }}</p></div></li>
+      <li><span>03</span><div><h3>{{ 'ai_studio_extension.install.step_three_title'|trans }}</h3><p>{{ 'ai_studio_extension.install.step_three_text'|trans }}</p></div></li>
+    </ol>
+  </section>
+
+  <section class="ai-extension-privacy">
+    <div>
+      <span class="ai-extension-label">{{ 'ai_studio_extension.privacy.label'|trans }}</span>
+      <h2>{{ 'ai_studio_extension.privacy.title'|trans }}</h2>
+    </div>
+    <div>
+      <p>{{ 'ai_studio_extension.privacy.text'|trans }}</p>
+      <div class="ai-extension-text-links">
+        <a href="https://github.com/bahdanhal/gemini-ai-studio-sync-extension/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer">{{ 'ai_studio_extension.privacy.privacy_cta'|trans }} ↗</a>
+        <a href="https://github.com/bahdanhal/gemini-ai-studio-sync-extension/issues" target="_blank" rel="noopener noreferrer">{{ 'ai_studio_extension.privacy.issues_cta'|trans }} ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <p class="ai-extension-disclaimer">{{ 'ai_studio_extension.disclaimer'|trans }}</p>
+</article>
+{% endblock %}

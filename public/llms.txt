@@ -4,6 +4,7 @@
 
 ## Primary developer tools
 
+- [AI Studio Local File Sync & Codebase Context](https://stackhal.com/ai-studio-local-file-sync): open-source Chrome extension for packing repository context, reviewing AI-generated diffs, and syncing approved files to a local workspace
 - [Nginx & Apache to Caddyfile Converter](https://stackhal.com/tools/caddy-transpiler): real-time transpiler converting Nginx server blocks and Apache .htaccess to clean Caddyfiles
 - [Apple Wallet (.pkpass) Inspector](https://stackhal.com/tools/pkpass-inspector): debug Apple Wallet passes, examine manifest hashes, JSON schemas, and preview passes
 - [CIDR Subnet Overlap Matrix](https://stackhal.com/tools/cidr-matrix): visual IPv4/IPv6 subnet calculator, collision detector, and available IP range planner
@@ -27,4 +28,3 @@
 - Public read-only MCP endpoint: `https://stackhal.com/mcp`
 - Public MCP tools: `audit_website_seo`, `analyze_geo_readiness`, `inspect_domain_security`, `transpile_to_caddyfile`, `inspect_apple_pkpass`, `calculate_cidr_overlap`, `generate_favicon_suite`, `transpile_regex_engine`, `trace_dns_delegation`, `validate_app_links`, `diagnose_cors_policy`.
 - No account or API key is required.
-

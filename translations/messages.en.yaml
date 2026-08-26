@@ -19,6 +19,7 @@ base:
         dns_dag_tracer: "DNS DAG Tracer"
         pkpass: "PKPass Inspector"
         app_links: "App Links"
+        ai_studio_extension: "AI Studio Local Sync"
         cors_sandbox: "CORS Sandbox"
         more: "Tools"
     context:
@@ -35,6 +36,7 @@ base:
         dns_dag_tracer: "Visual DNS Propagation DAG & Delegation Chain Tracer"
         pkpass: "Apple Wallet (.pkpass) Inspector & Emulator"
         app_links: "Apple Universal Links & Android App Links Validator"
+        ai_studio_extension: "AI Studio Local File Sync & Codebase Context"
         cors_sandbox: "CORS Policy & Preflight Diagnostic Sandbox"
     footer: "Useful, transparent tools · No signup · No tracking pixel"
     contact: "Contact"
@@ -58,6 +60,7 @@ home:
         email: "Email & identity"
         infrastructure: "Infrastructure"
         mobile: "Mobile & Wallet"
+        ai_coding: "AI coding"
     income:
         title: "Polish contract income calculator"
         text: "Compare take-home pay from the same company budget under UoP, umowa zlecenie, umowa o dzieło, and B2B."
@@ -100,6 +103,9 @@ home:
     cors_sandbox:
         title: "CORS Policy & Preflight Sandbox"
         text: "Diagnose cross-origin headers, preflight OPTIONS requests, wildcard credentials safety, and browser max-age limits."
+    ai_studio_extension:
+        title: "AI Studio Local File Sync & Codebase Context"
+        text: "Open-source Chrome extension for packing repository context, reviewing AI-generated diffs, and syncing approved changes directly to your local workspace."
     principles:
         private:
             title: "Private by default"
@@ -110,6 +116,70 @@ home:
         fast:
             title: "One job at a time"
             text: "Each tool is designed around one concrete task, with no paywalls, signups, or artificial delays."
+
+ai_studio_extension:
+    meta:
+        title: "AI Studio Local File Sync & Codebase Context · Chrome Extension"
+        description: "Open-source Chrome extension for Google AI Studio. Pack local codebase context, review generated diffs, sync approved files to disk, and undo changes without a backend."
+    eyebrow: "OPEN SOURCE CHROME EXTENSION · LOCAL-FIRST"
+    heading: "Give Google AI Studio a real local workspace"
+    lede: "Pack the code that matters into a prompt, review generated changes as visual diffs, and write only approved files back to disk. No backend, telemetry, or account beyond AI Studio."
+    status: "Chrome Web Store review pending"
+    github_cta: "View source & install from GitHub"
+    guide_cta: "Installation guide"
+    github_note: "MIT licensed · Manifest V3 · Zero runtime dependencies"
+    visual_alt: "AI Studio Local File Sync extension showing a multi-file diff review"
+    trust_label: "Extension characteristics"
+    features_label: "Extension features"
+    trust:
+        local: "Local filesystem access"
+        review: "Review before every write"
+        private: "No telemetry or backend"
+    problem:
+        label: "WHY THIS EXISTS"
+        title: "AI Studio has the context. Your editor has the files."
+        text: "The extension closes that gap without introducing another hosted agent. Select a project directory in the browser, decide what enters the prompt, and stay in control of every change that returns."
+    features:
+        context:
+            number: "01"
+            title: "Pack repository context deliberately"
+            text: "Inspect a token-sorted file tree, apply exclusion globs, and include only the files useful for the current task."
+        diff:
+            number: "02"
+            title: "Review changes before they touch disk"
+            text: "See additions and deletions file by file, edit the proposed result, skip unsafe patches, and sync only selected files."
+        sync:
+            number: "03"
+            title: "Keep the workflow reversible"
+            text: "Write through the browser File System Access API, avoid redundant writes, and undo the most recent synchronization in one click."
+    gallery:
+        label: "THE WORKFLOW"
+        title: "From a large codebase to an inspectable patch"
+        diff_alt: "Visual review of ten changed files before synchronization"
+        toolbar_alt: "Sync to Disk and Context controls inside Google AI Studio"
+        context_alt: "Token-sorted codebase context packer"
+        diff_caption: "Review every proposed file and edit the final content before writing."
+        toolbar_caption: "Sync a response or open the context controls without leaving AI Studio."
+        context_caption: "Understand token weight, exclude noise, and choose the exact repository context."
+    install:
+        label: "INSTALL NOW"
+        title: "Use the open-source build while the Store listing is reviewed"
+        intro: "The current release can be installed directly from GitHub in Chrome or another Chromium browser."
+        step_one_title: "Clone or download"
+        step_one_text: "Get the repository from GitHub and unpack it into a permanent local directory."
+        step_two_title: "Open extensions"
+        step_two_text: "Visit chrome://extensions and enable Developer mode."
+        step_three_title: "Load the extension"
+        step_three_text: "Choose Load unpacked, select the repository directory, then refresh Google AI Studio."
+        command_label: "Clone command"
+        store_note: "After Chrome Web Store approval, this page will link directly to the verified listing."
+    privacy:
+        label: "LOCAL-FIRST BY DESIGN"
+        title: "Your repository is not sent to an extension server"
+        text: "Files are read only after you choose a directory and invoke a feature. Selected context is inserted into the AI Studio page and is then handled under your Google account and Google's policies. The extension itself has no backend, analytics, trackers, or remote code."
+        privacy_cta: "Read the privacy policy"
+        issues_cta: "Report an issue"
+    disclaimer: "Not affiliated with, endorsed by, or sponsored by Google. Google AI Studio is a trademark of Google LLC."
 
 bimi:
     meta:
@@ -761,6 +831,4 @@ cors_sandbox:
     diagnostics_title: "Policy & Security Diagnostics"
     browser_ceilings_title: "Browser Max-Age Ceilings"
     browser_ceilings_intro: "Web browsers enforce hard maximum limits on Access-Control-Max-Age caching for preflight OPTIONS responses to prevent stale permission pinning."
-
-
 

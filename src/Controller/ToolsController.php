@@ -25,6 +25,16 @@ final class ToolsController extends AbstractController
     }
 
     #[Route(
+        path: ['en' => '/ai-studio-local-file-sync', 'pl' => '/pl/synchronizacja-plikow-ai-studio'],
+        name: 'ai_studio_extension',
+        methods: ['GET']
+    )]
+    public function aiStudioExtension(): Response
+    {
+        return $this->render('products/ai_studio_extension.html.twig');
+    }
+
+    #[Route(
         path: ['en' => '/bimi-studio', 'pl' => '/pl/bimi-studio'],
         name: 'bimi_studio',
         methods: ['GET']
