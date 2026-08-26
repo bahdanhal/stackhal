@@ -86,6 +86,35 @@ final class StackhalAdminControllerTest extends TestCase
         self::assertSame('stackhal_admin_auth', $cookies[0]->getName());
     }
 
+    public function testRejectsEmptyPasswordLogin(): void
+    {
+        $secret = 'test-secret-key';
+
+        $twig = $this->createMock(Environment::class);
+        $twig->expects(self::once())
+            ->method('render')
+            ->with('admin/login.html.twig', self::callback(static function (array $context): bool {
+                return isset($context['error']) && str_contains($context['error'], 'Invalid admin token');
+            }))
+            ->willReturn('<html>login error</html>');
+
+        $container = new Container();
+        $container->set('twig', $twig);
+
+        $controller = new StackhalAdminController(
+            $this->trafficAnalytics(),
+            $this->auditLogger,
+            $secret,
+        );
+        $controller->setContainer($container);
+
+        $validToken = hash_hmac('sha256', 'csrf:stackhal_admin_login', $secret);
+        $request = new Request(request: ['password' => '', '_token' => $validToken]);
+        $response = $controller->login($request);
+
+        self::assertSame(200, $response->getStatusCode());
+    }
+
     public function testRejectsLoginWithInvalidCsrfToken(): void
     {
         $secret = 'test-secret-key';
