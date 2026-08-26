@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Service;
 
-use App\Crawl\Infrastructure\HttpFetcher;
 use App\Crawl\Application\PageAnalyzer;
-use App\Crawl\Infrastructure\UrlGuard;
+use App\Shared\Infrastructure\Http\SafeHttpFetcher;
+use App\Shared\Infrastructure\Http\UrlGuard;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 
@@ -14,7 +14,7 @@ final class PageAnalyzerTest extends TestCase
 {
     public function testExtractsIndexingSignalsAndResolvedLinks(): void
     {
-        $fetcher = new HttpFetcher(new MockHttpClient(), new UrlGuard(), 5, 1_000_000);
+        $fetcher = new SafeHttpFetcher(new MockHttpClient(), new UrlGuard(), 5, 1_000_000);
         $analyzer = new PageAnalyzer($fetcher);
         $html = <<<'HTML'
 <!doctype html><html lang="en"><head>

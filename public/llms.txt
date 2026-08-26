@@ -1,30 +1,30 @@
-# Bahdan's Toolbox
+# StackHal.com — Developer Tools & Infrastructure Diagnostics
 
-> Personal site and free bilingual tools by backend engineer Bahdan Hal: Polish employment comparison, technical SEO and GEO audits, and a dated Polish used-goods price index.
+> Free online developer tools and diagnostics by backend engineer Bahdan Hal: Caddyfile transpiler, Apple PKPass inspector, CIDR overlap matrix, DMARC/BIMI domain inspector, technical SEO & GEO audits.
 
-## Primary pages
+## Primary developer tools
 
-- [About Bahdan Hal](https://bahdanhal.pl/): backend work, infrastructure, AI integrations and contact profiles
-- [Toolbox in English](https://bahdanhal.pl/tools): overview of all tools
-- [Toolbox in Polish](https://bahdanhal.pl/pl/narzedzia): polska wersja zestawu narzędzi
-- [Nginx to Caddy Converter](https://bahdanhal.pl/tools/caddy-transpiler): real-time transpiler converting Nginx server blocks and Apache .htaccess to clean Caddyfiles
-- [Konwerter Caddyfile](https://bahdanhal.pl/pl/narzedzia/konwerter-caddyfile): polska wersja konwertera Nginx i Apache do Caddyfile
-- [BIMI Studio & SVG Tiny 1.2 PS](https://bahdanhal.pl/tools/bimi-studio): BIMI logo sanitizer, safe-zone validator and live email inbox simulator
-- [BIMI Studio PL](https://bahdanhal.pl/pl/narzedzia/bimi-studio): polska wersja konwertera BIMI SVG Tiny 1.2 PS
-- [Domain Inspector](https://bahdanhal.pl/tools/domain-inspector): 1-click email security verification for DMARC, BIMI, MTA-STS, TLS-RPT, and SPF
-- [Inspektor domen](https://bahdanhal.pl/pl/narzedzia/inspektor-domen): polska wersja inspektora bezpieczeństwa domen
-- [Polish used-goods price index](https://bahdanhal.pl/tools/poland-used-price-index): manually reviewed, dated asking-price snapshots with historical observations
-- [Indeks cen używanych](https://bahdanhal.pl/pl/narzedzia/indeks-cen-uzywanych): polska wersja indeksu
-- [GEO analyzer](https://bahdanhal.pl/tools/geo-audit): deterministic generative-engine-readiness checks
-- [SEO analyzer](https://bahdanhal.pl/tools/seo-audit): technical crawling and indexability checks
-- [UoP / UZ / Ud / B2B calculator](https://bahdanhal.pl/tools/poland-employment-calculator): Polish contract take-home comparison
+- [Nginx & Apache to Caddyfile Converter](https://stackhal.com/tools/caddy-transpiler): real-time transpiler converting Nginx server blocks and Apache .htaccess to clean Caddyfiles
+- [Apple Wallet (.pkpass) Inspector](https://stackhal.com/tools/pkpass-inspector): debug Apple Wallet passes, examine manifest hashes, JSON schemas, and preview passes
+- [CIDR Subnet Overlap Matrix](https://stackhal.com/tools/cidr-matrix): visual IPv4/IPv6 subnet calculator, collision detector, and available IP range planner
+- [Domain Email Security Inspector](https://stackhal.com/tools/domain-inspector): 1-click verification for DMARC, BIMI, MTA-STS, TLS-RPT, and SPF
+- [BIMI Studio & SVG Tiny 1.2 PS](https://stackhal.com/tools/bimi-studio): BIMI logo sanitizer, safe-zone validator, and live email inbox simulator
+- [Technical SEO Audit](https://stackhal.com/tools/seo-audit): deterministic crawling, redirect loops, canonical integrity, robots.txt, and sitemap audits
+- [GEO Readiness Analyzer](https://stackhal.com/tools/geo-audit): deterministic answer-engine crawlability and AI readiness analysis
+- [Favicon Suite Generator](https://stackhal.com/tools/favicon-suite): multi-size ICO, PNG, and SVG manifest builder
+- [Regex Engine Transpiler](https://stackhal.com/tools/regex-transpiler): dialect converter for PCRE, JavaScript, Python, and Go regex
+- [DNS Delegation & Propagation DAG Tracer](https://stackhal.com/tools/dns-dag): visual DNS resolution hierarchy and nameserver health tracer
+- [Apple Universal Links & Android App Links Validator](https://stackhal.com/tools/app-links): assetlinks.json and apple-app-site-association checker
+- [CORS & Preflight Sandbox](https://stackhal.com/tools/cors-sandbox): interactive CORS header and preflight diagnostics
+
+## Ecosystem applications
+
+- [Bahdan Hal Portfolio](https://bahdanhal.pl/): backend consulting and production engineering
+- [IleZa.pl](https://ileza.pl/): Polish used tech price radar and salary calculator
 
 ## Data access
 
-- Public read-only MCP endpoint: `https://bahdanhal.pl/mcp`
-- MCP tools list exact tracked product configurations and return dated price history.
+- Public read-only MCP endpoint: `https://stackhal.com/mcp`
+- Public MCP tools: `audit_website_seo`, `analyze_geo_readiness`, `inspect_domain_security`, `transpile_to_caddyfile`, `inspect_apple_pkpass`, `calculate_cidr_overlap`, `generate_favicon_suite`, `transpile_regex_engine`, `trace_dns_delegation`, `validate_app_links`, `diagnose_cors_policy`.
 - No account or API key is required.
 
-## Important limitations
-
-Used-goods price values are manually reviewed aggregates of comparable public asking prices, not scraped listings, completed-sale statistics, valuations, or purchasing advice. Visitors may privately submit a public listing link for manual review; links are never fetched automatically or published, and seller data or listing text is not retained.

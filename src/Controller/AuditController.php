@@ -6,9 +6,9 @@ namespace App\Controller;
 
 use App\Audit\Application\IssueGrouper;
 use App\Audit\Application\SiteAuditor;
-use App\Crawl\Domain\UnsafeUrlException;
 use App\Lead\Application\CaptureLead;
 use App\Shared\Application\DailyQuota;
+use App\Shared\Domain\UnsafeUrlException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

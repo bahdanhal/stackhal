@@ -74,11 +74,6 @@ services:
       $timeoutSeconds: '%audit.timeout_seconds%'
       $maxBodyBytes: '%audit.max_body_bytes%'
 
-  App\Crawl\Infrastructure\HttpFetcher:
-    arguments:
-      $timeoutSeconds: '%audit.timeout_seconds%'
-      $maxBodyBytes: '%audit.max_body_bytes%'
-
   App\Audit\Infrastructure\AuditLogger:
     arguments:
       $directory: '%audit.log_directory%'
