@@ -120,13 +120,13 @@ home:
 ai_studio_extension:
     meta:
         title: "AI Studio Local File Sync & Codebase Context · Chrome Extension"
-        description: "Open-source Chrome extension for Google AI Studio. Pack local codebase context, review generated diffs, sync approved files to disk, and undo changes without a backend."
-    eyebrow: "OPEN SOURCE CHROME EXTENSION · LOCAL-FIRST"
-    heading: "Give Google AI Studio a real local workspace"
-    lede: "Pack the code that matters into a prompt, review generated changes as visual diffs, and write only approved files back to disk. No backend, telemetry, or account beyond AI Studio."
+        description: "An open-source Chrome extension for using Google AI Studio with a local codebase: context packing, diff review, file synchronization, and undo."
+    eyebrow: "OPEN SOURCE CHROME EXTENSION · AI STUDIO WORKFLOW"
+    heading: "Playing around with Google AI Studio?"
+    lede: "Tired of moving code back and forth with Ctrl+C/Ctrl+V like it’s 2024? This extension is a small open-source experiment in bringing a more agentic coding workflow to AI Studio."
     status: "Chrome Web Store review pending"
-    github_cta: "View source & install from GitHub"
-    guide_cta: "Installation guide"
+    github_cta: "View the repository on GitHub"
+    guide_cta: "Installation details"
     github_note: "MIT licensed · Manifest V3 · Zero runtime dependencies"
     visual_alt: "AI Studio Local File Sync extension showing a multi-file diff review"
     trust_label: "Extension characteristics"
@@ -137,8 +137,8 @@ ai_studio_extension:
         private: "No telemetry or backend"
     problem:
         label: "WHY THIS EXISTS"
-        title: "AI Studio has the context. Your editor has the files."
-        text: "The extension closes that gap without introducing another hosted agent. Select a project directory in the browser, decide what enters the prompt, and stay in control of every change that returns."
+        title: "AI Studio has the context. Your project has the files."
+        text: "This extension connects a user-selected local project to the AI Studio interface in the browser. It does not try to replace a full IDE or run a hosted coding agent."
     features:
         context:
             number: "01"
@@ -162,8 +162,8 @@ ai_studio_extension:
         toolbar_caption: "Sync a response or open the context controls without leaving AI Studio."
         context_caption: "Understand token weight, exclude noise, and choose the exact repository context."
     install:
-        label: "INSTALL NOW"
-        title: "Use the open-source build while the Store listing is reviewed"
+        label: "INSTALLATION"
+        title: "Installing the extension while the Store listing is reviewed"
         intro: "The current release can be installed directly from GitHub in Chrome or another Chromium browser."
         step_one_title: "Clone or download"
         step_one_text: "Get the repository from GitHub and unpack it into a permanent local directory."
@@ -176,7 +176,7 @@ ai_studio_extension:
     privacy:
         label: "LOCAL-FIRST BY DESIGN"
         title: "Your repository is not sent to an extension server"
-        text: "Files are read only after you choose a directory and invoke a feature. Selected context is inserted into the AI Studio page and is then handled under your Google account and Google's policies. The extension itself has no backend, analytics, trackers, or remote code."
+        text: "Files are read only after you choose a directory and invoke a feature. Selected context is inserted into the AI Studio page and is then handled under your Google account and Google's policies. The extension itself has no backend, analytics, trackers, or remote code. Its main functions are context packaging, diff review, synchronization, and undo."
         privacy_cta: "Read the privacy policy"
         issues_cta: "Report an issue"
     disclaimer: "Not affiliated with, endorsed by, or sponsored by Google. Google AI Studio is a trademark of Google LLC."
@@ -831,4 +831,3 @@ cors_sandbox:
     diagnostics_title: "Policy & Security Diagnostics"
     browser_ceilings_title: "Browser Max-Age Ceilings"
     browser_ceilings_intro: "Web browsers enforce hard maximum limits on Access-Control-Max-Age caching for preflight OPTIONS responses to prevent stale permission pinning."
-

@@ -120,13 +120,13 @@ home:
 ai_studio_extension:
     meta:
         title: "AI Studio Local File Sync & Codebase Context · Rozszerzenie Chrome"
-        description: "Otwarte rozszerzenie Chrome dla Google AI Studio. Pakuj lokalny kontekst kodu, przeglądaj diffy, zapisuj zatwierdzone pliki i cofaj zmiany bez zewnętrznego serwera."
-    eyebrow: "OTWARTE ROZSZERZENIE CHROME · LOCAL-FIRST"
-    heading: "Daj Google AI Studio dostęp do prawdziwego lokalnego projektu"
-    lede: "Pakuj potrzebny kod do promptu, przeglądaj wygenerowane zmiany jako wizualne diffy i zapisuj na dysku tylko zatwierdzone pliki. Bez backendu, telemetrii i dodatkowego konta."
+        description: "Otwarte rozszerzenie Chrome do używania Google AI Studio z lokalnym repozytorium: pakowanie kontekstu, przeglądanie diffów, synchronizacja plików i cofanie zmian."
+    eyebrow: "OTWARTE ROZSZERZENIE CHROME · AI STUDIO WORKFLOW"
+    heading: "Eksperymentujesz z Google AI Studio?"
+    lede: "Masz dość przenoszenia kodu tam i z powrotem przez Ctrl+C/Ctrl+V, jakby nadal był 2024? To mały projekt open source testujący bardziej agentowy sposób pracy z kodem w AI Studio."
     status: "Weryfikacja w Chrome Web Store w toku"
-    github_cta: "Zobacz kod i zainstaluj z GitHub"
-    guide_cta: "Instrukcja instalacji"
+    github_cta: "Zobacz repozytorium na GitHub"
+    guide_cta: "Szczegóły instalacji"
     github_note: "Licencja MIT · Manifest V3 · Zero zależności uruchomieniowych"
     visual_alt: "Rozszerzenie AI Studio Local File Sync z widokiem zmian w wielu plikach"
     trust_label: "Charakterystyka rozszerzenia"
@@ -137,8 +137,8 @@ ai_studio_extension:
         private: "Bez telemetrii i backendu"
     problem:
         label: "PO CO TO POWSTAŁO"
-        title: "AI Studio ma kontekst. Edytor ma pliki."
-        text: "Rozszerzenie łączy te dwa światy bez kolejnego hostowanego agenta. Wybierasz katalog projektu w przeglądarce, decydujesz, co trafi do promptu, i zachowujesz kontrolę nad każdą wracającą zmianą."
+        title: "AI Studio ma kontekst. Projekt ma pliki."
+        text: "Rozszerzenie łączy wybrany lokalny projekt z interfejsem AI Studio w przeglądarce. Nie próbuje zastępować pełnego IDE ani uruchamiać hostowanego agenta programistycznego."
     features:
         context:
             number: "01"
@@ -162,8 +162,8 @@ ai_studio_extension:
         toolbar_caption: "Synchronizuj odpowiedź lub otwórz ustawienia kontekstu bez opuszczania AI Studio."
         context_caption: "Sprawdź wagę tokenów, wyklucz szum i wybierz dokładny kontekst repozytorium."
     install:
-        label: "ZAINSTALUJ TERAZ"
-        title: "Użyj wersji open source w czasie weryfikacji w Store"
+        label: "INSTALACJA"
+        title: "Instalacja rozszerzenia podczas weryfikacji w Store"
         intro: "Aktualną wersję można zainstalować bezpośrednio z GitHub w Chrome lub innej przeglądarce Chromium."
         step_one_title: "Sklonuj lub pobierz"
         step_one_text: "Pobierz repozytorium z GitHub i rozpakuj je w stałym katalogu lokalnym."
@@ -176,7 +176,7 @@ ai_studio_extension:
     privacy:
         label: "LOCAL-FIRST Z ZAŁOŻENIA"
         title: "Repozytorium nie trafia na serwer rozszerzenia"
-        text: "Pliki są odczytywane dopiero po wybraniu katalogu i uruchomieniu funkcji. Wybrany kontekst trafia do strony AI Studio i podlega zasadom Google oraz ustawieniom Twojego konta. Rozszerzenie nie ma backendu, analityki, trackerów ani zdalnego kodu."
+        text: "Pliki są odczytywane dopiero po wybraniu katalogu i uruchomieniu funkcji. Wybrany kontekst trafia do strony AI Studio i podlega zasadom Google oraz ustawieniom Twojego konta. Rozszerzenie nie ma backendu, analityki, trackerów ani zdalnego kodu. Jego główne funkcje to pakowanie kontekstu, przeglądanie diffów, synchronizacja i cofanie zmian."
         privacy_cta: "Przeczytaj politykę prywatności"
         issues_cta: "Zgłoś problem"
     disclaimer: "Rozszerzenie nie jest powiązane, wspierane ani sponsorowane przez Google. Google AI Studio jest znakiem towarowym Google LLC."
