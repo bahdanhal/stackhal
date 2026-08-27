@@ -49,6 +49,7 @@
       <div class="topbar-actions">
         <nav class="primary-nav" aria-label="{{ 'base.navigation'|trans }}">
           <a href="{{ path('landing', {_locale: app.request.locale}) }}">{{ 'common.all_tools'|trans }}</a>
+          <a href="{{ path('blog_index') }}">Blog</a>
           <a href="{{ path('geo_home', {_locale: app.request.locale}) }}">{{ 'base.nav.geo'|trans }}</a>
           <a href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">{{ 'base.nav.seo'|trans }}</a>
         </nav>

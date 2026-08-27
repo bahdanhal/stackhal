@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+{% block title %}StackHal Blog · Practical Guides for Web Infrastructure{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}<meta name="description" content="Practical guides for email authentication, DNS, technical SEO, and developer infrastructure from StackHal.">{% endblock %}
+{% block canonical %}<link rel="canonical" href="https://stackhal.com/blog">{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="/blog.css">{% endblock %}
+{% block language_switch %}<a class="language-switch" href="{{ path('landing', {_locale: 'pl'}) }}" hreflang="pl">PL</a>{% endblock %}
+{% block body %}
+<section class="blog-index-shell">
+  <div class="blog-index-intro">
+    <p class="article-kicker">STACKHAL FIELD NOTES</p>
+    <h1>Practical guides for the parts of the web that usually break quietly.</h1>
+    <p class="article-dek">Short, evidence-led explainers for email authentication, DNS, technical SEO, and developer infrastructure.</p>
+  </div>
+  <a class="article-card" href="{{ path('blog_bimi_not_working') }}">
+    <div class="article-card-visual" aria-hidden="true"><span>v=BIMI1</span><span>p=reject</span><span>SVG Tiny PS</span></div>
+    <div class="article-card-copy">
+      <p class="article-kicker">EMAIL AUTHENTICATION · 8 MIN READ</p>
+      <h2>BIMI Not Working? A Practical Guide to DMARC, SVG Tiny PS, DNS Records, and VMC</h2>
+      <p>Your logo is uploaded, the TXT record exists, and the inbox is still blank. Here is the shortest path from a confusing BIMI setup to a testable diagnosis.</p>
+      <strong>Read the guide →</strong>
+    </div>
+  </a>
+</section>
+{% endblock %}

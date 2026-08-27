@@ -27,6 +27,8 @@ final readonly class SitemapController
             ['/apple-pkpass-inspector', '/pl/inspektor-pkpass'],
             ['/app-links-validator', '/pl/weryfikator-app-links'],
             ['/ai-studio-local-file-sync', '/pl/synchronizacja-plikow-ai-studio'],
+            ['/blog', '/blog'],
+            ['/blog/bimi-not-working', '/blog/bimi-not-working'],
         ];
 
         $entries = [];

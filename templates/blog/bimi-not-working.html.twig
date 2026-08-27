@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+{% block title %}BIMI Not Working? DMARC, SVG Tiny PS, DNS, and VMC Guide · StackHal{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}<meta name="description" content="BIMI not showing? Diagnose DMARC enforcement, SVG Tiny PS requirements, DNS records, HTTPS hosting, and VMC or CMC certificate requirements.">{% endblock %}
+{% block canonical %}
+  <link rel="canonical" href="https://stackhal.com/blog/bimi-not-working">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/bimi-not-working">
+{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="/blog.css">{% endblock %}
+{% block head_scripts %}
+  <script type="application/ld+json">{{ {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {'@type': 'Article', '@id': 'https://stackhal.com/blog/bimi-not-working#article', 'headline': 'BIMI Not Working? A Practical Guide to DMARC, SVG Tiny PS, DNS Records, and VMC', 'description': 'A practical guide to diagnosing BIMI logo display problems.', 'datePublished': '2026-08-28', 'dateModified': '2026-08-28', 'author': {'@id': 'https://stackhal.com/#stackhal'}, 'publisher': {'@id': 'https://stackhal.com/#stackhal'}, 'mainEntityOfPage': 'https://stackhal.com/blog/bimi-not-working', 'inLanguage': 'en'},
+      {'@type': 'HowTo', '@id': 'https://stackhal.com/blog/bimi-not-working#howto', 'name': 'Set up a BIMI record', 'step': [
+        {'@type': 'HowToStep', 'name': 'Enforce DMARC', 'text': 'Use a DMARC policy of quarantine or reject with pct=100.'},
+        {'@type': 'HowToStep', 'name': 'Prepare the logo', 'text': 'Create a square SVG Tiny PS logo without scripts or external references.'},
+        {'@type': 'HowToStep', 'name': 'Publish the record', 'text': 'Publish a TXT record at default._bimi.yourdomain pointing to the HTTPS SVG URL.'},
+        {'@type': 'HowToStep', 'name': 'Inspect the result', 'text': 'Check DNS, SVG reachability, MIME type, and provider-specific requirements.'}
+      ]}
+    ]
+  }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+{% endblock %}
+{% block language_switch %}<a class="language-switch" href="{{ path('landing', {_locale: 'pl'}) }}" hreflang="pl">PL</a>{% endblock %}
+{% block body %}
+<article class="article-shell">
+  <header class="article-header">
+    <p class="article-kicker">EMAIL AUTHENTICATION · 8 MIN READ · AUGUST 28, 2026</p>
+    <h1>BIMI Not Working?</h1>
+    <p class="article-dek">A practical guide to DMARC enforcement, SVG Tiny PS, DNS records, and the certificates that can keep a brand logo out of the inbox.</p>
+    <div class="article-header-meta"><span>StackHal Field Notes</span><span>Updated for current BIMI guidance</span></div>
+  </header>
+
+  <div class="article-layout">
+    <aside class="article-toc" aria-label="On this page">
+      <span>ON THIS PAGE</span>
+      <a href="#short-version">The short version</a>
+      <a href="#dmarc">DMARC first</a>
+      <a href="#record">The DNS record</a>
+      <a href="#svg">The SVG trap</a>
+      <a href="#certificates">VMC and CMC</a>
+      <a href="#checklist">Troubleshooting checklist</a>
+    </aside>
+
+    <div class="article-content">
+      <p id="short-version" class="article-lead">BIMI is a DNS-published signal that lets participating mailbox providers consider showing your brand logo next to authenticated email. It is not a replacement for SPF, DKIM, or DMARC—and publishing the record alone does not guarantee that a logo will appear.</p>
+
+      <div class="article-callout article-callout-accent"><strong>The useful mental model</strong><span>DMARC proves the sender is allowed to use the domain. BIMI tells a mailbox where the brand mark lives. The mailbox provider still decides whether to display it.</span></div>
+
+      <figure class="article-visual visual-pipeline">
+        <div class="pipeline-step"><b>01</b><strong>Authenticate</strong><small>SPF · DKIM · DMARC</small></div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step"><b>02</b><strong>Publish</strong><small>default._bimi TXT</small></div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step"><b>03</b><strong>Render</strong><small>Provider-specific inbox UI</small></div>
+        <figcaption>BIMI sits on top of email authentication; it does not replace it.</figcaption>
+      </figure>
+
+      <h2 id="dmarc">1. Check DMARC before touching the logo</h2>
+      <p>Most “BIMI is not working” investigations start in the wrong place. Before editing an SVG, inspect the DMARC policy for the visible From domain and its organizational domain.</p>
+      <p>For BIMI eligibility, the policy generally needs to be at enforcement: <code>p=quarantine</code> or <code>p=reject</code>, with <code>pct=100</code>. A monitoring-only policy such as <code>p=none</code> is useful while deploying DMARC, but it is not enough for the mailbox providers that require enforcement.</p>
+
+      <div class="article-screen screen-report" role="img" aria-label="Illustration of a StackHal domain security report showing DMARC enforcement and BIMI readiness">
+        <div class="screen-chrome"><span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span><span>stackhal.com / domain-inspector</span></div>
+        <div class="screen-body"><div class="screen-title">Domain security report <span class="screen-status">READY TO CHECK</span></div><div class="screen-grid"><div><small>DMARC POLICY</small><strong>p=reject</strong><em class="screen-good">pct=100 · aligned</em></div><div><small>BIMI READINESS</small><strong>Eligible</strong><em class="screen-good">enforcement detected</em></div></div></div>
+        <span class="screen-caption">Use Domain Inspector to verify the prerequisite before debugging the logo.</span>
+      </div>
+
+      <h2 id="record">2. Publish the record at the exact BIMI name</h2>
+      <p>The default selector is <code>default</code>, so the record lives at <code>default._bimi.example.com</code>. The <code>l=</code> tag points to the logo; the <code>a=</code> tag can point to a VMC or CMC when required by a receiving provider.</p>
+      <pre class="article-code"><code>default._bimi.example.com. IN TXT \
+"v=BIMI1; l=https://example.com/logo-bimi.svg;"</code></pre>
+      <p>Common mistakes are publishing the record at <code>_bimi.example.com</code>, using an HTTP logo URL, adding smart quotes, or leaving a trailing value copied from a different environment. DNS answers can also be cached, so test the authoritative path and allow time for propagation.</p>
+
+      <h2 id="svg">3. A normal SVG is not necessarily a BIMI SVG</h2>
+      <p>BIMI uses the stricter SVG Tiny PS profile. The logo should be square, compact, and safe to render in a small circular or rounded mask. It should not depend on scripts, animations, external references, or embedded raster images.</p>
+      <div class="article-screen screen-studio" role="img" aria-label="Illustration of StackHal BIMI Studio with a logo preview and SVG Tiny PS checks">
+        <div class="screen-chrome"><span class="screen-dot"></span><span class="screen-dot"></span><span class="screen-dot"></span><span>stackhal.com / bimi-studio</span></div>
+        <div class="studio-screen-body"><div class="studio-side"><small>SVG TINY PS STUDIO</small><strong>Logo preparation</strong><span class="screen-check">✓ Square viewBox</span><span class="screen-check">✓ Safe-zone preview</span><span class="screen-check">✓ Light / dark contrast</span></div><div class="studio-logo"><div class="logo-mark">SH</div><span>Inbox avatar preview</span></div></div>
+        <span class="screen-caption">Prepare the asset and preview how it survives a tiny inbox avatar.</span>
+      </div>
+      <p>Pay particular attention to the response headers when the file is hosted. The URL should be stable, use HTTPS, and serve the correct <code>image/svg+xml</code> content type. A file that looks fine in a browser can still fail a stricter fetch or profile check.</p>
+
+      <h2 id="certificates">4. Understand VMC and CMC before assuming BIMI is broken</h2>
+      <p>Some mailbox providers accept a self-asserted BIMI logo; others require a certificate that validates the brand mark. A Verified Mark Certificate (VMC) is tied to a qualifying registered trademark. A Common Mark Certificate (CMC) is another certificate path with different eligibility rules.</p>
+      <p>This is provider-specific and can change independently of your DNS. Treat a valid DNS record as necessary evidence, not as a promise that every inbox will display the same avatar.</p>
+
+      <div class="article-callout"><strong>Do not promise an inbox avatar</strong><span>BIMI improves brand recognition on supporting providers, but it is not a delivery guarantee, a spam bypass, or a universal replacement for a user profile image.</span></div>
+
+      <h2 id="checklist">A fast troubleshooting checklist</h2>
+      <ol class="article-checklist">
+        <li><strong>Visible From domain:</strong> confirm you are checking the domain recipients actually see.</li>
+        <li><strong>DMARC enforcement:</strong> verify <code>p=quarantine</code> or <code>p=reject</code> and <code>pct=100</code>.</li>
+        <li><strong>Alignment:</strong> make sure SPF and/or DKIM aligns with the From domain.</li>
+        <li><strong>Exact DNS name:</strong> query <code>default._bimi.domain</code> and confirm <code>v=BIMI1</code>.</li>
+        <li><strong>SVG retrieval:</strong> check HTTPS, status 200, MIME type, size, and SVG Tiny PS constraints.</li>
+        <li><strong>Provider rules:</strong> check whether the receiving mailbox requires VMC or CMC.</li>
+        <li><strong>Wait and retest:</strong> provider caches and rollout timing can outlive a correct DNS change.</li>
+      </ol>
+
+      <div class="article-cta"><p class="article-kicker">READY TO CHECK YOUR DOMAIN?</p><h2>Turn the guesswork into evidence.</h2><p>Run the DNS and email-security checks first, then prepare the logo for the small formats where BIMI actually appears.</p><div class="article-cta-actions"><a class="article-button article-button-primary" href="{{ path('domain_inspector_home') }}">Inspect a domain →</a><a class="article-button" href="{{ path('bimi_studio') }}">Open BIMI Studio</a></div></div>
+
+      <p class="article-sources"><strong>Sources:</strong> <a href="https://bimigroup.org/implementation-guide/" rel="noopener">BIMI Group implementation guide</a> · <a href="https://bimigroup.org/faqs-for-senders-esps/" rel="noopener">BIMI Group sender FAQ</a> · <a href="https://bimigroup.org/creating-bimi-svg-logo-files/" rel="noopener">SVG Tiny PS guidance</a></p>
+    </div>
+  </div>
+</article>
+{% endblock %}
