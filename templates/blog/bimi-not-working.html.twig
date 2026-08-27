@@ -38,6 +38,7 @@
       <a href="#dmarc">DMARC first</a>
       <a href="#record">The DNS record</a>
       <a href="#svg">The SVG trap</a>
+      <a href="#inbox-preview">Inbox result</a>
       <a href="#certificates">VMC and CMC</a>
       <a href="#checklist">Troubleshooting checklist</a>
     </aside>
@@ -81,7 +82,28 @@
       </div>
       <p>Pay particular attention to the response headers when the file is hosted. The URL should be stable, use HTTPS, and serve the correct <code>image/svg+xml</code> content type. A file that looks fine in a browser can still fail a stricter fetch or profile check.</p>
 
-      <h2 id="certificates">4. Understand VMC and CMC before assuming BIMI is broken</h2>
+      <h2 id="inbox-preview">4. What the result looks like in a mailbox</h2>
+      <p>When a provider accepts the BIMI signal, the practical result is small but visible: the sender’s brand mark appears in the avatar position beside the message. It is not a new email layout and it does not add a “BIMI” badge to every message.</p>
+      <div class="mailbox-previews" aria-label="Illustrative inbox previews showing a BIMI brand avatar">
+        <div class="mailbox-card mailbox-gmail">
+          <div class="mailbox-bar"><span class="mailbox-brand">Gmail</span><span>Primary</span></div>
+          <div class="mail-row"><div class="mail-avatar">AC</div><div class="mail-copy"><strong>Acme Corp</strong><span>Your monthly security report</span><small>Your report is ready to view…</small></div><time>10:24</time></div>
+          <small class="mailbox-label">Brand avatar beside the sender</small>
+        </div>
+        <div class="mailbox-card mailbox-apple">
+          <div class="mailbox-bar"><span class="mailbox-brand">Mail</span><span>Inbox</span></div>
+          <div class="mail-row"><div class="mail-avatar">AC</div><div class="mail-copy"><strong>Acme Corp</strong><span>Welcome to Acme Security</span><small>Finish setting up your account…</small></div><time>Yesterday</time></div>
+          <small class="mailbox-label">Same sender identity, different chrome</small>
+        </div>
+        <div class="mailbox-card mailbox-yahoo">
+          <div class="mailbox-bar"><span class="mailbox-brand">Yahoo Mail</span><span>Inbox</span></div>
+          <div class="mail-row"><div class="mail-avatar">AC</div><div class="mail-copy"><strong>Acme Corp</strong><span>Your invoice is available</span><small>Invoice #1048 is ready…</small></div><time>09:12</time></div>
+          <small class="mailbox-label">Provider decides if and when to show it</small>
+        </div>
+      </div>
+      <p class="article-visual-note">Illustrative previews, not screenshots of the providers’ live products. The exact avatar shape, size, fallback image, and display timing vary by mailbox provider and account context.</p>
+
+      <h2 id="certificates">5. Understand VMC and CMC before assuming BIMI is broken</h2>
       <p>Some mailbox providers accept a self-asserted BIMI logo; others require a certificate that validates the brand mark. A Verified Mark Certificate (VMC) is tied to a qualifying registered trademark. A Common Mark Certificate (CMC) is another certificate path with different eligibility rules.</p>
       <p>This is provider-specific and can change independently of your DNS. Treat a valid DNS record as necessary evidence, not as a promise that every inbox will display the same avatar.</p>
 
