@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace App\Admin\Presentation\Http;
 
 use App\Analytics\Application\TrafficAnalytics;
 use App\Audit\Infrastructure\AuditLogger;

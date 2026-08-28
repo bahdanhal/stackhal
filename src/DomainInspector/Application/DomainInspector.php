@@ -11,13 +11,13 @@ use App\DomainInspector\Domain\MtaStsCheck;
 use App\DomainInspector\Domain\MxCheck;
 use App\DomainInspector\Domain\SpfCheck;
 use App\DomainInspector\Domain\TlsRptCheck;
-use App\Shared\Infrastructure\Http\SafeHttpFetcher;
+use App\Shared\Application\HttpFetcher;
 
 final readonly class DomainInspector
 {
     public function __construct(
         private DnsResolverInterface $dnsResolver,
-        private SafeHttpFetcher $httpFetcher,
+        private HttpFetcher $httpFetcher,
     ) {
     }
 

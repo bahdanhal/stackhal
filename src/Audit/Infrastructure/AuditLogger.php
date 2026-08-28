@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Audit\Infrastructure;
 
-final readonly class AuditLogger
+use App\Audit\Application\AuditLogger as AuditLoggerPort;
+
+final readonly class AuditLogger implements AuditLoggerPort
 {
     public function __construct(
         private string $directory,

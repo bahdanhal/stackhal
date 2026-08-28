@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Blog;
 
 use App\Blog\Infrastructure\DoctrineBlogArticleRepository;
+use App\Blog\Domain\BlogArticle;
 use App\Entity\BlogArticleEntity;
 use App\Tests\DoctrineTestCase;
 
@@ -21,7 +22,7 @@ final class DoctrineBlogArticleRepositoryTest extends DoctrineTestCase
         $articles = $this->repository()->findPublished();
 
         self::assertSame(['newer', 'older'], array_map(
-            static fn (BlogArticleEntity $article): string => $article->getSlug(),
+            static fn (BlogArticle $article): string => $article->getSlug(),
             $articles
         ));
     }

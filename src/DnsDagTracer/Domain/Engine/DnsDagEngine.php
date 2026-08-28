@@ -10,6 +10,7 @@ use App\DnsDagTracer\Domain\Model\DnsLayer;
 use App\DnsDagTracer\Domain\Model\DnssecStatus;
 use App\DnsDagTracer\Domain\Model\DnsServerNode;
 use App\DnsDagTracer\Domain\Model\QueryType;
+use App\DnsDagTracer\Domain\Port\DnsRecordResolver;
 
 final class DnsDagEngine
 {
@@ -17,6 +18,10 @@ final class DnsDagEngine
         'A' => DNS_A, 'AAAA' => DNS_AAAA, 'CNAME' => DNS_CNAME, 'TXT' => DNS_TXT,
         'MX' => DNS_MX, 'NS' => DNS_NS, 'SOA' => DNS_SOA, 'CAA' => DNS_CAA,
     ];
+
+    public function __construct(private DnsRecordResolver $resolver)
+    {
+    }
 
     public function trace(string $domain, QueryType $queryType = QueryType::A): DnsDagResult
     {
@@ -35,9 +40,7 @@ final class DnsDagEngine
             );
         }
 
-        error_clear_last();
-        /** @var list<array<string, mixed>>|false $records */
-        $records = @dns_get_record($domain, self::TYPE_FLAGS[$queryType->value]);
+        $records = $this->resolver->resolve($domain, self::TYPE_FLAGS[$queryType->value]);
         if ($records === false || $records === []) {
             return $this->errorResult(
                 $domain,
@@ -95,9 +98,7 @@ final class DnsDagEngine
 
     private function buildAuthoritativeLayer(string $domain): ?DnsLayer
     {
-        error_clear_last();
-        /** @var list<array<string, mixed>>|false $records */
-        $records = @dns_get_record($domain, DNS_NS);
+        $records = $this->resolver->resolve($domain, DNS_NS);
         if ($records === false || $records === []) {
             return null;
         }
@@ -128,9 +129,7 @@ final class DnsDagEngine
 
     private function resolveNameserverIp(string $hostname): string
     {
-        error_clear_last();
-        /** @var list<array<string, mixed>>|false $records */
-        $records = @dns_get_record($hostname, DNS_A | DNS_AAAA);
+        $records = $this->resolver->resolve($hostname, DNS_A | DNS_AAAA);
         if ($records === false) {
             return '';
         }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Mcp;
 
 use App\DnsDagTracer\Application\DnsDagTracerService;
+use App\DnsDagTracer\Domain\Engine\DnsDagEngine;
+use App\DnsDagTracer\Domain\Port\DnsRecordResolver;
 use App\Mcp\DnsDagTools;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +16,17 @@ final class DnsDagToolsTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tools = new DnsDagTools(new DnsDagTracerService());
+        $resolver = $this->createStub(DnsRecordResolver::class);
+        $resolver->method('resolve')->willReturnCallback(static function (string $hostname, int $type): array|false {
+            if ($type === DNS_NS) {
+                return [['target' => 'ns1.example.com.', 'ttl' => 300]];
+            }
+            if (($type & DNS_A) !== 0 && $hostname === 'ns1.example.com.') {
+                return [['ip' => '192.0.2.1', 'ttl' => 300]];
+            }
+            return [['ip' => '93.184.216.34', 'ttl' => 300]];
+        });
+        $this->tools = new DnsDagTools(new DnsDagTracerService(new DnsDagEngine($resolver)));
     }
 
     public function testTraceDnsDelegationToolSuccess(): void

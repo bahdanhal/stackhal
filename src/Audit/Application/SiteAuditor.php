@@ -6,12 +6,12 @@ namespace App\Audit\Application;
 
 use App\Audit\Domain\AuditRuleEngine;
 use App\Audit\Domain\EditorialAdvisoryCatalog;
-use App\Audit\Infrastructure\AuditLogger;
+use App\Audit\Application\AuditLogger;
 use App\Crawl\Application\PageAnalyzer;
 use App\Crawl\Application\SitemapInspector;
 use App\Crawl\Domain\RobotsPolicy;
-use App\Shared\Infrastructure\Http\SafeHttpFetcher;
-use App\Shared\Infrastructure\Http\UrlGuard;
+use App\Shared\Application\HttpFetcher;
+use App\Shared\Application\UrlGuard;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -19,7 +19,7 @@ final readonly class SiteAuditor
 {
     public function __construct(
         private UrlGuard $urlGuard,
-        private SafeHttpFetcher $fetcher,
+        private HttpFetcher $fetcher,
         private PageAnalyzer $pageAnalyzer,
         private SitemapInspector $sitemapInspector,
         private AuditRuleEngine $ruleEngine,

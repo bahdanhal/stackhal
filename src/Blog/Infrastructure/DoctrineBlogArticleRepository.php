@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace App\Blog\Infrastructure;
 
+use App\Blog\Application\BlogArticleRepository;
+use App\Blog\Domain\BlogArticle;
 use App\Entity\BlogArticleEntity;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class DoctrineBlogArticleRepository
+final class DoctrineBlogArticleRepository implements BlogArticleRepository
 {
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 
-    /** @return list<BlogArticleEntity> */
+    /** @return list<BlogArticle> */
     public function findPublished(): array
     {
-        return $this->entityManager->createQueryBuilder()
+        /** @var list<BlogArticleEntity> $articles */
+        $articles = $this->entityManager->createQueryBuilder()
             ->select('article')
             ->from(BlogArticleEntity::class, 'article')
             ->andWhere('article.publishedAt <= :now')
@@ -25,11 +28,14 @@ final class DoctrineBlogArticleRepository
             ->addOrderBy('article.id', 'DESC')
             ->getQuery()
             ->getResult();
+
+        return array_map($this->map(...), $articles);
     }
 
-    public function findPublishedBySlug(string $slug): ?BlogArticleEntity
+    public function findPublishedBySlug(string $slug): ?BlogArticle
     {
-        return $this->entityManager->createQueryBuilder()
+        /** @var BlogArticleEntity|null $article */
+        $article = $this->entityManager->createQueryBuilder()
             ->select('article')
             ->from(BlogArticleEntity::class, 'article')
             ->andWhere('article.slug = :slug')
@@ -38,5 +44,26 @@ final class DoctrineBlogArticleRepository
             ->setParameter('now', new \DateTimeImmutable())
             ->getQuery()
             ->getOneOrNullResult();
+
+        return $article === null ? null : $this->map($article);
+    }
+
+    private function map(BlogArticleEntity $article): BlogArticle
+    {
+        return new BlogArticle(
+            $article->getSlug(),
+            $article->getTitle(),
+            $article->getDescription(),
+            $article->getCategory(),
+            $article->getReadTimeMinutes(),
+            $article->getPublishedAt(),
+            $article->getUpdatedAt(),
+            $article->getContentHtml(),
+            $article->getCtaLabel(),
+            $article->getCtaPath(),
+            $article->getVisualClass(),
+            $article->getVisualLines(),
+            $article->getHowToSteps(),
+        );
     }
 }

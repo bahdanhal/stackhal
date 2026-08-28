@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Toolbox\Presentation\Http;
 
 use App\CidrMatrix\Application\CidrMatrixService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

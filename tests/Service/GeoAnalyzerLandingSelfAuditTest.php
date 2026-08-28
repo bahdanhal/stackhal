@@ -10,7 +10,7 @@ use App\Geo\Application\GeoAnalyzer;
 use App\Kernel;
 use App\Mcp\GeoTools;
 use App\Shared\Infrastructure\Http\SafeHttpFetcher;
-use App\Shared\Infrastructure\Http\UrlGuard;
+use App\Shared\Application\UrlGuard;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -109,7 +109,8 @@ final class GeoAnalyzerLandingSelfAuditTest extends TestCase
         $robotsTxt = (string) file_get_contents(dirname(__DIR__, 2) . '/public/robots.txt');
         $llmsTxt = (string) file_get_contents(dirname(__DIR__, 2) . '/public/llms.txt');
 
-        $urlGuard = new UrlGuard();
+        $urlGuard = $this->createStub(UrlGuard::class);
+        $urlGuard->method('normalize')->willReturnCallback(static fn (string $input): string => $input);
         $fetcher = new class ($url, $html, $robotsTxt, $llmsTxt) extends SafeHttpFetcher {
             public function __construct(
                 private readonly string $targetUrl,

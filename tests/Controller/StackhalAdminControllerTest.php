@@ -7,7 +7,7 @@ namespace App\Tests\Controller;
 use App\Analytics\Application\TrafficAnalytics;
 use App\Analytics\Domain\PageViewRepository;
 use App\Audit\Infrastructure\AuditLogger;
-use App\Controller\Admin\StackhalAdminController;
+use App\Admin\Presentation\Http\StackhalAdminController;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;

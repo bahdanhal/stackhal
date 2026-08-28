@@ -6,8 +6,8 @@ namespace App\Geo\Application;
 
 use App\Crawl\Application\PageAnalyzer;
 use App\Crawl\Domain\RobotsPolicy;
-use App\Shared\Infrastructure\Http\SafeHttpFetcher;
-use App\Shared\Infrastructure\Http\UrlGuard;
+use App\Shared\Application\HttpFetcher;
+use App\Shared\Application\UrlGuard;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -20,7 +20,7 @@ final readonly class GeoAnalyzer
 
     public function __construct(
         private UrlGuard $urlGuard,
-        private SafeHttpFetcher $fetcher,
+        private HttpFetcher $fetcher,
         private PageAnalyzer $pageAnalyzer,
         private RobotsPolicy $robotsPolicy,
         private CacheInterface $auditCache,

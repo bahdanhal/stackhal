@@ -88,6 +88,9 @@ services:
   App\DomainInspector\Application\DnsResolverInterface:
     alias: App\DomainInspector\Infrastructure\CachedDnsResolver
 
+  App\DnsDagTracer\Domain\Port\DnsRecordResolver:
+    alias: App\DnsDagTracer\Infrastructure\NativeDnsRecordResolver
+
   App\Lead\Domain\LeadRepository:
     alias: App\Lead\Infrastructure\DoctrineLeadRepository
 
@@ -131,16 +134,16 @@ services:
     arguments:
       $token: '%env(MARKET_ADMIN_TOKEN)%'
 
-  App\Controller\AuditController:
+  App\Audit\Presentation\Http\AuditController:
     arguments:
       $auditQuota: '@App\Shared\Application\DailyQuota'
       $contactLimiter: '@limiter.contact'
 
-  App\Controller\GeoController:
+  App\Geo\Presentation\Http\GeoController:
     arguments:
       $auditQuota: '@App\Shared\Application\DailyQuota'
 
-  App\Controller\Admin\StackhalAdminController:
+  App\Admin\Presentation\Http\StackhalAdminController:
     arguments:
       $secret: '%env(APP_SECRET)%'
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\DomainInspector\Presentation\Http;
 
 use App\DomainInspector\Application\DomainInspector;
 use App\Shared\Application\DailyQuota;

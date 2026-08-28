@@ -6,7 +6,7 @@ namespace App\AppLinks\Application;
 
 use App\AppLinks\Domain\Engine\AppLinksValidator;
 use App\AppLinks\Domain\Model\AppLinksResult;
-use App\Shared\Infrastructure\Http\SafeHttpFetcher;
+use App\Shared\Application\HttpFetcher;
 
 final readonly class AppLinksService
 {
@@ -14,7 +14,7 @@ final readonly class AppLinksService
 
     public function __construct(
         ?AppLinksValidator $validator = null,
-        private ?SafeHttpFetcher $httpFetcher = null,
+        private ?HttpFetcher $httpFetcher = null,
     ) {
         $this->validator = $validator ?? new AppLinksValidator();
     }

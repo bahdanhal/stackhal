@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Shared\Presentation\Http;
 
-use App\Blog\Infrastructure\DoctrineBlogArticleRepository;
+use App\Blog\Application\BlogArticleRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final readonly class SitemapController
 {
     #[Route('/sitemap.xml', name: 'sitemap', methods: ['GET'])]
-    public function __invoke(?DoctrineBlogArticleRepository $articles = null): Response
+    public function __invoke(?BlogArticleRepository $articles = null): Response
     {
         $pairs = [
             ['/', '/pl/'],

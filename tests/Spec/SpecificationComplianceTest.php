@@ -329,7 +329,17 @@ final class SpecificationComplianceTest extends TestCase
         self::assertFileExists($specPath);
 
         $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
-        $engine = new \App\DnsDagTracer\Domain\Engine\DnsDagEngine();
+        $resolver = $this->createStub(\App\DnsDagTracer\Domain\Port\DnsRecordResolver::class);
+        $resolver->method('resolve')->willReturnCallback(static function (string $hostname, int $type): array|false {
+            if ($type === DNS_NS) {
+                return [['target' => 'ns1.example.com.', 'ttl' => 300]];
+            }
+            if (($type & DNS_A) !== 0 && $hostname === 'ns1.example.com.') {
+                return [['ip' => '192.0.2.1', 'ttl' => 300]];
+            }
+            return [['ip' => '93.184.216.34', 'ttl' => 300]];
+        });
+        $engine = new \App\DnsDagTracer\Domain\Engine\DnsDagEngine($resolver);
 
         foreach ($spec['test_vectors'] as $vector) {
             $queryType = \App\DnsDagTracer\Domain\Model\QueryType::fromString($vector['query_type'] ?? 'A');

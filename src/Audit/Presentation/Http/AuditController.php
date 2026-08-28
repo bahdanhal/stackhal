@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Audit\Presentation\Http;
 
 use App\Audit\Application\IssueGrouper;
 use App\Audit\Application\SiteAuditor;
