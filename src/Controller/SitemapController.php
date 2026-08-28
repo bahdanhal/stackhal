@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Blog\Infrastructure\DoctrineBlogArticleRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final readonly class SitemapController
 {
     #[Route('/sitemap.xml', name: 'sitemap', methods: ['GET'])]
-    public function __invoke(): Response
+    public function __invoke(?DoctrineBlogArticleRepository $articles = null): Response
     {
         $pairs = [
             ['/', '/pl/'],
@@ -28,11 +29,13 @@ final readonly class SitemapController
             ['/app-links-validator', '/pl/weryfikator-app-links'],
             ['/ai-studio-local-file-sync', '/pl/synchronizacja-plikow-ai-studio'],
             ['/blog', '/blog'],
-            ['/blog/bimi-not-working', '/blog/bimi-not-working'],
-            ['/blog/nginx-to-caddy', '/blog/nginx-to-caddy'],
-            ['/blog/dns-delegation-explained', '/blog/dns-delegation-explained'],
-            ['/blog/pkpass-signature-errors', '/blog/pkpass-signature-errors'],
         ];
+
+        if ($articles !== null) {
+            foreach ($articles->findPublished() as $article) {
+                $pairs[] = ['/blog/' . $article->getSlug(), '/blog/' . $article->getSlug()];
+            }
+        }
 
         $entries = [];
         foreach ($pairs as [$en, $pl]) {

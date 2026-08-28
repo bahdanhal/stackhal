@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ article.title }} · StackHal{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}<meta name="description" content="{{ article.description }}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="https://stackhal.com/blog/{{ article.slug }}"><link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.slug }}">{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="/blog.css">{% endblock %}
+{% block head_scripts %}
+  {% set article_schema = {'@type': 'Article', '@id': 'https://stackhal.com/blog/' ~ article.slug ~ '#article', 'headline': article.title, 'description': article.description, 'datePublished': article.publishedAt|date('Y-m-d'), 'dateModified': article.updatedAt|date('Y-m-d'), 'author': {'@id': 'https://stackhal.com/#stackhal'}, 'publisher': {'@id': 'https://stackhal.com/#stackhal'}, 'mainEntityOfPage': 'https://stackhal.com/blog/' ~ article.slug, 'inLanguage': 'en'} %}
+  {% set graph = [article_schema] %}
+  {% if article.howToSteps is not empty %}
+    {% set graph = graph|merge([{'@type': 'HowTo', '@id': 'https://stackhal.com/blog/' ~ article.slug ~ '#howto', 'name': article.title, 'step': article.howToSteps|map(step => {'@type': 'HowToStep', 'name': step.name, 'text': step.text})}]) %}
+  {% endif %}
+  <script type="application/ld+json">{{ {'@context': 'https://schema.org', '@graph': graph}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+{% endblock %}
+{% block language_switch %}<a class="language-switch" href="{{ path('landing', {_locale: 'pl'}) }}" hreflang="pl">PL</a>{% endblock %}
+{% block body %}
+<article class="article-shell">
+  <header class="article-header">
+    <p class="article-kicker">{{ article.category|upper }} · {{ article.readTimeMinutes }} MIN READ · {{ article.publishedAt|date('F d, Y')|upper }}</p>
+    <h1>{{ article.title }}</h1>
+    <p class="article-dek">{{ article.description }}</p>
+    <div class="article-header-meta"><span>StackHal Field Notes</span><span>Updated {{ article.updatedAt|date('F d, Y') }}</span></div>
+  </header>
+  <div class="article-layout">
+    <aside class="article-toc" aria-label="On this page"><span>ON THIS PAGE</span><a href="#article-content">Article content</a><a href="#article-cta">Use the tool</a></aside>
+    <div class="article-content">
+      <div id="article-content">{{ article.contentHtml|raw }}</div>
+      <div id="article-cta" class="article-cta"><p class="article-kicker">READY TO CHECK?</p><h2>Turn the guide into evidence.</h2><p>Use the StackHal tool connected to this field note to inspect your own configuration.</p><div class="article-cta-actions"><a class="article-button article-button-primary" href="{{ article.ctaPath }}">{{ article.ctaLabel }} →</a><a class="article-button" href="{{ path('blog_index') }}">Back to the blog</a></div></div>
+      <p class="article-sources"><strong>StackHal Field Notes:</strong> Practical explainers for developer infrastructure.</p>
+    </div>
+  </div>
+</article>
+{% endblock %}
