@@ -48,10 +48,19 @@ home:
     meta:
         title: "StackHal · Darmowe narzędzia dla programistów, SEO i infrastruktury"
         description: "Konkretne narzędzia do technicznego SEO, GEO, Apple Wallet, Caddy, bezpieczeństwa e-mail i analizy CIDR. Bez rejestracji."
-    eyebrow: "OTWARTY ZESTAW NARZĘDZI · BEZ REJESTRACJI"
-    heading_start: "Narzędzia do prawdziwej pracy z infrastrukturą"
+    eyebrow: "OTWARTY ZESTAW NARZĘDZI · BEZ ESTYMACJI"
+    heading_start: "Narzędzia do zadań, które miały zająć pięć minut"
     heading_emphasis: ""
-    lede: "Sprawdzaj, waliduj i konwertuj bez zakładania konta. Każde narzędzie rozwiązuje jeden konkretny problem i pokazuje dane stojące za wynikiem."
+    lede: "Sprawdzaj, waliduj i konwertuj, zanim incydent dostanie własny kanał na Slacku. Bez rejestracji."
+    catops:
+        heading: "Kot jest teraz starszym inżynierem"
+        eyebrow: "DOSTĘP DO PRODUKCJI PRZYZNANY · FATALNY POMYSŁ"
+        alert: "SEV-1 · WYKRYTO NIEAUTORYZOWANE URZĄDZENIE WSKAZUJĄCE"
+        resolved: "INCYDENT ROZWIĄZANY · PRZYCZYNA: MYSZ"
+        running_status: "Wykryto mysz||Brak smaczków||Kot obserwuje"
+        resolved_status: "Mysz zatrzymana||Zero przestojów||Zostało dziewięć żyć"
+        trigger_label: "Stan systemu StackHal"
+        cat_label: "Kot dyżurny CatOps"
     available: "GOTOWE"
     open: "Otwórz narzędzie"
     categories:

@@ -1,0 +1,29 @@
+.psa-space-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  opacity: .72;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.stackhal-site > .site-header,
+.stackhal-site > main,
+.stackhal-site > footer {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 800px) {
+  .psa-space-background {
+    opacity: .42;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .psa-space-background {
+    opacity: .5;
+  }
+}

@@ -1,0 +1,196 @@
+.catops-trigger {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  border: 0;
+  background: transparent;
+  color: #f3f5ff;
+  font: 700 20px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: -.08em;
+  cursor: crosshair;
+  transform: translate(-50%, -50%);
+}
+
+.catops-trigger:focus-visible {
+  outline: 1px solid #b8ff5a;
+  outline-offset: 8px;
+  border-radius: 50%;
+}
+
+.catops-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.catops-cat,
+.catops-mouse {
+  position: fixed;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+.catops-cat {
+  width: 90px;
+  filter: drop-shadow(0 0 8px rgba(184, 255, 90, .65));
+  transform-origin: center;
+}
+
+.catops-cat svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+.catops-cat .catops-body,
+.catops-cat .catops-head {
+  fill: #11131a;
+  stroke: #b8ff5a;
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.catops-cat circle {
+  fill: #b8ff5a;
+}
+
+.catops-tail,
+.catops-leg,
+.catops-mouth,
+.catops-whiskers {
+  fill: none;
+  stroke: #b8ff5a;
+  stroke-width: 3;
+  stroke-linecap: square;
+}
+
+.catops-whiskers,
+.catops-mouth {
+  stroke-width: 2;
+}
+
+.catops-running .catops-tail {
+  animation: catops-tail .25s steps(2, end) infinite alternate;
+  transform-origin: 30px 42px;
+}
+
+.catops-running .catops-leg-front,
+.catops-running .catops-leg-back {
+  animation: catops-paws .18s steps(2, end) infinite alternate;
+  transform-origin: center 53px;
+}
+
+.catops-running .catops-leg-back {
+  animation-direction: alternate-reverse;
+}
+
+.catops-mouse {
+  width: 24px;
+  height: 15px;
+  border: 1px solid #9ea2b1;
+  border-radius: 55% 70% 60% 45%;
+  background: #343744;
+  box-shadow: 0 0 12px rgba(158, 162, 177, .55);
+}
+
+.catops-mouse::before,
+.catops-mouse::after {
+  content: "";
+  position: absolute;
+}
+
+.catops-mouse::before {
+  top: -5px;
+  right: 3px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid #9ea2b1;
+  border-radius: 50%;
+  background: #242731;
+}
+
+.catops-mouse::after {
+  top: 8px;
+  left: -17px;
+  width: 20px;
+  height: 10px;
+  border-top: 1px solid #9ea2b1;
+  border-radius: 50%;
+  transform: rotate(-18deg);
+}
+
+.catops-mouse i {
+  position: absolute;
+  top: 5px;
+  right: 2px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #b8ff5a;
+}
+
+.catops-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 31;
+  margin: 0;
+  padding: 11px 15px;
+  border: 1px solid #b8ff5a;
+  border-radius: 2px;
+  background: rgba(8, 9, 13, .94);
+  color: #b8ff5a;
+  box-shadow: 0 0 24px rgba(184, 255, 90, .16);
+  font: 700 11px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: .08em;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.catops-incident .toolbox-orbit {
+  border-color: rgba(184, 255, 90, .7);
+  box-shadow: inset 0 0 70px rgba(184, 255, 90, .08), 0 0 90px rgba(184, 255, 90, .18);
+}
+
+.catops-incident .catops-trigger {
+  color: #b8ff5a;
+  text-shadow: 0 0 12px rgba(184, 255, 90, .8);
+}
+
+.catops-incident [data-catops-heading] {
+  animation: catops-glitch .16s steps(2, end) 4;
+}
+
+@keyframes catops-tail {
+  to { transform: rotate(18deg); }
+}
+
+@keyframes catops-paws {
+  to { transform: translateX(7px); }
+}
+
+@keyframes catops-glitch {
+  25% { transform: translateX(-3px); text-shadow: 3px 0 #7f68ff; }
+  75% { transform: translateX(3px); text-shadow: -3px 0 #b8ff5a; }
+}
+
+@media (max-width: 800px) {
+  [data-catops-mobile-trigger] {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .catops-cat { width: 76px; }
+  .catops-toast { bottom: 18px; width: calc(100vw - 32px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catops-cat *,
+  .catops-incident [data-catops-heading] {
+    animation: none !important;
+  }
+}

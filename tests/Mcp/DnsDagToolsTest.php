@@ -17,7 +17,7 @@ final class DnsDagToolsTest extends TestCase
     protected function setUp(): void
     {
         $resolver = $this->createStub(DnsRecordResolver::class);
-        $resolver->method('resolve')->willReturnCallback(static function (string $hostname, int $type): array|false {
+        $resolver->method('resolve')->willReturnCallback(static function (string $hostname, int $type): array {
             if ($type === DNS_NS) {
                 return [['target' => 'ns1.example.com.', 'ttl' => 300]];
             }

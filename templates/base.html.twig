@@ -1,4 +1,5 @@
 {% set tool_context %}{% block tool_name %}{% endblock %}{% endset %}
+{% set current_route = app.request.attributes.get('_route')|default('') %}
 <!doctype html>
 <html lang="{{ app.request ? app.request.getLocale() : 'en' }}">
 <head>
@@ -27,14 +28,17 @@
   <link rel="stylesheet" href="/contact.css">
   <link rel="stylesheet" href="/identity.css">
   <link rel="stylesheet" href="/ui.css">
+  <link rel="stylesheet" href="/psa-space-background.css">
   {% block stylesheets %}{% endblock %}
   <link rel="stylesheet" href="/theme-dark.css">
   <link rel="stylesheet" href="/brand-refresh.css">
+  <link rel="stylesheet" href="/page-remix.css">
   <script src="/contact.js" defer></script>
+  <script src="/psa-space-background.js" defer></script>
   <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'WebSite','@id':'https://stackhal.com/#website','url':'https://stackhal.com/','name':'StackHal','inLanguage':['en', 'pl'],'publisher':{'@id':'https://stackhal.com/#stackhal'},'author':{'@id':'https://stackhal.com/#stackhal'},'dateModified':'2026-08-27'}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
   {% block head_scripts %}{% endblock %}
 </head>
-<body class="stackhal-site {% block body_class %}{% endblock %}">
+<body class="stackhal-site page-{{ current_route|replace({'_': '-'}) }} {% block body_class %}{% endblock %}">
   <header class="site-header">
     <div class="topbar">
       <div class="brand-lockup">
@@ -82,6 +86,11 @@
       </div>
     {% endif %}
   </header>
+  {% block ambient_background %}
+    {% if not (current_route starts with 'stackhal_admin_') %}
+      <canvas class="psa-space-background" aria-hidden="true" role="presentation" data-nosnippet></canvas>
+    {% endif %}
+  {% endblock %}
   <main>{% block body %}{% endblock %}</main>
   <footer>{{ 'base.footer'|trans }} · <a class="footer-contact" href="mailto:bahdan.hal@hotmail.com">{{ 'base.contact'|trans }}</a><br><span class="copyright">© {{ "now"|date("Y") }} StackHal · <a class="copyright-link" href="https://bahdanhal.pl/">Bahdan Hal</a> · <a class="copyright-link" href="https://ileza.pl/" target="_blank" rel="noopener">IleZa ↗</a></span></footer>
   {% block scripts %}{% endblock %}

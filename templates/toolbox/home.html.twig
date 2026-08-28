@@ -8,15 +8,27 @@
   <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/">
   <link rel="alternate" hreflang="x-default" href="https://stackhal.com/">
 {% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/hero-explosion.css">
+  <link rel="stylesheet" href="/cat-ops.css">
+{% endblock %}
 
 {% block body %}
-<section class="hero toolbox-hero">
-  <div class="eyebrow">{{ 'home.eyebrow'|trans }}</div>
-  <h1>{{ 'home.heading_start'|trans }}</h1>
+<section
+  class="hero toolbox-hero"
+  data-catops-heading="{{ 'home.catops.heading'|trans }}"
+  data-catops-eyebrow="{{ 'home.catops.eyebrow'|trans }}"
+  data-catops-alert="{{ 'home.catops.alert'|trans }}"
+  data-catops-resolved="{{ 'home.catops.resolved'|trans }}"
+  data-catops-running-status="{{ 'home.catops.running_status'|trans }}"
+  data-catops-resolved-status="{{ 'home.catops.resolved_status'|trans }}"
+>
+  <div class="eyebrow" data-catops-mobile-trigger>{{ 'home.eyebrow'|trans }}</div>
+  <h1 data-catops-heading>{{ 'home.heading_start'|trans }}</h1>
   <p class="lede">{{ 'home.lede'|trans }}</p>
   <div class="toolbox-orbit" aria-hidden="true">
     <span>DNS</span><span>CIDR</span><span>SEO</span><span>PKPass</span><span>Caddy</span>
-    <strong>SH</strong>
+    <button class="catops-trigger" type="button" aria-label="{{ 'home.catops.trigger_label'|trans }}">SH</button>
   </div>
   <ul class="toolbox-status" aria-label="Toolbox characteristics">
     <li>Browser-first</li>
@@ -114,5 +126,27 @@
     <div><b>02</b><h2>{{ 'home.principles.clear.title'|trans }}</h2><p>{{ 'home.principles.clear.text'|trans }}</p></div>
     <div><b>03</b><h2>{{ 'home.principles.fast.title'|trans }}</h2><p>{{ 'home.principles.fast.text'|trans }}</p></div>
   </section>
+
+  <div class="catops-scene" aria-hidden="true" hidden>
+    <div class="catops-mouse"><i></i></div>
+    <div class="catops-cat">
+      <svg viewBox="0 0 120 76" role="img" aria-label="{{ 'home.catops.cat_label'|trans }}">
+        <path class="catops-tail" d="M32 43C9 51 9 20 25 25" />
+        <rect class="catops-body" x="27" y="27" width="61" height="33" rx="15" />
+        <path class="catops-leg catops-leg-front" d="M74 52v15h12" />
+        <path class="catops-leg catops-leg-back" d="M42 52v15H31" />
+        <path class="catops-head" d="M73 24L79 8l10 12 13-11 3 17v27H72z" />
+        <circle cx="83" cy="34" r="2.4" />
+        <circle cx="97" cy="34" r="2.4" />
+        <path class="catops-mouth" d="M87 43l4 3 4-3M91 46v4" />
+        <path class="catops-whiskers" d="M78 43l-12-3m12 7l-13 3m31-7l13-3m-13 7l13 3" />
+      </svg>
+    </div>
+  </div>
+  <p class="catops-toast" role="status" aria-live="polite" hidden></p>
 </section>
+{% endblock %}
+{% block scripts %}
+  <script src="/hero-explosion.js" defer></script>
+  <script src="/cat-ops.js" defer></script>
 {% endblock %}

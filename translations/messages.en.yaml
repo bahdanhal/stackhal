@@ -48,10 +48,19 @@ home:
     meta:
         title: "StackHal · Free Developer, SEO and Infrastructure Tools"
         description: "Focused developer utilities for technical SEO, GEO, Apple Wallet, Caddy, email security, DNS delegation and CIDR analysis. No signup required."
-    eyebrow: "OPEN DEVELOPER TOOLBOX · NO SIGNUP"
-    heading_start: "Developer tools for real infrastructure work"
+    eyebrow: "OPEN DEVELOPER TOOLBOX · ESTIMATE NOT INCLUDED"
+    heading_start: "Developer tools for tasks that were supposed to take five minutes"
     heading_emphasis: ""
-    lede: "Inspect, validate and convert without creating an account. Each utility solves one concrete web, email or infrastructure problem and shows its evidence."
+    lede: "Inspect, validate and convert before the incident gets its own Slack channel. No signup required."
+    catops:
+        heading: "The cat is now the senior engineer"
+        eyebrow: "PRODUCTION ACCESS GRANTED · TERRIBLE IDEA"
+        alert: "SEV-1 · UNAUTHORIZED POINTING DEVICE DETECTED"
+        resolved: "INCIDENT RESOLVED · ROOT CAUSE: THE MOUSE"
+        running_status: "Mouse detected||No treats||Cat watching"
+        resolved_status: "Mouse contained||Zero downtime||Nine lives remaining"
+        trigger_label: "StackHal system status"
+        cat_label: "The CatOps incident responder"
     available: "READY"
     open: "Open tool"
     categories:

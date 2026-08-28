@@ -330,7 +330,7 @@ final class SpecificationComplianceTest extends TestCase
 
         $spec = json_decode((string) file_get_contents($specPath), true, flags: JSON_THROW_ON_ERROR);
         $resolver = $this->createStub(\App\DnsDagTracer\Domain\Port\DnsRecordResolver::class);
-        $resolver->method('resolve')->willReturnCallback(static function (string $hostname, int $type): array|false {
+        $resolver->method('resolve')->willReturnCallback(static function (string $hostname, int $type): array {
             if ($type === DNS_NS) {
                 return [['target' => 'ns1.example.com.', 'ttl' => 300]];
             }
