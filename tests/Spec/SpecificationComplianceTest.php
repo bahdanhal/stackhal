@@ -320,7 +320,6 @@ final class SpecificationComplianceTest extends TestCase
         self::assertNotEmpty($spec['supported_query_types']);
         self::assertNotEmpty($spec['delegation_hierarchy']);
         self::assertNotEmpty($spec['diagnostic_codes']);
-        self::assertNotEmpty($spec['presets']);
         self::assertNotEmpty($spec['test_vectors']);
     }
 

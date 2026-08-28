@@ -17,13 +17,13 @@ final readonly class DnsDagTools
     #[McpTool(
         name: 'trace_dns_delegation',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Trace hierarchical DNS delegation chain (Root -> TLD -> Authoritative NS -> Global Resolvers) with DNSSEC trust chain validation and propagation consistency diagnostics.'
+        description: 'Query live DNS records and inspect the authoritative nameservers returned for a domain.'
     )]
     public function traceDnsDelegation(
-        #[Schema(description: 'The target domain name (e.g. "stackhal.com") to trace hierarchical DNS delegation for.')]
+        #[Schema(description: 'The target domain name (e.g. "example.com") to query using the application host resolver.')]
         string $domain,
         // phpcs:ignore Generic.Files.LineLength
-        #[Schema(description: 'Optional DNS record type: "A" (default), "AAAA", "CNAME", "TXT", "MX", "NS", "SOA", "CAA", "DS", "DNSKEY".')]
+        #[Schema(description: 'Optional DNS record type: "A" (default), "AAAA", "CNAME", "TXT", "MX", "NS", "SOA", or "CAA".')]
         ?string $query_type = 'A',
     ): string {
         try {

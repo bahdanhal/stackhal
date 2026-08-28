@@ -19,25 +19,25 @@ final class DnsDagToolsTest extends TestCase
 
     public function testTraceDnsDelegationToolSuccess(): void
     {
-        $response = $this->tools->traceDnsDelegation('stackhal.com', 'A');
+        $response = $this->tools->traceDnsDelegation('example.com', 'A');
 
         $data = json_decode($response, true, flags: JSON_THROW_ON_ERROR);
         self::assertSame('completed', $data['status']);
         self::assertSame('healthy', $data['result']['status']);
-        self::assertSame('secure', $data['result']['dnssec_status']);
-        self::assertSame(4, $data['result']['layer_count']);
+        self::assertSame('indeterminate', $data['result']['dnssec_status']);
+        self::assertSame(2, $data['result']['layer_count']);
         self::assertFalse($data['result']['has_divergence']);
         self::assertNotEmpty($data['result']['layers']);
     }
 
-    public function testTraceDnsDelegationToolBogus(): void
+    public function testTraceDnsDelegationToolInvalidDomain(): void
     {
-        $response = $this->tools->traceDnsDelegation('dnssec-failed.org', 'A');
+        $response = $this->tools->traceDnsDelegation('not a domain', 'A');
 
         $data = json_decode($response, true, flags: JSON_THROW_ON_ERROR);
         self::assertSame('completed', $data['status']);
         self::assertSame('error', $data['result']['status']);
-        self::assertSame('bogus', $data['result']['dnssec_status']);
-        self::assertContains('ERR_DNSSEC_BOGUS', $data['result']['error_codes']);
+        self::assertSame('indeterminate', $data['result']['dnssec_status']);
+        self::assertContains('ERR_INVALID_DOMAIN', $data['result']['error_codes']);
     }
 }

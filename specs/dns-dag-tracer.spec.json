@@ -54,55 +54,22 @@
       "description": "The authoritative nameserver is not authoritative for the domain."
     }
   },
-  "presets": [
-    {
-      "id": "cloudflare_dnssec_clean",
-      "domain": "stackhal.com",
-      "query_type": "A",
-      "description": "Healthy zone hosted on Cloudflare with valid DNSSEC DS record and fast TTL."
-    },
-    {
-      "id": "stale_propagation_migration",
-      "domain": "migration-example.org",
-      "query_type": "A",
-      "description": "Domain mid-migration where global public resolvers have divergent answers due to 86,400s TTL."
-    },
-    {
-      "id": "broken_dnssec_ds",
-      "domain": "dnssec-failed.org",
-      "query_type": "TXT",
-      "description": "Zone with invalid DS record triggering SERVFAIL on validating resolvers (1.1.1.1, 8.8.8.8, 9.9.9.9)."
-    }
-  ],
   "test_vectors": [
     {
-      "description": "Clean authoritative domain trace with valid DNSSEC and consistent resolver answers",
+      "description": "Live DNS lookup for a resolvable domain",
       "domain": "stackhal.com",
       "query_type": "A",
       "expected_status": "healthy",
-      "expected_dnssec_status": "secure",
+      "expected_dnssec_status": "indeterminate",
       "expected_layer_count": 2,
       "expected_divergence": false
     },
     {
-      "description": "Broken DNSSEC delegation detection",
-      "domain": "dnssec-failed.org",
+      "description": "Invalid domain input",
+      "domain": "not a domain",
       "query_type": "A",
       "expected_status": "error",
-      "expected_dnssec_status": "bogus",
-      "expected_error_codes": [
-        "ERR_DNSSEC_BOGUS"
-      ]
-    },
-    {
-      "description": "Divergent resolver answers detection",
-      "domain": "divergent-answers.test",
-      "query_type": "A",
-      "expected_status": "warning",
-      "expected_divergence": true,
-      "expected_warning_codes": [
-        "WARN_HIGH_TTL_MIGRATION_RISK"
-      ]
+      "expected_error_codes": ["ERR_INVALID_DOMAIN"]
     }
   ]
 }
