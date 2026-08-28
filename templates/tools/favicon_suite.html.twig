@@ -10,6 +10,7 @@
 {% endblock %}
 {% block stylesheets %}
   <link rel="stylesheet" href="/tools.css">
+  <link rel="stylesheet" href="/caddy-transpiler.css">
 {% endblock %}
 {% block language_switch %}
   <a class="language-switch" href="{{ path('favicon_suite', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
