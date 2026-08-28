@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Visual DNS Propagation DAG & Delegation Chain Trace Specification",
-  "description": "Formal contract definition for tracing hierarchical DNS delegation chains (Root -> TLD -> Authoritative NS -> Edge Anycast Resolvers), validating glue records and DNSSEC chains of trust, and diagnosing propagation stalls.",
+  "description": "Formal contract definition for querying live DNS records and inspecting the authoritative nameservers returned for a domain.",
   "version": "1.0.0",
   "supported_query_types": [
     "A",
@@ -11,76 +11,47 @@
     "MX",
     "NS",
     "SOA",
-    "CAA",
-    "DS",
-    "DNSKEY"
+    "CAA"
   ],
   "delegation_hierarchy": [
     {
       "layer": 0,
-      "name": "root",
-      "label": "Root Zone (.)",
-      "servers": "13 IANA Root Clusters (a.root-servers.net - m.root-servers.net)"
+      "name": "resolver",
+      "label": "System Resolver Response",
+      "servers": "Resolver used by the application host"
     },
     {
       "layer": 1,
-      "name": "tld",
-      "label": "Top-Level Domain (TLD)",
-      "servers": "Authoritative Registry Nameservers (e.g. gTLD / ccTLD)"
-    },
-    {
-      "layer": 2,
       "name": "authoritative",
       "label": "Authoritative Nameservers",
-      "servers": "Zone Host Nameservers (e.g. Cloudflare, Route53, NS1)"
-    },
-    {
-      "layer": 3,
-      "name": "edge_resolvers",
-      "label": "Global Edge Anycast Resolvers",
-      "servers": "Public Recursive Resolvers (Cloudflare 1.1.1.1, Google 8.8.8.8, Quad9 9.9.9.9, OpenDNS 208.67.222.222)"
+      "servers": "Nameservers returned by the live NS query"
     }
   ],
   "diagnostic_codes": {
+    "ERR_INVALID_DOMAIN": {
+      "severity": "error",
+      "title": "Invalid domain name",
+      "description": "The submitted value is not a valid fully qualified domain name."
+    },
+    "ERR_NO_RECORDS": {
+      "severity": "error",
+      "title": "No DNS records returned",
+      "description": "The selected record type returned no DNS records from the application resolver."
+    },
+    "ERR_UNSUPPORTED_RECORD_TYPE": {
+      "severity": "error",
+      "title": "Unsupported record type",
+      "description": "The resolver does not expose the selected DNS record type."
+    },
+    "INFO_LIVE_LOOKUP": {
+      "severity": "info",
+      "title": "Live DNS response",
+      "description": "Answers and TTL values were returned by the server resolver at request time."
+    },
     "ERR_LAME_DELEGATION": {
       "severity": "error",
-      "title": "Lame Delegation Detected",
-      "description": "The authoritative nameserver designated by the parent zone is refusing queries or is not authoritative for the domain."
-    },
-    "ERR_DNSSEC_BOGUS": {
-      "severity": "error",
-      "title": "Broken DNSSEC Chain of Trust",
-      "description": "The Delegation Signer (DS) record in the parent zone does not match any DNSKEY in the child zone, causing validation failure."
-    },
-    "ERR_MISSING_GLUE_RECORD": {
-      "severity": "error",
-      "title": "Missing In-Bailiwick Glue Record",
-      "description": "Nameserver hostname is a subdomain of the target domain but lacks mandatory A/AAAA glue records in the parent TLD zone."
-    },
-    "ERR_NXDOMAIN": {
-      "severity": "error",
-      "title": "Domain Not Found (NXDOMAIN)",
-      "description": "Parent or authoritative servers report that the queried domain name does not exist."
-    },
-    "WARN_SOA_SERIAL_DIVERGENCE": {
-      "severity": "warning",
-      "title": "SOA Serial Divergence",
-      "description": "Multiple authoritative nameservers return differing SOA serial numbers, indicating replication delay across nameservers."
-    },
-    "WARN_HIGH_TTL_MIGRATION_RISK": {
-      "severity": "warning",
-      "title": "High TTL Risk During Migration",
-      "description": "Resource record TTL exceeds 14,400 seconds (4 hours), which may delay global propagation during nameserver migrations."
-    },
-    "INFO_DNSSEC_SECURE": {
-      "severity": "info",
-      "title": "DNSSEC Authenticated & Secure",
-      "description": "Full cryptographic chain of trust validated from Root (.) through TLD to Child Zone RRSIG records."
-    },
-    "ERR_LIVE_TRACE_UNAVAILABLE": {
-      "severity": "error",
-      "title": "Live DNS Trace Unavailable",
-      "description": "This public tool currently provides demonstration traces only. No live DNS data was returned for this domain."
+      "title": "Lame delegation",
+      "description": "The authoritative nameserver is not authoritative for the domain."
     }
   },
   "presets": [
@@ -110,7 +81,7 @@
       "query_type": "A",
       "expected_status": "healthy",
       "expected_dnssec_status": "secure",
-      "expected_layer_count": 4,
+      "expected_layer_count": 2,
       "expected_divergence": false
     },
     {

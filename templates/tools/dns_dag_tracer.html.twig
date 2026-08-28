@@ -25,24 +25,6 @@
   } only %}
 
   <div class="transpiler-container" id="dns-dag-app" data-locale="{{ app.request.locale }}">
-    {% if result.isSimulation %}
-      <div class="ui-panel" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid #f59e0b; color: #fef3c7; background: #422006;">
-        <strong>{{ 'dns_dag_tracer.simulation_label'|trans }}</strong>
-        {{ 'dns_dag_tracer.simulation_text'|trans }}
-      </div>
-    {% endif %}
-    <!-- Presets Toolbar -->
-    <div class="transpiler-toolbar ui-panel">
-      <div class="preset-group">
-        <span class="preset-label">{{ 'dns_dag_tracer.presets_label'|trans }}:</span>
-        {% for preset in presets %}
-          <button type="button" class="btn-preset" data-domain="{{ preset.domain }}" data-query-type="{{ preset.query_type }}">
-            {{ preset.domain }} ({{ preset.query_type }})
-          </button>
-        {% endfor %}
-      </div>
-    </div>
-
     <!-- Query Input Form -->
     <div class="ui-panel" style="padding: 1.5rem; margin-bottom: 1.5rem;">
       <form method="post" action="{{ path('dns_dag_tracer', {_locale: app.request.locale}) }}" id="dns-form">
@@ -54,7 +36,7 @@
           <div>
             <label for="query-type-select" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">{{ 'dns_dag_tracer.record_type_label'|trans }}</label>
             <select name="query_type" id="query-type-select" style="width: 100%; padding: 0.6rem; background: var(--bg-surface, #1e293b); color: inherit; border: 1px solid var(--border-color, #334155); border-radius: 4px;">
-              {% for qt in ['A', 'AAAA', 'CNAME', 'TXT', 'MX', 'NS', 'SOA', 'CAA', 'DS', 'DNSKEY'] %}
+              {% for qt in ['A', 'AAAA', 'CNAME', 'TXT', 'MX', 'NS', 'SOA', 'CAA'] %}
                 <option value="{{ qt }}" {% if query_type == qt %}selected{% endif %}>{{ qt }}</option>
               {% endfor %}
             </select>
@@ -88,10 +70,8 @@
       </div>
 
       <div>
-        <span style="font-size: 0.8rem; color: #94a3b8; display: block;">Global Propagation</span>
-        <span style="font-weight: 700; color: {% if result.hasDivergence %}#f59e0b{% else %}#22c55e{% endif %};">
-          {% if result.hasDivergence %}Divergence Detected{% else %}Consistent Across Edge{% endif %}
-        </span>
+        <span style="font-size: 0.8rem; color: #94a3b8; display: block;">{{ 'dns_dag_tracer.resolver_comparison'|trans }}</span>
+        <span style="font-weight: 700; color: #94a3b8;">{{ 'dns_dag_tracer.resolver_comparison_unavailable'|trans }}</span>
       </div>
     </div>
 
@@ -116,9 +96,9 @@
                 <div style="background: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 0.75rem;">
                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                     <strong style="font-family: monospace; font-size: 0.9rem;">{{ node.serverName }}</strong>
-                    <span style="font-size: 0.75rem; color: #94a3b8;">{{ node.latencyMs }}ms</span>
+                    {% if node.latencyMs is not null %}<span style="font-size: 0.75rem; color: #94a3b8;">{{ node.latencyMs }}ms</span>{% endif %}
                   </div>
-                  <div style="font-size: 0.8rem; color: #64748b; font-family: monospace; margin-bottom: 0.5rem;">IP: {{ node.serverIp }}</div>
+                  {% if node.serverIp is not empty %}<div style="font-size: 0.8rem; color: #64748b; font-family: monospace; margin-bottom: 0.5rem;">IP: {{ node.serverIp }}</div>{% endif %}
                   
                   <div style="background: #090a0f; border-radius: 4px; padding: 0.5rem; font-family: monospace; font-size: 0.8rem;">
                     {% if node.answers is not empty %}

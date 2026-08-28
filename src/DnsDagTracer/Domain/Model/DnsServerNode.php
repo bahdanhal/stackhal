@@ -16,7 +16,7 @@ final readonly class DnsServerNode
         public int $ttl,
         public string $rcode = 'NOERROR',
         public ?int $soaSerial = null,
-        public float $latencyMs = 12.5,
+        public ?float $latencyMs = null,
         public bool $dnssecValidated = true,
     ) {
     }

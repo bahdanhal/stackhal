@@ -19,7 +19,6 @@ final readonly class DnsDagResult
         public array $diagnostics,
         public string $domain = '',
         public QueryType $queryType = QueryType::A,
-        public bool $isSimulation = false,
     ) {
     }
 
@@ -80,7 +79,6 @@ final readonly class DnsDagResult
             'has_divergence' => $this->hasDivergence,
             'domain' => $this->domain,
             'query_type' => $this->queryType->value,
-            'is_simulation' => $this->isSimulation,
             'layers' => array_map(static fn (DnsLayer $l) => $l->toArray(), $this->layers),
             'diagnostics' => array_map(static fn (DnsDiagnostic $d) => $d->toArray(), $this->diagnostics),
             'error_codes' => $this->getErrorCodes(),

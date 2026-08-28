@@ -194,13 +194,10 @@ final class ToolsController extends AbstractController
         $queryType = (string) $request->request->get('query_type', $request->query->get('query_type', 'A'));
 
         $result = $service->trace($domain, $queryType);
-        $presets = $service->getPresets();
-
         return $this->render('tools/dns_dag_tracer.html.twig', [
             'domain' => $domain,
             'query_type' => $queryType,
             'result' => $result,
-            'presets' => $presets,
         ]);
     }
 

@@ -21,62 +21,43 @@ final class DnsDagTracerTest extends TestCase
         $this->service = new DnsDagTracerService($this->engine);
     }
 
-    public function testCleanAuthoritativeTrace(): void
-    {
-        $result = $this->service->trace('stackhal.com', 'A');
-
-        self::assertSame('healthy', $result->status);
-        self::assertSame(DnssecStatus::SECURE, $result->dnssecStatus);
-        self::assertSame(4, $result->layerCount);
-        self::assertFalse($result->hasDivergence);
-        self::assertCount(4, $result->layers);
-        self::assertContains('INFO_DNSSEC_SECURE', $result->getInfoCodes());
-        self::assertTrue($result->isSimulation);
-    }
-
-    public function testBrokenDnssecBogusTrace(): void
-    {
-        $result = $this->service->trace('dnssec-failed.org', 'A');
-
-        self::assertSame('error', $result->status);
-        self::assertSame(DnssecStatus::BOGUS, $result->dnssecStatus);
-        self::assertContains('ERR_DNSSEC_BOGUS', $result->getErrorCodes());
-    }
-
-    public function testDivergentAnswersTrace(): void
-    {
-        $result = $this->service->trace('divergent-answers.test', 'A');
-
-        self::assertSame('warning', $result->status);
-        self::assertTrue($result->hasDivergence);
-        self::assertContains('WARN_HIGH_TTL_MIGRATION_RISK', $result->getWarningCodes());
-    }
-
-    public function testNxdomainTrace(): void
-    {
-        $result = $this->service->trace('nxdomain-example.invalid', 'A');
-
-        self::assertSame('error', $result->status);
-        self::assertContains('ERR_NXDOMAIN', $result->getErrorCodes());
-    }
-
-    public function testPresetsAvailable(): void
-    {
-        $presets = $this->service->getPresets();
-        self::assertCount(3, $presets);
-        self::assertSame('cloudflare_dnssec_clean', $presets[0]['id']);
-    }
-
-    public function testArbitraryDomainDoesNotReturnFabricatedTrace(): void
+    public function testLiveTraceReturnsRecordsForResolvableDomain(): void
     {
         $result = $this->service->trace('example.com', 'A');
+
+        self::assertSame('healthy', $result->status);
+        self::assertSame(DnssecStatus::INDETERMINATE, $result->dnssecStatus);
+        self::assertGreaterThanOrEqual(1, $result->layerCount);
+        self::assertFalse($result->hasDivergence);
+        self::assertContains('INFO_LIVE_LOOKUP', $result->getInfoCodes());
+        self::assertNotEmpty($result->layers[0]->nodes[0]->answers);
+    }
+
+    public function testUnresolvableDomainReturnsNoRecords(): void
+    {
+        $result = $this->service->trace('does-not-exist.invalid', 'A');
+
+        self::assertSame('error', $result->status);
+        self::assertContains('ERR_NO_RECORDS', $result->getErrorCodes());
+    }
+
+    public function testInvalidDomainDoesNotQueryOrReturnFabricatedTrace(): void
+    {
+        $result = $this->service->trace('not a domain', 'A');
 
         self::assertSame('error', $result->status);
         self::assertSame(DnssecStatus::INDETERMINATE, $result->dnssecStatus);
         self::assertSame(0, $result->layerCount);
         self::assertEmpty($result->layers);
-        self::assertContains('ERR_LIVE_TRACE_UNAVAILABLE', $result->getErrorCodes());
-        self::assertFalse($result->isSimulation);
+        self::assertContains('ERR_INVALID_DOMAIN', $result->getErrorCodes());
+    }
+
+    public function testUnsupportedDnssecRecordTypesAreNotClaimedAsSupported(): void
+    {
+        $result = $this->service->trace('example.com', 'DNSKEY');
+
+        self::assertSame('error', $result->status);
+        self::assertContains('ERR_UNSUPPORTED_RECORD_TYPE', $result->getErrorCodes());
     }
 
     public function testQueryTypeParsing(): void

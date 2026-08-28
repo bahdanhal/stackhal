@@ -92,8 +92,8 @@ home:
         title: "Transpiler dialektów Regex i matryca zgodności"
         text: "Konwertuj wyrażenia regularne PCRE do Go RE2, JavaScript, Pythona i Rusta, weryfikuj bezpieczeństwo asercji i eliminuj podatności ReDoS w czasie liniowym O(N)."
     dns_dag_tracer:
-        title: "Demonstracja DAG delegacji DNS"
-        text: "Poznaj stałą wizualizację warstw Root, TLD, serwerów autorytatywnych i resolverów. Śledzenie DNS na żywo nie jest jeszcze dostępne."
+        title: "Śledzenie delegacji DNS na żywo"
+        text: "Sprawdź prawdziwe rekordy DNS i zobacz serwery autorytatywne zwrócone dla domeny."
     pkpass:
         title: "Inspektor i debugger Apple Wallet (.pkpass)"
         text: "Wierny emulator kart Apple Wallet i Google Wallet, weryfikator sum kontrolnych SHA-1 w manifest.json, podgląd certyfikatów PKCS#7 i naprawa archiwum w 1 kliknięcie."
@@ -766,19 +766,18 @@ favicon_suite:
 
 dns_dag_tracer:
     meta:
-        title: "Demonstracja DAG delegacji DNS · StackHal"
-        description: "Poznaj stałą demonstrację warstw delegacji DNS, stanów DNSSEC i diagnostyki propagacji. Śledzenie DNS na żywo nie jest jeszcze dostępne."
+        title: "Śledzenie delegacji DNS na żywo · StackHal"
+        description: "Sprawdź aktualne rekordy DNS i serwery autorytatywne zwrócone dla domeny."
     eyebrow: "HIERARCHICZNA DELEGACJA DNS & TRACER DAG"
-    heading: "Demonstracja DAG delegacji DNS"
-    lede: "Poznaj stałe scenariusze pokazujące warstwy Root, TLD, serwerów autorytatywnych i resolverów. Śledzenie DNS na żywo nie jest jeszcze dostępne."
-    presets_label: "Scenariusze demonstracyjne"
-    domain_label: "Domena scenariusza:"
+    heading: "Śledzenie delegacji DNS na żywo"
+    lede: "Sprawdź prawdziwą odpowiedź DNS dla domeny i zobacz jej serwery autorytatywne. Wynik pochodzi z resolvera używanego przez serwer aplikacji."
+    domain_label: "Nazwa domeny:"
     record_type_label: "Typ rekordu:"
     trace_btn: "Śledź delegację DAG"
-    simulation_label: "Scenariusz demonstracyjny."
-    simulation_text: "Poniższy wynik to stałe dane przykładowe wyjaśniające wizualizację; nie jest to pomiar DNS na żywo."
-    dag_title: "Hierarchiczny DAG delegacji (4 warstwy)"
+    dag_title: "Rzeczywista odpowiedź DNS"
     diagnostics_title: "Diagnostyka delegacji i DNSSEC"
+    resolver_comparison: "Porównanie resolverów"
+    resolver_comparison_unavailable: "Nie wykonano"
     faq:
         title: "Najczęściej zadawane pytania"
         q1: "Jak działa hierarchiczna delegacja DNS?"
