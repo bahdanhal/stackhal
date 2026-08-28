@@ -1350,7 +1350,7 @@
     if (passType === 'boardingPass') {
       const origin = styleDict.primaryFields?.[0] || { label: 'SFO', value: 'SFO' };
       const dest = styleDict.primaryFields?.[1] || { label: 'WAW', value: 'WAW' };
-      const transitIcon = styleDict.transitType === 'PKTransitTypeTrain' ? '🚆' : (styleDict.transitType === 'PKTransitTypeBoat' ? '🚢' : '✈️');
+      const transitIcon = styleDict.transitType === 'PKTransitTypeTrain' ? 'TRAIN' : (styleDict.transitType === 'PKTransitTypeBoat' ? 'FERRY' : 'FLIGHT');
       primaryHtml = `
         <div class="boarding-route-row">
           <div class="route-point">
@@ -1443,7 +1443,7 @@
 
             <div class="pass-footer-bar">
               <span class="pass-apple-badge">Apple Wallet</span>
-              <button type="button" class="btn-flip-trigger" id="btn-flip-card" title="View details and terms">ℹ️ Flip to Back</button>
+              <button type="button" class="btn-flip-trigger" id="btn-flip-card" title="View details and terms">View reverse</button>
             </div>
           </div>
 
@@ -1531,7 +1531,7 @@
       if (linterResult.isValid) {
         statusHeaderEl.className = 'diag-summary-box status-valid';
         statusHeaderEl.innerHTML = `
-          <div class="diag-status-badge badge-valid">🟢 STATUS: VALID PASS</div>
+          <div class="diag-status-badge badge-valid">STATUS: VALID PASS</div>
           <div class="diag-meta-row">
             <span>Pass Type: <strong>${escapeHtml(linterResult.passType || 'generic')}</strong></span>
             <span>Org: <strong>${escapeHtml(pass.organizationName || '—')}</strong></span>
@@ -1541,7 +1541,7 @@
       } else {
         statusHeaderEl.className = 'diag-summary-box status-errors';
         statusHeaderEl.innerHTML = `
-          <div class="diag-status-badge badge-error">🔴 ${linterResult.errorCount} CRITICAL ERRORS · ${linterResult.warningCount} WARNINGS</div>
+          <div class="diag-status-badge badge-error">${linterResult.errorCount} CRITICAL ERRORS · ${linterResult.warningCount} WARNINGS</div>
           <div class="diag-meta-row">
             <span>Pass Type: <strong>${escapeHtml(linterResult.passType || 'Unknown')}</strong></span>
             <span>Serial: <strong>${escapeHtml(pass.serialNumber || '—')}</strong></span>
@@ -1589,7 +1589,7 @@
     const linterListEl = document.getElementById('linter-findings-list');
     if (linterListEl) {
       if (linterResult.findings.length === 0) {
-        linterListEl.innerHTML = '<div class="finding-item item-ok">✅ All PassKit schema keys, types, and constraints passed cleanly.</div>';
+        linterListEl.innerHTML = '<div class="finding-item item-ok">All PassKit schema keys, types, and constraints passed cleanly.</div>';
       } else {
         linterListEl.innerHTML = linterResult.findings.map(f => `
           <div class="finding-item item-${f.severity}">
@@ -1622,7 +1622,7 @@
         const isPresent = Boolean(state.rawArchiveFiles[a.name]);
         return `
           <div class="asset-card ${isPresent ? 'asset-present' : (a.required ? 'asset-missing-req' : 'asset-missing-opt')}">
-            <div class="asset-icon">${isPresent ? '🖼️' : '⚪'}</div>
+            <div class="asset-icon">${isPresent ? 'FILE' : '—'}</div>
             <div class="asset-info">
               <strong>${escapeHtml(a.name)}</strong>
               <small>${escapeHtml(a.dim)} · ${a.required ? '<b style="color: #ef4444">Required</b>' : 'Optional'}</small>
@@ -1640,20 +1640,20 @@
       if (!sigData.present) {
         sigContainerEl.innerHTML = `
           <div class="sig-alert sig-alert-warning">
-            <h4>⚠️ No PKCS#7 Signature Found</h4>
+            <h4>No PKCS#7 Signature Found</h4>
             <p>File <code>signature</code> is missing. iOS requires a digital signature signed by an Apple Developer Pass Type ID certificate.</p>
           </div>
         `;
       } else {
         sigContainerEl.innerHTML = `
           <div class="sig-alert ${sigData.valid ? 'sig-alert-success' : 'sig-alert-error'}">
-            <h4>${sigData.valid ? '✅ Valid Apple Developer Signature' : '🔴 Signature / Certificate Alert'}</h4>
+            <h4>${sigData.valid ? 'Valid Apple Developer Signature' : 'Signature / Certificate Alert'}</h4>
             <div class="sig-props-grid">
               <div><span>Issuer:</span> <strong>${escapeHtml(sigData.issuer || '—')}</strong></div>
               <div><span>Pass Type ID:</span> <code>${escapeHtml(sigData.passTypeIdentifier || pass.passTypeIdentifier || '—')}</code></div>
               <div><span>Team ID:</span> <code>${escapeHtml(sigData.teamIdentifier || pass.teamIdentifier || '—')}</code></div>
               <div><span>Valid Until:</span> <strong>${escapeHtml(sigData.notAfter || '2027-12-31')}</strong></div>
-              <div><span>Expired:</span> <strong>${sigData.isExpired ? 'YES ⚠️' : 'NO (Active)'}</strong></div>
+              <div><span>Expired:</span> <strong>${sigData.isExpired ? 'YES' : 'NO (Active)'}</strong></div>
             </div>
           </div>
         `;

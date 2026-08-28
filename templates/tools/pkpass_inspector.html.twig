@@ -60,21 +60,21 @@
     <div class="pkpass-toolbar">
       <div class="preset-group">
         <span class="preset-label">{{ 'pkpass.presets.label'|trans }}:</span>
-        <button type="button" class="btn-preset active" data-preset="boardingPass">✈️ {{ 'pkpass.presets.flight'|trans }}</button>
-        <button type="button" class="btn-preset" data-preset="eventTicket">🎟️ {{ 'pkpass.presets.event'|trans }}</button>
-        <button type="button" class="btn-preset" data-preset="storeCard">☕ {{ 'pkpass.presets.loyalty'|trans }}</button>
-        <button type="button" class="btn-preset" data-preset="coupon">🏷️ {{ 'pkpass.presets.coupon'|trans }}</button>
-        <button type="button" class="btn-preset" data-preset="generic">💳 {{ 'pkpass.presets.generic'|trans }}</button>
-        <button type="button" class="btn-preset" data-preset="brokenPass">⚠️ {{ 'pkpass.presets.broken_demo'|trans }}</button>
+        <button type="button" class="btn-preset active" data-preset="boardingPass">{{ 'pkpass.presets.flight'|trans }}</button>
+        <button type="button" class="btn-preset" data-preset="eventTicket">{{ 'pkpass.presets.event'|trans }}</button>
+        <button type="button" class="btn-preset" data-preset="storeCard">{{ 'pkpass.presets.loyalty'|trans }}</button>
+        <button type="button" class="btn-preset" data-preset="coupon">{{ 'pkpass.presets.coupon'|trans }}</button>
+        <button type="button" class="btn-preset" data-preset="generic">{{ 'pkpass.presets.generic'|trans }}</button>
+        <button type="button" class="btn-preset" data-preset="brokenPass">{{ 'pkpass.presets.broken_demo'|trans }}</button>
       </div>
       <div>
-        <span class="privacy-badge">🔒 100% Client-Side · Zero Data Upload</span>
+        <span class="privacy-badge">Local inspection · zero data upload</span>
       </div>
     </div>
 
     <!-- Drag & Drop Zone -->
     <div class="pkpass-drop-zone" id="pkpass-drop-zone">
-      <div class="drop-icon">📥</div>
+      <div class="drop-icon">PKPASS</div>
       <strong class="drop-prompt">{{ 'pkpass.upload.drop_prompt'|trans }}</strong>
       <span class="drop-hint">{{ 'pkpass.upload.formats'|trans }}</span>
       <input type="file" id="pkpass-file-input" accept=".pkpass,.zip,.json" style="display: none;">
@@ -85,10 +85,10 @@
       <!-- Left Column: Interactive Emulator -->
       <div class="emulator-panel">
         <div class="emulator-header-bar">
-          <span class="emulator-title">📱 {{ 'pkpass.emulator.title'|trans }}</span>
+          <span class="emulator-title">{{ 'pkpass.emulator.title'|trans }}</span>
           <div class="wallet-toggle-group">
-            <button type="button" class="btn-wallet-mode active" data-mode="apple">🍏 Apple Wallet</button>
-            <button type="button" class="btn-wallet-mode" data-mode="google">🌐 Google Wallet</button>
+            <button type="button" class="btn-wallet-mode active" data-mode="apple">Apple Wallet</button>
+            <button type="button" class="btn-wallet-mode" data-mode="google">Google Wallet</button>
           </div>
         </div>
 
@@ -101,7 +101,7 @@
       <div class="inspector-panel">
         <!-- Status Header -->
         <div id="diag-status-summary" class="diag-summary-box status-valid">
-          <div class="diag-status-badge badge-valid">🟢 STATUS: VALID PASS</div>
+          <div class="diag-status-badge badge-valid">STATUS: VALID PASS</div>
           <div class="diag-meta-row">
             <span>Pass Type: <strong>boardingPass</strong></span>
             <span>Org: <strong>LOT Polish Airlines</strong></span>
@@ -111,13 +111,13 @@
 
         <!-- Inspector Tabs Navigation -->
         <div class="inspector-tabs-nav">
-          <button type="button" class="inspector-tab-btn active" data-target="pane-manifest">🔍 SHA-1 Manifest</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-linter">📋 Schema Linter</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-assets">🖼️ Asset Checklist</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-signature">🔒 Signature</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-localizations">🌐 Localizations</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-contrast">🎨 Contrast</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-editor">⚙️ Live JSON Editor</button>
+          <button type="button" class="inspector-tab-btn active" data-target="pane-manifest">SHA-1 Manifest</button>
+          <button type="button" class="inspector-tab-btn" data-target="pane-linter">Schema Linter</button>
+          <button type="button" class="inspector-tab-btn" data-target="pane-assets">Asset Checklist</button>
+          <button type="button" class="inspector-tab-btn" data-target="pane-signature">Signature</button>
+          <button type="button" class="inspector-tab-btn" data-target="pane-localizations">Localizations</button>
+          <button type="button" class="inspector-tab-btn" data-target="pane-contrast">Contrast</button>
+          <button type="button" class="inspector-tab-btn" data-target="pane-editor">Live JSON Editor</button>
         </div>
 
         <!-- Panes -->
@@ -181,13 +181,13 @@
         <!-- Actions Bar -->
         <div class="inspector-actions-bar">
           <button type="button" class="btn-action-primary" id="btn-repack-pkpass">
-            🛠️ {{ 'pkpass.actions.repack'|trans }}
+            {{ 'pkpass.actions.repack'|trans }}
           </button>
           <button type="button" class="btn-action-secondary" id="btn-export-google-wallet">
-            🌐 {{ 'pkpass.actions.export_google'|trans }}
+            {{ 'pkpass.actions.export_google'|trans }}
           </button>
           <button type="button" class="btn-action-secondary" id="btn-download-json">
-            💾 {{ 'pkpass.actions.download_json'|trans }}
+            {{ 'pkpass.actions.download_json'|trans }}
           </button>
         </div>
       </div>
@@ -201,19 +201,19 @@
       </div>
       <div class="guide-grid">
         <div class="guide-card">
-          <h4>⚠️ {{ 'pkpass.guide.manifest_title'|trans }}</h4>
+          <h4>{{ 'pkpass.guide.manifest_title'|trans }}</h4>
           <p>{{ 'pkpass.guide.manifest_text'|trans }}</p>
         </div>
         <div class="guide-card">
-          <h4>🕒 {{ 'pkpass.guide.dates_title'|trans }}</h4>
+          <h4>{{ 'pkpass.guide.dates_title'|trans }}</h4>
           <p>{{ 'pkpass.guide.dates_text'|trans }}</p>
         </div>
         <div class="guide-card">
-          <h4>🖼️ {{ 'pkpass.guide.assets_title'|trans }}</h4>
+          <h4>{{ 'pkpass.guide.assets_title'|trans }}</h4>
           <p>{{ 'pkpass.guide.assets_text'|trans }}</p>
         </div>
         <div class="guide-card">
-          <h4>📱 {{ 'pkpass.guide.barcodes_title'|trans }}</h4>
+          <h4>{{ 'pkpass.guide.barcodes_title'|trans }}</h4>
           <p>{{ 'pkpass.guide.barcodes_text'|trans }}</p>
         </div>
       </div>

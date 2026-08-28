@@ -70,11 +70,11 @@
   function drawLadybug(context, x, y, size) {
     context.save();
     context.translate(x, y);
-    context.fillStyle = 'rgba(255, 130, 150, .55)';
+    context.fillStyle = 'rgba(144, 69, 58, .58)';
     context.beginPath();
     context.ellipse(0, 0, size * .55, size * .7, 0, 0, Math.PI * 2);
     context.fill();
-    context.strokeStyle = 'rgba(184, 255, 90, .5)';
+    context.strokeStyle = 'rgba(190, 190, 182, .42)';
     context.lineWidth = 1;
     context.beginPath();
     context.moveTo(0, -size * .65);
@@ -92,9 +92,9 @@
   function drawSymbol(context, index, x, y, size) {
     context.save();
     context.translate(x, y);
-    context.strokeStyle = 'rgba(184, 255, 90, .55)';
-    context.fillStyle = 'rgba(120, 167, 255, .18)';
-    context.lineWidth = 2;
+    context.strokeStyle = 'rgba(190, 190, 182, .5)';
+    context.fillStyle = 'rgba(156, 158, 155, .12)';
+    context.lineWidth = 1.2;
 
     if (index % 4 === 0) {
       context.restore();
@@ -104,17 +104,16 @@
 
     if (index % 4 === 1) {
       context.beginPath();
-      context.moveTo(0, size * .45);
-      context.bezierCurveTo(-size, -size * .2, -size * .45, -size, 0, -size * .45);
-      context.bezierCurveTo(size * .45, -size, size, -size * .2, 0, size * .45);
-      context.fill();
+      context.arc(-size * .28, 0, size * .34, 0, Math.PI * 2);
+      context.moveTo(size * .62, 0);
+      context.arc(size * .28, 0, size * .34, 0, Math.PI * 2);
       context.stroke();
     } else if (index % 4 === 2) {
       roundedRectangle(context, -size * .32, -size * .75, size * .64, size * 1.5, size * .16);
       context.stroke();
-      ['#ff8296', '#ffcc66', '#7bf0c3'].forEach(function (color, lightIndex) {
+      ['#685d57', '#9a8660', '#68756b'].forEach(function (color, lightIndex) {
         context.fillStyle = color;
-        context.globalAlpha = .42;
+        context.globalAlpha = .52;
         context.beginPath();
         context.arc(0, (-.45 + (lightIndex * .45)) * size, size * .13, 0, Math.PI * 2);
         context.fill();
@@ -136,20 +135,30 @@
     context.save();
     context.translate(poster.x, poster.y);
     context.rotate(poster.rotation);
-    roundedRectangle(context, -poster.width / 2, -poster.height / 2, poster.width, poster.height, 7);
-    context.fillStyle = 'rgba(13, 15, 24, .48)';
+    context.beginPath();
+    context.rect(-poster.width / 2, -poster.height / 2, poster.width, poster.height);
+    context.fillStyle = 'rgba(9, 10, 13, .68)';
     context.fill();
-    context.strokeStyle = index % 2 === 0 ? 'rgba(184, 255, 90, .28)' : 'rgba(120, 167, 255, .3)';
+    context.strokeStyle = 'rgba(182, 183, 178, .25)';
     context.lineWidth = 1;
     context.stroke();
 
-    drawSymbol(context, index, 0, -poster.height * .19, Math.min(25, poster.width * .12));
-    context.fillStyle = 'rgba(221, 226, 245, .44)';
-    context.font = '700 ' + Math.max(9, Math.min(12, poster.width / 20)) + 'px ui-monospace, monospace';
+    context.fillStyle = 'rgba(188, 189, 184, .34)';
+    context.font = '500 8px ui-monospace, monospace';
+    context.textAlign = 'left';
+    context.fillText('PUBLIC NOTICE / ' + String(index + 1).padStart(2, '0'), -poster.width / 2 + 10, -poster.height / 2 + 15);
+    context.beginPath();
+    context.moveTo(-poster.width / 2 + 10, -poster.height / 2 + 22);
+    context.lineTo(poster.width / 2 - 10, -poster.height / 2 + 22);
+    context.stroke();
+
+    drawSymbol(context, index, 0, -poster.height * .14, Math.min(19, poster.width * .09));
+    context.fillStyle = 'rgba(211, 212, 207, .46)';
+    context.font = '600 ' + Math.max(8, Math.min(10, poster.width / 22)) + 'px ui-monospace, monospace';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillText(message[0].toUpperCase(), 0, poster.height * .17, poster.width - 22);
-    context.fillText(message[1].toUpperCase(), 0, poster.height * .27, poster.width - 22);
+    context.fillText(message[0].toUpperCase(), 0, poster.height * .19, poster.width - 22);
+    context.fillText(message[1].toUpperCase(), 0, poster.height * .29, poster.width - 22);
     context.restore();
   }
 
@@ -160,9 +169,9 @@
     context.save();
     context.translate(x, y);
     context.rotate(-.18 + Math.sin(time * .001) * .04);
-    context.strokeStyle = 'rgba(184, 255, 90, .42)';
-    context.fillStyle = 'rgba(120, 167, 255, .16)';
-    context.lineWidth = 1.5;
+    context.strokeStyle = 'rgba(190, 192, 190, .38)';
+    context.fillStyle = 'rgba(122, 128, 132, .1)';
+    context.lineWidth = 1;
     context.beginPath();
     context.moveTo(20, 0);
     context.lineTo(-7, -8);
@@ -174,7 +183,7 @@
     context.beginPath();
     context.moveTo(-14, 0);
     context.lineTo(-35 - Math.sin(time * .02) * 8, 0);
-    context.strokeStyle = 'rgba(255, 204, 102, .34)';
+    context.strokeStyle = 'rgba(178, 143, 98, .26)';
     context.stroke();
     context.restore();
   }
@@ -184,15 +193,15 @@
     const x = width - (progress * width);
     const y = (comet.y * height) + (progress * height * .34);
     const gradient = context.createLinearGradient(x, y, x + 90, y - 32);
-    gradient.addColorStop(0, 'rgba(201, 133, 255, .5)');
-    gradient.addColorStop(1, 'rgba(201, 133, 255, 0)');
+    gradient.addColorStop(0, 'rgba(196, 188, 170, .38)');
+    gradient.addColorStop(1, 'rgba(196, 188, 170, 0)');
     context.strokeStyle = gradient;
     context.lineWidth = 2;
     context.beginPath();
     context.moveTo(x, y);
     context.lineTo(x + 90, y - 32);
     context.stroke();
-    context.fillStyle = 'rgba(243, 245, 255, .65)';
+    context.fillStyle = 'rgba(224, 223, 216, .55)';
     context.beginPath();
     context.arc(x, y, 3, 0, Math.PI * 2);
     context.fill();
@@ -283,10 +292,10 @@
     let planet = null;
     let constellation = null;
     const palette = [
-      ['rgba(184, 255, 90, .28)', 'rgba(184, 255, 90, .2)', 'rgba(120, 167, 255, .28)'],
-      ['rgba(201, 133, 255, .3)', 'rgba(201, 133, 255, .2)', 'rgba(255, 204, 102, .28)'],
-      ['rgba(120, 167, 255, .3)', 'rgba(120, 167, 255, .19)', 'rgba(123, 240, 195, .28)'],
-      ['rgba(255, 204, 102, .3)', 'rgba(255, 204, 102, .18)', 'rgba(255, 130, 150, .25)']
+      ['rgba(157, 164, 157, .25)', 'rgba(119, 126, 120, .15)', 'rgba(151, 158, 164, .22)'],
+      ['rgba(150, 143, 135, .25)', 'rgba(116, 108, 102, .15)', 'rgba(168, 150, 117, .2)'],
+      ['rgba(135, 150, 159, .24)', 'rgba(104, 119, 126, .14)', 'rgba(126, 147, 139, .2)'],
+      ['rgba(169, 151, 118, .23)', 'rgba(128, 113, 89, .14)', 'rgba(152, 128, 121, .19)']
     ][hashString(window.location.pathname) % 4];
     const rockets = [{ y: .22, speed: .000035, offset: random() }, { y: .72, speed: .000024, offset: random() }];
     const comets = [{ y: .08, speed: .000029, offset: random() }, { y: .48, speed: .000019, offset: random() }];

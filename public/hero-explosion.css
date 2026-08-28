@@ -8,6 +8,7 @@
   z-index: 4;
   max-width: none;
   pointer-events: none;
+  filter: saturate(.78) contrast(1.08);
 }
 
 .hero-explosion-target.is-detonating {
