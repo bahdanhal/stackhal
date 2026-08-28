@@ -76,6 +76,11 @@
       "severity": "info",
       "title": "DNSSEC Authenticated & Secure",
       "description": "Full cryptographic chain of trust validated from Root (.) through TLD to Child Zone RRSIG records."
+    },
+    "ERR_LIVE_TRACE_UNAVAILABLE": {
+      "severity": "error",
+      "title": "Live DNS Trace Unavailable",
+      "description": "This public tool currently provides demonstration traces only. No live DNS data was returned for this domain."
     }
   },
   "presets": [

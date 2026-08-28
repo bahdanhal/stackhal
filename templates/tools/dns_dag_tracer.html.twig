@@ -25,6 +25,12 @@
   } only %}
 
   <div class="transpiler-container" id="dns-dag-app" data-locale="{{ app.request.locale }}">
+    {% if result.isSimulation %}
+      <div class="ui-panel" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid #f59e0b; color: #fef3c7; background: #422006;">
+        <strong>{{ 'dns_dag_tracer.simulation_label'|trans }}</strong>
+        {{ 'dns_dag_tracer.simulation_text'|trans }}
+      </div>
+    {% endif %}
     <!-- Presets Toolbar -->
     <div class="transpiler-toolbar ui-panel">
       <div class="preset-group">
@@ -89,7 +95,8 @@
       </div>
     </div>
 
-    <!-- 4-Layer Delegation DAG Visualization -->
+    <!-- Delegation DAG Visualization -->
+    {% if result.layers is not empty %}
     <div class="ui-panel" style="padding: 1.5rem; margin-bottom: 1.5rem;">
       <h3 style="margin-top: 0; margin-bottom: 1.5rem;">{{ 'dns_dag_tracer.dag_title'|trans }}</h3>
 
@@ -140,6 +147,7 @@
         {% endfor %}
       </div>
     </div>
+    {% endif %}
 
     <!-- Diagnostics List -->
     {% if result.diagnostics is not empty %}

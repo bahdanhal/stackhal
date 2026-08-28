@@ -49,6 +49,11 @@ final class DnsDagEngine
             'title' => 'DNSSEC Authenticated & Secure',
             'description' => 'Full cryptographic chain of trust validated from Root (.) through TLD to Child Zone RRSIG records.',
         ],
+        'ERR_LIVE_TRACE_UNAVAILABLE' => [
+            'severity' => 'error',
+            'title' => 'Live DNS Trace Unavailable',
+            'description' => 'This public tool currently provides demonstration traces only. No live DNS data was returned for this domain.',
+        ],
     ];
 
     public function trace(string $domain, QueryType $queryType = QueryType::A): DnsDagResult
@@ -75,7 +80,11 @@ final class DnsDagEngine
             return $this->createErrorResult($domain, $queryType, 'ERR_LAME_DELEGATION');
         }
 
-        return $this->buildAuthoritativeTrace($domain, $queryType);
+        if ($domain === 'stackhal.com') {
+            return $this->buildAuthoritativeTrace($domain, $queryType);
+        }
+
+        return $this->createUnavailableResult($domain, $queryType);
     }
 
     private function buildAuthoritativeTrace(string $domain, QueryType $queryType): DnsDagResult
@@ -101,6 +110,7 @@ final class DnsDagEngine
             diagnostics: $diagnostics,
             domain: $domain,
             queryType: $queryType,
+            isSimulation: true,
         );
     }
 
@@ -128,6 +138,7 @@ final class DnsDagEngine
             diagnostics: $diagnostics,
             domain: $domain,
             queryType: $queryType,
+            isSimulation: true,
         );
     }
 
@@ -192,6 +203,21 @@ final class DnsDagEngine
             diagnostics: $diagnostics,
             domain: $domain,
             queryType: $queryType,
+            isSimulation: true,
+        );
+    }
+
+    private function createUnavailableResult(string $domain, QueryType $queryType): DnsDagResult
+    {
+        return new DnsDagResult(
+            status: 'error',
+            dnssecStatus: DnssecStatus::INDETERMINATE,
+            layerCount: 0,
+            hasDivergence: false,
+            layers: [],
+            diagnostics: [$this->createDiagnostic('ERR_LIVE_TRACE_UNAVAILABLE')],
+            domain: $domain,
+            queryType: $queryType,
         );
     }
 
@@ -214,6 +240,7 @@ final class DnsDagEngine
             diagnostics: [$this->createDiagnostic($errorCode)],
             domain: $domain,
             queryType: $queryType,
+            isSimulation: true,
         );
     }
 

@@ -31,6 +31,7 @@ final class DnsDagTracerTest extends TestCase
         self::assertFalse($result->hasDivergence);
         self::assertCount(4, $result->layers);
         self::assertContains('INFO_DNSSEC_SECURE', $result->getInfoCodes());
+        self::assertTrue($result->isSimulation);
     }
 
     public function testBrokenDnssecBogusTrace(): void
@@ -64,6 +65,18 @@ final class DnsDagTracerTest extends TestCase
         $presets = $this->service->getPresets();
         self::assertCount(3, $presets);
         self::assertSame('cloudflare_dnssec_clean', $presets[0]['id']);
+    }
+
+    public function testArbitraryDomainDoesNotReturnFabricatedTrace(): void
+    {
+        $result = $this->service->trace('example.com', 'A');
+
+        self::assertSame('error', $result->status);
+        self::assertSame(DnssecStatus::INDETERMINATE, $result->dnssecStatus);
+        self::assertSame(0, $result->layerCount);
+        self::assertEmpty($result->layers);
+        self::assertContains('ERR_LIVE_TRACE_UNAVAILABLE', $result->getErrorCodes());
+        self::assertFalse($result->isSimulation);
     }
 
     public function testQueryTypeParsing(): void

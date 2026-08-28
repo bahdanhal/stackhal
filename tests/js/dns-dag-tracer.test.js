@@ -29,5 +29,6 @@ assert.ok(spec.diagnostic_codes.ERR_NXDOMAIN);
 assert.ok(spec.diagnostic_codes.WARN_SOA_SERIAL_DIVERGENCE);
 assert.ok(spec.diagnostic_codes.WARN_HIGH_TTL_MIGRATION_RISK);
 assert.ok(spec.diagnostic_codes.INFO_DNSSEC_SECURE);
+assert.ok(spec.diagnostic_codes.ERR_LIVE_TRACE_UNAVAILABLE);
 
 console.log('DNS Propagation DAG Tracer JS spec tests passed');

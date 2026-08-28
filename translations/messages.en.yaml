@@ -92,8 +92,8 @@ home:
         title: "Regex Dialect Transpiler & Compatibility Matrix"
         text: "Transpile PCRE regex to Go RE2, JavaScript, Python, and Rust, analyze lookaround/backreference safety, and guarantee linear O(N) ReDoS protection."
     dns_dag_tracer:
-        title: "Visual DNS Propagation DAG & Delegation Chain"
-        text: "Trace hierarchical DNS delegation chains across Root, TLD, Authoritative NS and Global Anycast resolvers with DNSSEC trust validation."
+        title: "DNS Delegation DAG Demonstration"
+        text: "Explore a fixed visualization of Root, TLD, authoritative nameserver and resolver layers. Live DNS tracing is not available yet."
     pkpass:
         title: "Apple Wallet (.pkpass) Inspector & Debugger"
         text: "Pixel-perfect Apple Wallet & Google Wallet emulator, SHA-1 manifest validator, PKCS#7 certificate inspector, and 1-click package repair."
@@ -766,15 +766,17 @@ favicon_suite:
 
 dns_dag_tracer:
     meta:
-        title: "Visual DNS Propagation DAG & Delegation Chain Tracer · StackHal"
-        description: "Trace hierarchical DNS delegation chains (Root -> TLD -> Authoritative -> Edge Resolvers), validate DNSSEC trust chains and diagnose propagation stalls."
+        title: "DNS Delegation DAG Demonstration · StackHal"
+        description: "Explore a fixed demonstration of DNS delegation layers, DNSSEC states and propagation diagnostics. Live DNS tracing is not available yet."
     eyebrow: "HIERARCHICAL DNS DELEGATION & DAG TRACER"
-    heading: "Visual DNS Propagation DAG & Delegation Chain Tracer"
-    lede: "Trace DNS resolution down the entire delegation tree—from IANA Root and TLD registries to Authoritative nameservers and global anycast resolvers."
-    presets_label: "Example Scenarios"
-    domain_label: "Target Domain Name:"
+    heading: "DNS Delegation DAG Demonstration"
+    lede: "Explore fixed scenarios showing Root, TLD, authoritative nameserver and resolver layers. Live DNS tracing is not available yet."
+    presets_label: "Demonstration scenarios"
+    domain_label: "Scenario domain:"
     record_type_label: "Record Type:"
     trace_btn: "Trace Delegation DAG"
+    simulation_label: "Demonstration scenario."
+    simulation_text: "The result below is fixed sample data for explaining the visualization; it is not a live DNS measurement."
     dag_title: "Hierarchical Delegation DAG (4 Layers)"
     diagnostics_title: "Delegation & DNSSEC Diagnostics"
     faq:
