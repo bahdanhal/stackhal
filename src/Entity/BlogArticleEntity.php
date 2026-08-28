@@ -52,11 +52,11 @@ class BlogArticleEntity
     private string $visualClass;
 
     /** @var list<string> */
-    #[ORM\Column(type: Types::JSON)]
+    #[ORM\Column(name: 'visual_lines', type: Types::JSON)]
     private array $visualLinesData = [];
 
     /** @var list<array{name: string, text: string}> */
-    #[ORM\Column(type: Types::JSON)]
+    #[ORM\Column(name: 'how_to_steps', type: Types::JSON)]
     private array $howToStepsData = [];
 
     /**
