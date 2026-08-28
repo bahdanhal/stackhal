@@ -57,7 +57,7 @@ www.example.com. 300 IN A 203.0.113.42</code></pre><h2>NS records and glue</h2><
         foreach ($articles as $article) {
             $this->addSql(
                 'INSERT INTO blog_articles (slug, title, description, category, read_time_minutes, published_at, updated_at, content_html, cta_label, cta_path, visual_class, visual_lines, how_to_steps) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [$article[0], $article[1], $article[2], $article[3], $article[4], $publishedAt, $publishedAt, $article[9], $article[7], $article[8], $article[5], json_encode($article[6], JSON_THROW_ON_ERROR), json_encode($article[10], JSON_THROW_ON_ERROR)],
+                [$article[0], $article[1], $article[2], $article[3], $article[4], $publishedAt, $publishedAt, $article[9], $article[7], $article[8], $article[5], $article[6], $article[10]],
                 [Types::STRING, Types::STRING, Types::TEXT, Types::STRING, Types::SMALLINT, Types::DATETIMETZ_IMMUTABLE, Types::DATETIMETZ_IMMUTABLE, Types::TEXT, Types::STRING, Types::STRING, Types::STRING, Types::JSON, Types::JSON]
             );
         }
