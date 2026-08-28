@@ -29,6 +29,9 @@ final readonly class SitemapController
             ['/ai-studio-local-file-sync', '/pl/synchronizacja-plikow-ai-studio'],
             ['/blog', '/blog'],
             ['/blog/bimi-not-working', '/blog/bimi-not-working'],
+            ['/blog/nginx-to-caddy', '/blog/nginx-to-caddy'],
+            ['/blog/dns-delegation-explained', '/blog/dns-delegation-explained'],
+            ['/blog/pkpass-signature-errors', '/blog/pkpass-signature-errors'],
         ];
 
         $entries = [];

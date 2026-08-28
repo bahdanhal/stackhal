@@ -21,5 +21,32 @@
       <strong>Read the guide →</strong>
     </div>
   </a>
+  <a class="article-card" href="{{ path('blog_nginx_to_caddy') }}">
+    <div class="article-card-visual article-card-visual-caddy" aria-hidden="true"><span>location /api/</span><span>reverse_proxy</span><span>header_up Host</span></div>
+    <div class="article-card-copy">
+      <p class="article-kicker">REVERSE PROXIES · 9 MIN READ</p>
+      <h2>Nginx to Caddy Migration: Common Rewrite Rules and Hidden Traps</h2>
+      <p>Translate the directives that look obvious, then catch the path, header, and redirect semantics that can quietly change in production.</p>
+      <strong>Read the guide →</strong>
+    </div>
+  </a>
+  <a class="article-card" href="{{ path('blog_dns_delegation_explained') }}">
+    <div class="article-card-visual article-card-visual-dns" aria-hidden="true"><span>root → .com</span><span>NS → auth</span><span>DNSSEC ✓</span></div>
+    <div class="article-card-copy">
+      <p class="article-kicker">DNS · 8 MIN READ</p>
+      <h2>DNS Delegation Explained: From Root to Authoritative Nameserver</h2>
+      <p>Follow one DNS lookup across recursive resolution, delegation, glue, authoritative data, and DNSSEC without treating the system like a black box.</p>
+      <strong>Read the guide →</strong>
+    </div>
+  </a>
+  <a class="article-card" href="{{ path('blog_pkpass_signature_errors') }}">
+    <div class="article-card-visual article-card-visual-pkpass" aria-hidden="true"><span>manifest.json</span><span>SHA-1 ✓</span><span>signature PKCS#7</span></div>
+    <div class="article-card-copy">
+      <p class="article-kicker">APPLE WALLET · 7 MIN READ</p>
+      <h2>PKPass Signature Errors: What to Check Before Rebuilding the Bundle</h2>
+      <p>Use the bundle’s own evidence to separate a bad hash, a malformed signature, a broken certificate chain, and an invalid ZIP.</p>
+      <strong>Read the guide →</strong>
+    </div>
+  </a>
 </section>
 {% endblock %}

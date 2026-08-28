@@ -21,4 +21,22 @@ final class BlogController extends AbstractController
     {
         return $this->render('blog/bimi-not-working.html.twig');
     }
+
+    #[Route('/blog/nginx-to-caddy', name: 'blog_nginx_to_caddy', methods: ['GET'])]
+    public function nginxToCaddy(): Response
+    {
+        return $this->render('blog/nginx-to-caddy.html.twig');
+    }
+
+    #[Route('/blog/dns-delegation-explained', name: 'blog_dns_delegation_explained', methods: ['GET'])]
+    public function dnsDelegationExplained(): Response
+    {
+        return $this->render('blog/dns-delegation-explained.html.twig');
+    }
+
+    #[Route('/blog/pkpass-signature-errors', name: 'blog_pkpass_signature_errors', methods: ['GET'])]
+    public function pkpassSignatureErrors(): Response
+    {
+        return $this->render('blog/pkpass-signature-errors.html.twig');
+    }
 }
