@@ -22,10 +22,11 @@
     <div class="article-header-meta"><span>StackHal Field Notes</span><span>Updated {{ article.updatedAt|date('F d, Y') }}</span></div>
   </header>
   <div class="article-layout">
-    <aside class="article-toc" aria-label="On this page"><span>ON THIS PAGE</span><a href="#article-content">Article content</a><a href="#article-cta">Use the tool</a></aside>
+    {% set externalCta = article.ctaPath starts with 'https://' %}
+    <aside class="article-toc" aria-label="On this page"><span>ON THIS PAGE</span><a href="#article-content">Article content</a><a href="#article-cta">{% if externalCta %}Next step{% else %}Use the tool{% endif %}</a></aside>
     <div class="article-content">
       <div id="article-content">{{ article.contentHtml|raw }}</div>
-      <div id="article-cta" class="article-cta"><p class="article-kicker">READY TO CHECK?</p><h2>Turn the guide into evidence.</h2><p>Use the StackHal tool connected to this field note to inspect your own configuration.</p><div class="article-cta-actions"><a class="article-button article-button-primary" href="{{ article.ctaPath }}">{{ article.ctaLabel }} →</a><a class="article-button" href="{{ path('blog_index') }}">Back to the blog</a></div></div>
+      <div id="article-cta" class="article-cta"><p class="article-kicker">READY TO CHECK?</p><h2>{% if externalCta %}Continue with the primary documentation.{% else %}Turn the guide into evidence.{% endif %}</h2><p>{% if externalCta %}Use the maintained project's documentation to plan and verify the next step.{% else %}Use the StackHal tool connected to this field note to inspect your own configuration.{% endif %}</p><div class="article-cta-actions"><a class="article-button article-button-primary" href="{{ article.ctaPath }}">{{ article.ctaLabel }} →</a><a class="article-button" href="{{ path('blog_index') }}">Back to the blog</a></div></div>
       <p class="article-sources"><strong>StackHal Field Notes:</strong> Practical explainers for developer infrastructure.</p>
     </div>
   </div>
