@@ -56,6 +56,7 @@ if (!empty($proxy)) {
 }</code></pre>
 <p>This code appears in <a href="https://github.com/Azure/azure-storage-php/blob/master/azure-storage-common/src/Common/Internal/ServiceRestProxy.php">the retired <code>ServiceRestProxy</code></a> used by the Blob, Queue, Table, and File clients.</p>
 <p>The uppercase variable is important. Under CGI-style environments, incoming HTTP headers are mapped into environment variables. An attacker-supplied request header named <code>Proxy</code> can become <code>HTTP_PROXY</code>. This collision is the vulnerability class known as <a href="https://httpoxy.org/">httpoxy</a>.</p>
+<p>This vulnerability class is tracked as <a href="https://github.com/advisories/GHSA-m6ch-gg5f-wxx3">CVE-2016-5385 / GHSA-m6ch-gg5f-wxx3</a>. The advisory explicitly describes applications that call <code>getenv('HTTP_PROXY')</code>, but its affected Composer packages currently do not include <code>microsoft/azure-storage-blob</code> or <code>microsoft/azure-storage-common</code>. The Azure client added this behaviour after the original CVE was published.</p>
 <p>Guzzle’s own documentation explicitly says it only consumes uppercase <code>HTTP_PROXY</code> in the CLI SAPI because the value may be attacker-controlled in CGI environments. The Azure Storage SDK bypasses that safeguard by reading the variable itself and passing the result back to Guzzle as an explicit proxy option.</p>
 <p>In an affected CGI or FastCGI deployment, the flow becomes:</p>
 <pre class="article-code"><code>attacker request
