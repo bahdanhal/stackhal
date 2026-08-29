@@ -480,7 +480,12 @@ geo:
         failed: "missing"
         schema_types: "schema types"
         checks: "Evidence-based checks"
-        explain: "Open a check to see its evidence"
+        explain: "Open a check to see its diagnosis and evidence"
+        diagnosis: "Diagnosis:"
+        finding: "Finding:"
+        issue: "Issue:"
+        recommendation: "Recommendation:"
+        evidence_drawer: "View Inspected Evidence & Raw Data"
     status:
         pass: "Pass"
         warning: "Partial"

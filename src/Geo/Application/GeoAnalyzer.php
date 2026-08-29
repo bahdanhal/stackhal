@@ -132,52 +132,274 @@ final readonly class GeoAnalyzer
         $hasSiteName = $siteNameNodes instanceof \DOMNodeList && $siteNameNodes->length > 0;
 
         $checks = [];
-        $this->add($checks, 'access', $fetch['status'] === 200 ? 10 : 0, 10, ['status' => $fetch['status'], 'final_url' => $fetch['final_url']]);
+
+        // 1. Access
+        $accessEarned = $fetch['status'] === 200 ? 10 : 0;
+        $accessDiagnosis = $accessEarned === 10
+            ? 'The page successfully returned HTTP 200 OK.'
+            : 'The URL returned HTTP ' . $fetch['status'] . ' instead of HTTP 200 OK.';
+        $accessRecommendation = 'Ensure the web server is reachable and resolves with a clean HTTP 200 status code.';
+        $this->add($checks, 'access', $accessEarned, 10, $accessDiagnosis, $accessRecommendation, [
+            'status' => $fetch['status'],
+            'final_url' => $fetch['final_url'],
+        ]);
+
+        // 2. Indexability
         $indexable = $fetch['status'] === 200 && $robotsAllowed && !str_contains($metaRobots, 'noindex') && !str_contains($xRobots, 'noindex');
-        $this->add($checks, 'indexability', $indexable ? 10 : 0, 10, [
+        $indexEarned = $indexable ? 10 : 0;
+        if ($indexable) {
+            $indexDiagnosis = 'Search retrieval and AI crawler access are fully permitted (no noindex or robots.txt blocks).';
+        } else {
+            $blocks = [];
+            if (!$robotsAllowed) {
+                $blocks[] = 'robots.txt disallow rules';
+            }
+            if (str_contains($metaRobots, 'noindex')) {
+                $blocks[] = '<meta name="robots" content="noindex">';
+            }
+            if (str_contains($xRobots, 'noindex')) {
+                $blocks[] = 'X-Robots-Tag: noindex header';
+            }
+            $indexDiagnosis = 'Crawling/indexing is blocked by: ' . implode(', ', $blocks) . '.';
+        }
+        $indexRecommendation = 'Remove noindex directives and robots.txt disallow rules if public AI retrieval and search citations are desired.';
+        $this->add($checks, 'indexability', $indexEarned, 10, $indexDiagnosis, $indexRecommendation, [
             'robots_allowed' => $robotsAllowed,
             'meta_robots' => $page['robots'],
             'x_robots_tag' => $xRobots ?: null,
         ]);
+
+        // 3. Canonical
         $canonicalPoints = $page['canonical'] === null ? 0 : ($this->sameUrl($page['canonical'], $fetch['final_url']) ? 5 : 2);
-        $this->add($checks, 'canonical', $canonicalPoints, 5, ['canonical' => $page['canonical'], 'final_url' => $fetch['final_url']]);
+        if ($page['canonical'] === null) {
+            $canonicalDiagnosis = 'Missing canonical tag (<link rel="canonical">). AI engines may treat URL variations as duplicate content.';
+        } elseif ($this->sameUrl($page['canonical'], $fetch['final_url'])) {
+            $canonicalDiagnosis = 'Self-referencing canonical tag is present and matches the final page URL.';
+        } else {
+            $canonicalDiagnosis = 'The canonical URL (' . $page['canonical'] . ') '
+                . 'points to a different target than the fetched URL (' . $fetch['final_url'] . ').';
+        }
+        $canonicalRecommendation = 'Add a self-referencing canonical tag: <link rel="canonical" href="' . $fetch['final_url'] . '">';
+        $this->add($checks, 'canonical', $canonicalPoints, 5, $canonicalDiagnosis, $canonicalRecommendation, [
+            'canonical' => $page['canonical'],
+            'final_url' => $fetch['final_url'],
+        ]);
+
+        // 4. Metadata
         $metadataPoints = ($page['title'] ? 3 : 0) + ($page['description'] ? 3 : 0) + (count($page['h1']) === 1 ? 2 : 0);
-        $this->add($checks, 'metadata', $metadataPoints, 8, [
+        if ($metadataPoints === 8) {
+            $metadataDiagnosis = 'Primary metadata (title, meta description, and single H1 heading) is complete and well-defined.';
+        } else {
+            $metaDefects = [];
+            if (!$page['title']) {
+                $metaDefects[] = 'missing <title> tag';
+            }
+            if (!$page['description']) {
+                $metaDefects[] = 'missing meta description';
+            }
+            if (count($page['h1']) === 0) {
+                $metaDefects[] = 'missing <h1> heading';
+            } elseif (count($page['h1']) > 1) {
+                $metaDefects[] = 'found ' . count($page['h1']) . ' <h1> headings (exactly 1 recommended)';
+            }
+            $metadataDiagnosis = 'Incomplete metadata: ' . implode('; ', $metaDefects) . '.';
+        }
+        $metadataRecommendation = 'Ensure the page has an informative <title>, an engaging 120-160 char meta description, '
+            . 'and exactly one <h1> heading.';
+        $this->add($checks, 'metadata', $metadataPoints, 8, $metadataDiagnosis, $metadataRecommendation, [
             'title' => $page['title'],
             'description' => $page['description'],
             'h1_count' => count($page['h1']),
         ]);
-        $this->add($checks, 'language', $page['lang'] ? 3 : 0, 3, ['html_lang' => $page['lang']]);
+
+        // 5. Language
+        $langEarned = $page['lang'] ? 3 : 0;
+        $langDiagnosis = $page['lang']
+            ? 'Document language is declared as "' . $page['lang'] . '".'
+            : 'The <html> root element is missing a lang attribute (e.g. <html lang="en">).';
+        $langRecommendation = 'Declare the primary language using <html lang="en"> (or your target locale) '
+            . 'to ensure language models parse content accurately.';
+        $this->add($checks, 'language', $langEarned, 3, $langDiagnosis, $langRecommendation, [
+            'html_lang' => $page['lang'],
+        ]);
+
+        // 6. Direct Answer
         $answerPoints = $paragraphWords >= 25 && $paragraphWords <= 120 ? 10 : ($paragraphWords > 0 ? 5 : 0);
-        $this->add($checks, 'direct_answer', $answerPoints, 10, [
+        if ($paragraphWords >= 25 && $paragraphWords <= 120) {
+            $answerDiagnosis = 'The opening paragraph provides a concise summary (' . $paragraphWords . ' words), '
+                . 'optimal for direct AI answer extraction.';
+        } elseif ($paragraphWords > 120) {
+            $answerDiagnosis = 'The opening paragraph is verbose (' . $paragraphWords . ' words). '
+                . 'Distilling the core answer into 25–120 words improves snippet extraction.';
+        } elseif ($paragraphWords > 0) {
+            $answerDiagnosis = 'The opening paragraph is brief (' . $paragraphWords . ' words). '
+                . 'Expanding the lead explanation to 25–120 words improves factual clarity.';
+        } else {
+            $answerDiagnosis = 'No opening text paragraph found. The page lacks an immediate textual summary or direct answer.';
+        }
+        $answerRecommendation = 'Lead with a concise, factual 25–120 word paragraph that directly answers the central topic or describes the tool.';
+        $this->add($checks, 'direct_answer', $answerPoints, 10, $answerDiagnosis, $answerRecommendation, [
             'first_paragraph_words' => $paragraphWords,
             'sample' => $this->truncate($firstParagraph, 240),
         ]);
-        // phpcs:ignore Generic.Files.LineLength
-        $structurePoints = ($h2Count >= 2 ? 3 : ($h2Count === 1 ? 1 : 0)) + ($hasListOrTable ? 2 : 0) + ($hasMainContent ? 2 : 0) + ($paragraphCount >= 3 ? 1 : 0);
-        $this->add($checks, 'structure', $structurePoints, 8, [
+
+        // 7. Structure
+        $structurePoints = ($h2Count >= 2 ? 3 : ($h2Count === 1 ? 1 : 0))
+            + ($hasListOrTable ? 2 : 0)
+            + ($hasMainContent ? 2 : 0)
+            + ($paragraphCount >= 3 ? 1 : 0);
+        if ($structurePoints === 8) {
+            $structureDiagnosis = 'Rich semantic structure detected with <main>/<article> landmarks, '
+                . $h2Count . ' H2 subheadings, content paragraphs, and data lists/tables.';
+        } else {
+            $structureDefects = [];
+            if (!$hasMainContent) {
+                $structureDefects[] = 'missing <main> or <article> semantic wrapper';
+            }
+            if ($h2Count === 0) {
+                $structureDefects[] = 'no <h2> subheadings found';
+            } elseif ($h2Count === 1) {
+                $structureDefects[] = 'only 1 <h2> subheading found (at least 2 recommended)';
+            }
+            if (!$hasListOrTable) {
+                $structureDefects[] = 'no <ul>, <ol>, or <table> elements for structured data';
+            }
+            if ($paragraphCount < 3) {
+                $structureDefects[] = 'only ' . $paragraphCount . ' content paragraphs found';
+            }
+            $structureDiagnosis = 'Missing structural elements: ' . implode('; ', $structureDefects) . '.';
+        }
+        $structureRecommendation = 'Structure content using a <main> landmark, at least two <h2> subheadings, '
+            . 'and bullet lists or tables for scannable structured retrieval.';
+        $this->add($checks, 'structure', $structurePoints, 8, $structureDiagnosis, $structureRecommendation, [
             'h2_count' => $h2Count,
             'content_paragraphs' => $paragraphCount,
             'list_or_table' => $hasListOrTable,
             'main_or_article' => $hasMainContent,
         ]);
+
+        // 8. Schema
         $schemaPoints = ($schema['valid_count'] > 0 ? 4 : 0) + ($hasEntitySchema ? 4 : 0) + ($hasContentSchema ? 4 : 0);
-        $this->add($checks, 'schema', $schemaPoints, 12, [
+        if ($schemaPoints === 12) {
+            $schemaDiagnosis = 'Comprehensive JSON-LD structured data detected covering both entity definitions '
+                . 'and content schema types (' . implode(', ', $types) . ').';
+        } elseif ($schema['valid_count'] === 0) {
+            $schemaDiagnosis = 'No valid JSON-LD structured data blocks found on the page.';
+        } else {
+            $schemaDefects = [];
+            if (!$hasEntitySchema) {
+                $schemaDefects[] = 'missing entity schema (Organization, Person, or WebSite)';
+            }
+            if (!$hasContentSchema) {
+                $schemaDefects[] = 'missing content schema (SoftwareApplication, Article, Product, FAQPage, or HowTo)';
+            }
+            if ($schema['invalid_count'] > 0) {
+                $schemaDefects[] = $schema['invalid_count'] . ' block(s) with invalid JSON syntax';
+            }
+            $schemaDiagnosis = 'Partial structured data: ' . implode('; ', $schemaDefects)
+                . '. Detected types: ' . ($types ? implode(', ', $types) : 'none') . '.';
+        }
+        $schemaRecommendation = 'Implement schema.org JSON-LD structured data specifying both the publisher entity '
+            . '(@type: Organization/Person) and content (@type: SoftwareApplication, Article, Product, or FAQPage).';
+        $this->add($checks, 'schema', $schemaPoints, 12, $schemaDiagnosis, $schemaRecommendation, [
             'valid_json_ld_blocks' => $schema['valid_count'],
             'invalid_json_ld_blocks' => $schema['invalid_count'],
             'types' => $types,
         ]);
-        $provenancePoints = ($hasAuthor ? 4 : 0) + ($hasPublisher ? 3 : 0) + ($hasDate ? 3 : 0);
-        $this->add($checks, 'provenance', $provenancePoints, 10, ['author' => $hasAuthor, 'publisher' => $hasPublisher, 'dated' => $hasDate]);
-        $citationPoints = count($externalLinks) >= 3 ? 8 : (count($externalLinks) > 0 ? 4 : 0);
-        $this->add($checks, 'citations', $citationPoints, 8, ['external_links' => count($externalLinks), 'sample' => array_slice($externalLinks, 0, 5)]);
-        // phpcs:ignore Generic.Files.LineLength
-        $this->add($checks, 'faq', $hasFaq ? 5 : ($questionCount > 0 ? 2 : 0), 5, ['faq_schema' => in_array('FAQPage', $types, true), 'question_headings' => $questionCount]);
-        $this->add($checks, 'freshness', $hasDate ? 5 : 0, 5, ['date_in_schema_or_time' => $hasDate]);
 
+        // 9. Provenance
+        $provenancePoints = ($hasAuthor ? 4 : 0) + ($hasPublisher ? 3 : 0) + ($hasDate ? 3 : 0);
+        if ($provenancePoints === 10) {
+            $provenanceDiagnosis = 'Author byline, publisher organization, and publication/modification dates are all clearly attributable.';
+        } else {
+            $provDefects = [];
+            if (!$hasAuthor) {
+                $provDefects[] = 'missing author or reviewer attribution';
+            }
+            if (!$hasPublisher) {
+                $provDefects[] = 'missing publisher entity in schema';
+            }
+            if (!$hasDate) {
+                $provDefects[] = 'missing publication/update timestamp';
+            }
+            $provenanceDiagnosis = 'Attribution gaps: ' . implode('; ', $provDefects) . '.';
+        }
+        $provenanceRecommendation = 'Add explicit author bylines, publisher branding in JSON-LD, '
+            . 'and clear publication/update timestamps to establish credibility.';
+        $this->add($checks, 'provenance', $provenancePoints, 10, $provenanceDiagnosis, $provenanceRecommendation, [
+            'author' => $hasAuthor,
+            'publisher' => $hasPublisher,
+            'dated' => $hasDate,
+        ]);
+
+        // 10. Citations
+        $citationPoints = count($externalLinks) >= 3 ? 8 : (count($externalLinks) > 0 ? 4 : 0);
+        if (count($externalLinks) >= 3) {
+            $citationDiagnosis = 'Found ' . count($externalLinks) . ' outbound reference links providing an external evidence trail for factual verification.';
+        } elseif (count($externalLinks) > 0) {
+            $citationDiagnosis = 'Found only ' . count($externalLinks) . ' outbound link(s). '
+                . 'Providing 3+ diverse external citations establishes a stronger evidence trail for AI models.';
+        } else {
+            $citationDiagnosis = 'No outbound links or external references found. AI answer engines prioritize content backed by verifiable external sources.';
+        }
+        $citationRecommendation = 'Link to authoritative reference sources, documentation, research, or official specifications to ground claims.';
+        $this->add($checks, 'citations', $citationPoints, 8, $citationDiagnosis, $citationRecommendation, [
+            'external_links' => count($externalLinks),
+            'sample' => array_slice($externalLinks, 0, 5),
+        ]);
+
+        // 11. FAQ
+        $faqEarned = $hasFaq ? 5 : ($questionCount > 0 ? 2 : 0);
+        if (in_array('FAQPage', $types, true)) {
+            $faqDiagnosis = 'FAQPage JSON-LD schema is present and explicitly structures question-and-answer pairs machine-readably.';
+        } elseif ($questionCount >= 2) {
+            $faqDiagnosis = 'Found ' . $questionCount . ' question headings, but missing FAQPage JSON-LD schema to mark them up for conversational retrieval.';
+        } elseif ($questionCount === 1) {
+            $faqDiagnosis = 'Found 1 question heading, but missing FAQPage JSON-LD schema and additional Q&A pairs.';
+        } else {
+            $faqDiagnosis = 'No FAQPage schema and no question-formatted headings (e.g. "How to...", "What is...") were detected.';
+        }
+        $faqRecommendation = 'Add a dedicated FAQ section with question-form headings and FAQPage JSON-LD schema '
+            . 'to enable direct extraction in conversational AI answers.';
+        $this->add($checks, 'faq', $faqEarned, 5, $faqDiagnosis, $faqRecommendation, [
+            'faq_schema' => in_array('FAQPage', $types, true),
+            'question_headings' => $questionCount,
+        ]);
+
+        // 12. Freshness
+        $freshnessPoints = $hasDate ? 5 : 0;
+        $freshnessDiagnosis = $hasDate
+            ? 'Machine-readable publication or modification date was detected in structured data or <time datetime="..."> tags.'
+            : 'No machine-readable publication or modification date found. AI engines cannot verify whether content is current or stale.';
+        $freshnessRecommendation = 'Declare datePublished / dateModified in schema.org JSON-LD or use <time datetime="YYYY-MM-DD"> in visible templates.';
+        $this->add($checks, 'freshness', $freshnessPoints, 5, $freshnessDiagnosis, $freshnessRecommendation, [
+            'date_in_schema_or_time' => $hasDate,
+        ]);
+
+        // 13. Entity
         $entityPoints = ($hasEntitySchema ? 2 : 0) + ($hasAboutContact ? 2 : 0) + ($hasSiteName ? 2 : 0);
-        // phpcs:ignore Generic.Files.LineLength
-        $this->add($checks, 'entity', $entityPoints, 6, ['entity_schema' => $hasEntitySchema, 'about_or_contact_link' => $hasAboutContact, 'site_name' => $hasSiteName]);
+        if ($entityPoints === 6) {
+            $entityDiagnosis = 'Strong brand entity signals found: entity schema in JSON-LD, visible About/Contact links, and OpenGraph site_name.';
+        } else {
+            $entityDefects = [];
+            if (!$hasEntitySchema) {
+                $entityDefects[] = 'missing Organization or Person entity schema';
+            }
+            if (!$hasAboutContact) {
+                $entityDefects[] = 'no visible links to an About or Contact page';
+            }
+            if (!$hasSiteName) {
+                $entityDefects[] = 'missing OpenGraph og:site_name meta tag';
+            }
+            $entityDiagnosis = 'Entity clarity gaps: ' . implode('; ', $entityDefects) . '.';
+        }
+        $entityRecommendation = 'Add og:site_name meta tags, link to About/Contact in your navigation or footer, '
+            . 'and include an Organization schema entity with official name and logo.';
+        $this->add($checks, 'entity', $entityPoints, 6, $entityDiagnosis, $entityRecommendation, [
+            'entity_schema' => $hasEntitySchema,
+            'about_or_contact_link' => $hasAboutContact,
+            'site_name' => $hasSiteName,
+        ]);
 
         $score = array_sum(array_column($checks, 'earned'));
         $counts = ['pass' => 0, 'warning' => 0, 'fail' => 0];
@@ -213,16 +435,25 @@ final readonly class GeoAnalyzer
     }
 
     /**
-     * @param list<array{id: string, earned: int, maximum: int, status: string, evidence: array<string, mixed>}> $checks
+     * @param list<array<string, mixed>> $checks
      * @param array<string, mixed> $evidence
      */
-    private function add(array &$checks, string $id, int $earned, int $maximum, array $evidence): void
-    {
+    private function add(
+        array &$checks,
+        string $id,
+        int $earned,
+        int $maximum,
+        string $diagnosis,
+        string $recommendation,
+        array $evidence,
+    ): void {
         $checks[] = [
             'id' => $id,
             'earned' => $earned,
             'maximum' => $maximum,
             'status' => $earned === $maximum ? 'pass' : ($earned > 0 ? 'warning' : 'fail'),
+            'diagnosis' => $diagnosis,
+            'recommendation' => $recommendation,
             'evidence' => $evidence,
         ];
     }

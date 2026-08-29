@@ -29,8 +29,28 @@
             <div class="geo-checks">
                 {% for check in report.checks %}
                     <details class="geo-check geo-check-{{ check.status }}" {{ check.status != 'pass' ? 'open' : '' }}>
-                        <summary><span class="check-state">{{ ('geo.status.' ~ check.status)|trans }}</span><strong>{{ ('geo.check.' ~ check.id ~ '.title')|trans }}</strong><span class="check-points">{{ check.earned }}/{{ check.maximum }}</span></summary>
-                        <div class="geo-check-body"><p>{{ ('geo.check.' ~ check.id ~ '.help')|trans }}</p><pre>{{ check.evidence|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE')) }}</pre></div>
+                        <summary>
+                            <span class="check-state">{{ ('geo.status.' ~ check.status)|trans }}</span>
+                            <strong>{{ ('geo.check.' ~ check.id ~ '.title')|trans }}</strong>
+                            <span class="check-points">{{ check.earned }}/{{ check.maximum }}</span>
+                        </summary>
+                        <div class="geo-check-body">
+                            <div class="geo-check-diagnosis geo-diagnosis-{{ check.status }}">
+                                <strong>{{ check.status == 'pass' ? ('geo.report.diagnosis'|trans) : (check.status == 'warning' ? ('geo.report.finding'|trans) : ('geo.report.issue'|trans)) }}</strong>
+                                <span>{{ check.diagnosis }}</span>
+                            </div>
+                            {% if check.status != 'pass' and check.recommendation is defined and check.recommendation is not empty %}
+                                <div class="geo-check-recommendation">
+                                    <strong>{{ 'geo.report.recommendation'|trans }}</strong>
+                                    <span>{{ check.recommendation }}</span>
+                                </div>
+                            {% endif %}
+                            <p class="geo-check-help">{{ ('geo.check.' ~ check.id ~ '.help')|trans }}</p>
+                            <details class="geo-evidence-drawer">
+                                <summary><small>{{ 'geo.report.evidence_drawer'|trans }}</small></summary>
+                                <pre>{{ check.evidence|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE')) }}</pre>
+                            </details>
+                        </div>
                     </details>
                 {% endfor %}
             </div>

@@ -481,7 +481,12 @@ geo:
         failed: "braki"
         schema_types: "typy schema"
         checks: "Kontrole oparte na dowodach"
-        explain: "Otwórz kontrolę, aby zobaczyć dowody"
+        explain: "Otwórz kontrolę, aby zobaczyć diagnozę i dowody"
+        diagnosis: "Diagnoza:"
+        finding: "Obserwacja:"
+        issue: "Problem:"
+        recommendation: "Zalecenie:"
+        evidence_drawer: "Pokaż zbadane dane i dowody"
     status:
         pass: "Zaliczone"
         warning: "Częściowo"
