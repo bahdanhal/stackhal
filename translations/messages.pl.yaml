@@ -38,7 +38,17 @@ base:
         app_links: "Weryfikator Apple Universal Links i Android App Links"
         ai_studio_extension: "Lokalna synchronizacja plików i kontekstu z AI Studio"
         cors_sandbox: "Piaskownica polityk CORS i zapytań Preflight"
-    footer: "Przydatne i przejrzyste narzędzia · Bez rejestracji · Bez pikseli śledzących"
+    footer: "Narzędzia dla programistów i prywatna diagnostyka · Bez rejestracji · Bez pikseli śledzących"
+
+error404:
+    title: "404 — ROUTE_NOT_FOUND · StackHal"
+    eyebrow: "STATUS_CODE: 404_NOT_FOUND"
+    heading: "Nie odnaleziono trasy."
+    description: "Podany adres URI nie pasuje do żadnego zarejestrowanego narzędzia programistycznego, potoku diagnostycznego ani punktu końcowego."
+    home_button: "Wszystkie narzędzia"
+    diagnostic_button: "Inspektor domen"
+    explore_heading: "Katalog narzędzi deweloperskich:"
+
     contact: "Kontakt"
 
 common:

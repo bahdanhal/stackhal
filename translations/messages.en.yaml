@@ -38,8 +38,17 @@ base:
         app_links: "Apple Universal Links & Android App Links Validator"
         ai_studio_extension: "AI Studio Local File Sync & Codebase Context"
         cors_sandbox: "CORS Policy & Preflight Diagnostic Sandbox"
-    footer: "Useful, transparent tools · No signup · No tracking pixel"
+    footer: "Developer utilities & privacy-first diagnostics · No registration · No tracking pixels"
     contact: "Contact"
+
+error404:
+    title: "404 — ROUTE_NOT_FOUND · StackHal"
+    eyebrow: "STATUS_CODE: 404_NOT_FOUND"
+    heading: "Route resolution failed."
+    description: "The requested URI could not be mapped to any known tool, diagnostic pipeline, or endpoint in the registry."
+    home_button: "All Developer Tools"
+    diagnostic_button: "Domain Inspector"
+    explore_heading: "Developer Utilities Catalog:"
 
 common:
     all_tools: "All tools"
