@@ -60,7 +60,7 @@ home:
     eyebrow: "OPEN DEVELOPER TOOLBOX · ESTIMATE NOT INCLUDED"
     heading_start: "Developer tools for tasks that were supposed to take five minutes"
     heading_emphasis: ""
-    lede: "Inspect, validate and convert before the incident gets its own Slack channel. No signup required."
+    lede: "StackHal provides focused, browser-first developer utilities for technical SEO auditing, GEO answer readiness, Caddyfile transpilation, Apple Wallet PKPass inspection, visual CIDR subnet calculations, and email security verification—fast, transparent, and completely free."
     catops:
         heading: "The cat is now the senior engineer"
         eyebrow: "PRODUCTION ACCESS GRANTED · TERRIBLE IDEA"
@@ -108,10 +108,10 @@ home:
         text: "Analyze IPv4/IPv6 CIDR blocks, detect IP range overlap collisions, view 2D spatial tree partitions, and find available free subnets."
     regex_transpiler:
         title: "Regex Dialect Transpiler & Compatibility Matrix"
-        text: "Transpile PCRE regex to Go RE2, JavaScript, Python, and Rust, analyze lookaround/backreference safety, and guarantee linear O(N) ReDoS protection."
+        text: "Transpile regular expressions between PCRE, JavaScript, Python, Go, and Rust dialects with automated feature and edge-case warnings."
     dns_dag_tracer:
         title: "Live DNS Delegation Trace"
-        text: "Query real DNS records and inspect the authoritative nameservers returned for a domain."
+        text: "Trace authoritative DNS delegation from root (.) to TLD and name servers, detect lame delegations and visualize resolution DAGs."
     pkpass:
         title: "Apple Wallet (.pkpass) Inspector & Debugger"
         text: "Pixel-perfect Apple Wallet & Google Wallet emulator, SHA-1 manifest validator, PKCS#7 certificate inspector, and 1-click package repair."
@@ -134,6 +134,16 @@ home:
         fast:
             title: "One job at a time"
             text: "Each tool is designed around one concrete task, with no paywalls, signups, or artificial delays."
+    faq:
+        title: "Frequently Asked Questions"
+        q1: "What developer tools does StackHal offer?"
+        a1: "StackHal provides instant developer utilities including technical SEO crawling audits, GEO (Generative Engine Optimization) readiness checks, Nginx/Apache to Caddyfile transpilation, Apple Wallet PKPass inspection, visual CIDR subnet analysis, BIMI and domain security verification, and CORS debugging."
+        q2: "Are StackHal utilities free and private to use?"
+        a2: "Yes, all tools run without registration or signups. Client-side utilities process files and configurations directly inside your browser for total privacy."
+        q3: "How does the GEO Readiness Analyzer evaluate web pages?"
+        a3: "The GEO Analyzer inspects real technical and content signals—such as JSON-LD structured data, concise opening answers, semantic landmarks, author attribution, citation trails, and AI crawler permissions in robots.txt."
+        q4: "How do I convert Nginx or Apache configs to Caddy?"
+        a4: "Use our online Caddy Transpiler to paste your existing configuration and immediately receive an idiomatic Caddyfile with automated routing advice and security optimizations."
 
 ai_studio_extension:
     meta:

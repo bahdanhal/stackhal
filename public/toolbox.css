@@ -415,7 +415,8 @@
   }
 
   .tool-grid,
-  .toolbox-principles {
+  .toolbox-principles,
+  .faq-grid {
     grid-template-columns: 1fr;
   }
 
@@ -425,3 +426,44 @@
     min-height: 200px;
   }
 }
+
+.toolbox-faq {
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.faq-item {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.faq-item h2 {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 10px 0;
+  color: var(--fg);
+}
+
+.faq-item p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.faq-item a {
+  color: var(--blue, #73b7ff);
+  text-decoration: underline;
+}
+

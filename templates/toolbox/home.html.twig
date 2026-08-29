@@ -127,6 +127,28 @@
     <div><b>03</b><h2>{{ 'home.principles.fast.title'|trans }}</h2><p>{{ 'home.principles.fast.text'|trans }}</p></div>
   </section>
 
+  <section class="toolbox-faq" aria-labelledby="faq-title">
+    <header class="tool-category-header"><h2 id="faq-title">{{ 'home.faq.title'|trans }}</h2></header>
+    <div class="faq-grid">
+      <article class="faq-item">
+        <h2>{{ 'home.faq.q1'|trans }}</h2>
+        <p>{{ 'home.faq.a1'|trans }}</p>
+      </article>
+      <article class="faq-item">
+        <h2>{{ 'home.faq.q2'|trans }}</h2>
+        <p>{{ 'home.faq.a2'|trans }}</p>
+      </article>
+      <article class="faq-item">
+        <h2>{{ 'home.faq.q3'|trans }}</h2>
+        <p>{{ 'home.faq.a3'|trans }} Standard specifications: <a href="https://schema.org" target="_blank" rel="noopener noreferrer">Schema.org ↗</a> and <a href="https://developer.mozilla.org" target="_blank" rel="noopener noreferrer">MDN Web Docs ↗</a>.</p>
+      </article>
+      <article class="faq-item">
+        <h2>{{ 'home.faq.q4'|trans }}</h2>
+        <p>{{ 'home.faq.a4'|trans }} Documentation references: <a href="https://caddyserver.com/docs/" target="_blank" rel="noopener noreferrer">Caddy Server Docs ↗</a> and <a href="https://developer.apple.com/documentation/wallet/building-a-pass" target="_blank" rel="noopener noreferrer">Apple PassKit Specs ↗</a>.</p>
+      </article>
+    </div>
+  </section>
+
   <div class="catops-scene" aria-hidden="true" hidden>
     <div class="catops-mouse"><i></i></div>
     <div class="catops-cat">
@@ -143,6 +165,9 @@
   </div>
   <p class="catops-toast" role="status" aria-live="polite" hidden></p>
 </section>
+{% endblock %}
+{% block head_scripts %}
+  <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'WebApplication','@id':'https://stackhal.com/#app','url':'https://stackhal.com/','name':'StackHal Developer Utilities Suite','applicationCategory':'DeveloperApplication','operatingSystem':'All','browserRequirements':'Requires JavaScript. Requires HTML5.','offers':{'@type':'Offer','price':'0','priceCurrency':'USD'},'description':('home.lede'|trans),'author':{'@id':'https://stackhal.com/#stackhal'},'publisher':{'@id':'https://stackhal.com/#stackhal'}},{'@type':'FAQPage','@id':'https://stackhal.com/#faq','mainEntity':[{'@type':'Question','name':('home.faq.q1'|trans),'acceptedAnswer':{'@type':'Answer','text':('home.faq.a1'|trans)}},{'@type':'Question','name':('home.faq.q2'|trans),'acceptedAnswer':{'@type':'Answer','text':('home.faq.a2'|trans)}},{'@type':'Question','name':('home.faq.q3'|trans),'acceptedAnswer':{'@type':'Answer','text':('home.faq.a3'|trans)}},{'@type':'Question','name':('home.faq.q4'|trans),'acceptedAnswer':{'@type':'Answer','text':('home.faq.a4'|trans)}}]}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
 {% endblock %}
 {% block scripts %}
   <script src="/hero-explosion.js" defer></script>
