@@ -126,4 +126,18 @@ final readonly class AuditLogger implements AuditLoggerPort
 
         return $deleted;
     }
+
+    public function clearAll(): int
+    {
+        $deleted = 0;
+        foreach (glob(rtrim($this->directory, '/') . '/audit-*.jsonl') ?: [] as $file) {
+            if (is_file($file)) {
+                if (@unlink($file)) {
+                    $deleted++;
+                }
+            }
+        }
+
+        return $deleted;
+    }
 }
