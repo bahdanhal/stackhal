@@ -282,6 +282,31 @@
   font-size: 18px;
 }
 
+.page-blog-article .article-content li {
+  color: #322c23;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.page-blog-article .article-content a {
+  color: #762d25;
+  font-weight: 650;
+  text-decoration-thickness: .08em;
+  text-underline-offset: .16em;
+}
+
+.page-blog-article .article-content a:hover {
+  color: #ad382d;
+}
+
+.page-blog-article .article-callout strong {
+  color: #28241f;
+}
+
+.page-blog-article .article-sources {
+  color: #554d44 !important;
+}
+
 .page-blog-article .article-callout,
 .page-blog-article .article-visual,
 .page-blog-article .article-cta {
