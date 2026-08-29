@@ -120,6 +120,18 @@
       "severity": "warning",
       "title": "Crawlable pages are absent from the sitemap",
       "description": "Valid indexable 200 OK pages found during crawling are missing from the XML sitemap."
+    },
+    {
+      "code": "crawler-trap-probe",
+      "severity": "critical",
+      "title": "Unbounded URL variant returns indexable content",
+      "description": "The site returned HTTP 200 for a synthetic parameter variant without consolidating canonical or noindex."
+    },
+    {
+      "code": "soft-404-probe",
+      "severity": "critical",
+      "title": "Non-existent URL returns 200 OK (Soft 404)",
+      "description": "The server returned HTTP 200 for a non-existent route instead of HTTP 404 Not Found."
     }
   ]
 }

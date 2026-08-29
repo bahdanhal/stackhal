@@ -399,8 +399,9 @@ audit:
         sitemap-broken-url: "Adres w mapie witryny nie jest dostępny"
         sitemap-redirect: "Adres w mapie witryny przekierowuje"
         sitemap-parameters: "Mapa witryny zawiera adresy z parametrami"
-        sitemap-coverage: "Dostępnych stron brakuje w mapie witryny"
+        sitemap-coverage: "Indeksowalne strony nie znajdują się w mapie witryny"
         crawler-trap-probe: "Nieograniczony wariant URL zwraca indeksowalną treść"
+        soft-404-probe: "Nieistniejący adres URL zwraca 200 OK (Soft 404)"
     advisories:
         site-purpose:
             title: "Określ jeden jasny cel witryny"

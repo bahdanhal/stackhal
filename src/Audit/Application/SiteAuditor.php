@@ -144,16 +144,27 @@ final readonly class SiteAuditor
         $issues = $this->ruleEngine->evaluate(array_values($crawl['pages']), $redirectMatrix, $robots, $sitemap);
         foreach ($trapProbes as $probe) {
             if ($probe['trap']) {
+                $isSoft404Probe = str_contains($probe['url'], 'seo-audit-404-probe-check');
                 $isArbitraryQueryProbe = str_contains($probe['url'], 'seo_audit_probe=1');
-                $issues[] = [
-                    'severity' => 'critical',
-                    'code' => 'crawler-trap-probe',
-                    'title' => 'Unbounded URL variant returns indexable content',
-                    'detail' => $isArbitraryQueryProbe
-                        ? 'The site returned HTTP 200 for a synthetic unknown query string with no consolidating canonical or noindex signal. This indicates arbitrary parameters can create crawlable URL variants.' // phpcs:ignore Generic.Files.LineLength
-                        : $probe['url'] . ' returned HTTP 200 with no consolidating canonical or noindex signal.',
-                    'evidence' => $probe,
-                ];
+                if ($isSoft404Probe) {
+                    $issues[] = [
+                        'severity' => 'critical',
+                        'code' => 'soft-404-probe',
+                        'title' => 'Non-existent URL returns 200 OK (Soft 404)',
+                        'detail' => $probe['url'] . ' returned HTTP 200 for a non-existent route with no consolidating canonical or noindex signal. This causes Soft 404 indexing errors and duplicate content dilution.', // phpcs:ignore Generic.Files.LineLength
+                        'evidence' => $probe,
+                    ];
+                } else {
+                    $issues[] = [
+                        'severity' => 'critical',
+                        'code' => 'crawler-trap-probe',
+                        'title' => 'Unbounded URL variant returns indexable content',
+                        'detail' => $isArbitraryQueryProbe
+                            ? 'The site returned HTTP 200 for a synthetic unknown query string with no consolidating canonical or noindex signal. This indicates arbitrary parameters can create crawlable URL variants.' // phpcs:ignore Generic.Files.LineLength
+                            : $probe['url'] . ' returned HTTP 200 with no consolidating canonical or noindex signal.',
+                        'evidence' => $probe,
+                    ];
+                }
             }
         }
 
@@ -326,7 +337,10 @@ final readonly class SiteAuditor
      */
     private function probeCrawlerTraps(string $origin, array $pages): array
     {
-        $probes = [$origin . '/?seo_audit_probe=1'];
+        $probes = [
+            $origin . '/?seo_audit_probe=1',
+            $origin . '/seo-audit-404-probe-check',
+        ];
         foreach ($pages as $page) {
             /** @var list<string> $links */
             $links = $page['links'] ?? [];
@@ -336,7 +350,7 @@ final readonly class SiteAuditor
                     $parts = parse_url($link);
                     $probes[] = $origin . ($parts['path'] ?? '/') . '?page=999999999';
                 }
-                if (count($probes) >= 4) {
+                if (count($probes) >= 5) {
                     break 2;
                 }
             }

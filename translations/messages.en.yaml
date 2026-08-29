@@ -400,6 +400,7 @@ audit:
         sitemap-parameters: "Sitemap contains parameter URLs"
         sitemap-coverage: "Crawlable pages are absent from the sitemap"
         crawler-trap-probe: "Unbounded URL variant returns indexable content"
+        soft-404-probe: "Non-existent URL returns 200 OK (Soft 404)"
     advisories:
         site-purpose:
             title: "State one clear purpose for the site"
