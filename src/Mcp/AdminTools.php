@@ -34,6 +34,14 @@ final readonly class AdminTools
 
         $leads = $this->leads->all();
         $auditEvents = $this->auditLogger->events();
+        $seoEvents = array_values(array_filter(
+            $auditEvents,
+            static fn (array $e): bool => !str_starts_with((string) ($e['event'] ?? ''), 'geo_') && (($e['tool'] ?? '') !== 'geo'),
+        ));
+        $geoEvents = array_values(array_filter(
+            $auditEvents,
+            static fn (array $e): bool => str_starts_with((string) ($e['event'] ?? ''), 'geo_') || (($e['tool'] ?? '') === 'geo'),
+        ));
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $sevenDaysAgo = $now->modify('-7 days');
         $thirtyDaysAgo = $now->modify('-30 days');
@@ -48,7 +56,8 @@ final readonly class AdminTools
                     $thirtyDaysAgo,
                 ),
             ],
-            'seo_audits' => $this->auditStatistics($auditEvents, $sevenDaysAgo, $thirtyDaysAgo),
+            'seo_audits' => $this->auditStatistics($seoEvents, $sevenDaysAgo, $thirtyDaysAgo),
+            'geo_audits' => $this->auditStatistics($geoEvents, $sevenDaysAgo, $thirtyDaysAgo),
             'traffic' => $this->trafficAnalytics->summary($now),
             'lead_sources' => $this->frequencies(array_map(static fn (Lead $lead): string => $lead->source, $leads)),
         ]);
@@ -173,23 +182,24 @@ final readonly class AdminTools
             }
 
             $runs[$auditId] ??= ['audit_id' => $auditId, 'status' => 'running'];
-            if ($event['event'] === 'audit_requested') {
+            if ($event['event'] === 'audit_requested' || $event['event'] === 'geo_audit_requested') {
                 $runs[$auditId]['requested_at'] = (string) $event['timestamp'];
                 $runs[$auditId]['target'] = (string) ($event['target'] ?? '');
+                $runs[$auditId]['tool'] = ($event['tool'] ?? (str_starts_with((string) $event['event'], 'geo_') ? 'geo' : 'seo'));
             }
-            if ($event['event'] === 'audit_completed') {
+            if ($event['event'] === 'audit_completed' || $event['event'] === 'geo_audit_completed') {
                 $runs[$auditId] = [
                     ...$runs[$auditId],
                     'status' => 'completed',
                     'completed_at' => (string) $event['timestamp'],
                     'target' => (string) ($event['target'] ?? $runs[$auditId]['target'] ?? ''),
                     'score' => (int) ($event['score'] ?? 0),
-                    'pages_crawled' => (int) ($event['pages_crawled'] ?? 0),
+                    'pages_crawled' => (int) ($event['pages_crawled'] ?? 1),
                     'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
                     'cache_hit' => (bool) ($event['cache_hit'] ?? false),
                 ];
             }
-            if ($event['event'] === 'audit_failed') {
+            if ($event['event'] === 'audit_failed' || $event['event'] === 'geo_audit_failed') {
                 $runs[$auditId] = [
                     ...$runs[$auditId],
                     'status' => 'failed',

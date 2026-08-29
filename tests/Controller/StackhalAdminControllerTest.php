@@ -166,6 +166,8 @@ final class StackhalAdminControllerTest extends TestCase
                 self::callback(static function (array $context): bool {
                     return $context['total_audits'] === 1
                         && count($context['recent_audits']) === 1
+                        && $context['total_geo_audits'] === 0
+                        && count($context['recent_geo_audits']) === 0
                         && $context['traffic']['last_7_days']['page_views'] === 0;
                 }),
             )

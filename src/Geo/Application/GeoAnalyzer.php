@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Geo\Application;
 
+use App\Audit\Application\AuditLogger;
 use App\Crawl\Application\PageAnalyzer;
 use App\Crawl\Domain\RobotsPolicy;
 use App\Shared\Application\HttpFetcher;
@@ -25,6 +26,7 @@ final readonly class GeoAnalyzer
         private RobotsPolicy $robotsPolicy,
         private CacheInterface $auditCache,
         private int $cacheTtl,
+        private ?AuditLogger $auditLogger = null,
     ) {
     }
 
@@ -33,22 +35,52 @@ final readonly class GeoAnalyzer
      */
     public function analyze(string $input, bool $refresh = false): array
     {
-        $target = $this->urlGuard->normalize($input);
-        $cacheKey = hash('sha256', 'geo-v1|' . $target);
-        if ($refresh) {
-            $this->auditCache->delete($cacheKey);
+        $auditId = $this->auditLogger?->newAuditId() ?? bin2hex(random_bytes(6));
+        $requestStarted = hrtime(true);
+
+        try {
+            $target = $this->urlGuard->normalize($input);
+            $this->auditLogger?->log('geo_audit_requested', [
+                'audit_id' => $auditId,
+                'tool' => 'geo',
+                'target' => $this->auditLogger->safeUrl($target),
+                'refresh' => $refresh,
+            ]);
+
+            $cacheKey = hash('sha256', 'geo-v1|' . $target);
+            if ($refresh) {
+                $this->auditCache->delete($cacheKey);
+            }
+
+            $computed = false;
+            $report = $this->auditCache->get($cacheKey, function (ItemInterface $item) use ($target, &$computed): array {
+                $computed = true;
+                $item->expiresAfter($this->cacheTtl);
+
+                return $this->perform($target);
+            });
+            $report['cache'] = ['hit' => !$computed, 'ttl_seconds' => $this->cacheTtl];
+
+            $this->auditLogger?->log('geo_audit_completed', [
+                'audit_id' => $auditId,
+                'tool' => 'geo',
+                'target' => $this->auditLogger->safeUrl($target),
+                'cache_hit' => !$computed,
+                'request_duration_ms' => (int) round((hrtime(true) - $requestStarted) / 1_000_000),
+                'score' => $report['score'] ?? 0,
+            ]);
+
+            return $report;
+        } catch (\Throwable $exception) {
+            $this->auditLogger?->log('geo_audit_failed', [
+                'audit_id' => $auditId,
+                'tool' => 'geo',
+                'request_duration_ms' => (int) round((hrtime(true) - $requestStarted) / 1_000_000),
+                'error_type' => $exception::class,
+                'error' => $this->auditLogger->safeError($exception->getMessage()),
+            ]);
+            throw $exception;
         }
-
-        $computed = false;
-        $report = $this->auditCache->get($cacheKey, function (ItemInterface $item) use ($target, &$computed): array {
-            $computed = true;
-            $item->expiresAfter($this->cacheTtl);
-
-            return $this->perform($target);
-        });
-        $report['cache'] = ['hit' => !$computed, 'ttl_seconds' => $this->cacheTtl];
-
-        return $report;
     }
 
     /**

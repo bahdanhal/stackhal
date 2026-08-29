@@ -44,50 +44,93 @@ final class StackhalAdminController extends AbstractController
         ], $traffic['daily']);
 
         $events = $this->auditLogger->events();
-        $runs = [];
+        $seoRuns = [];
+        $geoRuns = [];
         foreach (array_reverse($events) as $event) {
             $auditId = (string) ($event['audit_id'] ?? '');
             if ($auditId === '') {
                 continue;
             }
-            $runs[$auditId] ??= ['audit_id' => $auditId, 'status' => 'running'];
-            if ($event['event'] === 'audit_requested') {
-                $runs[$auditId]['requested_at'] = (string) $event['timestamp'];
-                $runs[$auditId]['target'] = (string) ($event['target'] ?? '');
-            }
-            if ($event['event'] === 'audit_completed') {
-                $runs[$auditId] = [
-                    ...$runs[$auditId],
-                    'status' => 'completed',
-                    'completed_at' => (string) $event['timestamp'],
-                    'target' => (string) ($event['target'] ?? $runs[$auditId]['target'] ?? ''),
-                    'score' => (int) ($event['score'] ?? 0),
-                    'pages_crawled' => (int) ($event['pages_crawled'] ?? 0),
-                    'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
-                    'cache_hit' => (bool) ($event['cache_hit'] ?? false),
-                ];
-            }
-            if ($event['event'] === 'audit_failed') {
-                $runs[$auditId] = [
-                    ...$runs[$auditId],
-                    'status' => 'failed',
-                    'completed_at' => (string) $event['timestamp'],
-                    'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
-                    'error_type' => (string) ($event['error_type'] ?? ''),
-                    'error' => (string) ($event['error'] ?? ''),
-                ];
+            $eventName = (string) ($event['event'] ?? '');
+            $isGeo = str_starts_with($eventName, 'geo_') || (($event['tool'] ?? '') === 'geo');
+
+            if ($isGeo) {
+                $geoRuns[$auditId] ??= ['audit_id' => $auditId, 'tool' => 'geo', 'status' => 'running'];
+                if ($eventName === 'geo_audit_requested') {
+                    $geoRuns[$auditId]['requested_at'] = (string) $event['timestamp'];
+                    $geoRuns[$auditId]['target'] = (string) ($event['target'] ?? '');
+                }
+                if ($eventName === 'geo_audit_completed') {
+                    $geoRuns[$auditId] = [
+                        ...$geoRuns[$auditId],
+                        'status' => 'completed',
+                        'completed_at' => (string) $event['timestamp'],
+                        'target' => (string) ($event['target'] ?? $geoRuns[$auditId]['target'] ?? ''),
+                        'score' => (int) ($event['score'] ?? 0),
+                        'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
+                        'cache_hit' => (bool) ($event['cache_hit'] ?? false),
+                    ];
+                }
+                if ($eventName === 'geo_audit_failed') {
+                    $geoRuns[$auditId] = [
+                        ...$geoRuns[$auditId],
+                        'status' => 'failed',
+                        'completed_at' => (string) $event['timestamp'],
+                        'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
+                        'error_type' => (string) ($event['error_type'] ?? ''),
+                        'error' => (string) ($event['error'] ?? ''),
+                    ];
+                }
+            } else {
+                $seoRuns[$auditId] ??= ['audit_id' => $auditId, 'tool' => 'seo', 'status' => 'running'];
+                if ($eventName === 'audit_requested') {
+                    $seoRuns[$auditId]['requested_at'] = (string) $event['timestamp'];
+                    $seoRuns[$auditId]['target'] = (string) ($event['target'] ?? '');
+                }
+                if ($eventName === 'audit_completed') {
+                    $seoRuns[$auditId] = [
+                        ...$seoRuns[$auditId],
+                        'status' => 'completed',
+                        'completed_at' => (string) $event['timestamp'],
+                        'target' => (string) ($event['target'] ?? $seoRuns[$auditId]['target'] ?? ''),
+                        'score' => (int) ($event['score'] ?? 0),
+                        'pages_crawled' => (int) ($event['pages_crawled'] ?? 0),
+                        'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
+                        'cache_hit' => (bool) ($event['cache_hit'] ?? false),
+                    ];
+                }
+                if ($eventName === 'audit_failed') {
+                    $seoRuns[$auditId] = [
+                        ...$seoRuns[$auditId],
+                        'status' => 'failed',
+                        'completed_at' => (string) $event['timestamp'],
+                        'duration_ms' => (int) ($event['request_duration_ms'] ?? 0),
+                        'error_type' => (string) ($event['error_type'] ?? ''),
+                        'error' => (string) ($event['error'] ?? ''),
+                    ];
+                }
             }
         }
 
-        $runs = array_values($runs);
-        usort($runs, static fn (array $a, array $b): int => ($b['requested_at'] ?? '') <=> ($a['requested_at'] ?? ''));
+        $seoRuns = array_values($seoRuns);
+        usort($seoRuns, static fn (array $a, array $b): int => ($b['requested_at'] ?? '') <=> ($a['requested_at'] ?? ''));
+
+        $geoRuns = array_values($geoRuns);
+        usort($geoRuns, static fn (array $a, array $b): int => ($b['requested_at'] ?? '') <=> ($a['requested_at'] ?? ''));
 
         return $this->render('admin/dashboard.html.twig', [
             'traffic' => $traffic,
-            'recent_audits' => array_slice($runs, 0, 30),
-            'total_audits' => count($runs),
+            'recent_audits' => array_slice($seoRuns, 0, 30),
+            'total_audits' => count($seoRuns),
             'audits_last_7_days' => count(array_filter(
-                $runs,
+                $seoRuns,
+                static fn (array $run): bool => isset($run['requested_at'])
+                    && new \DateTimeImmutable((string) $run['requested_at']) >= $sevenDaysAgo
+            )),
+            'recent_geo_audits' => array_slice($geoRuns, 0, 30),
+            'total_geo_audits' => count($geoRuns),
+            'geo_audits_last_7_days' => count(array_filter(
+                $geoRuns,
                 static fn (array $run): bool => isset($run['requested_at'])
                     && new \DateTimeImmutable((string) $run['requested_at']) >= $sevenDaysAgo
             )),

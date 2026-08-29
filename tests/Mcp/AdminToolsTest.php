@@ -86,6 +86,10 @@ final class AdminToolsTest extends TestCase
         self::assertSame(2, $statistics['seo_audits']['last_7_days']);
         self::assertSame(1, $statistics['seo_audits']['completed']);
         self::assertSame(1, $statistics['seo_audits']['failed']);
+        self::assertSame(0, $statistics['geo_audits']['total']);
+        self::assertSame(0, $statistics['geo_audits']['last_7_days']);
+        self::assertSame(0, $statistics['geo_audits']['completed']);
+        self::assertSame(0, $statistics['geo_audits']['failed']);
         self::assertSame(0, $statistics['traffic']['last_30_days']['page_views']);
         self::assertSame('person@example.com', $leads['items'][0]['email']);
         self::assertSame(2, $audits['total']);
