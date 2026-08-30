@@ -2,9 +2,27 @@
 {% block title %}StackHal Blog · Practical Guides for Web Infrastructure{% endblock %}
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="Practical guides for email authentication, DNS, technical SEO, and developer infrastructure from StackHal.">{% endblock %}
-{% block canonical %}<link rel="canonical" href="https://stackhal.com/blog">{% endblock %}
+{% block canonical %}
+  {% if app.request.locale == 'pl' %}
+    <link rel="canonical" href="https://stackhal.com/pl/blog">
+    <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog">
+    <link rel="alternate" hreflang="en" href="https://stackhal.com/blog">
+    <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog">
+  {% else %}
+    <link rel="canonical" href="https://stackhal.com/blog">
+    <link rel="alternate" hreflang="en" href="https://stackhal.com/blog">
+    <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog">
+    <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog">
+  {% endif %}
+{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" href="/blog.css">{% endblock %}
-{% block language_switch %}<a class="language-switch" href="{{ path('landing', {_locale: 'pl'}) }}" hreflang="pl">PL</a>{% endblock %}
+{% block language_switch %}
+  {% if app.request.locale == 'pl' %}
+    <a class="language-switch" href="{{ path('blog_index', {_locale: 'en'}) }}" hreflang="en">EN</a>
+  {% else %}
+    <a class="language-switch" href="{{ path('blog_index', {_locale: 'pl'}) }}" hreflang="pl">PL</a>
+  {% endif %}
+{% endblock %}
 {% block body %}
 <section class="blog-index-shell">
   <div class="blog-index-intro">

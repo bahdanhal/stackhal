@@ -151,6 +151,10 @@ services:
     arguments:
       $secret: '%env(APP_SECRET)%'
 
+  App\Admin\Presentation\Http\AdminBlogController:
+    arguments:
+      $secret: '%env(APP_SECRET)%'
+
   App\Shared\Application\DailyQuota:
     arguments:
       $limiter: '@limiter.audit'

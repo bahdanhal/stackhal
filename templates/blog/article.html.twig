@@ -2,17 +2,42 @@
 {% block title %}{{ article.title }} · StackHal{% endblock %}
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ article.description }}">{% endblock %}
-{% block canonical %}<link rel="canonical" href="https://stackhal.com/blog/{{ article.slug }}"><link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.slug }}">{% endblock %}
+{% block canonical %}
+  {% if app.request.locale == 'pl' %}
+    <link rel="canonical" href="https://stackhal.com/pl/blog/{{ article.slug }}">
+    <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog/{{ article.slug }}">
+    {% if article.alternateSlug %}
+      <link rel="alternate" hreflang="en" href="https://stackhal.com/blog/{{ article.alternateSlug }}">
+      <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.alternateSlug }}">
+    {% else %}
+      <link rel="alternate" hreflang="en" href="https://stackhal.com/blog/{{ article.slug }}">
+      <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.slug }}">
+    {% endif %}
+  {% else %}
+    <link rel="canonical" href="https://stackhal.com/blog/{{ article.slug }}">
+    <link rel="alternate" hreflang="en" href="https://stackhal.com/blog/{{ article.slug }}">
+    {% if article.alternateSlug %}
+      <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog/{{ article.alternateSlug }}">
+    {% endif %}
+    <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.slug }}">
+  {% endif %}
+{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" href="/blog.css">{% endblock %}
 {% block head_scripts %}
-  {% set article_schema = {'@type': 'Article', '@id': 'https://stackhal.com/blog/' ~ article.slug ~ '#article', 'headline': article.title, 'description': article.description, 'datePublished': article.publishedAt|date('Y-m-d'), 'dateModified': article.updatedAt|date('Y-m-d'), 'author': {'@id': 'https://stackhal.com/#stackhal'}, 'publisher': {'@id': 'https://stackhal.com/#stackhal'}, 'mainEntityOfPage': 'https://stackhal.com/blog/' ~ article.slug, 'inLanguage': 'en'} %}
+  {% set article_schema = {'@type': 'Article', '@id': 'https://stackhal.com/blog/' ~ article.slug ~ '#article', 'headline': article.title, 'description': article.description, 'datePublished': article.publishedAt|date('Y-m-d'), 'dateModified': article.updatedAt|date('Y-m-d'), 'author': {'@id': 'https://stackhal.com/#stackhal'}, 'publisher': {'@id': 'https://stackhal.com/#stackhal'}, 'mainEntityOfPage': 'https://stackhal.com/blog/' ~ article.slug, 'inLanguage': app.request.locale} %}
   {% set graph = [article_schema] %}
   {% if article.howToSteps is not empty %}
     {% set graph = graph|merge([{'@type': 'HowTo', '@id': 'https://stackhal.com/blog/' ~ article.slug ~ '#howto', 'name': article.title, 'step': article.howToSteps|map(step => {'@type': 'HowToStep', 'name': step.name, 'text': step.text})}]) %}
   {% endif %}
   <script type="application/ld+json">{{ {'@context': 'https://schema.org', '@graph': graph}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
 {% endblock %}
-{% block language_switch %}<a class="language-switch" href="{{ path('landing', {_locale: 'pl'}) }}" hreflang="pl">PL</a>{% endblock %}
+{% block language_switch %}
+  {% if app.request.locale == 'pl' %}
+    <a class="language-switch" href="{{ path('blog_article', {'slug': article.alternateSlug ?: article.slug, '_locale': 'en'}) }}" hreflang="en">EN</a>
+  {% else %}
+    <a class="language-switch" href="{{ path('blog_article', {'slug': article.alternateSlug ?: article.slug, '_locale': 'pl'}) }}" hreflang="pl">PL</a>
+  {% endif %}
+{% endblock %}
 {% block body %}
 <article class="article-shell">
   <header class="article-header">
@@ -23,13 +48,20 @@
   </header>
   <div class="article-layout">
     {% set externalCta = article.ctaPath starts with 'https://' %}
-    <aside class="article-toc" aria-label="On this page"><span>ON THIS PAGE</span><a href="#article-content">Article content</a><a href="#article-cta">{% if externalCta %}Next step{% else %}Use the tool{% endif %}</a></aside>
-    <div class="article-content">
-      <div id="article-content">{{ article.contentHtml|raw }}</div>
-      <div id="article-cta" class="article-cta"><p class="article-kicker">READY TO CHECK?</p><h2>{% if externalCta %}Continue with the primary documentation.{% else %}Turn the guide into evidence.{% endif %}</h2><p>{% if externalCta %}Use the maintained project's documentation to plan and verify the next step.{% else %}Use the StackHal tool connected to this field note to inspect your own configuration.{% endif %}</p><div class="article-cta-actions"><a class="article-button article-button-primary" href="{{ article.ctaPath }}">{{ article.ctaLabel }} →</a><a class="article-button" href="{{ path('blog_index') }}">Back to the blog</a></div></div>
-      <p class="article-sources"><strong>StackHal Field Notes:</strong> Practical explainers for developer infrastructure.</p>
-    </div>
+    <aside class="article-toc" aria-label="On this page"><span>ON THIS PAGE</span><a href="#article-content">Article content</a><a href="#article-cta">Use the tool</a></aside>
+    <div class="article-prose" id="article-content">{{ article.contentHtml|raw }}</div>
+    <aside class="article-sidebar">
+      <div class="article-cta-card" id="article-cta">
+        <p class="article-kicker">RELATED TOOL</p>
+        <h2>Test this directly in your browser.</h2>
+        <p>Run the check against your own domain or configuration without installing additional CLI tools.</p>
+        <a class="cta-button" href="{{ article.ctaPath }}"{% if externalCta %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ article.ctaLabel }}</a>
+      </div>
+      <div class="article-author-card">
+        <p class="article-kicker">AUTHOR &amp; CONTEXT</p>
+        <p>Published by <strong>Bahdan Hal</strong> on StackHal. Built for engineers diagnosing subtle infrastructure, DNS, and deliverability bugs.</p>
+      </div>
+    </aside>
   </div>
 </article>
 {% endblock %}
-{% block scripts %}<script src="/blog.js"></script>{% endblock %}

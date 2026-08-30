@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+{% block title %}Blog Management · StackHal Admin{% endblock %}
+{% block robots %}<meta name="robots" content="noindex,nofollow">{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/admin-blog-editor.css">
+{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  <header class="admin-topbar">
+    <div>
+      <p class="admin-eyebrow">STACKHAL ADMIN</p>
+      <h1>Blog &amp; Article Manager</h1>
+    </div>
+    <div class="admin-nav-actions">
+      <a href="{{ path('stackhal_admin_dashboard') }}" class="admin-btn admin-btn-secondary">← Back to Dashboard</a>
+      <a href="{{ path('stackhal_admin_blog_new') }}" class="admin-btn admin-btn-primary">+ New Article</a>
+    </div>
+  </header>
+
+  {% for message in app.flashes('success') %}
+    <div class="admin-alert admin-alert-success">{{ message }}</div>
+  {% endfor %}
+  {% for message in app.flashes('error') %}
+    <div class="admin-alert admin-alert-danger">{{ message }}</div>
+  {% endfor %}
+
+  <div class="admin-locale-tabs">
+    <a href="{{ path('stackhal_admin_blog_list') }}" class="admin-tab {% if current_locale is null %}active{% endif %}">All Locales ({{ articles|length }})</a>
+    <a href="{{ path('stackhal_admin_blog_list', {locale: 'en'}) }}" class="admin-tab {% if current_locale == 'en' %}active{% endif %}">English (EN)</a>
+    <a href="{{ path('stackhal_admin_blog_list', {locale: 'pl'}) }}" class="admin-tab {% if current_locale == 'pl' %}active{% endif %}">Polish (PL)</a>
+  </div>
+
+  <div class="admin-table-wrapper">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Language</th>
+          <th>Title &amp; Slug</th>
+          <th>Category</th>
+          <th>Read Time</th>
+          <th>Published</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for article in articles %}
+          <tr>
+            <td>
+              <span class="admin-badge admin-badge-{{ article.locale }}">{{ article.locale|upper }}</span>
+            </td>
+            <td>
+              <strong>{{ article.title }}</strong>
+              <div class="admin-table-sub">
+                <code>/blog/{{ article.slug }}</code>
+                {% if article.alternateSlug %}
+                  <span title="Linked alternate language slug">⇄ <code>{{ article.alternateSlug }}</code></span>
+                {% endif %}
+              </div>
+            </td>
+            <td><span class="admin-badge">{{ article.category }}</span></td>
+            <td>{{ article.readTimeMinutes }} min</td>
+            <td>{{ article.publishedAt|date('Y-m-d H:i') }}</td>
+            <td class="admin-actions-cell">
+              <a href="{{ path('stackhal_admin_blog_edit', {id: article.id}) }}" class="admin-action-link">Edit</a>
+              <a href="{{ path('blog_article', {slug: article.slug, _locale: article.locale}) }}" target="_blank" class="admin-action-link">View ↗</a>
+              <form action="{{ path('stackhal_admin_blog_delete', {id: article.id}) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this article?');" style="display:inline;">
+                <input type="hidden" name="_token" value="{{ admin_csrf_token('delete_blog_article_' ~ article.id) }}">
+                <button type="submit" class="admin-action-delete">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="6" class="admin-empty-state">No articles found in this locale.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

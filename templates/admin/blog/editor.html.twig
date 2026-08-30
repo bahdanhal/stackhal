@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+{% block title %}{% if article %}Edit: {{ article.title }}{% else %}New Article{% endif %} · StackHal Admin{% endblock %}
+{% block robots %}<meta name="robots" content="noindex,nofollow">{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/blog.css">
+  <link rel="stylesheet" href="/admin-blog-editor.css">
+{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  <form action="" method="POST" id="blog-editor-form">
+    <input type="hidden" name="_token" value="{{ admin_csrf_token('admin_blog_article') }}">
+    
+    <header class="editor-header">
+      <div class="editor-header-left">
+        <a href="{{ path('stackhal_admin_blog_list') }}" class="admin-btn admin-btn-secondary">← Back to Articles</a>
+        <h2>{% if article %}Edit Article{% else %}Create New Article{% endif %}</h2>
+      </div>
+      <div class="editor-header-right">
+        <button type="button" id="btn-clean-symbols" class="admin-btn admin-btn-warning" title="Strips em-dashes, smart quotes and hidden characters to plain ASCII">Clean AI Symbols</button>
+        <button type="submit" class="admin-btn admin-btn-primary">{% if article %}Save Changes{% else %}Publish Article{% endif %}</button>
+      </div>
+    </header>
+
+    {% for message in app.flashes('error') %}
+      <div class="admin-alert admin-alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    <!-- Live Anti-Slop & Readability Bar -->
+    <div class="editor-score-bar" id="editor-score-bar">
+      <div class="score-pill">
+        <span class="score-label">Flesch Reading Ease:</span>
+        <strong id="score-flesch" class="score-val score-good">--</strong>
+      </div>
+      <div class="score-pill">
+        <span class="score-label">Grade Level:</span>
+        <strong id="score-grade" class="score-val">--</strong>
+      </div>
+      <div class="score-pill">
+        <span class="score-label">Words / Sentence:</span>
+        <strong id="score-wps" class="score-val">--</strong>
+      </div>
+      <div class="score-pill">
+        <span class="score-label">Word Count:</span>
+        <strong id="score-words" class="score-val">0</strong>
+      </div>
+      <div class="score-pill" id="score-symbols-pill">
+        <span class="score-label">Smart Symbols:</span>
+        <strong id="score-symbols" class="score-val score-good">0 (Clean)</strong>
+      </div>
+    </div>
+
+    <!-- Metadata Fields Grid -->
+    <div class="editor-meta-grid">
+      <div class="form-group">
+        <label for="input-locale">Language / Locale</label>
+        <select name="locale" id="input-locale" class="form-control">
+          <option value="en" {% if form_data.locale == 'en' %}selected{% endif %}>English (en)</option>
+          <option value="pl" {% if form_data.locale == 'pl' %}selected{% endif %}>Polski (pl)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="input-slug">URL Slug</label>
+        <input type="text" name="slug" id="input-slug" class="form-control" value="{{ form_data.slug|default('') }}" required placeholder="e.g. composer-license-checker-guide">
+      </div>
+      <div class="form-group">
+        <label for="input-alt-slug">Alternate Language Slug (cross-link)</label>
+        <input type="text" name="alternate_slug" id="input-alt-slug" class="form-control" value="{{ form_data.alternate_slug|default('') }}" placeholder="e.g. audyt-licencji-composer">
+      </div>
+      <div class="form-group">
+        <label for="input-category">Category</label>
+        <input type="text" name="category" id="input-category" class="form-control" value="{{ form_data.category|default('Technical Guide') }}" required placeholder="e.g. Security & Compliance">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="input-title">Article Title</label>
+      <input type="text" name="title" id="input-title" class="form-control form-control-lg" value="{{ form_data.title|default('') }}" required placeholder="Descriptive, engaging technical title">
+    </div>
+
+    <div class="form-group">
+      <label for="input-description">Lead Description / Dek</label>
+      <textarea name="description" id="input-description" class="form-control" rows="2" placeholder="One or two clear, active sentences summarizing the core finding or takeaway.">{{ form_data.description|default('') }}</textarea>
+    </div>
+
+    <!-- Split Editor Toolbar & Work Area -->
+    <div class="editor-workspace">
+      <div class="editor-pane">
+        <div class="editor-toolbar">
+          <button type="button" data-tag="h2">H2</button>
+          <button type="button" data-tag="h3">H3</button>
+          <button type="button" data-tag="bold">Bold</button>
+          <button type="button" data-tag="code">Inline Code</button>
+          <button type="button" data-tag="pre">Code Block</button>
+          <button type="button" data-tag="callout">Callout Box</button>
+          <button type="button" data-tag="list">Checklist</button>
+          <span class="toolbar-hint">HTML / Markdown supported</span>
+        </div>
+        <textarea name="content_html" id="input-content" class="editor-textarea" rows="25" required placeholder="Write your article body HTML here...">{{ form_data.content_html|default('') }}</textarea>
+      </div>
+
+      <div class="preview-pane">
+        <div class="preview-header">
+          <span>LIVE PREVIEW</span>
+          <span id="preview-mode">Rendered View</span>
+        </div>
+        <div class="preview-body" id="preview-container">
+          <div class="article-prose" id="preview-target"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Settings Accordion -->
+    <details class="editor-extra-details">
+      <summary>CTA, Visual Card &amp; Schema Settings</summary>
+      <div class="extra-details-body">
+        <div class="editor-meta-grid">
+          <div class="form-group">
+            <label for="input-cta-label">CTA Button Label</label>
+            <input type="text" name="cta_label" id="input-cta-label" class="form-control" value="{{ form_data.cta_label|default('Open Tool') }}">
+          </div>
+          <div class="form-group">
+            <label for="input-cta-path">CTA Button Path</label>
+            <input type="text" name="cta_path" id="input-cta-path" class="form-control" value="{{ form_data.cta_path|default('/') }}">
+          </div>
+          <div class="form-group">
+            <label for="input-visual-class">Visual Badge Style</label>
+            <input type="text" name="visual_class" id="input-visual-class" class="form-control" value="{{ form_data.visual_class|default('terminal-card') }}">
+          </div>
+          <div class="form-group">
+            <label for="input-read-time">Read Time (minutes)</label>
+            <input type="number" name="read_time_minutes" id="input-read-time" class="form-control" value="{{ form_data.read_time_minutes|default(5) }}">
+          </div>
+        </div>
+        <div class="editor-meta-grid">
+          <div class="form-group">
+            <label for="input-visual-lines">Visual Card Lines (one per line)</label>
+            <textarea name="visual_lines_raw" id="input-visual-lines" class="form-control" rows="3">{{ form_data.visual_lines_raw|default('') }}</textarea>
+          </div>
+          <div class="form-group">
+            <label for="input-howto-steps">HowTo Steps JSON (for Schema.org)</label>
+            <textarea name="how_to_steps_json" id="input-howto-steps" class="form-control" rows="3">{{ form_data.how_to_steps_json|default('[]') }}</textarea>
+          </div>
+        </div>
+      </div>
+    </details>
+  </form>
+</div>
+{% endblock %}
+{% block javascripts %}
+  <script src="/admin-blog-editor.js"></script>
+{% endblock %}

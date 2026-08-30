@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'blog_articles')]
-#[ORM\UniqueConstraint(name: 'uniq_blog_articles_slug', columns: ['slug'])]
-#[ORM\Index(columns: ['published_at'], name: 'idx_blog_articles_published_at')]
+#[ORM\UniqueConstraint(name: 'uniq_blog_articles_locale_slug', columns: ['locale', 'slug'])]
+#[ORM\Index(columns: ['locale', 'published_at'], name: 'idx_blog_articles_locale_published')]
 class BlogArticleEntity
 {
     #[ORM\Id]
@@ -18,8 +18,14 @@ class BlogArticleEntity
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
+    #[ORM\Column(type: Types::STRING, length: 5, options: ['default' => 'en'])]
+    private string $locale;
+
     #[ORM\Column(type: Types::STRING, length: 160)]
     private string $slug;
+
+    #[ORM\Column(type: Types::STRING, length: 160, options: ['default' => ''])]
+    private string $alternateSlug;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     private string $title;
@@ -76,9 +82,13 @@ class BlogArticleEntity
         string $ctaPath,
         string $visualClass,
         array $visualLines,
-        array $howToSteps
+        array $howToSteps,
+        string $locale = 'en',
+        string $alternateSlug = ''
     ) {
+        $this->locale = $locale;
         $this->slug = $slug;
+        $this->alternateSlug = $alternateSlug;
         $this->title = $title;
         $this->description = $description;
         $this->category = $category;
@@ -93,14 +103,39 @@ class BlogArticleEntity
         $this->howToStepsData = $howToSteps;
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getLocale(): string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale): void
+    {
+        $this->locale = $locale;
+    }
+
     public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function getId(): ?int
+    public function setSlug(string $slug): void
     {
-        return $this->id;
+        $this->slug = $slug;
+    }
+
+    public function getAlternateSlug(): string
+    {
+        return $this->alternateSlug;
+    }
+
+    public function setAlternateSlug(string $alternateSlug): void
+    {
+        $this->alternateSlug = $alternateSlug;
     }
 
     public function getTitle(): string
@@ -108,9 +143,19 @@ class BlogArticleEntity
         return $this->title;
     }
 
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
     }
 
     public function getCategory(): string
@@ -118,9 +163,19 @@ class BlogArticleEntity
         return $this->category;
     }
 
+    public function setCategory(string $category): void
+    {
+        $this->category = $category;
+    }
+
     public function getReadTimeMinutes(): int
     {
         return $this->readTimeMinutes;
+    }
+
+    public function setReadTimeMinutes(int $readTimeMinutes): void
+    {
+        $this->readTimeMinutes = $readTimeMinutes;
     }
 
     public function getPublishedAt(): \DateTimeImmutable
@@ -128,9 +183,19 @@ class BlogArticleEntity
         return $this->publishedAt;
     }
 
+    public function setPublishedAt(\DateTimeImmutable $publishedAt): void
+    {
+        $this->publishedAt = $publishedAt;
+    }
+
     public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 
     public function getContentHtml(): string
@@ -138,9 +203,19 @@ class BlogArticleEntity
         return $this->contentHtml;
     }
 
+    public function setContentHtml(string $contentHtml): void
+    {
+        $this->contentHtml = $contentHtml;
+    }
+
     public function getCtaLabel(): string
     {
         return $this->ctaLabel;
+    }
+
+    public function setCtaLabel(string $ctaLabel): void
+    {
+        $this->ctaLabel = $ctaLabel;
     }
 
     public function getCtaPath(): string
@@ -148,9 +223,19 @@ class BlogArticleEntity
         return $this->ctaPath;
     }
 
+    public function setCtaPath(string $ctaPath): void
+    {
+        $this->ctaPath = $ctaPath;
+    }
+
     public function getVisualClass(): string
     {
         return $this->visualClass;
+    }
+
+    public function setVisualClass(string $visualClass): void
+    {
+        $this->visualClass = $visualClass;
     }
 
     /** @return list<string> */
@@ -159,9 +244,21 @@ class BlogArticleEntity
         return $this->visualLinesData;
     }
 
+    /** @param list<string> $visualLines */
+    public function setVisualLines(array $visualLines): void
+    {
+        $this->visualLinesData = $visualLines;
+    }
+
     /** @return list<array{name: string, text: string}> */
     public function getHowToSteps(): array
     {
         return $this->howToStepsData;
+    }
+
+    /** @param list<array{name: string, text: string}> $howToSteps */
+    public function setHowToSteps(array $howToSteps): void
+    {
+        $this->howToStepsData = $howToSteps;
     }
 }
