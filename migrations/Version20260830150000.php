@@ -10,11 +10,11 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Migrations\AbstractMigration;
 
-final class Version20260830130000 extends AbstractMigration
+final class Version20260830150000 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Publish a reproducible Composer dependency license screening study';
+        return 'Update composer-license-metadata-dependency-audit article with deslopified human analysis';
     }
 
     public function up(Schema $schema): void
@@ -129,60 +129,25 @@ description: Screen Composer dependencies for license metadata and copyleft sign
 HTML;
 
         $this->addSql(
-            'INSERT INTO blog_articles (slug, title, description, category, read_time_minutes, published_at, updated_at, content_html, cta_label, cta_path, visual_class, visual_lines, how_to_steps) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'UPDATE blog_articles SET title = ?, description = ?, content_html = ?, updated_at = ? WHERE slug = ?',
             [
-                'composer-license-metadata-dependency-audit',
                 'Composer License Metadata vs. Dependency Reality: Screening 10,000 Packages',
                 'Top-level Composer manifests only declare what the root package intends. In a scan of 10,000 Packagist libraries and 100 WordPress plugins, 320 packages pulled transitive copyleft dependencies—including PayPal\'s server SDK and WPForms Lite.',
-                'Security & Compliance',
-                11,
-                new \DateTimeImmutable('2026-08-30 12:00:00+00:00'),
-                new \DateTimeImmutable('2026-08-30 12:00:00+00:00'),
                 $articleHtml,
-                'Audit Your composer.lock',
-                '/composer-license-checker',
-                'terminal-card',
-                [
-                    'screening 10,000 Composer packages...',
-                    'paypal/paypal-server-sdk -> apimatic/jsonmapper [OSL-3.0]',
-                    'wpforms-lite -> vendor_prefixed/apimatic/jsonmapper [OSL-3.0]',
-                    '320 first-pass review candidates (3.2%)',
-                ],
-                [
-                    [
-                        'name' => 'Paste composer.json or composer.lock',
-                        'text' => 'Open StackHal Composer License Checker and paste your project dependency manifest.',
-                    ],
-                    [
-                        'name' => 'Inspect Transitive Copyleft Signals',
-                        'text' => 'Review exact versions and evidence paths for GPL, AGPL, OSL, LGPL, or MPL signals.',
-                    ],
-                    [
-                        'name' => 'Verify Physical Headers and Context',
-                        'text' => 'Inspect vendor license files, check linking and distribution models, and resolve copyleft obligations.',
-                    ],
-                ],
+                new \DateTimeImmutable('2026-08-30 15:00:00+00:00'),
+                'composer-license-metadata-dependency-audit',
             ],
             [
                 Types::STRING,
                 Types::STRING,
-                Types::STRING,
-                Types::STRING,
-                Types::INTEGER,
-                Types::DATETIMETZ_IMMUTABLE,
-                Types::DATETIMETZ_IMMUTABLE,
                 Types::TEXT,
+                Types::DATETIMETZ_IMMUTABLE,
                 Types::STRING,
-                Types::STRING,
-                Types::STRING,
-                Types::JSON,
-                Types::JSON,
             ]
         );
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql('DELETE FROM blog_articles WHERE slug = ?', ['composer-license-metadata-dependency-audit']);
     }
 }
