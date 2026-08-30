@@ -1,4 +1,4 @@
-# AI Agent Guidelines & System Instructions — stackhal (stackhal.com)
+# AI Agent Guidelines & System Instructions - stackhal (stackhal.com)
 
 This document provides mandatory directives for all AI coding agents interacting with the `stackhal` repository (`stackhal.com`).
 

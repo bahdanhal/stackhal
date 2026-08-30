@@ -10,11 +10,11 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Migrations\AbstractMigration;
 
-final class Version20260829120000 extends AbstractMigration
+final class Version20260830153000 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Publish the retired Azure SDK for PHP security and migration field note';
+        return 'Update Azure SDK blog post to plain ASCII and high readability';
     }
 
     public function up(Schema $schema): void
@@ -58,54 +58,28 @@ if (!empty($proxy)) {
 <p class="article-sources"><strong>Primary sources:</strong> <a href="https://github.com/Azure/azure-sdk-for-php">Archived Azure SDK for PHP</a> | <a href="https://httpoxy.org/">httpoxy Vulnerability Class</a> | <a href="https://github.com/php-oss-for-azure/azure-php">PHP OSS for Azure</a></p>
 HTML;
 
-        $publishedAt = new \DateTimeImmutable('2026-08-29 12:00:00+00:00');
-
         $this->addSql(
-            'INSERT INTO blog_articles (slug, title, description, category, read_time_minutes, published_at, updated_at, content_html, cta_label, cta_path, visual_class, visual_lines, how_to_steps) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'UPDATE blog_articles SET title = ?, description = ?, content_html = ?, read_time_minutes = ?, updated_at = ? WHERE slug = ?',
             [
-                'retired-azure-sdk-for-php-migration',
                 'The Retired Azure SDK for PHP Can Fail Quietly',
                 'Two transport-security paths in Microsoft\'s archived PHP SDK can keep Azure requests working while weakening TLS verification or proxy routing.',
-                'PHP and cloud security',
-                6,
-                $publishedAt,
-                $publishedAt,
                 $contentHtml,
-                'Open the migration guide',
-                'https://php-oss-for-azure.github.io/storage-blob/migrate-from-microsoft-azure-storage-blob',
-                'azure',
-                ['HTTPS_PROXY -> verify=false', 'HTTP_PROXY -> request route', 'azure-oss/storage-blob'],
-                [
-                    ['name' => 'Audit proxy state', 'text' => 'Inspect HTTP_PROXY, HTTPS_PROXY, TLS verification, SAPI behaviour, and web-server mitigations.'],
-                    ['name' => 'Inventory SDK usage', 'text' => 'Find retired Azure packages, namespaces, services, and signed or privileged request paths.'],
-                    ['name' => 'Migrate one service', 'text' => 'Replace Blob, Queue, File Share, or identity code behind an application-owned boundary.'],
-                    ['name' => 'Verify the new path', 'text' => 'Test TLS, proxy routing, signed URLs, operations, and the final Composer dependency graph.'],
-                ],
+                6,
+                new \DateTimeImmutable('2026-08-30 15:30:00+00:00'),
+                'retired-azure-sdk-for-php-migration',
             ],
             [
                 Types::STRING,
                 Types::STRING,
                 Types::TEXT,
-                Types::STRING,
-                Types::SMALLINT,
+                Types::INTEGER,
                 Types::DATETIMETZ_IMMUTABLE,
-                Types::DATETIMETZ_IMMUTABLE,
-                Types::TEXT,
                 Types::STRING,
-                Types::STRING,
-                Types::STRING,
-                Types::JSON,
-                Types::JSON,
             ]
         );
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql(
-            'DELETE FROM blog_articles WHERE slug = ?',
-            ['retired-azure-sdk-for-php-migration'],
-            [Types::STRING]
-        );
     }
 }

@@ -924,7 +924,7 @@
       serialNumber: 'TKT-OPENER-2026',
       teamIdentifier: 'BAHDAN9988',
       organizationName: 'Open\'er Festival',
-      description: 'VIP Weekend Pass — Gdynia Kosakowo',
+      description: 'VIP Weekend Pass - Gdynia Kosakowo',
       backgroundColor: 'rgb(24, 18, 43)',
       foregroundColor: 'rgb(255, 255, 255)',
       labelColor: 'rgb(216, 180, 254)',
@@ -1534,8 +1534,8 @@
           <div class="diag-status-badge badge-valid">STATUS: VALID PASS</div>
           <div class="diag-meta-row">
             <span>Pass Type: <strong>${escapeHtml(linterResult.passType || 'generic')}</strong></span>
-            <span>Org: <strong>${escapeHtml(pass.organizationName || '—')}</strong></span>
-            <span>Team ID: <strong>${escapeHtml(pass.teamIdentifier || '—')}</strong></span>
+            <span>Org: <strong>${escapeHtml(pass.organizationName || '-')}</strong></span>
+            <span>Team ID: <strong>${escapeHtml(pass.teamIdentifier || '-')}</strong></span>
           </div>
         `;
       } else {
@@ -1544,7 +1544,7 @@
           <div class="diag-status-badge badge-error">${linterResult.errorCount} CRITICAL ERRORS · ${linterResult.warningCount} WARNINGS</div>
           <div class="diag-meta-row">
             <span>Pass Type: <strong>${escapeHtml(linterResult.passType || 'Unknown')}</strong></span>
-            <span>Serial: <strong>${escapeHtml(pass.serialNumber || '—')}</strong></span>
+            <span>Serial: <strong>${escapeHtml(pass.serialNumber || '-')}</strong></span>
           </div>
         `;
       }
@@ -1575,8 +1575,8 @@
         rows.push(`
           <tr>
             <td><code>${escapeHtml(fn)}</code></td>
-            <td><small class="hash-code">${expected ? expected.substring(0, 10) + '...' : '—'}</small></td>
-            <td><small class="hash-code">${actual ? actual.substring(0, 10) + '...' : '—'}</small></td>
+            <td><small class="hash-code">${expected ? expected.substring(0, 10) + '...' : '-'}</small></td>
+            <td><small class="hash-code">${actual ? actual.substring(0, 10) + '...' : '-'}</small></td>
             <td>${status}</td>
           </tr>
         `);
@@ -1622,7 +1622,7 @@
         const isPresent = Boolean(state.rawArchiveFiles[a.name]);
         return `
           <div class="asset-card ${isPresent ? 'asset-present' : (a.required ? 'asset-missing-req' : 'asset-missing-opt')}">
-            <div class="asset-icon">${isPresent ? 'FILE' : '—'}</div>
+            <div class="asset-icon">${isPresent ? 'FILE' : '-'}</div>
             <div class="asset-info">
               <strong>${escapeHtml(a.name)}</strong>
               <small>${escapeHtml(a.dim)} · ${a.required ? '<b style="color: #ef4444">Required</b>' : 'Optional'}</small>
@@ -1649,9 +1649,9 @@
           <div class="sig-alert ${sigData.valid ? 'sig-alert-success' : 'sig-alert-error'}">
             <h4>${sigData.valid ? 'Valid Apple Developer Signature' : 'Signature / Certificate Alert'}</h4>
             <div class="sig-props-grid">
-              <div><span>Issuer:</span> <strong>${escapeHtml(sigData.issuer || '—')}</strong></div>
-              <div><span>Pass Type ID:</span> <code>${escapeHtml(sigData.passTypeIdentifier || pass.passTypeIdentifier || '—')}</code></div>
-              <div><span>Team ID:</span> <code>${escapeHtml(sigData.teamIdentifier || pass.teamIdentifier || '—')}</code></div>
+              <div><span>Issuer:</span> <strong>${escapeHtml(sigData.issuer || '-')}</strong></div>
+              <div><span>Pass Type ID:</span> <code>${escapeHtml(sigData.passTypeIdentifier || pass.passTypeIdentifier || '-')}</code></div>
+              <div><span>Team ID:</span> <code>${escapeHtml(sigData.teamIdentifier || pass.teamIdentifier || '-')}</code></div>
               <div><span>Valid Until:</span> <strong>${escapeHtml(sigData.notAfter || '2027-12-31')}</strong></div>
               <div><span>Expired:</span> <strong>${sigData.isExpired ? 'YES' : 'NO (Active)'}</strong></div>
             </div>

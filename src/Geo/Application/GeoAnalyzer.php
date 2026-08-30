@@ -230,14 +230,14 @@ final readonly class GeoAnalyzer
                 . 'optimal for direct AI answer extraction.';
         } elseif ($paragraphWords > 120) {
             $answerDiagnosis = 'The opening paragraph is verbose (' . $paragraphWords . ' words). '
-                . 'Distilling the core answer into 25–120 words improves snippet extraction.';
+                . 'Distilling the core answer into 25-120 words improves snippet extraction.';
         } elseif ($paragraphWords > 0) {
             $answerDiagnosis = 'The opening paragraph is brief (' . $paragraphWords . ' words). '
-                . 'Expanding the lead explanation to 25–120 words improves factual clarity.';
+                . 'Expanding the lead explanation to 25-120 words improves factual clarity.';
         } else {
             $answerDiagnosis = 'No opening text paragraph found. The page lacks an immediate textual summary or direct answer.';
         }
-        $answerRecommendation = 'Lead with a concise, factual 25–120 word paragraph that directly answers the central topic or describes the tool.';
+        $answerRecommendation = 'Lead with a concise, factual 25-120 word paragraph that directly answers the central topic or describes the tool.';
         $this->add($checks, 'direct_answer', $answerPoints, 10, $answerDiagnosis, $answerRecommendation, [
             'first_paragraph_words' => $paragraphWords,
             'sample' => $this->truncate($firstParagraph, 240),
@@ -543,7 +543,7 @@ final readonly class GeoAnalyzer
 
     private function wordCount(string $text): int
     {
-        return preg_match_all('/[\p{L}\p{N}]+(?:[’\'-][\p{L}\p{N}]+)*/u', $text) ?: 0;
+        return preg_match_all("/[\\p{L}\\p{N}]+(?:['-][\\p{L}\\p{N}]+)*/u", $text) ?: 0;
     }
 
     /**

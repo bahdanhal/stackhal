@@ -105,7 +105,7 @@
   <section class="section">
     <div class="section-title"><h2>{{ 'audit.report.crawled_pages'|trans }}</h2><span>{{ report.pages|length }} {{ 'audit.report.sampled'|trans }}</span></div>
     <div class="table-wrap"><table><thead><tr><th>URL</th><th>Status</th><th>Canonical</th><th>Title</th><th>H1</th><th>Words</th></tr></thead><tbody>
-    {% for page in report.pages %}<tr><td class="url">{{ page.final_url }}</td><td><span class="status status-{{ page.status >= 400 or page.status == 0 ? 'bad' : 'good' }}">{{ page.status ?: 'ERR' }}</span></td><td>{{ page.canonical ? (page.canonical == page.final_url ? 'Self' : 'Other') : 'Missing' }}</td><td>{{ page.title|default('—') }}</td><td>{{ page.h1|length }}</td><td>{{ page.word_count }}</td></tr>{% endfor %}
+    {% for page in report.pages %}<tr><td class="url">{{ page.final_url }}</td><td><span class="status status-{{ page.status >= 400 or page.status == 0 ? 'bad' : 'good' }}">{{ page.status ?: 'ERR' }}</span></td><td>{{ page.canonical ? (page.canonical == page.final_url ? 'Self' : 'Other') : 'Missing' }}</td><td>{{ page.title|default('-') }}</td><td>{{ page.h1|length }}</td><td>{{ page.word_count }}</td></tr>{% endfor %}
     </tbody></table></div>
   </section>
 

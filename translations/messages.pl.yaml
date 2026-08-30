@@ -41,7 +41,7 @@ base:
     footer: "Narzędzia dla programistów i prywatna diagnostyka · Bez rejestracji · Bez pikseli śledzących"
 
 error404:
-    title: "404 — ROUTE_NOT_FOUND · StackHal"
+    title: "404 - ROUTE_NOT_FOUND · StackHal"
     eyebrow: "STATUS_CODE: 404_NOT_FOUND"
     heading: "Nie odnaleziono trasy."
     description: "Podany adres URI nie pasuje do żadnego zarejestrowanego narzędzia programistycznego, potoku diagnostycznego ani punktu końcowego."
@@ -61,7 +61,7 @@ home:
     eyebrow: "OTWARTY ZESTAW NARZĘDZI · BEZ ESTYMACJI"
     heading_start: "Narzędzia do zadań, które miały zająć pięć minut"
     heading_emphasis: ""
-    lede: "StackHal to pakiet narzędzi online dla programistów: audyty techniczne SEO, gotowość GEO dla wyszukiwarek AI, konwersja Caddyfile, inspekcja kart Apple Wallet PKPass, kalkulator podsieci CIDR oraz weryfikacja bezpieczeństwa poczty—bez logowania i bezpośrednio w przeglądarce."
+    lede: "StackHal to pakiet narzędzi online dla programistów: audyty techniczne SEO, gotowość GEO dla wyszukiwarek AI, konwersja Caddyfile, inspekcja kart Apple Wallet PKPass, kalkulator podsieci CIDR oraz weryfikacja bezpieczeństwa poczty-bez logowania i bezpośrednio w przeglądarce."
     catops:
         heading: "Kot jest teraz starszym inżynierem"
         eyebrow: "DOSTĘP DO PRODUKCJI PRZYZNANY · FATALNY POMYSŁ"
@@ -145,7 +145,7 @@ home:
         q2: "Czy narzędzia StackHal są bezpłatne i bezpieczne dla prywatności?"
         a2: "Tak, wszystkie narzędzia działają bez rejestracji i logowania. Narzędzia po stronie klienta przetwarzają pliki i konfiguracje bezpośrednio w Twojej przeglądarce."
         q3: "Jak działa analizator gotowości GEO?"
-        a3: "Analizator GEO bada rzeczywiste sygnały techniczne i merytoryczne — dane strukturalne JSON-LD, zwięzłe odpowiedzi wstępne, semantykę HTML, atrybucję autorstwa, zewnętrzne cytowania oraz reguły robots.txt dla botów AI."
+        a3: "Analizator GEO bada rzeczywiste sygnały techniczne i merytoryczne - dane strukturalne JSON-LD, zwięzłe odpowiedzi wstępne, semantykę HTML, atrybucję autorstwa, zewnętrzne cytowania oraz reguły robots.txt dla botów AI."
         q4: "Jak przekonwertować konfigurację Nginx lub Apache na Caddy?"
         a4: "Skorzystaj z naszego konwertera Caddy Transpiler, wklej konfigurację i natychmiast uzyskaj poprawny Caddyfile z automatycznymi poradami migracyjnymi."
 
@@ -445,7 +445,7 @@ contact:
     company: "Firma"
     note: "Dane zostaną zapisane prywatnie na tym serwerze, aby Bahdan mógł się odezwać. Bez newslettera i automatycznej sprzedaży."
     invalid_origin: "Nieprawidłowe źródło formularza."
-    saved: "Dziękuję — zgłoszenie zostało zapisane. Bahdan się odezwie."
+    saved: "Dziękuję - zgłoszenie zostało zapisane. Bahdan się odezwie."
     too_many: "Zbyt wiele zgłoszeń kontaktowych dzisiaj. Użyj kontaktu bezpośredniego."
     invalid_email: "Wpisz poprawny adres e-mail."
     invalid_contact: "Wpisz poprawny e-mail albo numer telefonu."
@@ -459,7 +459,7 @@ geo:
     eyebrow: "GENERATIVE ENGINE OPTIMIZATION"
     heading_start: "Czy silniki odpowiedzi"
     heading_emphasis: "zrozumieją i zacytują stronę?"
-    lede: "Sprawdź jedną stronę pod kątem sygnałów technicznych i redakcyjnych, które ułatwiają odnalezienie, interpretację, przypisanie i cytowanie treści. Każdy punkt wynika z widocznych dowodów — nie z obietnicy widoczności w AI."
+    lede: "Sprawdź jedną stronę pod kątem sygnałów technicznych i redakcyjnych, które ułatwiają odnalezienie, interpretację, przypisanie i cytowanie treści. Każdy punkt wynika z widocznych dowodów - nie z obietnicy widoczności w AI."
     form:
         label: "Adres strony"
         submit: "Uruchom audyt GEO"
@@ -534,7 +534,7 @@ geo:
             help: "Wskazanie odpowiedzialności i historii publikacji ułatwia ocenę oraz przypisanie twierdzeń."
         citations:
             title: "Twierdzenia mogą prowadzić do zewnętrznych źródeł"
-            help: "Trafne odnośniki tworzą widoczny ślad dowodowy. Liczba linków jest tylko przybliżeniem — jakość źródeł wymaga oceny człowieka."
+            help: "Trafne odnośniki tworzą widoczny ślad dowodowy. Liczba linków jest tylko przybliżeniem - jakość źródeł wymaga oceny człowieka."
         faq:
             title: "Ważne pytania mają wyraźne odpowiedzi"
             help: "Sekcje oparte na pytaniach pasują do wyszukiwania konwersacyjnego, jeśli wnoszą informacje, a nie powtarzalny tekst SEO."
@@ -602,7 +602,7 @@ caddy_transpiler:
         private:
             title: "100% prywatności w przeglądarce"
             text: "Całe parsowanie i konwersja odbywają się lokalnie w Twojej przeglądarce. Żadne domeny, porty ani adresy IP nie są przesyłane na serwer."
-    mapping_cheatsheet_title: "Inteligentne mapowanie — dlaczego Caddy jest prostszy"
+    mapping_cheatsheet_title: "Inteligentne mapowanie - dlaczego Caddy jest prostszy"
     cheatsheet_proxy_title: "Reverse Proxy i nagłówki"
     cheatsheet_proxy_desc: "proxy_pass i 5 linii proxy_set_header zamieniają się w pojedyncze reverse_proxy. Host, X-Forwarded-For i WebSockets działają automatycznie."
     cheatsheet_ssl_title: "Automatyczny HTTPS"
@@ -649,7 +649,7 @@ pkpass:
         download_json: "Pobierz pass.json"
     guide:
         title: "Dlaczego iOS odrzuca pliki .pkpass bez komunikatu o błędzie"
-        subtitle: "System iOS nie wyświetla szczegółowych błędów w interfejsie — po prostu nie otwiera uszkodzonego pliku. Oto najczęstsze przyczyny problemów wykrywane przez ten inspektor:"
+        subtitle: "System iOS nie wyświetla szczegółowych błędów w interfejsie - po prostu nie otwiera uszkodzonego pliku. Oto najczęstsze przyczyny problemów wykrywane przez ten inspektor:"
         manifest_title: "Rozsynchronizowanie sum SHA-1 w manifest.json"
         manifest_text: "Zmiana daty, treści lub kodu kreskowego w pass.json bez przeliczenia jego sumy SHA-1 w manifest.json sprawia, że iOS natychmiast odrzuca bilet jako uszkodzony."
         dates_title: "Daty bez strefy czasowej w formacie ISO 8601"

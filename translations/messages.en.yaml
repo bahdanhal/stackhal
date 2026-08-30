@@ -44,7 +44,7 @@ base:
     contact: "Contact"
 
 error404:
-    title: "404 — ROUTE_NOT_FOUND · StackHal"
+    title: "404 - ROUTE_NOT_FOUND · StackHal"
     eyebrow: "STATUS_CODE: 404_NOT_FOUND"
     heading: "Route resolution failed."
     description: "The requested URI could not be mapped to any known tool, diagnostic pipeline, or endpoint in the registry."
@@ -62,7 +62,7 @@ home:
     eyebrow: "OPEN DEVELOPER TOOLBOX · ESTIMATE NOT INCLUDED"
     heading_start: "Developer tools for tasks that were supposed to take five minutes"
     heading_emphasis: ""
-    lede: "StackHal provides focused, browser-first developer utilities for technical SEO auditing, GEO answer readiness, Caddyfile transpilation, Apple Wallet PKPass inspection, visual CIDR subnet calculations, and email security verification—fast, transparent, and completely free."
+    lede: "StackHal provides focused, browser-first developer utilities for technical SEO auditing, GEO answer readiness, Caddyfile transpilation, Apple Wallet PKPass inspection, visual CIDR subnet calculations, and email security verification-fast, transparent, and completely free."
     catops:
         heading: "The cat is now the senior engineer"
         eyebrow: "PRODUCTION ACCESS GRANTED · TERRIBLE IDEA"
@@ -92,7 +92,7 @@ home:
         text: "Find redirect mistakes, crawler traps, duplicate URL spaces, canonical problems, and sitemap gaps."
     market:
         title: "Poland used-goods price index"
-        text: "Follow Bahdan’s manually reviewed snapshots of comparable second-hand asking prices, with history and transparent limitations."
+        text: "Follow Bahdan's manually reviewed snapshots of comparable second-hand asking prices, with history and transparent limitations."
     favicon_suite:
         title: "Favicon Kitchen & Dark-Mode SVG Suite"
         text: "Generate dark-mode adaptive vector favicons, multi-resolution ICOs, Apple touch icons, and Android PWA bundles with safe-zone masking."
@@ -146,7 +146,7 @@ home:
         q2: "Are StackHal utilities free and private to use?"
         a2: "Yes, all tools run without registration or signups. Client-side utilities process files and configurations directly inside your browser for total privacy."
         q3: "How does the GEO Readiness Analyzer evaluate web pages?"
-        a3: "The GEO Analyzer inspects real technical and content signals—such as JSON-LD structured data, concise opening answers, semantic landmarks, author attribution, citation trails, and AI crawler permissions in robots.txt."
+        a3: "The GEO Analyzer inspects real technical and content signals-such as JSON-LD structured data, concise opening answers, semantic landmarks, author attribution, citation trails, and AI crawler permissions in robots.txt."
         q4: "How do I convert Nginx or Apache configs to Caddy?"
         a4: "Use our online Caddy Transpiler to paste your existing configuration and immediately receive an idiomatic Caddyfile with automated routing advice and security optimizations."
 
@@ -156,7 +156,7 @@ ai_studio_extension:
         description: "An open-source Chrome extension for using Google AI Studio with a local codebase: context packing, diff review, file synchronization, and undo."
     eyebrow: "OPEN SOURCE CHROME EXTENSION · AI STUDIO WORKFLOW"
     heading: "Playing around with Google AI Studio?"
-    lede: "Tired of moving code back and forth with Ctrl+C/Ctrl+V like it’s 2024? This extension is a small open-source experiment in bringing a more agentic coding workflow to AI Studio."
+    lede: "Tired of moving code back and forth with Ctrl+C/Ctrl+V like it's 2024? This extension is a small open-source experiment in bringing a more agentic coding workflow to AI Studio."
     status: "Available in the Chrome Web Store"
     store_cta: "Install from the Chrome Web Store"
     guide_cta: "Installation details"
@@ -309,7 +309,7 @@ domain_inspector:
         q3: "How does SMTP TLS-RPT (RFC 8460) help?"
         a3: "TLS Reporting enables sending mail providers to send daily aggregate telemetry reports whenever encryption negotiation fails, identifying routing issues and certificate expiration before mail drops."
     report:
-        title: "Email Security Report for %domain% · Bahdan’s Toolbox"
+        title: "Email Security Report for %domain% · Bahdan's Toolbox"
         back: "Inspect another domain"
         score_label: "Deliverability Security Score: %score%/100"
         time_label: "Inspected at %time%"
@@ -339,8 +339,8 @@ audit:
         loading: "Crawling…"
         note: "10 crawl audits per IP each day · Polite, robots-aware crawling · Reports cached for six hours."
     limit:
-        message: "You have used today’s 10 free crawl audits. Leave your email or contact Bahdan directly for help."
-        title: "Need another audit—or help fixing it?"
+        message: "You have used today's 10 free crawl audits. Leave your email or contact Bahdan directly for help."
+        title: "Need another audit-or help fixing it?"
         text: "Leave your email privately on this server, or use a direct contact option."
     features:
         redirect:
@@ -382,7 +382,7 @@ audit:
         editorial_review: "Human editorial review"
         not_scored: "RECOMMENDATIONS · NOT SCORED"
         editorial_intro: "A crawler can verify delivery and structure, but it cannot decide whether a site is original, accurate, useful or trustworthy. Review these questions before publishing more pages."
-        people_first_source: "Google’s people-first content guidance"
+        people_first_source: "Google's people-first content guidance"
         found_in: "Found in %count% places. Open an occurrence to see its URL and evidence."
         redirect_matrix: "Host & redirect matrix"
         variants: "variants"
@@ -446,7 +446,7 @@ contact:
     company: "Company"
     note: "Stored privately on this server so Bahdan can follow up. No mailing list or automated sales sequence."
     invalid_origin: "Invalid form origin."
-    saved: "Thanks — your contact request is saved. Bahdan will follow up."
+    saved: "Thanks - your contact request is saved. Bahdan will follow up."
     too_many: "Too many contact requests today. Please use a direct contact link instead."
     invalid_email: "Please enter a valid email address."
     invalid_contact: "Please enter a valid email address or phone number."
@@ -460,7 +460,7 @@ geo:
     eyebrow: "GENERATIVE ENGINE OPTIMIZATION"
     heading_start: "Can answer engines"
     heading_emphasis: "understand and cite you?"
-    lede: "Inspect one page for the technical and editorial signals that make content easier to retrieve, interpret, attribute, and quote. Every point is tied to visible evidence—not a promise of AI visibility."
+    lede: "Inspect one page for the technical and editorial signals that make content easier to retrieve, interpret, attribute, and quote. Every point is tied to visible evidence-not a promise of AI visibility."
     form:
         label: "Page URL"
         submit: "Run GEO audit"
@@ -514,7 +514,7 @@ geo:
             help: "The page should not be blocked by robots.txt or noindex directives when public discovery is intended."
         canonical:
             title: "The canonical identifies this page"
-            help: "A self-referencing canonical helps consolidate the page’s identity and avoid ambiguous URL variants."
+            help: "A self-referencing canonical helps consolidate the page's identity and avoid ambiguous URL variants."
         metadata:
             title: "Title, description and H1 are explicit"
             help: "Clear primary metadata gives retrieval systems a compact description of the page and its subject."
@@ -650,7 +650,7 @@ pkpass:
         download_json: "Download pass.json"
     guide:
         title: "Why iOS Silently Drops .pkpass Files"
-        subtitle: "When creating digital passes, iOS rarely shows descriptive error popups — it silently fails to open the pass. Here are the top failure reasons caught by this inspector:"
+        subtitle: "When creating digital passes, iOS rarely shows descriptive error popups - it silently fails to open the pass. Here are the top failure reasons caught by this inspector:"
         manifest_title: "manifest.json SHA-1 Desync"
         manifest_text: "Modifying dates, colors, or barcode messages in pass.json without recomputing its SHA-1 checksum in manifest.json causes iOS to reject the archive immediately as corrupt or tampered."
         dates_title: "Floating Dates Missing Timezones"

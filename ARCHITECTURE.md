@@ -1,4 +1,4 @@
-# Architecture Documentation — stackhal (stackhal.com)
+# Architecture Documentation - stackhal (stackhal.com)
 
 `stackhal` (`stackhal.com`) is the developer tools and web infrastructure diagnostics platform by Bahdan Hal.
 

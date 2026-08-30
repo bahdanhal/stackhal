@@ -1,10 +1,10 @@
 # Stackhal (`stackhal`)
 
-**Live website:** [Stackhal — free online developer, DevOps, and infrastructure tools](https://stackhal.com/)
+**Live website:** [Stackhal - free online developer, DevOps, and infrastructure tools](https://stackhal.com/)
 
 Fast, privacy-focused tools for developers, infrastructure engineers, and technical SEO work, with no tracking or account required.
 
-**Related projects:** [Bahdan Hal — software engineering consulting](https://bahdanhal.pl/) · [IleZa.pl — used electronics price intelligence](https://ileza.pl/)
+**Related projects:** [Bahdan Hal - software engineering consulting](https://bahdanhal.pl/) · [IleZa.pl - used electronics price intelligence](https://ileza.pl/)
 
 **Shared Packagist packages:** [`bahdan/symfony-safe-http-client`](https://packagist.org/packages/bahdan/symfony-safe-http-client) · [`bahdan/symfony-privacy-analytics-bundle`](https://packagist.org/packages/bahdan/symfony-privacy-analytics-bundle) · [`bahdan/lead-capture-bundle`](https://packagist.org/packages/bahdan/lead-capture-bundle)
 

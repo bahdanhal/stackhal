@@ -90,7 +90,7 @@ final readonly class AuditRuleEngine
         foreach ($titles as $title => $urls) {
             if (count($urls) > 1) {
                 // phpcs:ignore Generic.Files.LineLength
-                $add('warning', 'duplicate-title', 'Duplicate page title', 'The title “' . $title . '” appears on ' . count($urls) . ' crawled pages.', array_slice($urls, 0, 10));
+                $add('warning', 'duplicate-title', 'Duplicate page title', 'The title "' . $title . '" appears on ' . count($urls) . ' crawled pages.', array_slice($urls, 0, 10));
             }
         }
         foreach ($hashes as $urls) {

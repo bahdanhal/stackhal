@@ -126,10 +126,10 @@
                             {% for audit in recent_audits %}
                                 <tr style="border-bottom: 1px solid #1a1d28;">
                                     <td style="padding: 12px; white-space: nowrap; color: var(--muted, #94a3b8);">
-                                        {{ audit.requested_at ?? audit.completed_at ?? '—' }}
+                                        {{ audit.requested_at ?? audit.completed_at ?? '-' }}
                                     </td>
                                     <td style="padding: 12px; font-family: monospace; color: #e2e8f0;">
-                                        {{ audit.target ?? '—' }}
+                                        {{ audit.target ?? '-' }}
                                     </td>
                                     <td style="padding: 12px; white-space: nowrap;">
                                         {% if audit.status == 'completed' %}
@@ -141,10 +141,10 @@
                                         {% endif %}
                                     </td>
                                     <td style="padding: 12px; font-weight: 700; color: #fff;">
-                                        {{ audit.score is defined ? audit.score ~ '/100' : '—' }}
+                                        {{ audit.score is defined ? audit.score ~ '/100' : '-' }}
                                     </td>
                                     <td style="padding: 12px; color: var(--muted, #94a3b8);">
-                                        {{ audit.duration_ms is defined ? audit.duration_ms ~ ' ms' : '—' }}
+                                        {{ audit.duration_ms is defined ? audit.duration_ms ~ ' ms' : '-' }}
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -178,10 +178,10 @@
                             {% for audit in recent_geo_audits %}
                                 <tr style="border-bottom: 1px solid #1a1d28;">
                                     <td style="padding: 12px; white-space: nowrap; color: var(--muted, #94a3b8);">
-                                        {{ audit.requested_at ?? audit.completed_at ?? '—' }}
+                                        {{ audit.requested_at ?? audit.completed_at ?? '-' }}
                                     </td>
                                     <td style="padding: 12px; font-family: monospace; color: #e2e8f0;">
-                                        {{ audit.target ?? '—' }}
+                                        {{ audit.target ?? '-' }}
                                     </td>
                                     <td style="padding: 12px; white-space: nowrap;">
                                         {% if audit.status == 'completed' %}
@@ -193,10 +193,10 @@
                                         {% endif %}
                                     </td>
                                     <td style="padding: 12px; font-weight: 700; color: #fff;">
-                                        {{ audit.score is defined ? audit.score ~ '/100' : '—' }}
+                                        {{ audit.score is defined ? audit.score ~ '/100' : '-' }}
                                     </td>
                                     <td style="padding: 12px; color: var(--muted, #94a3b8);">
-                                        {{ audit.duration_ms is defined ? audit.duration_ms ~ ' ms' : '—' }}
+                                        {{ audit.duration_ms is defined ? audit.duration_ms ~ ' ms' : '-' }}
                                     </td>
                                 </tr>
                             {% endfor %}

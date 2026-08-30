@@ -1,5 +1,5 @@
 /**
- * BIMI Studio — SVG Tiny 1.2 PS Converter & Live Inbox Simulator
+ * BIMI Studio - SVG Tiny 1.2 PS Converter & Live Inbox Simulator
  * Zero backend overhead, 100% browser-based & privacy-safe.
  */
 (function () {

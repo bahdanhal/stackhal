@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <strong>Production Packages:</strong> ${res.total_prod_packages} (${res.review_prod_count} to review) |
           <strong>Dev Packages:</strong> ${res.total_dev_packages} (${res.review_dev_count} to review)
         </p>
-        <p style="color:#94a3b8;"><strong>Mode:</strong> ${escapeHtml(res.audit_mode)} — ${escapeHtml(res.scope_note)}</p>
+        <p style="color:#94a3b8;"><strong>Mode:</strong> ${escapeHtml(res.audit_mode)} - ${escapeHtml(res.scope_note)}</p>
         <div style="margin-top: 1rem;">
           <h4 style="margin-bottom: 0.5rem;">Package Breakdown:</h4>
           ${prodRows}
