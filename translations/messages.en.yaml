@@ -890,8 +890,8 @@ composer_license:
     lockfile_intro: "Paste your composer.json or composer.lock JSON to analyze production and development dependencies."
     investigation:
         badge: "EMPIRICAL INVESTIGATION"
-        title: "What a Composer Dependency Graph Can and Cannot Prove"
-        lede: "See the method, corrected counts, exact dependency paths, and limits behind a 10,000-package license metadata screen."
+        title: "Hundreds of Hidden License Traps in 10,000 PHP Packages"
+        lede: "See the real findings, PayPal and WPForms case studies, real court rulings, and how to audit your vendor tree."
         button: "Read the Full Investigation"
     faq:
         heading: "Frequently Asked Questions"

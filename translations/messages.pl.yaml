@@ -889,8 +889,8 @@ composer_license:
     lockfile_intro: "Wklej treść composer.json lub composer.lock, aby przeanalizować licencje zależności produkcyjnych i deweloperskich."
     investigation:
         badge: "RAPORT Z BADAŃ"
-        title: "Co Graf Zależności Composer Może Udowodnić, a Czego Nie"
-        lede: "Poznaj metodę, poprawione wyniki, dokładne ścieżki zależności i ograniczenia analizy metadanych 10 000 pakietów."
+        title: "Setki Ukrytych Pułapek Licencyjnych w 10 000 Pakietów PHP"
+        lede: "Zobacz rzeczywiste wyniki audytu, studia przypadków PayPal i WPForms, wyroki sądowe oraz metody ochrony kodu."
         button: "Przeczytaj Pełny Raport"
     faq:
         heading: "Często Zadawane Pytania"
