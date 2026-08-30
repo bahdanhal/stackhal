@@ -10,7 +10,12 @@
   pointer-events: none;
 }
 
-.stackhal-site > .site-header,
+.stackhal-site > .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
 .stackhal-site > main,
 .stackhal-site > footer {
   position: relative;

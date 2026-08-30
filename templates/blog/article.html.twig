@@ -49,7 +49,7 @@
   <div class="article-layout">
     {% set externalCta = article.ctaPath starts with 'https://' %}
     <aside class="article-toc" aria-label="On this page"><span>ON THIS PAGE</span><a href="#article-content">Article content</a><a href="#article-cta">Use the tool</a></aside>
-    <div class="article-prose" id="article-content">{{ article.contentHtml|raw }}</div>
+    <div class="article-prose article-content" id="article-content">{{ article.contentHtml|raw }}</div>
     <aside class="article-sidebar">
       <div class="article-cta-card" id="article-cta">
         <p class="article-kicker">RELATED TOOL</p>
