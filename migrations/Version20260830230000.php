@@ -20,9 +20,9 @@ final class Version20260830230000 extends AbstractMigration
     public function up(Schema $schema): void
     {
         $articleHtml = <<<'HTML'
-<p class="article-lead">We scanned 10,000 top PHP packages and 100 popular WordPress plugins. What we found is an alarming compliance blind spot: 320 packages pull viral copyleft code into projects that claim simple MIT terms. Real SDKs from PayPal and plugins on 5 million live sites distribute OSL-3.0 and GPL files under innocent labels. If you build SaaS, online shops, or private code, here is what hides in your vendor folder. Real court cases show you could face heavy lawsuits.</p>
+<p class="article-lead">I scanned 10,000 top PHP packages and 100 popular WordPress plugins. What I found is an alarming compliance blind spot: 320 packages pull viral copyleft code into projects that claim simple MIT terms. Real SDKs from PayPal and plugins on 5 million live sites distribute OSL-3.0 and GPL files under innocent labels. If you build SaaS, online shops, or private code, here is what hides in your vendor folder. Real court cases show you could face heavy lawsuits.</p>
 
-<div class="article-callout article-callout-accent"><strong>The short version</strong><span>A package license only covers code written by its direct author. In our scan of 10,000 Composer packages, 320 libraries (3.2%) pulled in copyleft code while claiming MIT at the root. Real courts have ordered 800,000 EUR in damages for open source license breaches. Here are the exact dependency paths, the real risks, and how to protect your code today.</span></div>
+<div class="article-callout article-callout-accent"><strong>The short version</strong><span>A package license only covers code written by its direct author. In my scan of 10,000 Composer packages, 320 libraries (3.2%) pulled in copyleft code while claiming MIT at the root. Real courts have ordered 800,000 EUR in damages for open source license breaches. Here are the exact dependency paths, the real risks, and how to protect your code today.</span></div>
 
 <h2>What open source lawsuits can cost</h2>
 <p>Open source licenses are legally binding contracts. Courts in Europe and the United States enforce these terms with heavy costs for companies.</p>
@@ -50,7 +50,7 @@ final class Version20260830230000 extends AbstractMigration
   <span class="screen-caption">Snapshot collected on August 30, 2026 across stable Packagist releases and top WordPress.org plugins.</span>
 </div>
 
-<p>Our method was simple: we recursively checked every single dependency across the entire tree to find any child package carrying a more restrictive license than the root project.</p>
+<p>My method was simple: I recursively checked every single dependency across the entire tree to find any child package carrying a more restrictive license than the root project.</p>
 
 <h2>Case study: the PayPal server SDK and OSL-3.0</h2>
 <p>When PayPal retired older PHP SDKs, they told merchants to use <code>paypal/paypal-server-sdk</code>. On Packagist, PayPal listed this package as <code>MIT</code>.</p>
@@ -135,7 +135,7 @@ HTML;
         $this->addSql(
             'UPDATE blog_articles SET title = ?, description = ?, content_html = ?, read_time_minutes = ?, updated_at = ? WHERE slug = ?',
             [
-                'We Scanned 10,000 PHP Packages and Found Hundreds of Hidden License Traps: Here Is Why You Could Get Sued',
+                'I Scanned 10,000 PHP Packages and Found Hundreds of Hidden License Traps: Here Is Why You Could Get Sued',
                 'In an audit of 10,000 Composer packages and top WordPress plugins, 320 libraries pulled copyleft code under permissive root tags. See real court cases and exact dependency risks.',
                 $articleHtml,
                 9,
