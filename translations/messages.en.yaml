@@ -59,10 +59,10 @@ home:
     meta:
         title: "StackHal · Free Developer, SEO and Infrastructure Tools"
         description: "Focused developer utilities for technical SEO, GEO, Apple Wallet, Caddy, email security, DNS delegation and CIDR analysis. No signup required."
-    eyebrow: "OPEN DEVELOPER TOOLBOX · ESTIMATE NOT INCLUDED"
-    heading_start: "Developer tools for tasks that were supposed to take five minutes"
+    eyebrow: "OPEN DEVELOPER TOOLBOX · NO SIGNUP"
+    heading_start: "Developer tools for web, security, and infrastructure"
     heading_emphasis: ""
-    lede: "StackHal provides focused, browser-first developer utilities for technical SEO auditing, GEO answer readiness, Caddyfile transpilation, Apple Wallet PKPass inspection, visual CIDR subnet calculations, and email security verification-fast, transparent, and completely free."
+    lede: "Focused, browser-first developer utilities for technical SEO auditing, GEO answer readiness, Caddyfile transpilation, Apple Wallet PKPass inspection, visual CIDR subnet calculations, and email security verification - fast, transparent, and completely free."
     catops:
         heading: "The cat is now the senior engineer"
         eyebrow: "PRODUCTION ACCESS GRANTED · TERRIBLE IDEA"

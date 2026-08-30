@@ -58,10 +58,10 @@ home:
     meta:
         title: "StackHal · Darmowe narzędzia dla programistów, SEO i infrastruktury"
         description: "Konkretne narzędzia do technicznego SEO, GEO, Apple Wallet, Caddy, bezpieczeństwa e-mail i analizy CIDR. Bez rejestracji."
-    eyebrow: "OTWARTY ZESTAW NARZĘDZI · BEZ ESTYMACJI"
-    heading_start: "Narzędzia do zadań, które miały zająć pięć minut"
+    eyebrow: "OTWARTY ZESTAW NARZĘDZI · BEZ LOGOWANIA"
+    heading_start: "Narzędzia online dla programistów i DevOps"
     heading_emphasis: ""
-    lede: "StackHal to pakiet narzędzi online dla programistów: audyty techniczne SEO, gotowość GEO dla wyszukiwarek AI, konwersja Caddyfile, inspekcja kart Apple Wallet PKPass, kalkulator podsieci CIDR oraz weryfikacja bezpieczeństwa poczty-bez logowania i bezpośrednio w przeglądarce."
+    lede: "Pakiet szybkich narzędzi webowych: audyty techniczne SEO, analiza gotowości GEO dla silników AI, konwersja Caddyfile, inspekcja kart Apple Wallet PKPass, kalkulator podsieci CIDR oraz diagnostyka domen - bezpośrednio w przeglądarce i bez rejestracji."
     catops:
         heading: "Kot jest teraz starszym inżynierem"
         eyebrow: "DOSTĘP DO PRODUKCJI PRZYZNANY · FATALNY POMYSŁ"
