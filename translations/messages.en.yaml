@@ -891,7 +891,7 @@ composer_license:
     investigation:
         badge: "EMPIRICAL INVESTIGATION"
         title: "Composer License Metadata vs. Dependency Reality: 10,000 Packages Screened"
-        lede: "Top-level manifests only declare what the root package intends. Read how 320 packages pulled transitive copyleft dependencies, including PayPal's server SDK and WPForms Lite."
+        lede: "A package license only covers its author's code. Read how 320 packages pulled transitive copyleft code, including PayPal's server SDK and WPForms Lite."
         button: "Read the Full Investigation"
     faq:
         heading: "Frequently Asked Questions"

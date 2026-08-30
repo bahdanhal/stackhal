@@ -890,7 +890,7 @@ composer_license:
     investigation:
         badge: "RAPORT Z BADAŃ"
         title: "Metadane Licencji a Graf Zależności: Przeskanowano 10 000 Pakietów"
-        lede: "Deklaracja w manifeście dotyczy tylko pakietu głównego. Zobacz, jak 320 bibliotek pobrało licencje copyleft, w tym oficjalny SDK PayPal i WPForms Lite."
+        lede: "Licencja pakietu dotyczy tylko kodu autora. Zobacz, jak 320 bibliotek pobralo zaleznosci copyleft, w tym SDK PayPal i WPForms Lite."
         button: "Przeczytaj Pełny Raport"
     faq:
         heading: "Często Zadawane Pytania"
