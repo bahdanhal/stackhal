@@ -873,7 +873,7 @@ cors_sandbox:
     browser_ceilings_intro: "Web browsers enforce hard maximum limits on Access-Control-Max-Age caching for preflight OPTIONS responses to prevent stale permission pinning."
 composer_license:
     meta:
-        title: "Composer License & Copyleft Audit — StackHal Developer Tools"
+        title: "Composer License & Copyleft Audit - StackHal Developer Tools"
         description: "Screen exact Composer lock files and Packagist dependency graphs for copyleft license signals that deserve manual compliance review."
     eyebrow: "SUPPLY CHAIN COMPLIANCE"
     heading: "Composer License & Copyleft Checker"
@@ -891,7 +891,7 @@ composer_license:
     investigation:
         badge: "EMPIRICAL INVESTIGATION"
         title: "Composer License Metadata vs. Dependency Reality: 10,000 Packages Screened"
-        lede: "Top-level manifests only declare what the root package intends. Read how 320 packages pulled transitive copyleft dependencies—including PayPal's server SDK and WPForms Lite."
+        lede: "Top-level manifests only declare what the root package intends. Read how 320 packages pulled transitive copyleft dependencies, including PayPal's server SDK and WPForms Lite."
         button: "Read the Full Investigation"
     faq:
         heading: "Frequently Asked Questions"

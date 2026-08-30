@@ -872,7 +872,7 @@ cors_sandbox:
     browser_ceilings_intro: "Przeglądarki internetowe narzucają sztywne górne limity czasu buforowania Access-Control-Max-Age dla zapytań preflight OPTIONS."
 composer_license:
     meta:
-        title: "Sprawdzanie Licencji Composer i Copyleft — Narzędzia StackHal"
+        title: "Sprawdzanie Licencji Composer i Copyleft - Narzędzia StackHal"
         description: "Wstępna analiza dokładnych wersji Composer i grafu zależności pod kątem sygnałów licencji copyleft wymagających ręcznej weryfikacji."
     eyebrow: "BEZPIECZEŃSTWO ŁAŃCUCHA DOSTAW"
     heading: "Sprawdzanie Licencji Composer i Copyleft"
@@ -890,7 +890,7 @@ composer_license:
     investigation:
         badge: "RAPORT Z BADAŃ"
         title: "Metadane Licencji a Graf Zależności: Przeskanowano 10 000 Pakietów"
-        lede: "Deklaracja w manifeście dotyczy tylko pakietu głównego. Zobacz, jak 320 bibliotek pobrało licencje copyleft — w tym oficjalny SDK PayPal i WPForms Lite."
+        lede: "Deklaracja w manifeście dotyczy tylko pakietu głównego. Zobacz, jak 320 bibliotek pobrało licencje copyleft, w tym oficjalny SDK PayPal i WPForms Lite."
         button: "Przeczytaj Pełny Raport"
     faq:
         heading: "Często Zadawane Pytania"
