@@ -26,6 +26,8 @@ final class SitemapControllerTest extends TestCase
         self::assertStringContainsString('https://stackhal.com/dns-dag-tracer', $content);
         self::assertStringContainsString('https://stackhal.com/app-links-validator', $content);
         self::assertStringContainsString('https://stackhal.com/ai-studio-local-file-sync', $content);
+        self::assertStringContainsString('https://stackhal.com/composer-license-checker', $content);
+        self::assertStringContainsString('https://stackhal.com/pl/sprawdzanie-licencji-composer', $content);
         self::assertStringContainsString('https://stackhal.com/pl/generator-favicon', $content);
         self::assertStringContainsString('https://stackhal.com/pl/piaskownica-cors', $content);
         self::assertStringContainsString('https://stackhal.com/pl/tracer-dns-dag', $content);

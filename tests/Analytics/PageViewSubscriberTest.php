@@ -60,6 +60,28 @@ final class PageViewSubscriberTest extends TestCase
         self::assertSame(hash_hmac('sha256', gmdate('Y-m-d') . '|198.51.100.8|Mozilla/5.0', 'analytics-secret'), $stored->visitorHash);
     }
 
+    public function testAnalyticsFailureDoesNotBreakThePageResponse(): void
+    {
+        $repository = $this->createMock(PageViewRepository::class);
+        $repository->expects(self::once())
+            ->method('save')
+            ->willThrowException(new \RuntimeException('Database unavailable'));
+        $request = Request::create('https://stackhal.com/tools', 'GET', server: [
+            'REMOTE_ADDR' => '198.51.100.8',
+            'HTTP_USER_AGENT' => 'Mozilla/5.0',
+        ]);
+        $event = new ResponseEvent(
+            $this->createStub(HttpKernelInterface::class),
+            $request,
+            HttpKernelInterface::MAIN_REQUEST,
+            new Response('<html></html>', 200, ['Content-Type' => 'text/html']),
+        );
+
+        (new PageViewSubscriber($repository, 'analytics-secret'))->onResponse($event);
+
+        self::assertSame(Response::HTTP_OK, $event->getResponse()->getStatusCode());
+    }
+
     #[DataProvider('provideExcludedUserAgents')]
     public function testExcludesBotsAndPrivacySignals(string $userAgent): void
     {

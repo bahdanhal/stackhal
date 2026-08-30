@@ -21,11 +21,13 @@ graph TD
         PHP --> DevToolsContext[Developer Tools Suite]
         PHP --> AnalyticsContext[Privacy-Preserving Traffic Analytics]
         PHP --> McpContext[Developer Tools MCP Endpoint]
+        PHP --> ComposerLicenseContext[Composer License Signal Screening]
     end
 
     subgraph "External Integrations"
         AuditContext -->|Crawl with SSRF Guard & DNS Pinning| ExternalWeb[Target Websites]
         DomainInspectorContext -->|DNS Resolution & Policy Fetch| PublicDns[Public DNS & Policy Endpoints]
+        ComposerLicenseContext -->|Constraint-aware metadata lookup| Packagist[Packagist Metadata API]
     end
 
     subgraph "Persistence Layer (PostgreSQL 17)"
@@ -51,9 +53,10 @@ graph TD
    - **CIDR Subnet Overlap Matrix**: Bitwise IPv4/IPv6 math with visual matrix grid rendering.
    - **Domain Email Security Inspector**: DMARC, BIMI SVG Tiny 1.2 PS, MTA-STS, TLS-RPT, SPF checks with DNS caching.
    - **Favicon Suite Generator**, **Regex Transpiler**, **DNS Propagation DAG Tracer**, **App Links Validator**, **CORS Preflight Sandbox**.
+   - **Composer License Signal Checker**: exact lockfile graph analysis and constraint-aware Packagist estimates with bounded traversal and explicit incomplete-state reporting.
 
 4. **Model Context Protocol (MCP) Integration**
-   - Exposes tools at `/mcp`: `audit_website_seo`, `analyze_geo_readiness`, `inspect_domain_security`, `transpile_to_caddyfile`, `inspect_apple_pkpass`, `calculate_cidr_overlap`, `generate_favicon_suite`, `transpile_regex_engine`, `trace_dns_delegation`, `validate_app_links`, `diagnose_cors_policy`.
+   - Exposes tools at `/mcp`: `audit_website_seo`, `analyze_geo_readiness`, `inspect_domain_security`, `transpile_to_caddyfile`, `inspect_apple_pkpass`, `calculate_cidr_overlap`, `generate_favicon_suite`, `transpile_regex_engine`, `trace_dns_delegation`, `validate_app_links`, `diagnose_cors_policy`, `audit_composer_package_license`, `audit_composer_lockfile`.
    - Admin tools: `get_admin_dashboard_statistics`, `list_admin_recent_audits`, `list_admin_contact_leads`.
 
 ---
@@ -82,6 +85,7 @@ stackhal/
 ├── src/
 │   ├── Analytics/               # Traffic analytics & page views
 │   ├── Audit/                   # Technical SEO crawler & audit rules engine
+│   ├── ComposerLicense/         # Exact lockfile and Packagist license screening
 │   ├── Command/                 # CLI audit and maintenance commands
 │   ├── Controller/              # Tool controllers & web UI
 │   │   ├── Admin/               # StackhalAdminController

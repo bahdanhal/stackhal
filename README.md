@@ -22,7 +22,9 @@ Fast, privacy-focused tools for developers, infrastructure engineers, and techni
 - **`/geo-audit`**: Generative Engine Optimization (GEO) readiness analyzer (13 deterministic criteria for AI search engines like Perplexity, ChatGPT, Gemini).
 - **`/domain-inspector`**: Domain email security analyzer for DMARC, BIMI, MTA-STS, TLS-RPT, SPF, and MX records.
 - **`/bimi-studio`**: BIMI SVG Tiny 1.2 PS studio, sanitizer, and live avatar mailbox preview (Gmail, Apple Mail, Yahoo).
+- **`/composer-license-checker`**: Exact `composer.lock` and constraint-aware Packagist license-signal screening with explicit scope and uncertainty.
 - **`POST /mcp`**: High-performance Model Context Protocol endpoint exposing all tool operations to AI agents.
+- **Research snapshot**: Versioned data and normalization methodology under `docs/research/composer-license-audit/`.
 
 ---
 

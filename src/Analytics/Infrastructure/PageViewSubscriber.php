@@ -6,6 +6,7 @@ namespace App\Analytics\Infrastructure;
 
 use App\Analytics\Domain\PageViewRepository;
 use Bahdan\PrivacyAnalyticsBundle\EventSubscriber\PageViewSubscriber as BasePageViewSubscriber;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -20,12 +21,15 @@ final readonly class PageViewSubscriber implements EventSubscriberInterface
         . '|(?:^|/)(?:\.env|\.git)(?:/|$)|\.php(?:/|$)#i';
 
     private BasePageViewSubscriber $inner;
+    private ?LoggerInterface $logger;
 
     public function __construct(
         PageViewRepository $pageViews,
         string $secret,
+        ?LoggerInterface $logger = null,
     ) {
         $this->inner = new BasePageViewSubscriber($pageViews, $secret);
+        $this->logger = $logger;
     }
 
     public static function getSubscribedEvents(): array
@@ -48,7 +52,13 @@ final readonly class PageViewSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->inner->onTerminate($event);
+        try {
+            $this->inner->onTerminate($event);
+        } catch (\Throwable $exception) {
+            $this->logger?->warning('Page view analytics recording failed.', [
+                'exception_class' => $exception::class,
+            ]);
+        }
     }
 
     private function hasSuspiciousChromiumHeaders(Request $request, string $userAgent): bool

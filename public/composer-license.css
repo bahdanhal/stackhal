@@ -1,0 +1,187 @@
+/* Composer License Audit Tool Styles */
+.license-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+.license-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--surface-2, #1a202c);
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border-color, #2d3748);
+}
+
+.tab-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  color: var(--text-muted, #a0aec0);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-color, #fff);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+  color: #fff;
+  background: var(--primary-color, #3b82f6);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.tab-pane {
+  padding: 1.5rem;
+  background: var(--surface-1, #131722);
+  border-radius: 12px;
+  border: 1px solid var(--border-color, #2d3748);
+  margin-bottom: 2rem;
+}
+
+.search-bar-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.license-input, .license-textarea {
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  background: var(--input-bg, #0d1117);
+  border: 1px solid var(--border-color, #30363d);
+  border-radius: 8px;
+  color: #f0f6fc;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+}
+
+.license-input:focus, .license-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.presets-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.presets-label {
+  color: var(--text-muted, #8b949e);
+  font-weight: 500;
+}
+
+.preset-pill {
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.preset-pill.review {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.preset-pill.clean {
+  background: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.preset-pill:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.2);
+}
+
+.action-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Results Cards */
+.audit-card {
+  background: var(--surface-1, #131722);
+  border-radius: 12px;
+  border: 1px solid var(--border-color, #2d3748);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.audit-card.review,
+.audit-card.error {
+  border-left: 5px solid #ef4444;
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.05) 0%, var(--surface-1, #131722) 100%);
+}
+
+.audit-card.clean {
+  border-left: 5px solid #22c55e;
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.05) 0%, var(--surface-1, #131722) 100%);
+}
+
+.badge-tag {
+  display: inline-block;
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-tag.strong { background: #ef4444; color: #fff; }
+.badge-tag.weak { background: #f59e0b; color: #000; }
+.badge-tag.clean { background: #22c55e; color: #000; }
+
+.trace-path-box {
+  background: var(--code-bg, #0d1117);
+  border: 1px solid var(--border-color, #30363d);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-top: 0.75rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  color: #c9d1d9;
+  overflow-x: auto;
+}
+
+.investigation-cta-card {
+  margin-top: 2.5rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.cta-badge {
+  display: inline-block;
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}

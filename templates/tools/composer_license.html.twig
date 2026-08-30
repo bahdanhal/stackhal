@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'composer_license.meta.title'|trans }}{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}<meta name="description" content="{{ 'composer_license.meta.description'|trans }}">{% endblock %}
+{% block canonical %}
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/sprawdzanie-licencji-composer' : 'https://stackhal.com/composer-license-checker' }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com/composer-license-checker">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/sprawdzanie-licencji-composer">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/composer-license-checker">
+{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/tools.css">
+  <link rel="stylesheet" href="/composer-license.css">
+{% endblock %}
+{% block head_scripts %}
+  <script type="application/ld+json">{{ {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebApplication',
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/sprawdzanie-licencji-composer#app' : 'https://stackhal.com/composer-license-checker#app'),
+        'name': 'composer_license.heading'|trans,
+        'description': 'composer_license.meta.description'|trans,
+        'url': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/sprawdzanie-licencji-composer' : 'https://stackhal.com/composer-license-checker'),
+        'applicationCategory': 'DeveloperApplication',
+        'operatingSystem': 'Any',
+        'offers': {
+          '@type': 'Offer',
+          'price': '0',
+          'priceCurrency': 'USD'
+        },
+        'author': {'@id': 'https://stackhal.com/#stackhal'},
+        'publisher': {'@id': 'https://stackhal.com/#stackhal'}
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': (app.request.locale == 'pl' ? 'https://stackhal.com/pl/sprawdzanie-licencji-composer#faq' : 'https://stackhal.com/composer-license-checker#faq'),
+        'inLanguage': app.request.locale,
+        'mainEntity': [
+          {'@type': 'Question', 'name': 'composer_license.faq.q1'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'composer_license.faq.a1'|trans}},
+          {'@type': 'Question', 'name': 'composer_license.faq.q2'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'composer_license.faq.a2'|trans}},
+          {'@type': 'Question', 'name': 'composer_license.faq.q3'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'composer_license.faq.a3'|trans}},
+          {'@type': 'Question', 'name': 'composer_license.faq.q4'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'composer_license.faq.a4'|trans}}
+        ]
+      }
+    ]
+  }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+{% endblock %}
+{% block language_switch %}
+  <a class="language-switch" href="{{ path('composer_license_checker', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
+{% endblock %}
+{% block tool_name %}{{ 'composer_license.heading'|trans }}{% endblock %}
+
+{% block body %}
+<section class="tool-page-shell license-shell">
+  {% include 'tools/_tool_intro.html.twig' with {
+    eyebrow: 'composer_license.eyebrow'|trans,
+    heading: 'composer_license.heading'|trans,
+    lede: 'composer_license.lede'|trans
+  } only %}
+
+  <div class="license-container" id="license-audit-app" data-locale="{{ app.request.locale }}">
+    <!-- Tabs Header -->
+    <div class="license-tabs ui-panel" role="tablist">
+      <button class="tab-btn active" id="tab-package-btn" role="tab" aria-selected="true" aria-controls="tab-package">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        {{ 'composer_license.tabs.package'|trans }}
+      </button>
+      <button class="tab-btn" id="tab-lockfile-btn" role="tab" aria-selected="false" aria-controls="tab-lockfile">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        {{ 'composer_license.tabs.lockfile'|trans }}
+      </button>
+    </div>
+
+    <!-- Tab 1: Single Package Lookup -->
+    <div class="tab-pane active ui-panel" id="tab-package" role="tabpanel">
+      <div class="search-bar-row">
+        <input type="text" id="pkg-input" class="license-input" placeholder="e.g. paypal/paypal-server-sdk, barryvdh/laravel-dompdf, symfony/http-foundation" autocomplete="off" spellcheck="false">
+        <button id="pkg-audit-btn" class="btn btn-primary">
+          <span class="btn-text">{{ 'composer_license.buttons.audit_package'|trans }}</span>
+          <span class="btn-spinner" style="display:none;">⏳</span>
+        </button>
+      </div>
+
+      <div class="presets-row">
+        <span class="presets-label">{{ 'composer_license.presets.label'|trans }}:</span>
+        <button class="preset-pill review" data-pkg="paypal/paypal-server-sdk">paypal/paypal-server-sdk ⚠️</button>
+        <button class="preset-pill review" data-pkg="barryvdh/laravel-dompdf">barryvdh/laravel-dompdf ⚠️</button>
+        <button class="preset-pill clean" data-pkg="symfony/http-foundation">symfony/http-foundation ✅</button>
+        <button class="preset-pill clean" data-pkg="guzzlehttp/guzzle">guzzlehttp/guzzle ✅</button>
+      </div>
+    </div>
+
+    <!-- Tab 2: Paste composer.json / composer.lock -->
+    <div class="tab-pane ui-panel" id="tab-lockfile" role="tabpanel" style="display:none;">
+      <p class="tab-intro">{{ 'composer_license.lockfile_intro'|trans }}</p>
+      <textarea id="lockfile-input" class="license-textarea" rows="8" placeholder='Paste your composer.json or composer.lock JSON here...&#10;&#10;{&#10;  "require": {&#10;    "paypal/paypal-server-sdk": "^2.4",&#10;    "barryvdh/laravel-dompdf": "^3.1"&#10;  }&#10;}'></textarea>
+      <div class="action-row">
+        <button id="lockfile-audit-btn" class="btn btn-primary">
+          <span class="btn-text">{{ 'composer_license.buttons.audit_lockfile'|trans }}</span>
+          <span class="btn-spinner" style="display:none;">⏳</span>
+        </button>
+        <button id="lockfile-example-btn" class="btn btn-secondary">{{ 'composer_license.buttons.load_example'|trans }}</button>
+      </div>
+    </div>
+
+    <!-- Audit Result Display Area -->
+    <div id="audit-results" class="audit-results-container" style="display:none;">
+      <!-- Populated via JS -->
+    </div>
+  </div>
+
+  <!-- Deep Investigation Banner & Link -->
+  <div class="investigation-cta-card ui-panel">
+    <div class="cta-badge">🔍 {{ 'composer_license.investigation.badge'|trans }}</div>
+    <h3>{{ 'composer_license.investigation.title'|trans }}</h3>
+    <p>{{ 'composer_license.investigation.lede'|trans }}</p>
+    <a href="/blog/composer-license-metadata-dependency-audit" class="btn btn-outline">{{ 'composer_license.investigation.button'|trans }} &rarr;</a>
+  </div>
+
+  <!-- FAQ Section -->
+  <section class="tool-faq-section" id="faq">
+    <h2 class="faq-heading">{{ 'composer_license.faq.heading'|trans }}</h2>
+    <div class="faq-grid">
+      <div class="faq-item ui-panel">
+        <h3>{{ 'composer_license.faq.q1'|trans }}</h3>
+        <p>{{ 'composer_license.faq.a1'|trans }}</p>
+      </div>
+      <div class="faq-item ui-panel">
+        <h3>{{ 'composer_license.faq.q2'|trans }}</h3>
+        <p>{{ 'composer_license.faq.a2'|trans }}</p>
+      </div>
+      <div class="faq-item ui-panel">
+        <h3>{{ 'composer_license.faq.q3'|trans }}</h3>
+        <p>{{ 'composer_license.faq.a3'|trans }}</p>
+      </div>
+      <div class="faq-item ui-panel">
+        <h3>{{ 'composer_license.faq.q4'|trans }}</h3>
+        <p>{{ 'composer_license.faq.a4'|trans }}</p>
+      </div>
+    </div>
+  </section>
+</section>
+
+<script src="/composer-license.js"></script>
+{% endblock %}
