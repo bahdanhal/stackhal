@@ -890,7 +890,7 @@ composer_license:
     lockfile_intro: "Paste your composer.json or composer.lock JSON to analyze production and development dependencies."
     investigation:
         badge: "EMPIRICAL INVESTIGATION"
-        title: "Hundreds of Hidden License Traps in 10,000 PHP Packages"
+        title: "Hundreds of hidden license traps in 10,000 PHP packages"
         lede: "See the real findings, PayPal and WPForms case studies, real court rulings, and how to audit your vendor tree."
         button: "Read the Full Investigation"
     faq:
