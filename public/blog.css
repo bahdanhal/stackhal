@@ -210,28 +210,28 @@
 }
 
 .audit-dataset-dropdown {
-  margin: 32px 0;
-  border: 1px solid #2d3748;
-  border-radius: 12px;
-  background: #0f131a;
+  margin: 36px 0;
+  border: 1px solid #283347 !important;
+  border-radius: 14px !important;
+  background: #0d121c !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4) !important;
   overflow: hidden;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
 }
 
 .audit-dataset-dropdown summary {
-  padding: 16px 20px;
-  font-size: 15.5px;
-  font-weight: 750;
-  color: #f8fafc !important;
-  background: #141a24;
-  border-bottom: 1px solid transparent;
+  padding: 18px 22px !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  background: #141b28 !important;
+  border-bottom: 1px solid transparent !important;
   cursor: pointer;
   list-style: none;
   display: flex;
   align-items: center;
   gap: 12px;
   user-select: none;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .audit-dataset-dropdown summary::-webkit-details-marker {
@@ -250,165 +250,149 @@
 }
 
 .audit-dataset-dropdown[open] summary {
-  background: #192231;
-  border-bottom: 1px solid #2d3748;
+  background: #192336 !important;
+  border-bottom: 1px solid #283347 !important;
 }
 
 .audit-dataset-dropdown summary:hover {
-  background: #1e283a;
+  background: #1d293d !important;
 }
 
 .audit-dataset-dropdown .spoiler-body {
-  padding: 22px 18px;
-  background: #0b0f16;
+  padding: 24px 20px !important;
+  background: #080c14 !important;
 }
 
-.dropdown-intro {
-  color: #e2e8f0 !important;
-  font-size: 14.5px !important;
+#article-content .audit-dataset-dropdown .dropdown-intro,
+.article-content .audit-dataset-dropdown .dropdown-intro,
+.audit-dataset-dropdown .dropdown-intro {
+  color: #f1f5f9 !important;
+  font-size: 15px !important;
   line-height: 1.6 !important;
-  margin: 0 0 20px !important;
+  margin: 0 0 22px !important;
+  font-weight: 450 !important;
 }
 
 .audit-pkg-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
 }
 
-.audit-pkg-item {
+.audit-item {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: #121824;
-  border: 1px solid #1e293b;
+  gap: 8px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: #111724;
+  border: 1px solid #202b3e;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.audit-pkg-item:hover {
-  background: #172030;
-  border-color: #334155;
+.audit-item:hover {
+  background: #161e2e;
+  border-color: #31415e;
 }
 
-.pkg-top-line {
+.audit-item-head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   flex-wrap: wrap;
-  gap: 8px 10px;
+  gap: 10px 12px;
 }
 
-.pkg-rank {
+.audit-rank {
   color: #94a3b8 !important;
   font-family: ui-monospace, SFMono-Regular, monospace;
   font-size: 12px;
   font-weight: 800;
-  min-width: 48px;
+  min-width: 44px;
 }
 
-.pkg-name {
-  color: #38bdf8 !important;
-  background: #1e293b !important;
-  border: 1px solid #334155 !important;
-  border-radius: 4px !important;
-  padding: 3px 7px !important;
-  font-size: 13.5px !important;
-  font-weight: 750 !important;
+.audit-pkg-title {
+  color: #ffffff !important;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 15.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em;
   word-break: break-all;
 }
 
-.badge-root {
-  display: inline-block;
-  color: #f8fafc !important;
-  background: #334155 !important;
-  border: 1px solid #475569;
-  padding: 2px 7px;
-  border-radius: 4px;
+.audit-badge-declared {
+  color: #cbd5e1 !important;
+  background: #242f42 !important;
+  border: 1px solid #3b4b66;
+  padding: 2px 8px;
+  border-radius: 5px;
   font-size: 11.5px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
-.badge-signal {
+.audit-badge-risk {
   margin-left: auto;
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 3px 9px;
+  border-radius: 5px;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: .02em;
   white-space: nowrap;
 }
 
-.badge-signal-strong {
+.risk-strong {
   color: #fca5a5 !important;
   background: rgba(239, 68, 68, 0.22) !important;
-  border: 1px solid rgba(239, 68, 68, 0.55);
+  border: 1px solid rgba(239, 68, 68, 0.6) !important;
 }
 
-.badge-signal-weak {
+.risk-weak {
   color: #fde047 !important;
   background: rgba(234, 179, 8, 0.22) !important;
-  border: 1px solid rgba(234, 179, 8, 0.55);
+  border: 1px solid rgba(234, 179, 8, 0.6) !important;
 }
 
-.pkg-bottom-line {
+.audit-item-chain {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px 8px;
-  font-size: 12px;
+  gap: 6px 10px;
+  font-size: 13px;
+  color: #94a3b8 !important;
+  padding-left: 2px;
+  line-height: 1.5;
+}
+
+.chain-label {
+  color: #64748b !important;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.chain-item {
   color: #cbd5e1 !important;
-  padding-left: 6px;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 12.5px;
 }
 
-.pkg-arrow {
-  color: var(--orange, #ff5c35) !important;
-  font-size: 14px;
-  font-weight: 800;
-  margin-right: 2px;
-}
-
-.pkg-dep {
-  color: #e2e8f0 !important;
-  background: #182030 !important;
-  border: 1px solid #283548 !important;
-  padding: 2px 6px !important;
-  border-radius: 4px !important;
-  font-size: 12px !important;
-}
-
-.pkg-dot {
-  color: #64748b;
-  font-size: 10px;
-}
-
-.pkg-more {
-  color: #94a3b8;
-  font-size: 11px;
-}
-
-.badge-strong {
-  display: inline-block;
-  color: #fca5a5 !important;
-  background: rgba(239, 68, 68, 0.2) !important;
-  border: 1px solid rgba(239, 68, 68, 0.45);
-  padding: 1px 5px;
-  border-radius: 3px;
-  font-size: 10.5px;
+.chain-item .lic-tag {
+  color: #f97316 !important;
+  font-style: normal;
   font-weight: 700;
 }
 
-.badge-weak {
-  display: inline-block;
-  color: #fde047 !important;
-  background: rgba(234, 179, 8, 0.2) !important;
-  border: 1px solid rgba(234, 179, 8, 0.45);
-  padding: 1px 5px;
-  border-radius: 3px;
-  font-size: 10.5px;
-  font-weight: 700;
+.chain-sep {
+  color: #475569 !important;
+  font-size: 13px;
 }
+
+.chain-more {
+  color: #64748b !important;
+  font-size: 11.5px;
+}
+
 
 
 
