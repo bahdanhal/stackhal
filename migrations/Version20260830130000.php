@@ -98,11 +98,11 @@ final class Version20260830130000 extends AbstractMigration
 <h2>6. AI Agent Guardrail</h2>
 <p>This compact skill tells coding agents to distinguish exact lockfile evidence from estimates and to escalate legal conclusions to a human reviewer:</p>
 
-<details class="code-spoiler-widget" style="background: rgba(13,17,23,0.8); border: 1px solid #30363d; border-radius: 8px; padding: 1rem; margin: 1.5rem 0;">
-  <summary style="cursor: pointer; font-weight: 700; color: #58a6ff; user-select: none;">
+<details class="code-spoiler-widget">
+  <summary>
     📦 View the "composer-license-audit" Agent Skill
   </summary>
-  <div style="margin-top: 1rem;">
+  <div class="spoiler-body">
     <button type="button" data-copy-target="composer-license-skill">Copy skill</button>
     <pre><code id="composer-license-skill" class="language-yaml">---
 name: composer-license-audit

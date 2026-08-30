@@ -22,3 +22,91 @@
   border-color: #38bdf8;
   color: #7dd3fc;
 }
+
+/* Clean Code & Skill Spoiler Widget */
+.article-content pre {
+  margin: 24px 0;
+  border: 1px solid #30384a;
+  border-radius: 10px;
+  background: #0c0f15;
+  padding: 18px 20px;
+  overflow-x: auto;
+}
+
+.article-content pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: #cdd6f4 !important;
+  font: 13.5px/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
+
+.code-spoiler-widget {
+  margin: 32px 0;
+  border: 1px solid #34394a;
+  border-radius: 14px;
+  background: #0c0f15;
+  overflow: hidden;
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.25);
+}
+
+.code-spoiler-widget summary {
+  padding: 16px 20px;
+  font-weight: 750;
+  font-size: 14.5px;
+  color: var(--ink, #f0f4fc);
+  background: #151a25;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+.code-spoiler-widget summary::-webkit-details-marker {
+  display: none;
+}
+
+.code-spoiler-widget summary::before {
+  content: "▶";
+  font-size: 10px;
+  color: var(--orange, #ff7a00);
+  transition: transform 0.2s ease;
+}
+
+.code-spoiler-widget[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.code-spoiler-widget[open] summary {
+  border-bottom-color: #292e3b;
+  background: #181e2b;
+}
+
+.code-spoiler-widget summary:hover {
+  background: #1c2333;
+}
+
+.spoiler-body {
+  padding: 20px;
+  position: relative;
+  background: #0c0f15;
+}
+
+.spoiler-body pre {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.spoiler-body [data-copy-target] {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 5;
+  margin: 0;
+}
