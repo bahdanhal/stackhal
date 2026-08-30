@@ -22,13 +22,12 @@
   border-color: #38bdf8;
   color: #7dd3fc;
 }
-
 /* Clean Code & Skill Spoiler Widget */
 .article-content pre {
   margin: 24px 0;
-  border: 1px solid #30384a;
+  border: 1px solid var(--line, #d9d3c5);
   border-radius: 10px;
-  background: #0c0f15;
+  background: #0f131a;
   padding: 18px 20px;
   overflow-x: auto;
 }
@@ -37,31 +36,31 @@
   background: transparent !important;
   border: none !important;
   padding: 0 !important;
-  color: #cdd6f4 !important;
+  color: #e2e8f0 !important;
   font: 13.5px/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
 }
 
 .code-spoiler-widget {
   margin: 32px 0;
-  border: 1px solid #34394a;
-  border-radius: 14px;
-  background: #0c0f15;
+  border: 1px solid var(--line, #d9d3c5);
+  border-radius: 12px;
+  background: var(--panel, #fffdf7);
   overflow: hidden;
-  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .code-spoiler-widget summary {
   padding: 16px 20px;
   font-weight: 750;
-  font-size: 14.5px;
-  color: var(--ink, #f0f4fc);
-  background: #151a25;
+  font-size: 15px;
+  color: var(--ink, #151515) !important;
+  background: var(--panel, #fffdf7);
   border-bottom: 1px solid transparent;
   cursor: pointer;
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   user-select: none;
   transition: all 0.15s ease;
 }
@@ -72,8 +71,8 @@
 
 .code-spoiler-widget summary::before {
   content: "▶";
-  font-size: 10px;
-  color: var(--orange, #ff7a00);
+  font-size: 11px;
+  color: var(--orange, #ff5c35);
   transition: transform 0.2s ease;
 }
 
@@ -82,18 +81,18 @@
 }
 
 .code-spoiler-widget[open] summary {
-  border-bottom-color: #292e3b;
-  background: #181e2b;
+  border-bottom: 1px solid var(--line, #d9d3c5);
+  background: var(--paper, #f5f2e9);
 }
 
 .code-spoiler-widget summary:hover {
-  background: #1c2333;
+  background: var(--paper, #f5f2e9);
 }
 
 .spoiler-body {
   padding: 20px;
   position: relative;
-  background: #0c0f15;
+  background: #0f131a;
 }
 
 .spoiler-body pre {
@@ -103,10 +102,27 @@
   background: transparent !important;
 }
 
+.spoiler-body pre code {
+  color: #e2e8f0 !important;
+}
+
 .spoiler-body [data-copy-target] {
   position: absolute;
   top: 16px;
   right: 18px;
   z-index: 5;
   margin: 0;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #1e293b;
+  color: #f1f5f9;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.spoiler-body [data-copy-target]:hover {
+  background: #334155;
+  border-color: #94a3b8;
 }
