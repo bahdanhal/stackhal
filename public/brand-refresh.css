@@ -124,10 +124,22 @@ body.stackhal-site {
   max-width: 1180px;
 }
 
+.stackhal-site .hero,
+.stackhal-site .report-shell,
+.stackhal-site .tool-shell {
+  padding-top: 44px;
+}
+
+.stackhal-site .tool-intro h1,
+.stackhal-site .income-shell h1 {
+  font-size: clamp(40px, 4.9vw, 62px);
+}
+
 .stackhal-site .toolbox-hero {
   position: relative;
-  min-height: 690px;
-  padding-top: 92px;
+  min-height: 0;
+  padding-top: 52px;
+  padding-bottom: 24px;
 }
 
 .stackhal-site .toolbox-hero::before {
@@ -166,7 +178,7 @@ body.stackhal-site {
   position: relative;
   z-index: 1;
   max-width: 790px;
-  font-size: clamp(56px, 7.7vw, 102px);
+  font-size: clamp(48px, 6.2vw, 78px);
   font-weight: 720;
   line-height: .91;
   letter-spacing: -.075em;
@@ -250,7 +262,7 @@ body.stackhal-site {
   position: relative;
   z-index: 1;
   gap: 0;
-  margin-top: 36px;
+  margin-top: 28px;
 }
 
 .stackhal-site .toolbox-status li {
@@ -276,7 +288,7 @@ body.stackhal-site {
   position: relative;
   z-index: 2;
   gap: 58px;
-  margin-top: 100px;
+  margin-top: 54px;
 }
 
 .stackhal-site .tool-category-header {
@@ -494,7 +506,7 @@ body.stackhal-site {
 @media (max-width: 800px) {
   .stackhal-site .toolbox-hero {
     min-height: 0;
-    padding-top: 58px;
+    padding-top: 38px;
   }
 
   .stackhal-site .toolbox-hero::before {
@@ -508,7 +520,7 @@ body.stackhal-site {
   }
 
   .stackhal-site .toolbox-hero > h1 {
-    font-size: clamp(50px, 14.5vw, 72px);
+    font-size: clamp(44px, 12.5vw, 62px);
   }
 
   .stackhal-site .tool-catalog {
