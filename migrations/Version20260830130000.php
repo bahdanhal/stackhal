@@ -149,19 +149,19 @@ HTML;
                 'A reproducible Composer and WordPress license-metadata screen: methodology, exact candidate breakdown, PayPal and WPForms evidence paths, and explicit legal limitations.',
                 'Security & Compliance',
                 11,
-                new \DateTimeImmutable('2026-08-30 13:00:00+00:00'),
-                new \DateTimeImmutable('2026-08-30 13:00:00+00:00'),
+                new \DateTimeImmutable('2026-08-30 12:00:00+00:00'),
+                new \DateTimeImmutable('2026-08-30 12:00:00+00:00'),
                 $articleHtml,
                 'Audit Your composer.lock',
                 '/composer-license-checker',
                 'terminal-card',
-                json_encode([
+                [
                     'screening 10,000 Composer packages...',
                     'paypal/paypal-server-sdk -> apimatic/jsonmapper [OSL-3.0]',
                     'wpforms-lite -> vendor_prefixed/apimatic/jsonmapper [OSL-3.0]',
                     '320 first-pass review candidates (3.2%)',
-                ], JSON_THROW_ON_ERROR),
-                json_encode([
+                ],
+                [
                     [
                         'name' => 'Paste composer.json or composer.lock',
                         'text' => 'Open Stackhal Composer License Checker and paste your project dependency manifest.',
@@ -174,7 +174,7 @@ HTML;
                         'name' => 'Review Before Acting',
                         'text' => 'Inspect physical license files, confirm integration details, and involve a qualified reviewer before replacing a dependency.',
                     ],
-                ], JSON_THROW_ON_ERROR),
+                ],
             ],
             [
                 Types::STRING,
