@@ -889,8 +889,8 @@ composer_license:
     lockfile_intro: "Wklej treść composer.json lub composer.lock, aby przeanalizować licencje zależności produkcyjnych i deweloperskich."
     investigation:
         badge: "RAPORT Z BADAŃ"
-        title: "Metadane Licencji a Graf Zależności: Przeskanowano 10 000 Pakietów"
-        lede: "Licencja pakietu dotyczy tylko kodu autora. Zobacz, jak 320 bibliotek pobralo zaleznosci copyleft, w tym SDK PayPal i WPForms Lite."
+        title: "Co Graf Zależności Composer Może Udowodnić, a Czego Nie"
+        lede: "Poznaj metodę, poprawione wyniki, dokładne ścieżki zależności i ograniczenia analizy metadanych 10 000 pakietów."
         button: "Przeczytaj Pełny Raport"
     faq:
         heading: "Często Zadawane Pytania"

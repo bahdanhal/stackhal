@@ -22,7 +22,7 @@
     <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.slug }}">
   {% endif %}
 {% endblock %}
-{% block stylesheets %}<link rel="stylesheet" href="/blog.css">{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="/blog.css?v=20260830163000">{% endblock %}
 {% block head_scripts %}
   {% set article_schema = {'@type': 'Article', '@id': 'https://stackhal.com/blog/' ~ article.slug ~ '#article', 'headline': article.title, 'description': article.description, 'datePublished': article.publishedAt|date('Y-m-d'), 'dateModified': article.updatedAt|date('Y-m-d'), 'author': {'@id': 'https://stackhal.com/#stackhal'}, 'publisher': {'@id': 'https://stackhal.com/#stackhal'}, 'mainEntityOfPage': 'https://stackhal.com/blog/' ~ article.slug, 'inLanguage': app.request.locale} %}
   {% set graph = [article_schema] %}
@@ -65,3 +65,4 @@
   </div>
 </article>
 {% endblock %}
+{% block scripts %}<script src="/blog.js" defer></script>{% endblock %}
