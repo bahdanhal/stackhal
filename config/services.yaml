@@ -143,10 +143,6 @@ services:
     arguments:
       $auditQuota: '@App\Shared\Application\DailyQuota'
 
-  App\ComposerLicense\Presentation\Http\ComposerLicenseController:
-    arguments:
-      $licenseLimiter: '@limiter.composer_license'
-
   App\Admin\Presentation\Http\StackhalAdminController:
     arguments:
       $secret: '%env(APP_SECRET)%'

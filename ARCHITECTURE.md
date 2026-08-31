@@ -21,13 +21,11 @@ graph TD
         PHP --> DevToolsContext[Developer Tools Suite]
         PHP --> AnalyticsContext[Privacy-Preserving Traffic Analytics]
         PHP --> McpContext[Developer Tools MCP Endpoint]
-        PHP --> ComposerLicenseContext[Composer License Signal Screening]
     end
 
     subgraph "External Integrations"
         AuditContext -->|Crawl with SSRF Guard & DNS Pinning| ExternalWeb[Target Websites]
         DomainInspectorContext -->|DNS Resolution & Policy Fetch| PublicDns[Public DNS & Policy Endpoints]
-        ComposerLicenseContext -->|Constraint-aware metadata lookup| Packagist[Packagist Metadata API]
     end
 
     subgraph "Persistence Layer (PostgreSQL 17)"
@@ -85,7 +83,6 @@ stackhal/
 ├── src/
 │   ├── Analytics/               # Traffic analytics & page views
 │   ├── Audit/                   # Technical SEO crawler & audit rules engine
-│   ├── ComposerLicense/         # Exact lockfile and Packagist license screening
 │   ├── Command/                 # CLI audit and maintenance commands
 │   ├── Controller/              # Tool controllers & web UI
 │   │   ├── Admin/               # StackhalAdminController

@@ -113,9 +113,6 @@ home:
     dns_dag_tracer:
         title: "Śledzenie delegacji DNS na żywo"
         text: "Sprawdź prawdziwe rekordy DNS i zobacz serwery autorytatywne zwrócone dla domeny."
-    composer_license:
-        title: "Analizator sygnałów licencji Composer"
-        text: "Sprawdź dokładne wersje z composer.lock lub oszacuj manifest pod kątem sygnałów copyleft, niepełnego grafu i ścieżek wymagających weryfikacji."
     pkpass:
         title: "Inspektor i debugger Apple Wallet (.pkpass)"
         text: "Wierny emulator kart Apple Wallet i Google Wallet, weryfikator sum kontrolnych SHA-1 w manifest.json, podgląd certyfikatów PKCS#7 i naprawa archiwum w 1 kliknięcie."
@@ -870,35 +867,4 @@ cors_sandbox:
     diagnostics_title: "Diagnostyka polityki i bezpieczeństwa"
     browser_ceilings_title: "Limity Max-Age w przeglądarkach"
     browser_ceilings_intro: "Przeglądarki internetowe narzucają sztywne górne limity czasu buforowania Access-Control-Max-Age dla zapytań preflight OPTIONS."
-composer_license:
-    meta:
-        title: "Sprawdzanie Licencji Composer i Copyleft - Narzędzia StackHal"
-        description: "Wstępna analiza dokładnych wersji Composer i grafu zależności pod kątem sygnałów licencji copyleft wymagających ręcznej weryfikacji."
-    eyebrow: "BEZPIECZEŃSTWO ŁAŃCUCHA DOSTAW"
-    heading: "Sprawdzanie Licencji Composer i Copyleft"
-    lede: "Sprawdź graf zależności pod kątem GPL, AGPL, OSL, LGPL i MPL. Dokładna analiza lockfile, jawny zakres i bez automatycznych wniosków prawnych."
-    tabs:
-        package: "Sprawdź Pakiet"
-        lockfile: "Audyt composer.json / composer.lock"
-    buttons:
-        audit_package: "Audytuj Pakiet"
-        audit_lockfile: "Audytuj Zależności"
-        load_example: "Wczytaj Przykładowy JSON"
-    presets:
-        label: "Przykładowe pakiety"
-    lockfile_intro: "Wklej treść composer.json lub composer.lock, aby przeanalizować licencje zależności produkcyjnych i deweloperskich."
-    investigation:
-        badge: "RAPORT Z BADAŃ"
-        title: "Setki ukrytych pułapek licencyjnych w 10 000 pakietów PHP"
-        lede: "Zobacz rzeczywiste wyniki audytu, studia przypadków PayPal i WPForms, wyroki sądowe oraz metody ochrony kodu."
-        button: "Przeczytaj Pełny Raport"
-    faq:
-        heading: "Często Zadawane Pytania"
-        q1: "Dlaczego pakiet MIT może nadal wymagać weryfikacji licencji?"
-        a1: "Deklaracja MIT zwykle dotyczy kodu autora pakietu. Zależności zachowują własne licencje, dlatego osobno trzeba sprawdzić dystrybucję, łączenie, noty i status utworu zależnego."
-        q2: "Czym różni się GPL od OSL-3.0?"
-        a2: "OSL-3.0 zawiera warunek External Deployment dotyczący Original Work lub Derivative Work. Sam wpis w grafie zależności nie rozstrzyga, czy konkretna integracja jest utworem zależnym."
-        q3: "Czy użycie biblioteki LGPL (np. HTMLPurifier) w komercyjnym kodzie PHP jest dozwolone?"
-        a3: "Często tak, ale zależy to od wersji LGPL oraz sposobu łączenia i dystrybucji. Należy zachować noty i sprawdzić wymagania dotyczące wymiany, ponownego linkowania oraz udostępnienia źródeł."
-        q4: "Czy asystenci AI potrafią automatycznie wykrywać te konflikty licencyjne?"
-        a4: "AI może wskazać sygnały w zależnościach i metadanych, ale nie zastępuje analizy źródeł ani opinii prawnej. Narzędzie pokazuje ścieżki dowodowe i niepewność do ręcznej oceny."
+

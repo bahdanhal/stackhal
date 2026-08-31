@@ -21,7 +21,6 @@ base:
         app_links: "App Links"
         ai_studio_extension: "AI Studio Local Sync"
         cors_sandbox: "CORS Sandbox"
-        composer_license: "License Checker"
         more: "Tools"
     context:
         income: "Polish income calculator"
@@ -39,7 +38,6 @@ base:
         app_links: "Apple Universal Links & Android App Links Validator"
         ai_studio_extension: "AI Studio Local File Sync & Codebase Context"
         cors_sandbox: "CORS Policy & Preflight Diagnostic Sandbox"
-        composer_license: "Composer License & Copyleft Checker"
     footer: "Developer utilities & privacy-first diagnostics · No registration · No tracking pixels"
     contact: "Contact"
 
@@ -114,9 +112,6 @@ home:
     dns_dag_tracer:
         title: "Live DNS Delegation Trace"
         text: "Trace authoritative DNS delegation from root (.) to TLD and name servers, detect lame delegations and visualize resolution DAGs."
-    composer_license:
-        title: "Composer License Signal Checker"
-        text: "Inspect exact composer.lock versions or estimate manifest constraints for copyleft metadata signals, incomplete graphs, and evidence paths requiring review."
     pkpass:
         title: "Apple Wallet (.pkpass) Inspector & Debugger"
         text: "Pixel-perfect Apple Wallet & Google Wallet emulator, SHA-1 manifest validator, PKCS#7 certificate inspector, and 1-click package repair."
@@ -871,35 +866,4 @@ cors_sandbox:
     diagnostics_title: "Policy & Security Diagnostics"
     browser_ceilings_title: "Browser Max-Age Ceilings"
     browser_ceilings_intro: "Web browsers enforce hard maximum limits on Access-Control-Max-Age caching for preflight OPTIONS responses to prevent stale permission pinning."
-composer_license:
-    meta:
-        title: "Composer License & Copyleft Audit - StackHal Developer Tools"
-        description: "Screen exact Composer lock files and Packagist dependency graphs for copyleft license signals that deserve manual compliance review."
-    eyebrow: "SUPPLY CHAIN COMPLIANCE"
-    heading: "Composer License & Copyleft Checker"
-    lede: "Screen PHP dependency graphs for GPL, AGPL, OSL, LGPL, and MPL signals. Exact lockfile analysis, transparent scope notes, and no automatic legal conclusions."
-    tabs:
-        package: "Inspect Single Package"
-        lockfile: "Audit composer.json / composer.lock"
-    buttons:
-        audit_package: "Audit Package"
-        audit_lockfile: "Audit Dependencies"
-        load_example: "Load Example JSON"
-    presets:
-        label: "Try packages"
-    lockfile_intro: "Paste your composer.json or composer.lock JSON to analyze production and development dependencies."
-    investigation:
-        badge: "EMPIRICAL INVESTIGATION"
-        title: "Hundreds of hidden license traps in 10,000 PHP packages"
-        lede: "See the real findings, PayPal and WPForms case studies, real court rulings, and how to audit your vendor tree."
-        button: "Read the Full Investigation"
-    faq:
-        heading: "Frequently Asked Questions"
-        q1: "Why can an MIT package still need a license review?"
-        a1: "The MIT declaration normally covers the package author's own code. Dependencies retain their own licenses, so distribution, linking, notices, and derivative-work questions must be checked separately."
-        q2: "What is the difference between GPL and OSL-3.0?"
-        a2: "OSL-3.0 includes an External Deployment condition for the Original Work or a Derivative Work. Whether a particular integration is a derivative work is context-specific and cannot be decided from a dependency edge alone."
-        q3: "Is using an LGPL library like HTMLPurifier permitted in proprietary PHP code?"
-        a3: "Often, but the answer depends on the LGPL version and how the library is combined and distributed. Preserve notices and verify replacement, relinking, and source-offer requirements for the exact release."
-        q4: "Can AI coding assistants detect these license conflicts automatically?"
-        a4: "AI can identify dependency and metadata signals, but it cannot replace source inspection or legal analysis. This tool supplies evidence paths and explicit uncertainty for a human review."
+
