@@ -46,14 +46,14 @@
         <a class="brand" href="{{ path('landing', {_locale: app.request.locale}) }}" aria-label="{{ 'base.home_label'|trans }}">
           <span class="brand-mark">SH</span>
           <span class="brand-name"><span class="brand-name-full">StackHal</span><span class="brand-name-short">StackHal</span></span>
-          <span class="brand-signal">Developer utilities</span>
+          <span class="brand-signal">{{ 'base.brand_signal'|trans }}</span>
         </a>
         {% endblock %}
       </div>
       <div class="topbar-actions">
         <nav class="primary-nav" aria-label="{{ 'base.navigation'|trans }}">
           <a href="{{ path('landing', {_locale: app.request.locale}) }}">{{ 'common.all_tools'|trans }}</a>
-          <a href="{{ path('blog_index') }}">Blog</a>
+          <a href="{{ path('blog_index') }}">{{ 'base.nav.blog'|trans }}</a>
           <a href="{{ path('geo_home', {_locale: app.request.locale}) }}">{{ 'base.nav.geo'|trans }}</a>
           <a href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">{{ 'base.nav.seo'|trans }}</a>
         </nav>

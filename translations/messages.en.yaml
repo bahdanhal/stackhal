@@ -3,9 +3,11 @@ base:
     home_label: "StackHal home"
     brand: "StackHal"
     brand_short: "StackHal"
+    brand_signal: "Developer utilities"
     by: "by Bahdan Hal"
     navigation: "Tools and language"
     nav:
+        blog: "Blog"
         income: "UoP / UZ / UoD / B2B"
         geo: "GEO analyzer"
         seo: "SEO analyzer"
@@ -54,6 +56,15 @@ common:
     all_tools: "All tools"
 
 home:
+    status:
+        label: "Toolbox characteristics"
+        browser_first: "Browser-first"
+        no_signup: "No signup"
+        observable_results: "Observable results"
+    references:
+        standard: "Standard specifications:"
+        documentation: "Documentation references:"
+        and: "and"
     meta:
         title: "StackHal · Free Developer, SEO and Infrastructure Tools"
         description: "Focused developer utilities for technical SEO, GEO, Apple Wallet, Caddy, email security, DNS delegation and CIDR analysis. No signup required."
@@ -866,4 +877,3 @@ cors_sandbox:
     diagnostics_title: "Policy & Security Diagnostics"
     browser_ceilings_title: "Browser Max-Age Ceilings"
     browser_ceilings_intro: "Web browsers enforce hard maximum limits on Access-Control-Max-Age caching for preflight OPTIONS responses to prevent stale permission pinning."
-

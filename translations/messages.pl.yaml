@@ -3,9 +3,11 @@ base:
     home_label: "Strona główna StackHal"
     brand: "StackHal"
     brand_short: "StackHal"
+    brand_signal: "Narzędzia dla programistów"
     by: "autor: Bahdan Hal"
     navigation: "Narzędzia i język"
     nav:
+        blog: "Blog"
         income: "UoP / UZ / UoD / B2B"
         geo: "Analizator GEO"
         seo: "Analizator SEO"
@@ -55,6 +57,15 @@ common:
     all_tools: "Wszystkie narzędzia"
 
 home:
+    status:
+        label: "Najważniejsze cechy narzędzi"
+        browser_first: "Działa w przeglądarce"
+        no_signup: "Bez rejestracji"
+        observable_results: "Czytelne wyniki"
+    references:
+        standard: "Specyfikacje:"
+        documentation: "Dokumentacja:"
+        and: "oraz"
     meta:
         title: "StackHal · Darmowe narzędzia dla programistów, SEO i infrastruktury"
         description: "Konkretne narzędzia do technicznego SEO, GEO, Apple Wallet, Caddy, bezpieczeństwa e-mail i analizy CIDR. Bez rejestracji."
