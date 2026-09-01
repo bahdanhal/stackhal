@@ -208,7 +208,7 @@
 
     triggers.forEach(function (trigger) {
       trigger.addEventListener('click', function () {
-        if (activationGate(window.performance.now())) {
+        if (trigger.matches('[data-catops-mobile-trigger]') || activationGate(window.performance.now())) {
           activate();
         }
       });

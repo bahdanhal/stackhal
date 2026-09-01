@@ -29,9 +29,9 @@ base:
         market: "Indeks cen używanych rzeczy w Polsce"
         bimi: "BIMI Studio i konwerter SVG"
         domain_inspector: "Inspektor bezpieczeństwa domen i BIMI"
-        caddy_transpiler: "Transpiler Nginx i Apache do Caddyfile"
-        cidr_matrix: "Wizualna Matryca CIDR i Nakładania się Podsieci"
-        regex_transpiler: "Transpiler dialektów Regex i matryca zgodności"
+        caddy_transpiler: "Konwerter Nginx i Apache do Caddyfile"
+        cidr_matrix: "Wizualna matryca CIDR i nakładania się podsieci"
+        regex_transpiler: "Konwerter dialektów Regex i matryca zgodności"
         favicon_suite: "Generator pakietu Favicon i SVG Dark-Mode"
         dns_dag_tracer: "Wizualny DAG propagacji DNS i łańcuch delegacji"
         pkpass: "Inspektor i emulator Apple Wallet (.pkpass)"
@@ -105,17 +105,17 @@ home:
         title: "Nginx i Apache ➔ Caddyfile Converter"
         text: "Konwertuj bloki serwera Nginx oraz Apache .htaccess na czysty, czytelny Caddyfile w czasie rzeczywistym, z inteligentnymi podpowiedziami i gotowymi presetami."
     cidr_matrix:
-        title: "Wizualna Matryca CIDR i Nakładania się Podsieci"
+        title: "Wizualna matryca CIDR i nakładania się podsieci"
         text: "Analizuj bloki CIDR IPv4/IPv6, wykrywaj kolizje podsieci, wizualizuj struktury drzewiaste 2D i znajduj wolne podsieci."
     regex_transpiler:
-        title: "Transpiler dialektów Regex i matryca zgodności"
+        title: "Konwerter dialektów Regex i matryca zgodności"
         text: "Konwertuj wyrażenia regularne PCRE do Go RE2, JavaScript, Pythona i Rusta, weryfikuj bezpieczeństwo asercji i eliminuj podatności ReDoS w czasie liniowym O(N)."
     dns_dag_tracer:
         title: "Śledzenie delegacji DNS na żywo"
-        text: "Sprawdź prawdziwe rekordy DNS i zobacz serwery autorytatywne zwrócone dla domeny."
+        text: "Sprawdź aktualne rekordy DNS i zobacz serwery autorytatywne przypisane do domeny."
     pkpass:
         title: "Inspektor i debugger Apple Wallet (.pkpass)"
-        text: "Wierny emulator kart Apple Wallet i Google Wallet, weryfikator sum kontrolnych SHA-1 w manifest.json, podgląd certyfikatów PKCS#7 i naprawa archiwum w 1 kliknięcie."
+        text: "Wierny emulator kart Apple Wallet i Google Wallet, weryfikator sum kontrolnych SHA-1 w manifest.json, podgląd certyfikatów PKCS#7 i naprawa archiwum jednym kliknięciem."
     app_links:
         title: "Apple Universal Links & Android App Links"
         text: "Waliduj manifesty Apple AASA i Android AssetLinks, testuj reguły routingu URL i diagnozuj błędy deeplinków."
@@ -128,7 +128,7 @@ home:
     principles:
         private:
             title: "Prywatność domyślnie"
-            text: "Obliczenia pozostają w przeglądarce. Raporty z crawlowania są buforowane, aby nie obciążać wielokrotnie badanej strony."
+            text: "Obliczenia pozostają w przeglądarce. Raporty ze skanowania są buforowane, aby nie obciążać wielokrotnie badanej strony."
         clear:
             title: "Widoczne uzasadnienie"
             text: "Wzory, dowody, daty i ograniczenia są obok wyniku, a nie ukryte za samą punktacją."
@@ -246,7 +246,7 @@ bimi:
         button: "Pobierz zgodne logo-bimi.svg"
     sim:
         title: "3. Symulator skrzynek pocztowych"
-        subtitle: "Podgląd w popularnych programach pocztowych w 1 kliknięcie"
+        subtitle: "Podgląd w popularnych programach pocztowych jednym kliknięciem"
         sender_label: "Nazwa nadawcy w symulatorze:"
         subject_label: "Temat wiadomości w symulatorze:"
     dns:
@@ -274,11 +274,11 @@ bimi:
 
 domain_inspector:
     meta:
-        title: "Inspektor domen · Sprawdzanie DMARC, BIMI, MTA-STS i SPF w 1 kliknięcie"
+        title: "Inspektor domen · Sprawdzanie DMARC, BIMI, MTA-STS i SPF jednym kliknięciem"
         description: "Zweryfikuj standardy bezpieczeństwa poczty w domenie: zgodność DMARC z BIMI, dostępność rekordu BIMI i logo, MTA-STS RFC 8461, SMTP TLS-RPT oraz SPF."
     eyebrow: "BEZPIECZEŃSTWO POCZTY I DOSTARCZALNOŚĆ"
     heading: "Inspektor domen i weryfikacja BIMI"
-    lede: "Sprawdź łańcuch uwierzytelniania poczty w domenie w 1 kliknięcie. Zbadaj zgodność polityki DMARC z BIMI, wymuszenie szyfrowania MTA-STS, raporty TLS oraz SPF."
+    lede: "Sprawdź łańcuch uwierzytelniania poczty w domenie jednym kliknięciem. Zbadaj zgodność polityki DMARC z BIMI, wymuszenie szyfrowania MTA-STS, raporty TLS oraz SPF."
     title: "Inspektor domen"
     input_label: "Wpisz nazwę domeny do sprawdzenia:"
     check_btn: "Sprawdź domenę"
@@ -328,14 +328,14 @@ audit:
     eyebrow: "SZYBKI TECHNICZNY AUDYT SEO"
     heading_start: "Znajdź miejsce, w którym Googlebot"
     heading_emphasis: "gubi wątek."
-    lede: "Sprawdź przekierowania, canonical, pułapki crawlowania, parametry, paginację, robots.txt i mapy witryny. Wyniki powstają bezpośrednio z obserwowalnych danych HTTP."
+    lede: "Sprawdź przekierowania, canonical, pułapki skanowania, parametry, paginację, robots.txt i mapy witryny. Wyniki opierają się bezpośrednio na danych HTTP."
     form:
         label: "Adres witryny"
         submit: "Uruchom audyt"
-        loading: "Crawlowanie…"
-        note: "10 audytów z crawlowaniem na IP dziennie · Crawlowanie zgodne z robots.txt · Raporty buforowane przez sześć godzin."
+        loading: "Skanowanie..."
+        note: "10 audytów skanowania na IP dziennie · Skanowanie zgodne z robots.txt · Raporty buforowane przez sześć godzin."
     limit:
-        message: "Wykorzystano dzisiejszy limit 10 bezpłatnych audytów z crawlowaniem. Zostaw e-mail lub skontaktuj się bezpośrednio z Bahdanem."
+        message: "Wykorzystano dzisiejszy limit 10 bezpłatnych audytów skanowania. Zostaw e-mail lub skontaktuj się bezpośrednio z Bahdanem."
         title: "Potrzebujesz kolejnego audytu lub pomocy?"
         text: "Zostaw e-mail prywatnie na tym serwerze albo wybierz kontakt bezpośredni."
     features:
@@ -353,7 +353,7 @@ audit:
         q1: "Co dokładnie bada ten audyt SEO?"
         a1: "Weryfikuje kody statusu HTTP, spójność wariantów protokołu i subdomeny www, pętle przekierowań, znaczniki canonical, dostępność robots.txt, mapy XML oraz nieskończone pułapki parametrów URL."
         q2: "Dlaczego parametry URL tworzą pułapki dla crawlerów?"
-        a2: "Niekontrolowane kombinacje filtrów, sortowań i identyfikatorów sesji generują miliony powielonych stron, które marnują budżet crawlowania (crawl budget) bez wnoszenia wartości do indeksu."
+        a2: "Niekontrolowane kombinacje filtrów, sortowań i identyfikatorów sesji generują miliony powielonych stron, które marnują budżet skanowania bez wnoszenia wartości do indeksu."
         q3: "Jak canonical wpływa na widoczność w wyszukiwarce?"
         a3: "Poprawny tag canonical konsoliduje sygnały rankingowe do wybranego adresu głównego i chroni przed kanibalizacją treści."
     report:
@@ -363,8 +363,8 @@ audit:
         complete: "AUDYT ZAKOŃCZONY"
         generated: "Wygenerowano"
         refresh: "Odśwież crawl"
-        score: "kondycja crawlowania"
-        pages: "przecrawlowane strony"
+        score: "kondycja skanowania"
+        pages: "przeskanowane strony"
         urls: "odkryte adresy URL"
         sitemap_urls: "adresy w mapie"
         critical: "krytyczne"
@@ -382,7 +382,7 @@ audit:
         found_in: "Znaleziono w %count% miejscach. Otwórz wystąpienie, aby zobaczyć adres i dowody."
         redirect_matrix: "Macierz hostów i przekierowań"
         variants: "wariantów"
-        crawled_pages: "Przecrawlowane strony"
+        crawled_pages: "Przeskanowane strony"
         sampled: "w próbce"
         sitemaps: "Mapy witryny"
         no_robots: "Brak treści robots.txt."
@@ -447,7 +447,7 @@ contact:
     invalid_email: "Wpisz poprawny adres e-mail."
     invalid_contact: "Wpisz poprawny e-mail albo numer telefonu."
     failed: "Nie udało się teraz zapisać zgłoszenia. Użyj kontaktu bezpośredniego."
-    saving: "Zapisywanie…"
+    saving: "Zapisywanie..."
 
 geo:
     meta:
@@ -460,7 +460,7 @@ geo:
     form:
         label: "Adres strony"
         submit: "Uruchom audyt GEO"
-        loading: "Analizowanie…"
+        loading: "Analizowanie..."
         note: "Jedna strona · Buforowanie przez sześć godzin · Wspólny limit 10 audytów dziennie · Bez gwarancji pozycji."
     limit:
         title: "Potrzebujesz kolejnego audytu?"
@@ -559,15 +559,15 @@ geo:
 
 caddy_transpiler:
     meta:
-        title: "Konwerter Nginx do Caddy · Transpiler Apache do Caddyfile"
-        description: "Darmowy konwerter Nginx i Apache do Caddyfile online. Błyskawiczny transpiler po stronie przeglądarki przekształcający konfiguracje Nginx i Apache .htaccess na czysty Caddyfile."
+        title: "Konwerter Nginx do Caddy · Konwerter Apache do Caddyfile"
+        description: "Darmowy konwerter Nginx i Apache do Caddyfile online. Błyskawiczne narzędzie w przeglądarce przekształca konfiguracje Nginx i Apache .htaccess w przejrzysty plik Caddyfile."
     eyebrow: "DARMOWY KONWERTER KONFIGURACJI SERWERÓW"
-    heading: "Nginx i Apache ➔ Caddyfile Converter"
-    lede: "Przekształcaj bloki Nginx oraz konfiguracje Apache (.htaccess / VirtualHost) na czysty, czytelny format Caddyfile w czasie rzeczywistym. Działa w 100% w przeglądarce."
+    heading: "Nginx i Apache ➔ konwerter Caddyfile"
+    lede: "Przekształcaj bloki Nginx oraz konfiguracje Apache (.htaccess / VirtualHost) w przejrzysty plik Caddyfile w czasie rzeczywistym. Narzędzie działa w 100% w przeglądarce."
     source_label: "Serwer źródłowy"
     server_nginx: "Nginx (nginx.conf / server)"
     server_apache: "Apache (.htaccess / VirtualHost)"
-    presets_label: "Gotowe presety (1 kliknięcie)"
+    presets_label: "Gotowe presety (jedno kliknięcie)"
     preset_wordpress: "WordPress"
     preset_laravel_symfony: "Symfony / Laravel"
     preset_nextjs: "Next.js / Node.js"
@@ -611,7 +611,7 @@ caddy_transpiler:
     faq:
         title: "Często zadawane pytania"
         q1: "Jak przekonwertować konfigurację Nginx na Caddyfile?"
-        a1: "Wklej blok server lub dyrektywy location do pola edytora. Transpiler automatycznie rozpozna proxy_pass, fastcgi_pass, try_files, root oraz reguły przepisywania i wygeneruje poprawny Caddyfile dla Caddy v2."
+        a1: "Wklej blok server lub dyrektywy location do pola edytora. Konwerter automatycznie rozpozna proxy_pass, fastcgi_pass, try_files, root oraz reguły przepisywania i wygeneruje poprawny plik Caddyfile dla Caddy v2."
         q2: "Czy mogę przekonwertować plik .htaccess z Apache?"
         a2: "Tak. Wybierz Apache jako serwer źródłowy i wklej reguły .htaccess lub blok <VirtualHost>. Narzędzie przetłumaczy RewriteRule, DirectoryIndex, nagłówki i podstawowe uwierzytelnianie na dyrektywy Caddy."
         q3: "Czy moje pliki konfiguracyjne są wysyłane na serwer?"
@@ -668,15 +668,15 @@ pkpass:
 
 cidr_matrix:
     meta:
-        title: "Wizualna Matryca CIDR i Nakładania się Podsieci · Kalkulator IP Online"
+        title: "Wizualna matryca CIDR i nakładania się podsieci · Kalkulator IP online"
         description: "Parsuj bloki CIDR IPv4/IPv6, wykrywaj kolizje i nakładanie się zakresów IP, wizualizuj podziały przestrzeni adresowej 2D i alokuj wolne podsieci."
     eyebrow: "SIEĆ · CIDR I PODSIECI"
-    heading: "Wizualna Matryca CIDR i Nakładania się Podsieci"
+    heading: "Wizualna matryca CIDR i nakładania się podsieci"
     lede: "Wykrywaj konflikty adresacji IP w VPC AWS, klastrach Kubernetes i sieciach VPN, wizualizuj podziały adresów i automatycznie alokuj wolne podsieci."
     form:
         title: "Dane wejściowe bloków CIDR"
         help: "Wprowadź bloki CIDR IPv4 lub IPv6 rozdzielone przecinkami lub nowymi liniami (np. 10.0.0.0/16, 10.0.32.0/20)."
-        presets: "Gotowe wzorce (1-Click)"
+        presets: "Gotowe wzorce (jedno kliknięcie)"
         label_cidrs: "Podsieci CIDR"
         label_parent: "Nadrzędny zakres CIDR (Opcjonalnie)"
         label_free_prefix: "Oczekiwana długość prefiksu wolnej podsieci (Opcjonalnie, np. 20 lub 24)"
@@ -717,7 +717,7 @@ regex_transpiler:
         title: "Konwerter dialektów Regex i matryca zgodności · PCRE do Go RE2"
         description: "Transpiluj i waliduj wyrażenia regularne między PCRE, Go RE2, JavaScriptem, Pythonem a Rustem. Eliminuj podatności ReDoS z gwarancją czasu liniowego O(N)."
     eyebrow: "SILNIKI REGEX · PCRE ➔ GO RE2"
-    heading: "Transpiler dialektów Regex i matryca zgodności"
+    heading: "Konwerter dialektów Regex i matryca zgodności"
     lede: "Konwertuj złożone wyrażenia regularne między PCRE, Go RE2, JavaScriptem, Pythonem a Rustem. Wykrywaj błędy asercji lookaround, przekształcaj grupy atomowe i kwantyfikatory zachłanne oraz weryfikuj odporność na ReDoS."
     source_label: "Dialekt źródłowy"
     target_label: "Silnik docelowy"
@@ -763,7 +763,7 @@ regex_transpiler:
         a1: "Asercje lookaround wymagają nawracania w celu sprawdzenia warunków przed lub za wskaźnikiem bez konsumpcji znaków. Aby matematycznie zagwarantować liniowy czas O(N) i wyeliminować ataki ReDoS, RE2 zabrania asercji wyprzedzających i wstecznych."
         q2: "Dlaczego referencje wsteczne (backreferences) są zabronione w RE2?"
         a2: "Dopasowywanie wyrażeń z referencjami wstecznymi (takimi jak \\1 lub \\k<name>) jest problemem NP-zupełnym i w pesymistycznym przypadku wymaga wykładniczego czasu. RE2 ich nie obsługuje, aby utrzymać stałą wydajność liniową."
-        q3: "Jak transpiler obsługuje grupy atomowe (?>...) i kwantyfikatory zachłanne ++?"
+        q3: "Jak konwerter obsługuje grupy atomowe (?>...) i kwantyfikatory zachłanne ++?"
         a3: "Grupy atomowe i kwantyfikatory zaborcze służą w PCRE do ograniczania backtrackingu. Ponieważ RE2 w ogóle nie nawraca, grupy atomowe są zamieniane na grupy nieprzechwytujące (?:...), a kwantyfikatory ++ na standardowe zachłanne (+)."
         q4: "Czy przetwarzanie regex i tekstu jest bezpieczne?"
         a4: "Tak! 100% parsowania AST, oceny matrycy i dopasowywania wzorców wykonuje się lokalnie w Twojej przeglądarce za pomocą JavaScriptu. Żadne dane nie trafiają na nasze serwery."
@@ -867,4 +867,3 @@ cors_sandbox:
     diagnostics_title: "Diagnostyka polityki i bezpieczeństwa"
     browser_ceilings_title: "Limity Max-Age w przeglądarkach"
     browser_ceilings_intro: "Przeglądarki internetowe narzucają sztywne górne limity czasu buforowania Access-Control-Max-Age dla zapytań preflight OPTIONS."
-
