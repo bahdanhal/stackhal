@@ -138,7 +138,7 @@ home:
     faq:
         title: "Często zadawane pytania"
         q1: "Jakie narzędzia dla programistów oferuje StackHal?"
-        a1: "StackHal zapewnia natychmiastowe narzędzia programistyczne: audyty techniczne SEO, analizę gotowości GEO pod silniki AI, konwerter Nginx/Apache na Caddyfile, inspektor kart Apple Wallet PKPass, kalkulator podsieci CIDR, weryfikację BIMI i bezpieczeństwa domen oraz testy CORS."
+        a1: "StackHal oferuje narzędzia programistyczne do audytów SEO i GEO, konwersji Nginx/Apache do Caddyfile oraz testów CORS. Znajdziesz tu także inspektor kart Apple Wallet PKPass, kalkulator CIDR i narzędzia do weryfikacji BIMI oraz bezpieczeństwa domen."
         q2: "Czy narzędzia StackHal są bezpłatne i bezpieczne dla prywatności?"
         a2: "Tak, wszystkie narzędzia działają bez rejestracji i logowania. Narzędzia po stronie klienta przetwarzają pliki i konfiguracje bezpośrednio w Twojej przeglądarce."
         q3: "Jak działa analizator gotowości GEO?"
@@ -152,7 +152,7 @@ ai_studio_extension:
         description: "Otwarte rozszerzenie Chrome do używania Google AI Studio z lokalnym repozytorium: pakowanie kontekstu, przeglądanie diffów, synchronizacja plików i cofanie zmian."
     eyebrow: "OTWARTE ROZSZERZENIE CHROME · AI STUDIO WORKFLOW"
     heading: "Eksperymentujesz z Google AI Studio?"
-    lede: "Masz dość przenoszenia kodu tam i z powrotem przez Ctrl+C/Ctrl+V, jakby nadal był 2024? To mały projekt open source testujący bardziej agentowy sposób pracy z kodem w AI Studio."
+    lede: "Masz dość przenoszenia kodu tam i z powrotem przez Ctrl+C/Ctrl+V, jakby nadal był 2024? To mały projekt open source, który testuje bardziej zautomatyzowany sposób pracy z kodem w AI Studio."
     status: "Dostępne w Chrome Web Store"
     store_cta: "Zainstaluj z Chrome Web Store"
     guide_cta: "Szczegóły instalacji"
@@ -205,7 +205,7 @@ ai_studio_extension:
     privacy:
         label: "LOCAL-FIRST Z ZAŁOŻENIA"
         title: "Repozytorium nie trafia na serwer rozszerzenia"
-        text: "Pliki są odczytywane dopiero po wybraniu katalogu i uruchomieniu funkcji. Wybrany kontekst trafia do strony AI Studio i podlega zasadom Google oraz ustawieniom Twojego konta. Rozszerzenie nie ma backendu, analityki, trackerów ani zdalnego kodu. Jego główne funkcje to pakowanie kontekstu, przeglądanie diffów, synchronizacja i cofanie zmian."
+        text: "Pliki są odczytywane dopiero po wybraniu katalogu i uruchomieniu funkcji. Wybrany kontekst trafia do AI Studio i podlega zasadom Google oraz ustawieniom Twojego konta. Rozszerzenie nie ma backendu, analityki, trackerów ani zdalnego kodu. Służy do pakowania kontekstu, przeglądania diffów, synchronizacji i cofania zmian."
         privacy_cta: "Przeczytaj politykę prywatności"
         issues_cta: "Zgłoś problem"
     disclaimer: "Rozszerzenie nie jest powiązane, wspierane ani sponsorowane przez Google. Google AI Studio jest znakiem towarowym Google LLC."
@@ -477,7 +477,7 @@ geo:
             text: "Dane uporządkowane, autor, wydawca, daty, źródła i tożsamość podmiotu."
     method:
         title: "Co oznacza ta punktacja"
-        text: "GEO nie ma jednego standardu, a żadne narzędzie nie potwierdzi obecności w wygenerowanej odpowiedzi. Audyt mierzy obserwowalne sygnały gotowości, które poprawiają też dostępność i jasność treści. Decyzje dotyczące crawlerów AI są raportowane osobno i nigdy nie obniżają wyniku."
+        text: "GEO nie ma jednego standardu. Żadne narzędzie nie może zagwarantować obecności w wygenerowanej odpowiedzi. Audyt mierzy obserwowalne sygnały gotowości, które poprawiają dostępność i jasność treści. Decyzje crawlerów AI są raportowane osobno i nie obniżają wyniku."
     report:
         title: "Raport gotowości GEO"
         new: "Nowy audyt GEO"
@@ -658,7 +658,7 @@ pkpass:
     faq:
         title: "Często zadawane pytania"
         q1: "Co znajduje się wewnątrz pliku .pkpass?"
-        a1: "Plik .pkpass to standardowe archiwum ZIP zawierające plik pass.json (układ pól, kolory, daty, kody kreskowe), manifest.json (słownik sum kontrolnych SHA-1 wszystkich plików), plik signature (podpis cyfrowy PKCS#7 od Apple Developer) oraz grafiki PNG (ikony, logo, baner, miniatura)."
+        a1: "Plik .pkpass to standardowe archiwum ZIP. Zawiera pass.json z układem pól, kolorami, datami i kodami kreskowymi. Ma też manifest.json z sumami SHA-1, podpis PKCS#7 oraz grafiki PNG: ikony, logo, baner i miniaturę."
         q2: "Czy mogę otworzyć plik .pkpass na systemie Android, Windows lub Linux?"
         a2: "Tak! To narzędzie działa w 100% w przeglądarce i renderuje wierną wizualizację karty pokładowej, biletu, karty stałego klienta lub kuponu wraz z czytelnym kodem kreskowym i QR."
         q3: "Jak działa funkcja 'Napraw i pobierz .pkpass'?"
@@ -743,7 +743,7 @@ regex_transpiler:
     table:
         feature: "Cecha / Możliwość"
     why_re2_title: "Dlaczego Go RE2 i Rust całkowicie eliminują ReDoS"
-    why_re2_intro: "Tradycyjne silniki (PCRE, JS, Python) wykorzystują rekurencyjne nawracanie (backtracking), co czyni je podatnymi na ataki blokujące procesor (ReDoS). Go RE2 i Rust opierają się na automatach skończonych (DFA/NFA) z gwarancją wykonania w czasie liniowym."
+    why_re2_intro: "Tradycyjne silniki (PCRE, JS, Python) używają backtrackingu. W skrajnych przypadkach może on zablokować procesor w ataku ReDoS. Go RE2 i Rust korzystają z automatów skończonych (DFA/NFA), które gwarantują czas liniowy."
     benefits:
         redos:
             title: "Zero katastrofalnego backtrackingu"
