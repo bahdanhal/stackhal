@@ -449,7 +449,7 @@ contact:
     phone_optional: "Telefon (opcjonalny, jeśli zostawisz e-mail)"
     message_optional: "W czym mogę pomóc? (opcjonalnie)"
     message_placeholder: "Wystarczy link i dwa zdania."
-    submit: "Poproś Bahdana"
+    submit: "Napisz do Bahdana"
     company: "Firma"
     note: "Dane zostaną zapisane prywatnie na tym serwerze, aby Bahdan mógł się odezwać. Bez newslettera i automatycznej sprzedaży."
     invalid_origin: "Nieprawidłowe źródło formularza."
