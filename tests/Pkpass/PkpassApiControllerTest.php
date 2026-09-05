@@ -108,6 +108,10 @@ final class PkpassApiControllerTest extends TestCase
 
     public function testValidateWithPkpassArchive(): void
     {
+        if (!class_exists(\ZipArchive::class)) {
+            self::markTestSkipped('ext-zip (ZipArchive) is not installed');
+        }
+
         $tempZip = tempnam(sys_get_temp_dir(), 'pkpass_test_') . '.zip';
         $zip = new \ZipArchive();
         $zip->open($tempZip, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);

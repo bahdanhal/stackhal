@@ -136,6 +136,25 @@ final class PkpassApiController extends AbstractController
 
     private function validatePkpassArchive(UploadedFile $file): JsonResponse
     {
+        if (!class_exists(\ZipArchive::class)) {
+            return new JsonResponse([
+                'valid' => false,
+                'score' => 0,
+                'counts' => ['errors' => 1, 'warnings' => 0, 'info' => 0],
+                'findings' => [
+                    [
+                        'code' => 'ERR_ZIP_EXTENSION_UNAVAILABLE',
+                        'severity' => 'error',
+                        'title' => 'ZIP Extension Unavailable',
+                        'message' => 'PHP ext-zip extension is not installed on the server to decompress .pkpass archives.',
+                        'file' => $file->getClientOriginalName(),
+                        'path' => null,
+                        'remediation' => 'Install php-zip on the server or submit raw pass.json directly.',
+                    ],
+                ],
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $zip = new \ZipArchive();
         $openResult = $zip->open($file->getPathname());
         if ($openResult !== true) {
@@ -338,6 +357,10 @@ final class PkpassApiController extends AbstractController
      */
     private function extractPassJsonFromArchive(UploadedFile $file): ?array
     {
+        if (!class_exists(\ZipArchive::class)) {
+            return null;
+        }
+
         $zip = new \ZipArchive();
         if ($zip->open($file->getPathname()) !== true) {
             return null;
