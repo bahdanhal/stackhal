@@ -68,8 +68,24 @@
         <button type="button" class="btn-preset" data-preset="brokenPass">{{ 'pkpass.presets.broken_demo'|trans }}</button>
       </div>
       <div>
-        <span class="privacy-badge">Local inspection · zero data upload</span>
+        <span class="privacy-badge">Zero-Knowledge · In-Browser Processing</span>
       </div>
+    </div>
+
+    <!-- Studio Mode Switcher Bar -->
+    <div class="studio-mode-bar" id="studio-mode-bar">
+      <button type="button" class="btn-studio-mode active" data-studio-mode="designer">
+        <span class="studio-mode-icon">🎨</span> {{ 'pkpass.studio.designer'|trans }}
+      </button>
+      <button type="button" class="btn-studio-mode" data-studio-mode="inspector">
+        <span class="studio-mode-icon">🔍</span> {{ 'pkpass.studio.inspector'|trans }}
+      </button>
+      <button type="button" class="btn-studio-mode" data-studio-mode="signing">
+        <span class="studio-mode-icon">🔐</span> {{ 'pkpass.studio.signing'|trans }}
+      </button>
+      <button type="button" class="btn-studio-mode" data-studio-mode="code">
+        <span class="studio-mode-icon">💻</span> {{ 'pkpass.studio.code_export'|trans }}
+      </button>
     </div>
 
     <!-- Drag & Drop Zone -->
@@ -97,99 +113,311 @@
         </div>
       </div>
 
-      <!-- Right Column: Diagnostics & Data Inspector -->
+      <!-- Right Column: Studio Panels -->
       <div class="inspector-panel">
-        <!-- Status Header -->
-        <div id="diag-status-summary" class="diag-summary-box status-valid">
-          <div class="diag-status-badge badge-valid">STATUS: VALID PASS</div>
-          <div class="diag-meta-row">
-            <span>Pass Type: <strong>boardingPass</strong></span>
-            <span>Org: <strong>LOT Polish Airlines</strong></span>
-            <span>Team ID: <strong>BAHDAN9988</strong></span>
+
+        <!-- STUDIO PANEL 1: Visual Pass Designer -->
+        <div class="studio-panel-view" id="studio-panel-designer" style="display: block;">
+          <div class="designer-card-section">
+            <h3 class="designer-section-title">{{ 'pkpass.studio.type_label'|trans }}</h3>
+            <div class="pass-style-selector-grid" id="designer-style-selector">
+              <button type="button" class="btn-style-select active" data-style="boardingPass">✈️ Boarding Pass</button>
+              <button type="button" class="btn-style-select" data-style="eventTicket">🎟️ Event Ticket</button>
+              <button type="button" class="btn-style-select" data-style="storeCard">💳 Store Card</button>
+              <button type="button" class="btn-style-select" data-style="coupon">🏷️ Coupon</button>
+              <button type="button" class="btn-style-select" data-style="generic">🪪 Generic</button>
+            </div>
           </div>
-        </div>
 
-        <!-- Inspector Tabs Navigation -->
-        <div class="inspector-tabs-nav">
-          <button type="button" class="inspector-tab-btn active" data-target="pane-manifest">SHA-1 Manifest</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-linter">Schema Linter</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-assets">Asset Checklist</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-signature">Signature</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-localizations">Localizations</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-contrast">Contrast</button>
-          <button type="button" class="inspector-tab-btn" data-target="pane-editor">Live JSON Editor</button>
-        </div>
+          <!-- Metadata -->
+          <div class="designer-card-section">
+            <h3 class="designer-section-title">{{ 'pkpass.studio.metadata_title'|trans }}</h3>
+            <div class="designer-form-grid">
+              <div class="form-group">
+                <label for="ds-org-name">{{ 'pkpass.studio.org_name'|trans }}</label>
+                <input type="text" id="ds-org-name" class="studio-input" placeholder="Acme Inc.">
+              </div>
+              <div class="form-group">
+                <label for="ds-description">{{ 'pkpass.studio.description'|trans }}</label>
+                <input type="text" id="ds-description" class="studio-input" placeholder="VIP Pass">
+              </div>
+              <div class="form-group">
+                <label for="ds-pass-type-id">{{ 'pkpass.studio.pass_type_id'|trans }}</label>
+                <input type="text" id="ds-pass-type-id" class="studio-input" placeholder="pass.com.example.ticket">
+              </div>
+              <div class="form-group">
+                <label for="ds-team-id">{{ 'pkpass.studio.team_id'|trans }}</label>
+                <input type="text" id="ds-team-id" class="studio-input" placeholder="ABCDE12345" maxlength="10">
+              </div>
+              <div class="form-group">
+                <label for="ds-serial-number">{{ 'pkpass.studio.serial_number'|trans }}</label>
+                <input type="text" id="ds-serial-number" class="studio-input" placeholder="LOT-89421">
+              </div>
+            </div>
+          </div>
 
-        <!-- Panes -->
-        <!-- 1. Manifest Pane -->
-        <div class="inspector-tab-pane" id="pane-manifest" style="display: block;">
-          <table class="diag-table">
-            <thead>
-              <tr>
-                <th>File</th>
-                <th>Manifest Hash</th>
-                <th>Actual Hash</th>
-                <th>Integrity Status</th>
-              </tr>
-            </thead>
-            <tbody id="manifest-table-body">
+          <!-- Colors & WCAG Contrast -->
+          <div class="designer-card-section">
+            <div class="section-header-flex">
+              <h3 class="designer-section-title">{{ 'pkpass.studio.colors_title'|trans }}</h3>
+              <button type="button" class="btn-autofix-contrast" id="btn-autofix-contrast">
+                ⚡ {{ 'pkpass.studio.auto_fix_contrast'|trans }}
+              </button>
+            </div>
+            <div class="designer-colors-grid">
+              <div class="color-picker-cell">
+                <label>{{ 'pkpass.studio.bg_color'|trans }}</label>
+                <div class="color-input-wrap">
+                  <input type="color" id="ds-bg-color-picker" class="color-box-picker" value="#0f172a">
+                  <input type="text" id="ds-bg-color-text" class="studio-input input-color-text" value="rgb(15, 23, 42)">
+                </div>
+              </div>
+              <div class="color-picker-cell">
+                <label>{{ 'pkpass.studio.fg_color'|trans }}</label>
+                <div class="color-input-wrap">
+                  <input type="color" id="ds-fg-color-picker" class="color-box-picker" value="#ffffff">
+                  <input type="text" id="ds-fg-color-text" class="studio-input input-color-text" value="rgb(255, 255, 255)">
+                </div>
+              </div>
+              <div class="color-picker-cell">
+                <label>{{ 'pkpass.studio.label_color'|trans }}</label>
+                <div class="color-input-wrap">
+                  <input type="color" id="ds-lbl-color-picker" class="color-box-picker" value="#94a3b8">
+                  <input type="text" id="ds-lbl-color-text" class="studio-input input-color-text" value="rgb(148, 163, 184)">
+                </div>
+              </div>
+            </div>
+            <div class="designer-contrast-meter" id="designer-contrast-meter">
               <!-- Rendered dynamically -->
-            </tbody>
-          </table>
-        </div>
+            </div>
+          </div>
 
-        <!-- 2. Linter Pane -->
-        <div class="inspector-tab-pane" id="pane-linter" style="display: none;">
-          <div class="linter-findings-list" id="linter-findings-list">
-            <!-- Rendered dynamically -->
+          <!-- Fields Grid Manager -->
+          <div class="designer-card-section">
+            <h3 class="designer-section-title">{{ 'pkpass.studio.fields_title'|trans }}</h3>
+            <div id="designer-transit-type-row" style="display: none; margin-bottom: 1rem;">
+              <label for="ds-transit-type" style="font-size: 0.85rem; color: #94a3b8; display: block; margin-bottom: 0.25rem;">
+                {{ 'pkpass.studio.transit_type'|trans }}
+              </label>
+              <select id="ds-transit-type" class="studio-input">
+                <option value="PKTransitTypeAir">Flight (PKTransitTypeAir)</option>
+                <option value="PKTransitTypeTrain">Train (PKTransitTypeTrain)</option>
+                <option value="PKTransitTypeBus">Bus (PKTransitTypeBus)</option>
+                <option value="PKTransitTypeBoat">Boat / Ferry (PKTransitTypeBoat)</option>
+                <option value="PKTransitTypeGeneric">Generic (PKTransitTypeGeneric)</option>
+              </select>
+            </div>
+
+            <!-- Field Groups Container -->
+            <div class="field-groups-accordion" id="designer-field-groups">
+              <!-- Dynamically rendered field editors for header, primary, secondary, auxiliary, back -->
+            </div>
+          </div>
+
+          <!-- Barcode & NFC Engine -->
+          <div class="designer-card-section">
+            <h3 class="designer-section-title">{{ 'pkpass.studio.barcode_title'|trans }}</h3>
+            <div class="designer-form-grid">
+              <div class="form-group">
+                <label for="ds-barcode-format">{{ 'pkpass.studio.barcode_format'|trans }}</label>
+                <select id="ds-barcode-format" class="studio-input">
+                  <option value="PKBarcodeFormatQR">QR Code (PKBarcodeFormatQR)</option>
+                  <option value="PKBarcodeFormatPDF417">PDF417 (PKBarcodeFormatPDF417)</option>
+                  <option value="PKBarcodeFormatAztec">Aztec (PKBarcodeFormatAztec)</option>
+                  <option value="PKBarcodeFormatCode128">Code 128 (PKBarcodeFormatCode128)</option>
+                  <option value="none">None (No Barcode)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ds-barcode-message">{{ 'pkpass.studio.barcode_message'|trans }}</label>
+                <input type="text" id="ds-barcode-message" class="studio-input" placeholder="Payload content or URL">
+              </div>
+              <div class="form-group">
+                <label for="ds-barcode-alttext">{{ 'pkpass.studio.alt_text'|trans }}</label>
+                <input type="text" id="ds-barcode-alttext" class="studio-input" placeholder="Human readable code">
+              </div>
+            </div>
+          </div>
+
+          <!-- Asset Studio (HTML5 Canvas Scaler) -->
+          <div class="designer-card-section">
+            <div class="section-header-flex">
+              <div>
+                <h3 class="designer-section-title" style="margin-bottom: 0.2rem;">{{ 'pkpass.studio.assets_title'|trans }}</h3>
+                <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">{{ 'pkpass.studio.assets_subtitle'|trans }}</p>
+              </div>
+              <button type="button" class="btn-action-secondary" id="btn-generate-branded-assets">
+                ✨ {{ 'pkpass.studio.generate_assets'|trans }}
+              </button>
+            </div>
+            <div class="asset-studio-slots-grid" id="asset-studio-slots">
+              <!-- Dynamically populated slots -->
+            </div>
           </div>
         </div>
 
-        <!-- 3. Asset Checklist Pane -->
-        <div class="inspector-tab-pane" id="pane-assets" style="display: none;">
-          <div class="asset-checklist-grid" id="asset-checklist-grid">
-            <!-- Rendered dynamically -->
+        <!-- STUDIO PANEL 2: Pass Inspector & Linter -->
+        <div class="studio-panel-view" id="studio-panel-inspector" style="display: none;">
+          <!-- Status Header -->
+          <div id="diag-status-summary" class="diag-summary-box status-valid">
+            <div class="diag-status-badge badge-valid">STATUS: VALID PASS</div>
+            <div class="diag-meta-row">
+              <span>Pass Type: <strong>boardingPass</strong></span>
+              <span>Org: <strong>LOT Polish Airlines</strong></span>
+              <span>Team ID: <strong>BAHDAN9988</strong></span>
+            </div>
+          </div>
+
+          <!-- Inspector Tabs Navigation -->
+          <div class="inspector-tabs-nav">
+            <button type="button" class="inspector-tab-btn active" data-target="pane-manifest">SHA-1 Manifest</button>
+            <button type="button" class="inspector-tab-btn" data-target="pane-linter">Schema Linter</button>
+            <button type="button" class="inspector-tab-btn" data-target="pane-assets">Asset Checklist</button>
+            <button type="button" class="inspector-tab-btn" data-target="pane-signature">Signature</button>
+            <button type="button" class="inspector-tab-btn" data-target="pane-localizations">Localizations</button>
+            <button type="button" class="inspector-tab-btn" data-target="pane-contrast">Contrast</button>
+            <button type="button" class="inspector-tab-btn" data-target="pane-editor">Live JSON Editor</button>
+          </div>
+
+          <!-- Panes -->
+          <div class="inspector-tab-pane" id="pane-manifest" style="display: block;">
+            <table class="diag-table">
+              <thead>
+                <tr>
+                  <th>File</th>
+                  <th>Manifest Hash</th>
+                  <th>Actual Hash</th>
+                  <th>Integrity Status</th>
+                </tr>
+              </thead>
+              <tbody id="manifest-table-body">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="inspector-tab-pane" id="pane-linter" style="display: none;">
+            <div class="linter-findings-list" id="linter-findings-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <div class="inspector-tab-pane" id="pane-assets" style="display: none;">
+            <div class="asset-checklist-grid" id="asset-checklist-grid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <div class="inspector-tab-pane" id="pane-signature" style="display: none;">
+            <div id="signature-info-container">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <div class="inspector-tab-pane" id="pane-localizations" style="display: none;">
+            <div id="localization-container">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <div class="inspector-tab-pane" id="pane-contrast" style="display: none;">
+            <div id="contrast-container">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <div class="inspector-tab-pane" id="pane-editor" style="display: none;">
+            <textarea class="pkpass-json-editor-textarea" id="pkpass-json-editor" spellcheck="false"></textarea>
+          </div>
+
+          <!-- Actions Bar -->
+          <div class="inspector-actions-bar">
+            <button type="button" class="btn-action-primary" id="btn-repack-pkpass">
+              {{ 'pkpass.actions.repack'|trans }}
+            </button>
+            <button type="button" class="btn-action-secondary" id="btn-export-google-wallet">
+              {{ 'pkpass.actions.export_google'|trans }}
+            </button>
+            <button type="button" class="btn-action-secondary" id="btn-download-json">
+              {{ 'pkpass.actions.download_json'|trans }}
+            </button>
           </div>
         </div>
 
-        <!-- 4. Signature Pane -->
-        <div class="inspector-tab-pane" id="pane-signature" style="display: none;">
-          <div id="signature-info-container">
-            <!-- Rendered dynamically -->
+        <!-- STUDIO PANEL 3: Digital Signing & Export -->
+        <div class="studio-panel-view" id="studio-panel-signing" style="display: none;">
+          <div class="designer-card-section">
+            <h3 class="designer-section-title">{{ 'pkpass.studio.sign_mode_browser'|trans }}</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.5; margin-bottom: 1rem;">
+              Apple requires passes to be cryptographically signed with your Apple Developer Pass Certificate.
+              Stackhal decrypts and signs your package <strong>100% inside your web browser via WebCrypto API</strong>.
+              Your private key and certificate never leave this browser tab.
+            </p>
+            <div class="signing-form-box">
+              <div class="form-group">
+                <label for="ds-p12-file">{{ 'pkpass.studio.upload_p12'|trans }}</label>
+                <input type="file" id="ds-p12-file" class="studio-input" accept=".p12,.pfx">
+              </div>
+              <div class="form-group">
+                <label for="ds-p12-password">{{ 'pkpass.studio.p12_password'|trans }}</label>
+                <input type="password" id="ds-p12-password" class="studio-input" placeholder="Certificate export password">
+              </div>
+              <button type="button" class="btn-action-primary" id="btn-webcrypto-sign">
+                🔏 {{ 'pkpass.studio.sign_download'|trans }}
+              </button>
+              <div id="signing-status-msg" style="margin-top: 0.75rem; font-size: 0.85rem;"></div>
+            </div>
+          </div>
+
+          <div class="designer-card-section">
+            <h3 class="designer-section-title">{{ 'pkpass.studio.sign_mode_unsigned'|trans }}</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.5; margin-bottom: 1rem;">
+              If signing on your own server, Docker container, or CI/CD runner, download the raw verified bundle and use standard OpenSSL commands:
+            </p>
+            <div style="display: flex; gap: 0.75rem; margin-bottom: 1.25rem;">
+              <button type="button" class="btn-action-secondary" id="btn-download-unsigned-pkpass">
+                📦 {{ 'pkpass.studio.unsigned_download'|trans }}
+              </button>
+              <button type="button" class="btn-action-secondary" id="btn-download-pass-json-2">
+                📄 {{ 'pkpass.actions.download_json'|trans }}
+              </button>
+            </div>
+
+            <h4 style="font-size: 0.9rem; color: #f8fafc; margin-bottom: 0.5rem;">CLI Terminal One-Liner (OpenSSL)</h4>
+            <div class="code-snippet-box">
+              <pre id="signing-cli-command"></pre>
+            </div>
           </div>
         </div>
 
-        <!-- 5. Localizations Pane -->
-        <div class="inspector-tab-pane" id="pane-localizations" style="display: none;">
-          <div id="localization-container">
-            <!-- Rendered dynamically -->
+        <!-- STUDIO PANEL 4: Polyglot Code Generator -->
+        <div class="studio-panel-view" id="studio-panel-code" style="display: none;">
+          <div class="designer-card-section">
+            <div class="section-header-flex">
+              <div>
+                <h3 class="designer-section-title" style="margin-bottom: 0.2rem;">{{ 'pkpass.studio.code_title'|trans }}</h3>
+                <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">{{ 'pkpass.studio.code_subtitle'|trans }}</p>
+              </div>
+              <button type="button" class="btn-action-secondary" id="btn-copy-code-snippet">
+                📋 Copy Snippet
+              </button>
+            </div>
+
+            <!-- Code Language Tabs -->
+            <div class="code-tabs-nav" style="margin-top: 1rem;">
+              <button type="button" class="btn-code-tab active" data-lang="php">PHP 8.4 / Symfony</button>
+              <button type="button" class="btn-code-tab" data-lang="ts">TypeScript / Node.js</button>
+              <button type="button" class="btn-code-tab" data-lang="python">Python 3</button>
+              <button type="button" class="btn-code-tab" data-lang="go">Go</button>
+              <button type="button" class="btn-code-tab" data-lang="curl">cURL (Stackhal API)</button>
+            </div>
+
+            <div class="code-snippet-box" style="margin-top: 0.75rem;">
+              <pre id="code-generator-output"></pre>
+            </div>
           </div>
         </div>
 
-        <!-- 6. Contrast Pane -->
-        <div class="inspector-tab-pane" id="pane-contrast" style="display: none;">
-          <div id="contrast-container">
-            <!-- Rendered dynamically -->
-          </div>
-        </div>
-
-        <!-- 7. JSON Editor Pane -->
-        <div class="inspector-tab-pane" id="pane-editor" style="display: none;">
-          <textarea class="pkpass-json-editor-textarea" id="pkpass-json-editor" spellcheck="false"></textarea>
-        </div>
-
-        <!-- Actions Bar -->
-        <div class="inspector-actions-bar">
-          <button type="button" class="btn-action-primary" id="btn-repack-pkpass">
-            {{ 'pkpass.actions.repack'|trans }}
-          </button>
-          <button type="button" class="btn-action-secondary" id="btn-export-google-wallet">
-            {{ 'pkpass.actions.export_google'|trans }}
-          </button>
-          <button type="button" class="btn-action-secondary" id="btn-download-json">
-            {{ 'pkpass.actions.download_json'|trans }}
-          </button>
-        </div>
       </div>
     </div>
 

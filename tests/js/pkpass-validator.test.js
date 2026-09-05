@@ -91,6 +91,38 @@ async function runTests() {
   const parsedPass = JSON.parse(extractedPassJson);
   assert.equal(parsedPass.organizationName, 'Warsaw Tech Hub');
 
+  // 10. Auto-Fix Colors Engine
+  const darkBgFixed = PkpassInspector.autoFixColors('rgb(15, 23, 42)', 'rgb(20, 25, 35)', 'rgb(22, 28, 40)');
+  assert.equal(darkBgFixed.foregroundColor, 'rgb(255, 255, 255)');
+  assert.equal(darkBgFixed.labelColor, 'rgb(203, 213, 225)');
+
+  const lightBgFixed = PkpassInspector.autoFixColors('rgb(240, 240, 240)', 'rgb(230, 230, 230)', 'rgb(220, 220, 220)');
+  assert.equal(lightBgFixed.foregroundColor, 'rgb(15, 23, 42)');
+
+  // 11. Polyglot Code Generator
+  const phpCode = PkpassInspector.generateCodeSnippet('php', PkpassInspector.PRESETS.boardingPass);
+  assert.ok(phpCode.includes('ZipArchive'), 'PHP snippet must use ZipArchive');
+  assert.ok(phpCode.includes('openssl_pkcs7_sign'), 'PHP snippet must use openssl_pkcs7_sign');
+
+  const tsCode = PkpassInspector.generateCodeSnippet('ts', PkpassInspector.PRESETS.boardingPass);
+  assert.ok(tsCode.includes('@walletpass/pass-js'), 'TS snippet must import pass-js');
+
+  const pyCode = PkpassInspector.generateCodeSnippet('python', PkpassInspector.PRESETS.boardingPass);
+  assert.ok(pyCode.includes('zipfile.ZipFile'), 'Python snippet must use zipfile');
+
+  const goCode = PkpassInspector.generateCodeSnippet('go', PkpassInspector.PRESETS.boardingPass);
+  assert.ok(goCode.includes('archive/zip'), 'Go snippet must use archive/zip');
+
+  const curlCode = PkpassInspector.generateCodeSnippet('curl', PkpassInspector.PRESETS.boardingPass);
+  assert.ok(curlCode.includes('/api/v1/pkpass/validate'), 'cURL snippet must target Stackhal API');
+
+  // 12. Asset Studio Specifications
+  assert.ok(PkpassInspector.ASSET_SPECS.icon, 'Asset specs must define icon');
+  assert.equal(PkpassInspector.ASSET_SPECS.icon.required, true);
+  assert.equal(PkpassInspector.ASSET_SPECS.icon.variants[0].w, 29);
+  assert.equal(PkpassInspector.ASSET_SPECS.icon.variants[1].w, 58);
+  assert.equal(PkpassInspector.ASSET_SPECS.icon.variants[2].w, 87);
+
   console.log('All Apple Wallet .pkpass JS tests passed cleanly!');
 }
 

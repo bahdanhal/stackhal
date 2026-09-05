@@ -13,6 +13,7 @@ final readonly class ValidationFinding
         public string $description,
         public ?string $field = null,
         public ?string $file = null,
+        public ?string $remediation = null,
     ) {
     }
 
@@ -26,8 +27,11 @@ final readonly class ValidationFinding
             'severity' => $this->severity->value,
             'title' => $this->title,
             'description' => $this->description,
+            'message' => $this->description,
             'field' => $this->field,
+            'path' => $this->field,
             'file' => $this->file,
+            'remediation' => $this->remediation,
         ];
     }
 }

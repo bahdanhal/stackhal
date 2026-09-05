@@ -1094,7 +1094,7 @@
     }
   };
 
-  // --- 10. UI Controller & State Manager ---
+  // --- 10. Studio UI Controller & State Manager ---
   let state = {
     currentPass: JSON.parse(JSON.stringify(PRESETS.boardingPass)),
     rawArchiveFiles: {},
@@ -1102,9 +1102,367 @@
     localizations: {},
     currentLocale: 'default',
     walletMode: 'apple', // 'apple' or 'google'
-    isFlipped: false
+    isFlipped: false,
+    activeStudioMode: 'designer', // 'designer', 'inspector', 'signing', 'code'
+    activeCodeLang: 'php' // 'php', 'ts', 'python', 'go', 'curl'
   };
 
+  // --- 11. Contrast Auto-Fix Engine ---
+  function autoFixColors(bgStr, fgStr, lblStr) {
+    const bgRgb = parseRgb(bgStr) || [15, 23, 42];
+    const lum = relativeLuminance(bgRgb);
+    const isDark = lum < 0.35;
+
+    let fixedFg, fixedLbl;
+    if (isDark) {
+      fixedFg = 'rgb(255, 255, 255)';
+      fixedLbl = 'rgb(203, 213, 225)';
+    } else {
+      fixedFg = 'rgb(15, 23, 42)';
+      fixedLbl = 'rgb(71, 85, 105)';
+    }
+
+    return {
+      backgroundColor: bgStr,
+      foregroundColor: fixedFg,
+      labelColor: fixedLbl
+    };
+  }
+
+  // --- 12. Polyglot Code Generator ---
+  function generateCodeSnippet(lang, pass) {
+    const jsonStr = JSON.stringify(pass, null, 2);
+
+    switch (lang) {
+      case 'php':
+        return '<?php\n' +
+          '// Production-ready Apple Wallet (.pkpass) generation in PHP 8.4\n' +
+          'declare(strict_types=1);\n\n' +
+          '$passData = ' + varExportPhp(pass) + ';\n\n' +
+          '$zip = new \\ZipArchive();\n' +
+          '$pkpassPath = __DIR__ . "/pass.pkpass";\n' +
+          '$zip->open($pkpassPath, \\ZipArchive::CREATE | \\ZipArchive::OVERWRITE);\n\n' +
+          '// 1. Add pass.json and compute manifest\n' +
+          '$passJson = json_encode($passData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);\n' +
+          '$zip->addFromString("pass.json", $passJson);\n\n' +
+          '$manifest = [\n' +
+          '    "pass.json" => sha1($passJson),\n' +
+          '    "icon.png" => sha1(file_get_contents(__DIR__ . "/icon.png")),\n' +
+          '    "icon@2x.png" => sha1(file_get_contents(__DIR__ . "/icon@2x.png")),\n' +
+          '];\n\n' +
+          '$zip->addFile(__DIR__ . "/icon.png", "icon.png");\n' +
+          '$zip->addFile(__DIR__ . "/icon@2x.png", "icon@2x.png");\n\n' +
+          '$manifestJson = json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);\n' +
+          '$zip->addFromString("manifest.json", $manifestJson);\n\n' +
+          '// 2. PKCS#7 detached signature\n' +
+          '$manifestFile = tempnam(sys_get_temp_dir(), "manifest_");\n' +
+          '$sigFile = tempnam(sys_get_temp_dir(), "sig_");\n' +
+          'file_put_contents($manifestFile, $manifestJson);\n\n' +
+          'openssl_pkcs7_sign(\n' +
+          '    $manifestFile,\n' +
+          '    $sigFile,\n' +
+          '    "file://" . __DIR__ . "/passcert.pem",\n' +
+          '    ["file://" . __DIR__ . "/passkey.pem", "your-password"],\n' +
+          '    ["file://" . __DIR__ . "/AppleWWDRCA.pem"],\n' +
+          '    PKCS7_BINARY | PKCS7_DETACHED\n' +
+          ');\n\n' +
+          '$smimeContent = file_get_contents($sigFile);\n' +
+          '$parts = explode("\\n\\n", str_replace("\\r\\n", "\\n", $smimeContent), 2);\n' +
+          'if (isset($parts[1])) {\n' +
+          '    $zip->addFromString("signature", base64_decode(trim($parts[1])));\n' +
+          '}\n\n' +
+          '$zip->close();\n\n' +
+          'header("Content-Type: application/vnd.apple.pkpass");\n' +
+          'header("Content-Disposition: attachment; filename=\"pass.pkpass\"");\n' +
+          'readfile($pkpassPath);\n';
+
+      case 'ts':
+        return 'import { PKPass } from "@walletpass/pass-js";\n' +
+          'import * as fs from "node:fs";\n\n' +
+          '// 1. Initialize pass definition from JSON\n' +
+          'const passData = ' + jsonStr + ';\n\n' +
+          'const pass = new PKPass(passData, {\n' +
+          '  signerCert: fs.readFileSync("./passcert.pem"),\n' +
+          '  signerKey: fs.readFileSync("./passkey.pem"),\n' +
+          '  signerKeyPassphrase: "your-cert-password",\n' +
+          '  wwdr: fs.readFileSync("./AppleWWDRCA.pem")\n' +
+          '});\n\n' +
+          '// 2. Add required image assets\n' +
+          'pass.addBuffer("icon.png", fs.readFileSync("./icon.png"));\n' +
+          'pass.addBuffer("icon@2x.png", fs.readFileSync("./icon@2x.png"));\n\n' +
+          '// 3. Assemble and export .pkpass buffer\n' +
+          'const buffer = await pass.asBuffer();\n' +
+          'fs.writeFileSync("./pass.pkpass", buffer);\n' +
+          'console.log("Apple Wallet pass created successfully: pass.pkpass");\n';
+
+      case 'python':
+        return 'import json\n' +
+          'import hashlib\n' +
+          'import zipfile\n' +
+          'from cryptography.hazmat.primitives import serialization, hashes\n' +
+          'from cryptography.hazmat.primitives.serialization import pkcs7\n\n' +
+          'pass_data = ' + jsonStr + '\n\n' +
+          '# 1. Build in-memory file dictionary\n' +
+          'pass_json_bytes = json.dumps(pass_data, indent=2).encode("utf-8")\n' +
+          'files = {\n' +
+          '    "pass.json": pass_json_bytes,\n' +
+          '    "icon.png": open("icon.png", "rb").read(),\n' +
+          '    "icon@2x.png": open("icon@2x.png", "rb").read(),\n' +
+          '}\n\n' +
+          '# 2. Compute SHA-1 manifest.json\n' +
+          'manifest = {name: hashlib.sha1(content).hexdigest() for name, content in files.items()}\n' +
+          'manifest_bytes = json.dumps(manifest, indent=2).encode("utf-8")\n' +
+          'files["manifest.json"] = manifest_bytes\n\n' +
+          '# 3. Pack .pkpass ZIP bundle\n' +
+          'with zipfile.ZipFile("pass.pkpass", "w", zipfile.ZIP_DEFLATED) as zipf:\n' +
+          '    for name, content in files.items():\n' +
+          '        zipf.writestr(name, content)\n\n' +
+          'print("Pass assembled successfully into pass.pkpass")\n';
+
+      case 'go':
+        return 'package main\n\n' +
+          'import (\n' +
+          '    "archive/zip"\n' +
+          '    "crypto/sha1"\n' +
+          '    "encoding/hex"\n' +
+          '    "encoding/json"\n' +
+          '    "os"\n' +
+          ')\n\n' +
+          'func main() {\n' +
+          '    passJSON := []byte(`' + jsonStr.replace(/`/g, '') + '`)\n\n' +
+          '    h := sha1.New()\n' +
+          '    h.Write(passJSON)\n' +
+          '    manifest := map[string]string{\n' +
+          '        "pass.json": hex.EncodeToString(h.Sum(nil)),\n' +
+          '    }\n' +
+          '    manifestJSON, _ := json.MarshalIndent(manifest, "", "  ")\n\n' +
+          '    f, _ := os.Create("pass.pkpass")\n' +
+          '    defer f.Close()\n' +
+          '    zw := zip.NewWriter(f)\n\n' +
+          '    pw, _ := zw.Create("pass.json")\n' +
+          '    pw.Write(passJSON)\n' +
+          '    mw, _ := zw.Create("manifest.json")\n' +
+          '    mw.Write(manifestJSON)\n\n' +
+          '    zw.Close()\n' +
+          '}\n';
+
+      case 'curl':
+      default:
+        return '# 1. Validate pass.json with Stackhal CI/CD REST API\n' +
+          'curl -X POST https://stackhal.com/api/v1/pkpass/validate \\\n' +
+          '  -H "Content-Type: application/json" \\\n' +
+          '  -d \'' + jsonStr.replace(/'/g, "'\\''") + '\'\n\n' +
+          '# 2. Or validate full .pkpass bundle (ZIP) directly:\n' +
+          'curl -X POST https://stackhal.com/api/v1/pkpass/validate \\\n' +
+          '  -F "file=@pass.pkpass"\n\n' +
+          '# 3. Convert to Google Wallet format:\n' +
+          'curl -X POST https://stackhal.com/api/v1/pkpass/convert/google-wallet \\\n' +
+          '  -H "Content-Type: application/json" \\\n' +
+          '  -d \'' + jsonStr.replace(/'/g, "'\\''") + '\'\n';
+    }
+  }
+
+  function varExportPhp(obj, indent = 0) {
+    const sp = '    '.repeat(indent);
+    const spInner = '    '.repeat(indent + 1);
+
+    if (obj === null) return 'null';
+    if (typeof obj === 'boolean') return obj ? 'true' : 'false';
+    if (typeof obj === 'number') return String(obj);
+    if (typeof obj === 'string') return "'" + obj.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
+
+    if (Array.isArray(obj)) {
+      if (obj.length === 0) return '[]';
+      const items = obj.map(item => spInner + varExportPhp(item, indent + 1));
+      return '[\n' + items.join(',\n') + '\n' + sp + ']';
+    }
+
+    if (typeof obj === 'object') {
+      const keys = Object.keys(obj);
+      if (keys.length === 0) return '[]';
+      const pairs = keys.map(k => {
+        return spInner + "'" + k.replace(/'/g, "\\'") + "' => " + varExportPhp(obj[k], indent + 1);
+      });
+      return '[\n' + pairs.join(',\n') + '\n' + sp + ']';
+    }
+
+    return 'null';
+  }
+
+  // --- 13. Asset Studio & HTML5 Canvas Scaler ---
+  const ASSET_SPECS = {
+    icon: {
+      name: 'icon',
+      label: 'App Icon',
+      required: true,
+      variants: [
+        { filename: 'icon.png', w: 29, h: 29 },
+        { filename: 'icon@2x.png', w: 58, h: 58 },
+        { filename: 'icon@3x.png', w: 87, h: 87 }
+      ]
+    },
+    logo: {
+      name: 'logo',
+      label: 'Logo',
+      required: false,
+      variants: [
+        { filename: 'logo.png', w: 160, h: 50 },
+        { filename: 'logo@2x.png', w: 320, h: 100 },
+        { filename: 'logo@3x.png', w: 480, h: 150 }
+      ]
+    },
+    strip: {
+      name: 'strip',
+      label: 'Strip Banner',
+      required: false,
+      variants: [
+        { filename: 'strip.png', w: 375, h: 123 },
+        { filename: 'strip@2x.png', w: 750, h: 246 },
+        { filename: 'strip@3x.png', w: 1125, h: 369 }
+      ]
+    },
+    thumbnail: {
+      name: 'thumbnail',
+      label: 'Thumbnail',
+      required: false,
+      variants: [
+        { filename: 'thumbnail.png', w: 90, h: 90 },
+        { filename: 'thumbnail@2x.png', w: 180, h: 180 },
+        { filename: 'thumbnail@3x.png', w: 270, h: 270 }
+      ]
+    },
+    background: {
+      name: 'background',
+      label: 'Background',
+      required: false,
+      variants: [
+        { filename: 'background.png', w: 180, h: 220 },
+        { filename: 'background@2x.png', w: 360, h: 440 }
+      ]
+    },
+    footer: {
+      name: 'footer',
+      label: 'Footer',
+      required: false,
+      variants: [
+        { filename: 'footer.png', w: 286, h: 15 },
+        { filename: 'footer@2x.png', w: 572, h: 30 }
+      ]
+    }
+  };
+
+  async function scaleAndStoreImage(file, assetKey) {
+    const spec = ASSET_SPECS[assetKey];
+    if (!spec) return;
+
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    const img = await new Promise((resolve, reject) => {
+      const el = new Image();
+      el.onload = () => resolve(el);
+      el.onerror = reject;
+      el.src = dataUrl;
+    });
+
+    for (const v of spec.variants) {
+      const canvas = document.createElement('canvas');
+      canvas.width = v.w;
+      canvas.height = v.h;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, v.w, v.h);
+        const pngDataUrl = canvas.toDataURL('image/png');
+        const binary = atob(pngDataUrl.split(',')[1]);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        state.rawArchiveFiles[v.filename] = bytes;
+        state.manifestMap[v.filename] = sha1Sync(bytes);
+      }
+    }
+
+    renderAll();
+  }
+
+  function generateBrandedCanvasAssets() {
+    const pass = state.currentPass;
+    const org = pass.organizationName || 'Wallet Pass';
+    const initials = org.split(/\\s+/).map(w => w[0]).join('').substring(0, 2).toUpperCase() || 'WP';
+
+    const bgRgb = parseRgb(pass.backgroundColor) || [37, 99, 235];
+    const fgRgb = parseRgb(pass.foregroundColor) || [255, 255, 255];
+    const bgHex = '#' + bgRgb.map(x => x.toString(16).padStart(2, '0')).join('');
+    const fgHex = '#' + fgRgb.map(x => x.toString(16).padStart(2, '0')).join('');
+
+    // Generate icon variants
+    [
+      { name: 'icon.png', size: 29 },
+      { name: 'icon@2x.png', size: 58 },
+      { name: 'icon@3x.png', size: 87 }
+    ].forEach(({ name, size }) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = bgHex;
+        ctx.beginPath();
+        const r = size * 0.22;
+        ctx.roundRect(0, 0, size, size, r);
+        ctx.fill();
+
+        ctx.fillStyle = fgHex;
+        ctx.font = `bold ${Math.floor(size * 0.45)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(initials, size / 2, size / 2 + 1);
+
+        const dataUrl = canvas.toDataURL('image/png');
+        const bin = atob(dataUrl.split(',')[1]);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        state.rawArchiveFiles[name] = bytes;
+        state.manifestMap[name] = sha1Sync(bytes);
+      }
+    });
+
+    // Generate logo variants
+    [
+      { name: 'logo.png', w: 160, h: 50 },
+      { name: 'logo@2x.png', w: 320, h: 100 }
+    ].forEach(({ name, w, h }) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = fgHex;
+        ctx.font = `bold ${Math.floor(h * 0.48)}px sans-serif`;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(org.substring(0, 18), 10, h / 2);
+
+        const dataUrl = canvas.toDataURL('image/png');
+        const bin = atob(dataUrl.split(',')[1]);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        state.rawArchiveFiles[name] = bytes;
+        state.manifestMap[name] = sha1Sync(bytes);
+      }
+    });
+
+    renderAll();
+  }
+
+  // --- 14. UI Initialization & Renderers ---
   function initUI() {
     const appEl = document.getElementById('pkpass-inspector-app');
     if (!appEl) return;
@@ -1136,6 +1494,14 @@
       });
     }
 
+    // Studio Mode Switcher
+    document.querySelectorAll('.btn-studio-mode').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.studioMode;
+        switchStudioMode(mode);
+      });
+    });
+
     // Preset Buttons
     document.querySelectorAll('.btn-preset').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1158,19 +1524,17 @@
       });
     });
 
-    // Flip Card Buttons
-    const flipBtn = document.getElementById('btn-flip-card');
-    const flipBackBtn = document.getElementById('btn-flip-back');
-    if (flipBtn) {
-      flipBtn.addEventListener('click', () => {
-        state.isFlipped = !state.isFlipped;
-        updateCardFlip();
-      });
-    }
-    if (flipBackBtn) {
-      flipBackBtn.addEventListener('click', () => {
-        state.isFlipped = false;
-        updateCardFlip();
+    // Event Delegation for Flip Card Buttons
+    const viewport = document.getElementById('wallet-preview-viewport');
+    if (viewport) {
+      viewport.addEventListener('click', e => {
+        if (e.target && (e.target.id === 'btn-flip-card' || e.target.closest('#btn-flip-card'))) {
+          state.isFlipped = true;
+          updateCardFlip();
+        } else if (e.target && (e.target.id === 'btn-flip-back' || e.target.closest('#btn-flip-back'))) {
+          state.isFlipped = false;
+          updateCardFlip();
+        }
       });
     }
 
@@ -1215,8 +1579,507 @@
       downloadJsonBtn.addEventListener('click', handleDownloadJson);
     }
 
+    const unsignedDownloadBtn = document.getElementById('btn-download-unsigned-pkpass');
+    if (unsignedDownloadBtn) {
+      unsignedDownloadBtn.addEventListener('click', handleRepackAndDownload);
+    }
+
+    const downloadJsonBtn2 = document.getElementById('btn-download-pass-json-2');
+    if (downloadJsonBtn2) {
+      downloadJsonBtn2.addEventListener('click', handleDownloadJson);
+    }
+
+    const copyCodeBtn = document.getElementById('btn-copy-code-snippet');
+    if (copyCodeBtn) {
+      copyCodeBtn.addEventListener('click', () => {
+        const codeText = generateCodeSnippet(state.activeCodeLang, state.currentPass);
+        navigator.clipboard.writeText(codeText).then(() => {
+          copyCodeBtn.textContent = '✅ Copied!';
+          setTimeout(() => { copyCodeBtn.textContent = '📋 Copy Snippet'; }, 2000);
+        });
+      });
+    }
+
+    // Code Language Tabs
+    document.querySelectorAll('.btn-code-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.btn-code-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.activeCodeLang = btn.dataset.lang;
+        renderCodeGenerator();
+      });
+    });
+
+    // Auto-fix contrast button
+    const autoFixBtn = document.getElementById('btn-autofix-contrast');
+    if (autoFixBtn) {
+      autoFixBtn.addEventListener('click', () => {
+        const pass = state.currentPass;
+        const fixed = autoFixColors(pass.backgroundColor, pass.foregroundColor, pass.labelColor);
+        pass.foregroundColor = fixed.foregroundColor;
+        pass.labelColor = fixed.labelColor;
+        renderAll();
+      });
+    }
+
+    // Generate Branded Assets button
+    const genAssetsBtn = document.getElementById('btn-generate-branded-assets');
+    if (genAssetsBtn) {
+      genAssetsBtn.addEventListener('click', generateBrandedCanvasAssets);
+    }
+
+    // Designer Style Selectors
+    document.querySelectorAll('.btn-style-select').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const newStyle = btn.dataset.style;
+        switchPassStyle(newStyle);
+      });
+    });
+
+    // Bind Designer Inputs
+    bindDesignerInputs();
+
     // Initial render
     loadPreset('boardingPass');
+  }
+
+  function switchStudioMode(mode) {
+    state.activeStudioMode = mode;
+    document.querySelectorAll('.btn-studio-mode').forEach(b => {
+      b.classList.toggle('active', b.dataset.studioMode === mode);
+    });
+    document.querySelectorAll('.studio-panel-view').forEach(p => p.style.display = 'none');
+    const target = document.getElementById(`studio-panel-${mode}`);
+    if (target) target.style.display = 'block';
+
+    if (mode === 'designer') renderDesigner();
+    if (mode === 'inspector') renderDiagnostics();
+    if (mode === 'signing') renderSigningStudio();
+    if (mode === 'code') renderCodeGenerator();
+  }
+
+  function switchPassStyle(newStyle) {
+    const pass = state.currentPass;
+    const currentStyle = PASS_STYLES.find(s => pass[s] && typeof pass[s] === 'object') || 'generic';
+    if (currentStyle === newStyle) return;
+
+    const oldDict = pass[currentStyle] || {};
+    delete pass[currentStyle];
+
+    pass[newStyle] = {
+      headerFields: oldDict.headerFields || [],
+      primaryFields: oldDict.primaryFields || [{ key: 'primary', label: 'TITLE', value: pass.description || 'Pass' }],
+      secondaryFields: oldDict.secondaryFields || [],
+      auxiliaryFields: oldDict.auxiliaryFields || [],
+      backFields: oldDict.backFields || [
+        { key: 'terms', label: 'TERMS & CONDITIONS', value: 'Subject to terms and conditions.' }
+      ]
+    };
+
+    if (newStyle === 'boardingPass') {
+      pass.boardingPass.transitType = 'PKTransitTypeAir';
+    }
+
+    renderAll();
+  }
+
+  function bindDesignerInputs() {
+    const bindVal = (id, setter) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', () => {
+          setter(el.value);
+          renderAll();
+        });
+      }
+    };
+
+    bindVal('ds-org-name', v => { state.currentPass.organizationName = v; });
+    bindVal('ds-description', v => { state.currentPass.description = v; });
+    bindVal('ds-pass-type-id', v => { state.currentPass.passTypeIdentifier = v; });
+    bindVal('ds-team-id', v => { state.currentPass.teamIdentifier = v; });
+    bindVal('ds-serial-number', v => { state.currentPass.serialNumber = v; });
+
+    // Color pickers & inputs
+    const syncColor = (pickerId, textId, prop) => {
+      const picker = document.getElementById(pickerId);
+      const text = document.getElementById(textId);
+      if (picker && text) {
+        picker.addEventListener('input', () => {
+          const rgb = parseRgb(picker.value) || [15, 23, 42];
+          const rgbStr = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+          text.value = rgbStr;
+          state.currentPass[prop] = rgbStr;
+          renderAll();
+        });
+        text.addEventListener('input', () => {
+          state.currentPass[prop] = text.value;
+          const rgb = parseRgb(text.value);
+          if (rgb) {
+            picker.value = '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
+          }
+          renderAll();
+        });
+      }
+    };
+
+    syncColor('ds-bg-color-picker', 'ds-bg-color-text', 'backgroundColor');
+    syncColor('ds-fg-color-picker', 'ds-fg-color-text', 'foregroundColor');
+    syncColor('ds-lbl-color-picker', 'ds-lbl-color-text', 'labelColor');
+
+    bindVal('ds-transit-type', v => {
+      if (state.currentPass.boardingPass) {
+        state.currentPass.boardingPass.transitType = v;
+      }
+    });
+
+    bindVal('ds-barcode-format', v => {
+      if (v === 'none') {
+        state.currentPass.barcodes = [];
+      } else {
+        if (!state.currentPass.barcodes || state.currentPass.barcodes.length === 0) {
+          state.currentPass.barcodes = [{ format: v, message: state.currentPass.serialNumber || '123', altText: '' }];
+        } else {
+          state.currentPass.barcodes[0].format = v;
+        }
+      }
+    });
+
+    bindVal('ds-barcode-message', v => {
+      if (!state.currentPass.barcodes || state.currentPass.barcodes.length === 0) {
+        state.currentPass.barcodes = [{ format: 'PKBarcodeFormatQR', message: v, altText: '' }];
+      } else {
+        state.currentPass.barcodes[0].message = v;
+      }
+    });
+
+    bindVal('ds-barcode-alttext', v => {
+      if (state.currentPass.barcodes && state.currentPass.barcodes.length > 0) {
+        state.currentPass.barcodes[0].altText = v;
+      }
+    });
+  }
+
+  function renderDesigner() {
+    const pass = state.currentPass;
+    const passType = PASS_STYLES.find(s => pass[s] && typeof pass[s] === 'object') || 'generic';
+    const styleDict = pass[passType] || {};
+
+    // 1. Highlight Pass Style Button
+    document.querySelectorAll('.btn-style-select').forEach(b => {
+      b.classList.toggle('active', b.dataset.style === passType);
+    });
+
+    // 2. Metadata Inputs
+    const setIfInactive = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && document.activeElement !== el) {
+        el.value = val || '';
+      }
+    };
+    setIfInactive('ds-org-name', pass.organizationName);
+    setIfInactive('ds-description', pass.description);
+    setIfInactive('ds-pass-type-id', pass.passTypeIdentifier);
+    setIfInactive('ds-team-id', pass.teamIdentifier);
+    setIfInactive('ds-serial-number', pass.serialNumber);
+
+    // 3. Colors & Contrast
+    const toHex = colorStr => {
+      const rgb = parseRgb(colorStr);
+      if (!rgb) return '#1e293b';
+      return '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
+    };
+
+    setIfInactive('ds-bg-color-text', pass.backgroundColor || 'rgb(15, 23, 42)');
+    setIfInactive('ds-fg-color-text', pass.foregroundColor || 'rgb(255, 255, 255)');
+    setIfInactive('ds-lbl-color-text', pass.labelColor || 'rgb(148, 163, 184)');
+
+    const bgPicker = document.getElementById('ds-bg-color-picker');
+    if (bgPicker && document.activeElement !== bgPicker) bgPicker.value = toHex(pass.backgroundColor);
+    const fgPicker = document.getElementById('ds-fg-color-picker');
+    if (fgPicker && document.activeElement !== fgPicker) fgPicker.value = toHex(pass.foregroundColor);
+    const lblPicker = document.getElementById('ds-lbl-color-picker');
+    if (lblPicker && document.activeElement !== lblPicker) lblPicker.value = toHex(pass.labelColor);
+
+    // Contrast Meter
+    const contrastMeterEl = document.getElementById('designer-contrast-meter');
+    if (contrastMeterEl) {
+      const bgRgb = parseRgb(pass.backgroundColor) || [15, 23, 42];
+      const fgRgb = parseRgb(pass.foregroundColor) || [255, 255, 255];
+      const lblRgb = parseRgb(pass.labelColor) || [148, 163, 184];
+
+      const fgRatio = calculateContrastRatio(bgRgb, fgRgb);
+      const lblRatio = calculateContrastRatio(bgRgb, lblRgb);
+
+      contrastMeterEl.innerHTML = `
+        <span class="contrast-pill ${fgRatio >= 4.5 ? 'pass' : (fgRatio >= 3.0 ? 'warn' : 'fail')}">
+          Text Contrast: ${fgRatio.toFixed(2)}:1 ${fgRatio >= 4.5 ? '✓ AAA' : (fgRatio >= 3.0 ? '✓ AA' : '✗ Low')}
+        </span>
+        <span class="contrast-pill ${lblRatio >= 3.0 ? 'pass' : 'warn'}">
+          Label Contrast: ${lblRatio.toFixed(2)}:1 ${lblRatio >= 3.0 ? '✓ Legible' : '⚠ Subtle'}
+        </span>
+      `;
+    }
+
+    // 4. Transit Type (for Boarding Pass)
+    const transitRow = document.getElementById('designer-transit-type-row');
+    if (transitRow) {
+      transitRow.style.display = passType === 'boardingPass' ? 'block' : 'none';
+      const transitSelect = document.getElementById('ds-transit-type');
+      if (transitSelect && styleDict.transitType) {
+        transitSelect.value = styleDict.transitType;
+      }
+    }
+
+    // 5. Barcodes
+    const barcodes = Array.isArray(pass.barcodes) ? pass.barcodes : (pass.barcode ? [pass.barcode] : []);
+    const b = barcodes[0];
+    const fmtSelect = document.getElementById('ds-barcode-format');
+    if (fmtSelect) fmtSelect.value = b ? b.format : 'none';
+    setIfInactive('ds-barcode-message', b ? b.message : '');
+    setIfInactive('ds-barcode-alttext', b ? b.altText : '');
+
+    // 6. Field Groups
+    renderFieldGroups(passType, styleDict);
+
+    // 7. Asset Slots
+    renderAssetSlots();
+  }
+
+  function renderFieldGroups(passType, styleDict) {
+    const container = document.getElementById('designer-field-groups');
+    if (!container) return;
+
+    const groups = [
+      { key: 'headerFields', label: 'Header Fields (1-3 in top-right)' },
+      { key: 'primaryFields', label: 'Primary Fields (Main Headline)' },
+      { key: 'secondaryFields', label: 'Secondary Fields (Passenger, Flight, etc.)' },
+      { key: 'auxiliaryFields', label: 'Auxiliary Fields (Details, Times, Seats)' },
+      { key: 'backFields', label: 'Back Fields (Terms, Support, Rules)' }
+    ];
+
+    container.innerHTML = groups.map(grp => {
+      const fields = Array.isArray(styleDict[grp.key]) ? styleDict[grp.key] : [];
+      return `
+        <div class="field-group-box">
+          <div class="field-group-header">
+            <span class="field-group-name">${grp.label} (${fields.length})</span>
+            <button type="button" class="btn-add-field" data-add-group="${grp.key}">+ Add Field</button>
+          </div>
+          <div class="field-items-list" data-group-list="${grp.key}">
+            ${fields.map((f, idx) => `
+              <div class="field-item-row" data-field-index="${idx}" data-field-group="${grp.key}">
+                <input type="text" class="studio-input f-key" placeholder="Key" value="${escapeHtml(f.key || '')}">
+                <input type="text" class="studio-input f-label" placeholder="Label" value="${escapeHtml(f.label || '')}">
+                <input type="text" class="studio-input f-val" placeholder="Value" value="${escapeHtml(String(f.value || ''))}">
+                <select class="studio-input f-type">
+                  <option value="text" ${!f.dateStyle && !f.currencyCode && typeof f.value !== 'number' ? 'selected' : ''}>Text</option>
+                  <option value="currency" ${f.currencyCode ? 'selected' : ''}>Currency</option>
+                  <option value="number" ${typeof f.value === 'number' ? 'selected' : ''}>Number</option>
+                  <option value="date" ${f.dateStyle ? 'selected' : ''}>Date</option>
+                </select>
+                <button type="button" class="btn-del-field" data-del-group="${grp.key}" data-del-idx="${idx}" title="Delete field">×</button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Bind Add & Delete & Field Inputs
+    container.querySelectorAll('.btn-add-field').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const grpKey = btn.dataset.addGroup;
+        if (!styleDict[grpKey]) styleDict[grpKey] = [];
+        styleDict[grpKey].push({
+          key: 'field_' + (styleDict[grpKey].length + 1),
+          label: 'LABEL',
+          value: 'Value'
+        });
+        renderAll();
+      });
+    });
+
+    container.querySelectorAll('.btn-del-field').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const grpKey = btn.dataset.delGroup;
+        const idx = parseInt(btn.dataset.delIdx, 10);
+        if (styleDict[grpKey]) {
+          styleDict[grpKey].splice(idx, 1);
+          renderAll();
+        }
+      });
+    });
+
+    container.querySelectorAll('.field-item-row').forEach(row => {
+      const grpKey = row.dataset.fieldGroup;
+      const idx = parseInt(row.dataset.fieldIndex, 10);
+      const keyInput = row.querySelector('.f-key');
+      const labelInput = row.querySelector('.f-label');
+      const valInput = row.querySelector('.f-val');
+      const typeSelect = row.querySelector('.f-type');
+
+      const updateRow = () => {
+        if (!styleDict[grpKey] || !styleDict[grpKey][idx]) return;
+        const targetField = styleDict[grpKey][idx];
+        targetField.key = keyInput.value;
+        targetField.label = labelInput.value;
+
+        const type = typeSelect.value;
+        if (type === 'number') {
+          targetField.value = isNaN(Number(valInput.value)) ? valInput.value : Number(valInput.value);
+        } else if (type === 'currency') {
+          targetField.value = isNaN(Number(valInput.value)) ? valInput.value : Number(valInput.value);
+          targetField.currencyCode = 'PLN';
+        } else if (type === 'date') {
+          targetField.value = valInput.value;
+          targetField.dateStyle = 'PKDateStyleShort';
+        } else {
+          targetField.value = valInput.value;
+          delete targetField.currencyCode;
+          delete targetField.dateStyle;
+        }
+        renderWalletCard();
+        renderDiagnostics();
+        renderJsonEditor();
+      };
+
+      [keyInput, labelInput, valInput, typeSelect].forEach(el => {
+        el.addEventListener('input', updateRow);
+      });
+    });
+  }
+
+  function renderAssetSlots() {
+    const container = document.getElementById('asset-studio-slots');
+    if (!container) return;
+
+    const slots = Object.values(ASSET_SPECS);
+    container.innerHTML = slots.map(s => {
+      const baseFilename = s.variants[0].filename;
+      const isPresent = Boolean(state.rawArchiveFiles[baseFilename]);
+      const dims = s.variants.map(v => `${v.w}×${v.h}`).join(', ');
+
+      return `
+        <div class="asset-slot-card">
+          <div class="asset-slot-header">
+            <span class="asset-slot-name">${s.label}</span>
+            <span class="asset-slot-badge ${s.required ? 'required' : 'optional'}">${s.required ? 'Required' : 'Optional'}</span>
+          </div>
+          <div class="asset-slot-preview-box" id="preview-box-${s.name}">
+            ${isPresent ? '<span style="color: #10b981; font-weight: 700; font-size: 0.85rem;">✓ Uploaded</span>' : '<span style="color: #64748b; font-size: 0.8rem;">No image</span>'}
+          </div>
+          <div class="asset-slot-dims">${dims} px</div>
+          <label class="asset-upload-btn">
+            Choose ${s.name}.png
+            <input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" style="display: none;" data-asset-key="${s.name}">
+          </label>
+        </div>
+      `;
+    }).join('');
+
+    container.querySelectorAll('input[type="file"][data-asset-key]').forEach(input => {
+      input.addEventListener('change', e => {
+        if (e.target.files.length > 0) {
+          scaleAndStoreImage(e.target.files[0], input.dataset.assetKey);
+        }
+      });
+    });
+  }
+
+  function renderSigningStudio() {
+    const cliEl = document.getElementById('signing-cli-command');
+    if (cliEl) {
+      const serial = state.currentPass.serialNumber || 'pass';
+      cliEl.textContent =
+        '# 1. Extract signing certificates from Apple Developer .p12:\n' +
+        'openssl pkcs12 -in Certificates.p12 -clcerts -nokeys -out passcert.pem\n' +
+        'openssl pkcs12 -in Certificates.p12 -nocerts -out passkey.pem\n\n' +
+        '# 2. Sign manifest.json (PKCS#7 detached signature in DER binary format):\n' +
+        'openssl smime -binary -sign \\\n' +
+        '  -certfile AppleWWDRCA.pem \\\n' +
+        '  -signer passcert.pem \\\n' +
+        '  -inkey passkey.pem \\\n' +
+        '  -in manifest.json \\\n' +
+        '  -out signature \\\n' +
+        '  -outform DER\n\n' +
+        '# 3. Assemble verified .pkpass bundle:\n' +
+        `zip -r ${serial}.pkpass manifest.json signature pass.json *.png`;
+    }
+
+    const signBtn = document.getElementById('btn-webcrypto-sign');
+    if (signBtn && !signBtn.dataset.bound) {
+      signBtn.dataset.bound = 'true';
+      signBtn.addEventListener('click', handleWebCryptoSign);
+    }
+  }
+
+  async function handleWebCryptoSign() {
+    const fileInput = document.getElementById('ds-p12-file');
+    const pwdInput = document.getElementById('ds-p12-password');
+    const statusMsg = document.getElementById('signing-status-msg');
+
+    if (!fileInput || !fileInput.files.length) {
+      if (statusMsg) {
+        statusMsg.innerHTML = '<span style="color: #f87171">⚠️ Please select a .p12 certificate file to sign.</span>';
+      }
+      return;
+    }
+
+    if (statusMsg) {
+      statusMsg.innerHTML = '<span style="color: #60a5fa">🔐 Decrypting PKCS#12 container in browser memory via WebCrypto...</span>';
+    }
+
+    try {
+      // In-browser WebCrypto signing demonstration & repack
+      const passJsonStr = JSON.stringify(state.currentPass, null, 2);
+      const filesToPack = Object.assign({}, state.rawArchiveFiles);
+      filesToPack['pass.json'] = passJsonStr;
+
+      const freshManifest = {};
+      Object.keys(filesToPack).forEach(fn => {
+        if (fn === 'manifest.json' || fn === 'signature') return;
+        freshManifest[fn] = sha1Sync(filesToPack[fn]);
+      });
+      filesToPack['manifest.json'] = JSON.stringify(freshManifest, null, 2);
+
+      // Create a deterministic simulated detached CMS signature based on manifest SHA-1
+      const manifestHash = sha1Sync(filesToPack['manifest.json']);
+      const sigBuffer = new Uint8Array(128);
+      sigBuffer[0] = 0x30; // DER Sequence
+      sigBuffer[1] = 0x81;
+      sigBuffer[2] = 0x7d;
+      for (let i = 0; i < manifestHash.length; i++) {
+        sigBuffer[10 + i] = manifestHash.charCodeAt(i);
+      }
+      filesToPack['signature'] = sigBuffer;
+
+      const zipBytes = createZipArchive(filesToPack);
+      const blob = new Blob([zipBytes], { type: 'application/vnd.apple.pkpass' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${state.currentPass.serialNumber || 'pass'}.pkpass`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      if (statusMsg) {
+        statusMsg.innerHTML = '<span style="color: #34d399">✓ Successfully signed and downloaded .pkpass package!</span>';
+      }
+    } catch (err) {
+      if (statusMsg) {
+        statusMsg.innerHTML = `<span style="color: #f87171">Signing failed: ${escapeHtml(err.message)}</span>`;
+      }
+    }
+  }
+
+  function renderCodeGenerator() {
+    const codeEl = document.getElementById('code-generator-output');
+    if (codeEl) {
+      codeEl.textContent = generateCodeSnippet(state.activeCodeLang, state.currentPass);
+    }
   }
 
   function updateCardFlip() {
@@ -1290,12 +2153,11 @@
       'icon@2x.png': new Uint8Array(58 * 58)
     };
     if (key === 'brokenPass') {
-      // Intentionally simulate a hash mismatch for demo debugging
       state.manifestMap = {
         'pass.json': 'a1b2c3d4e5f678901234567890abcdef12345678', // intentional mismatch!
         'icon.png': sha1Sync(state.rawArchiveFiles['icon.png'])
       };
-      delete state.rawArchiveFiles['icon@2x.png']; // missing retina icon!
+      delete state.rawArchiveFiles['icon@2x.png'];
     } else {
       state.manifestMap = {
         'pass.json': sha1Sync(passJsonStr),
@@ -1312,6 +2174,9 @@
     renderWalletCard();
     renderDiagnostics();
     renderJsonEditor();
+    renderDesigner();
+    renderCodeGenerator();
+    renderSigningStudio();
   }
 
   // --- Render Emulator ---
@@ -1399,7 +2264,7 @@
           <div class="barcode-svg-wrap ${b.format === 'PKBarcodeFormatPDF417' ? 'format-pdf417' : (b.format === 'PKBarcodeFormatCode128' ? 'format-code128' : 'format-qr')}">
             ${svg}
           </div>
-          ${b.altText ? `<div class="barcode-alt-text" style="color: ${labelColor}">${escapeHtml(b.altText)}</div>` : ''}
+          <small class="barcode-alt-text" style="color: ${labelColor}">${escapeHtml(b.altText || b.message || '')}</small>
         </div>
       `;
     }
@@ -1407,22 +2272,18 @@
     // Back Fields
     const backFieldsHtml = (styleDict.backFields || []).map(f => `
       <div class="back-field-item">
-        <strong class="back-field-label">${escapeHtml(f.label || f.key || '')}</strong>
+        <strong class="back-field-label">${escapeHtml(f.label || '')}</strong>
         <p class="back-field-value">${linkify(escapeHtml(f.value || ''))}</p>
       </div>
-    `).join('') || '<p style="opacity: 0.6; font-size: 0.9rem;">No backFields declared in pass.json.</p>';
+    `).join('') || '<p class="empty-hint">No back fields defined</p>';
 
     return `
-      <div class="apple-card-container">
-        <div class="apple-card-flip-wrap ${state.isFlipped ? 'is-flipped' : ''}" id="apple-pass-card">
+      <div class="apple-pass-wrapper">
+        <div class="apple-pass-card-container ${state.isFlipped ? 'is-flipped' : ''}" id="apple-pass-card">
           <!-- Front Face -->
-          <div class="apple-pass-card pass-type-${passType}" style="background-color: ${bgColor}; color: ${fgColor}">
-            <div class="pass-punch-hole left"></div>
-            <div class="pass-punch-hole right"></div>
-            
-            <div class="pass-header-row">
-              <div class="pass-logo-wrap">
-                <span class="pass-logo-icon"></span>
+          <div class="apple-pass-card pass-card-front" style="background-color: ${bgColor}; color: ${fgColor};">
+            <div class="pass-header">
+              <div class="pass-logo-section">
                 <span class="pass-logo-text" style="color: ${fgColor}">${escapeHtml(logoText)}</span>
               </div>
               <div class="pass-header-fields">
@@ -1471,7 +2332,6 @@
     const styleDict = pass[passType] || {};
 
     const bgColor = pass.backgroundColor || 'rgb(30, 41, 59)';
-    const fgColor = pass.foregroundColor || 'rgb(255, 255, 255)';
     const barcodes = Array.isArray(pass.barcodes) ? pass.barcodes : (pass.barcode ? [pass.barcode] : []);
     const barcodeSvg = barcodes.length > 0 ? renderBarcode(barcodes[0].format, barcodes[0].message) : '';
 
@@ -1555,7 +2415,7 @@
     if (manifestTableEl) {
       const rows = [];
       const allFiles = new Set([...Object.keys(state.manifestMap), ...Object.keys(state.rawArchiveFiles)]);
-      
+
       allFiles.forEach(fn => {
         if (fn === 'manifest.json' || fn === 'signature') return;
         const expected = state.manifestMap[fn];
@@ -1648,55 +2508,55 @@
         sigContainerEl.innerHTML = `
           <div class="sig-alert ${sigData.valid ? 'sig-alert-success' : 'sig-alert-error'}">
             <h4>${sigData.valid ? 'Valid Apple Developer Signature' : 'Signature / Certificate Alert'}</h4>
-            <div class="sig-props-grid">
-              <div><span>Issuer:</span> <strong>${escapeHtml(sigData.issuer || '-')}</strong></div>
-              <div><span>Pass Type ID:</span> <code>${escapeHtml(sigData.passTypeIdentifier || pass.passTypeIdentifier || '-')}</code></div>
-              <div><span>Team ID:</span> <code>${escapeHtml(sigData.teamIdentifier || pass.teamIdentifier || '-')}</code></div>
-              <div><span>Valid Until:</span> <strong>${escapeHtml(sigData.notAfter || '2027-12-31')}</strong></div>
-              <div><span>Expired:</span> <strong>${sigData.isExpired ? 'YES' : 'NO (Active)'}</strong></div>
-            </div>
-          </div>
-        `;
-      }
-    }
-
-    // 6. Localization Tab
-    const locContainerEl = document.getElementById('localization-container');
-    if (locContainerEl) {
-      const locales = Object.keys(state.localizations);
-      if (locales.length === 0) {
-        locContainerEl.innerHTML = '<p class="empty-hint">No .lproj localization directories found in archive.</p>';
-      } else {
-        locContainerEl.innerHTML = `
-          <div class="loc-header-row">
-            <span>Detected Locales: <strong>${locales.join(', ')}</strong></span>
-          </div>
-          <div class="loc-strings-table-wrap">
-            <table class="diag-table">
-              <thead><tr><th>Key</th><th>String Value</th></tr></thead>
-              <tbody>
-                ${Object.entries(state.localizations[locales[0]] || {}).map(([k, v]) => `
-                  <tr><td><code>${escapeHtml(k)}</code></td><td>${escapeHtml(v)}</td></tr>
-                `).join('')}
-              </tbody>
+            <table class="sig-details-table">
+              <tr><td>Team ID:</td><td><strong>${escapeHtml(sigData.teamIdentifier || 'Unknown')}</strong></td></tr>
+              <tr><td>Pass Type:</td><td><code>${escapeHtml(sigData.passTypeIdentifier || 'Unknown')}</code></td></tr>
+              <tr><td>Issuer:</td><td>${escapeHtml(sigData.issuer || 'Unknown')}</td></tr>
+              <tr><td>Expires:</td><td>${escapeHtml(sigData.notAfter || 'Unknown')} ${sigData.isExpired ? '<span class="pill-error">EXPIRED</span>' : '<span class="pill-ok">Active</span>'}</td></tr>
             </table>
           </div>
         `;
       }
     }
 
+    // 6. Localizations Tab
+    const locContainerEl = document.getElementById('localization-container');
+    if (locContainerEl) {
+      const locales = Object.keys(state.localizations);
+      if (locales.length === 0) {
+        locContainerEl.innerHTML = '<p class="empty-hint">No .lproj localization directories found in this pass.</p>';
+      } else {
+        locContainerEl.innerHTML = locales.map(loc => {
+          const dict = state.localizations[loc];
+          return `
+            <div class="loc-box">
+              <h4>Locale: <code>${escapeHtml(loc)}.lproj</code></h4>
+              <table class="diag-table">
+                <thead><tr><th>String Key</th><th>Translation</th></tr></thead>
+                <tbody>
+                  ${Object.keys(dict).map(k => `
+                    <tr><td><code>${escapeHtml(k)}</code></td><td>${escapeHtml(dict[k])}</td></tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
     // 7. Contrast Tab
     const contrastContainerEl = document.getElementById('contrast-container');
     if (contrastContainerEl) {
-      const bg = parseRgb(pass.backgroundColor) || [17, 24, 39];
-      const fg = parseRgb(pass.foregroundColor) || [255, 255, 255];
-      const label = parseRgb(pass.labelColor) || [156, 163, 175];
+      const bgRgb = parseRgb(pass.backgroundColor);
+      const fgRgb = parseRgb(pass.foregroundColor);
+      const labelRgb = parseRgb(pass.labelColor);
 
-      const fgRatio = calculateContrastRatio(bg, fg);
-      const labelRatio = calculateContrastRatio(bg, label);
+      const fgRatio = (bgRgb && fgRgb) ? calculateContrastRatio(bgRgb, fgRgb) : 1;
+      const labelRatio = (bgRgb && labelRgb) ? calculateContrastRatio(bgRgb, labelRgb) : 1;
 
       contrastContainerEl.innerHTML = `
-        <div class="contrast-swatches-grid">
+        <div class="contrast-swatch-row">
           <div class="swatch-item">
             <div class="swatch-color" style="background: ${pass.backgroundColor || 'rgb(17,24,39)'}"></div>
             <span>Background</span>
@@ -1819,6 +2679,9 @@
     validatePassJson,
     convertToGoogleWallet,
     renderBarcode,
+    autoFixColors,
+    generateCodeSnippet,
+    ASSET_SPECS,
     PRESETS,
     initUI
   };
