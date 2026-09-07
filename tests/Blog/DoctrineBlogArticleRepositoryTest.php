@@ -38,13 +38,26 @@ final class DoctrineBlogArticleRepositoryTest extends DoctrineTestCase
         self::assertNull($this->repository()->findPublishedBySlug('missing'));
     }
 
+    public function testFindPublishedBySlugStrictlyMatchesLocaleWithoutEnglishFallback(): void
+    {
+        $this->entityManager->persist($this->article('english-only', new \DateTimeImmutable('-1 hour'), 'en'));
+        $this->entityManager->flush();
+
+        self::assertSame('english-only', $this->repository()->findPublishedBySlug('english-only', 'en')?->getSlug());
+        self::assertNull($this->repository()->findPublishedBySlug('english-only', 'pl'));
+    }
+
     private function repository(): DoctrineBlogArticleRepository
     {
         return new DoctrineBlogArticleRepository($this->entityManager);
     }
 
-    private function article(string $slug, \DateTimeImmutable $publishedAt): BlogArticleEntity
-    {
+    private function article(
+        string $slug,
+        \DateTimeImmutable $publishedAt,
+        string $locale = 'en',
+        string $alternateSlug = ''
+    ): BlogArticleEntity {
         return new BlogArticleEntity(
             $slug,
             $slug,
@@ -59,6 +72,8 @@ final class DoctrineBlogArticleRepositoryTest extends DoctrineTestCase
             'dns',
             ['one', 'two'],
             [['name' => 'Step', 'text' => 'Do the thing']],
+            $locale,
+            $alternateSlug
         );
     }
 }

@@ -1,17 +1,20 @@
 mcp:
-  app: 'StackHal DevTools & Audits MCP'
-  version: '1.1.0'
-  description: 'Online developer tools: Caddyfile transpiler, Apple PKPass inspector, CIDR matrix, DMARC/BIMI domain inspector, and SEO/GEO audits.'
-  website_url: 'https://stackhal.com/'
-  instructions: |
-    Public tools provide Caddyfile transpilation, Apple PKPass inspection, CIDR subnet diagnostics, domain security audits (DMARC, SPF, BIMI), and SEO audits. Administrative tools require an Authorization: Bearer header.
-  client_transports:
-    http: true
-    stdio: true
-  http:
-    path: '/mcp'
-    allowed_hosts: ['stackhal.com', 'www.stackhal.com', 'localhost', '127.0.0.1']
-    session:
-      store: file
-      directory: '%kernel.project_dir%/var/mcp-sessions'
-      ttl: 3600
+  servers:
+    default:
+      name: 'StackHal DevTools & Audits MCP'
+      version: '1.1.0'
+      description: 'Online developer tools: Caddyfile transpiler, Apple PKPass inspector, CIDR matrix, DMARC/BIMI domain inspector, and SEO/GEO audits.'
+      website_url: 'https://stackhal.com/'
+      instructions: |
+        Public tools provide Caddyfile transpilation, Apple PKPass inspection, CIDR subnet diagnostics, domain security audits (DMARC, SPF, BIMI), and SEO audits. Administrative tools require an Authorization: Bearer header.
+      transports:
+        http: true
+        stdio: true
+      http:
+        path: '/mcp'
+        allowed_hosts: ['stackhal.com', 'www.stackhal.com', 'localhost', '127.0.0.1']
+      session:
+        store: file
+        directory: '%kernel.project_dir%/var/mcp-sessions'
+        ttl: 3600
+      registry: '*'

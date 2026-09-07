@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>XML Sitemap · StackHal</title>
         <style>
-          :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+          :root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
           * { box-sizing: border-box; }
           body { margin: 0; color: #e7eef8; background: radial-gradient(circle at 12% 0%, #23466f 0, transparent 34rem), linear-gradient(145deg, #12233a, #0d1828 55%, #101d31); min-height: 100vh; }
           main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 64px 0 80px; }

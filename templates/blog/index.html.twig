@@ -11,7 +11,6 @@
   {% else %}
     <link rel="canonical" href="https://stackhal.com/blog">
     <link rel="alternate" hreflang="en" href="https://stackhal.com/blog">
-    <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog">
     <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog">
   {% endif %}
 {% endblock %}
@@ -20,7 +19,7 @@
   {% if app.request.locale == 'pl' %}
     <a class="language-switch" href="{{ path('blog_index', {_locale: 'en'}) }}" hreflang="en">EN</a>
   {% else %}
-    <a class="language-switch" href="{{ path('blog_index', {_locale: 'pl'}) }}" hreflang="pl">PL</a>
+    <a class="language-switch" href="{{ path('landing', {_locale: 'pl'}) }}" hreflang="pl">PL</a>
   {% endif %}
 {% endblock %}
 {% block body %}

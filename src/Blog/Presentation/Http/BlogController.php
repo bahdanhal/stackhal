@@ -16,8 +16,15 @@ final class BlogController extends AbstractController
     #[Route(path: ['en' => '/blog', 'pl' => '/pl/blog'], name: 'blog_index', methods: ['GET'])]
     public function index(Request $request, BlogArticleRepository $articles): Response
     {
+        $locale = $request->getLocale();
+        $published = $articles->findPublished($locale);
+
+        if ($locale !== 'en' && $published === []) {
+            return $this->redirectToRoute('blog_index', ['_locale' => 'en'], Response::HTTP_MOVED_PERMANENTLY);
+        }
+
         return $this->render('blog/index.html.twig', [
-            'articles' => $articles->findPublished($request->getLocale()),
+            'articles' => $published,
         ]);
     }
 
@@ -29,8 +36,32 @@ final class BlogController extends AbstractController
     )]
     public function article(string $slug, Request $request, BlogArticleRepository $articles): Response
     {
-        $article = $articles->findPublishedBySlug($slug, $request->getLocale());
+        $locale = $request->getLocale();
+        $article = $articles->findPublishedBySlug($slug, $locale);
+
         if ($article === null) {
+            if ($locale !== 'en') {
+                $enArticle = $articles->findPublishedBySlug($slug, 'en');
+                if ($enArticle !== null) {
+                    if ($enArticle->getAlternateSlug() !== '') {
+                        $plArticle = $articles->findPublishedBySlug($enArticle->getAlternateSlug(), $locale);
+                        if ($plArticle !== null) {
+                            return $this->redirectToRoute(
+                                'blog_article',
+                                ['slug' => $plArticle->getSlug(), '_locale' => $locale],
+                                Response::HTTP_MOVED_PERMANENTLY
+                            );
+                        }
+                    }
+
+                    return $this->redirectToRoute(
+                        'blog_article',
+                        ['slug' => $slug, '_locale' => 'en'],
+                        Response::HTTP_MOVED_PERMANENTLY
+                    );
+                }
+            }
+
             throw new NotFoundHttpException('Blog article not found.');
         }
 

@@ -23,27 +23,22 @@
 
 html { background: #0d1828; }
 body {
-  background:
-    radial-gradient(circle at 12% 2%, rgba(82, 146, 224, .30), transparent 38rem),
-    radial-gradient(circle at 88% 26%, rgba(53, 112, 190, .21), transparent 34rem),
-    linear-gradient(155deg, #12233a 0%, #0d1828 46%, #101d31 100%),
-    var(--paper);
-  background-attachment: fixed;
+  background: var(--paper);
 }
 ::selection { background: #287bc5; color: #fff; }
 
 .topbar {
   background: rgba(12, 24, 40, .86);
   border-color: rgba(101, 137, 180, .28);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .025);
+  box-shadow: none;
 }
-.brand-mark { background: linear-gradient(145deg, #58adff, #356bd8); box-shadow: 0 0 0 4px rgba(90, 169, 255, .09); }
+.brand-mark { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: none; }
 .hero, .report-shell { padding-top: 64px; }
 .toolbox-hero { padding-top: 72px; }
 .hero h1, .geo-home h1, .market-shell h1 {
-  font-size: clamp(42px, 5.25vw, 70px);
-  line-height: 1;
-  letter-spacing: -.04em;
+  font-size: clamp(38px, 4.8vw, 54px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 .profile-hero h1 { font-size: clamp(46px, 6.25vw, 84px); line-height: .96; }
 .tool-intro h1, .income-shell h1 { font-size: clamp(40px, 4.9vw, 64px); }
@@ -63,12 +58,12 @@ body {
   background: #07101e;
   color: #f5f8fc;
 }
-.tool-card-market { background: linear-gradient(145deg, #142844, #111d2f); }
+.tool-card-market { background: #142844; }
 .tool-card-primary p, .ai-summary .section-title span, .ai-summary p { color: #a9b9cc; }
 .priority-grid article { background: #102039; border-color: #2d4566; }
 
 .audit-form { box-shadow: 0 24px 70px rgba(0, 5, 15, .38), inset 0 1px 0 rgba(255, 255, 255, .04); }
-.audit-form button, .lead-row button { background: linear-gradient(145deg, #559fff, #3375dd); }
+.audit-form button, .lead-row button { background: #3578df; }
 .audit-form input:focus { outline-color: rgba(90, 169, 255, .55); }
 .audit-form input, .field input, .field select, .income-controls input,
 .income-controls select, .market-product select, .lead-row input,
@@ -96,7 +91,7 @@ th { background: #172840; }
 .profile-facts, .profile-work-list article, .tool-faq details { border-color: var(--line); }
 .profile-grid > div, .feature-grid article, .geo-explainer article,
 .toolbox-principles > div { border-color: #507daf; }
-.profile-contact { background: linear-gradient(135deg, #07101e, #102a4a); }
+.profile-contact { background: #07101e; }
 .market-latest { grid-template-columns: repeat(3, 1fr); }
 .market-request { background: rgba(22, 38, 59, .94); }
 

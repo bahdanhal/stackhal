@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="dangerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#f87171"/>
+    </linearGradient>
+    <linearGradient id="modernGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="560" rx="16" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Top Chrome Bar -->
+  <rect x="0" y="0" width="1000" height="42" rx="16" fill="#0f172a" />
+  <rect x="0" y="24" width="1000" height="18" fill="#0f172a" />
+  <line x1="0" y1="42" x2="1000" y2="42" stroke="#1e293b" stroke-width="1.5"/>
+  <circle cx="24" cy="21" r="5" fill="#f43f5e"/>
+  <circle cx="40" cy="21" r="5" fill="#eab308"/>
+  <circle cx="56" cy="21" r="5" fill="#22c55e"/>
+  <text x="80" y="25" fill="#94a3b8" font-family="ui-monospace, monospace" font-size="12" font-weight="600">census_2026_09_04.go.mod — runtime_distribution (N=575)</text>
+  <rect x="830" y="10" width="145" height="22" rx="4" fill="rgba(239,68,68,0.15)" stroke="rgba(239,68,68,0.4)"/>
+  <text x="902" y="25" fill="#f87171" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="800" text-anchor="middle">50.6% EOL COMPILERS</text>
+
+  <!-- Main Title Area -->
+  <text x="40" y="82" fill="#f8fafc" font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="800">The Go "Dead on Arrival" Anomaly</text>
+  <text x="40" y="106" fill="#94a3b8" font-family="Inter, system-ui, sans-serif" font-size="13">Exhaustive census of all 575 Go repositories initialized on September 4, 2026. Go only supports the last 2 releases (1.26 &amp; 1.27).</text>
+
+  <!-- Key Metric Summary Cards -->
+  <g transform="translate(40, 126)">
+    <!-- Card 1: EOL Target Total -->
+    <rect x="0" y="0" width="285" height="88" rx="10" fill="#151d2f" stroke="#ef4444" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <text x="20" y="28" fill="#f87171" font-family="ui-monospace, monospace" font-size="11" font-weight="700">EOL RUNTIMES (go &lt;= 1.25)</text>
+    <text x="20" y="64" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="900">291 <tspan font-size="18" fill="#f87171" font-weight="700">(50.6%)</tspan></text>
+    <text x="20" y="80" fill="#94a3b8" font-family="Inter, system-ui, sans-serif" font-size="10">Targeting officially unsupported compilers</text>
+
+    <!-- Card 2: Modern Targets -->
+    <rect x="315" y="0" width="285" height="88" rx="10" fill="#151d2f" stroke="#10b981" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <text x="335" y="28" fill="#34d399" font-family="ui-monospace, monospace" font-size="11" font-weight="700">SUPPORTED (go 1.26 &amp; 1.27)</text>
+    <text x="335" y="64" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="900">283 <tspan font-size="18" fill="#34d399" font-weight="700">(49.2%)</tspan></text>
+    <text x="335" y="80" fill="#94a3b8" font-family="Inter, system-ui, sans-serif" font-size="10">Active stable compiler releases</text>
+
+    <!-- Card 3: Model Inertia Gap -->
+    <rect x="630" y="0" width="290" height="88" rx="10" fill="#151d2f" stroke="#334155" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <text x="650" y="28" fill="#fbbf24" font-family="ui-monospace, monospace" font-size="11" font-weight="700">PRE-TRAINING ANCHOR</text>
+    <text x="650" y="64" fill="#ffffff" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="900">1.22 – 1.25</text>
+    <text x="650" y="80" fill="#94a3b8" font-family="Inter, system-ui, sans-serif" font-size="10">Dominant pre-training token frequency</text>
+  </g>
+
+  <!-- Distribution Chart Area -->
+  <g transform="translate(40, 240)">
+    <rect x="0" y="0" width="920" height="280" rx="12" fill="#0d1320" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- Chart Header -->
+    <text x="24" y="32" fill="#e2e8f0" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700">Breakdown of Specified `go 1.xx` Compiler Directives in Initial Commits</text>
+    <line x1="24" y1="46" x2="896" y2="46" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- Bar 1: Go 1.26 (Modern) -->
+    <text x="24" y="78" fill="#94a3b8" font-family="ui-monospace, monospace" font-size="12">go 1.26 (Active)</text>
+    <rect x="150" y="64" width="456" height="20" rx="4" fill="url(#modernGrad)"/>
+    <text x="616" y="79" fill="#f8fafc" font-family="ui-monospace, monospace" font-size="12" font-weight="700">177 repos (30.8%)</text>
+
+    <!-- Bar 2: Go 1.25 (EOL Aug 2026) -->
+    <text x="24" y="112" fill="#f87171" font-family="ui-monospace, monospace" font-size="12">go 1.25 (EOL)</text>
+    <rect x="150" y="98" width="345" height="20" rx="4" fill="url(#dangerGrad)"/>
+    <text x="505" y="113" fill="#f87171" font-family="ui-monospace, monospace" font-size="12" font-weight="700">134 repos (23.3%) — Expired Aug 2026</text>
+
+    <!-- Bar 3: Go 1.27 (Latest) -->
+    <text x="24" y="146" fill="#94a3b8" font-family="ui-monospace, monospace" font-size="12">go 1.27 (Active)</text>
+    <rect x="150" y="132" width="273" height="20" rx="4" fill="url(#modernGrad)"/>
+    <text x="433" y="147" fill="#f8fafc" font-family="ui-monospace, monospace" font-size="12" font-weight="700">106 repos (18.4%)</text>
+
+    <!-- Bar 4: Go 1.24 (EOL early 2026) -->
+    <text x="24" y="180" fill="#f87171" font-family="ui-monospace, monospace" font-size="12">go 1.24 (EOL)</text>
+    <rect x="150" y="166" width="152" height="20" rx="4" fill="url(#dangerGrad)"/>
+    <text x="312" y="181" fill="#f87171" font-family="ui-monospace, monospace" font-size="12" font-weight="700">59 repos (10.3%)</text>
+
+    <!-- Bar 5: Go 1.22 (EOL early 2025) -->
+    <text x="24" y="214" fill="#f87171" font-family="ui-monospace, monospace" font-size="12">go 1.22 (EOL)</text>
+    <rect x="150" y="200" width="121" height="20" rx="4" fill="url(#dangerGrad)"/>
+    <text x="281" y="215" fill="#f87171" font-family="ui-monospace, monospace" font-size="12" font-weight="700">47 repos (8.2%)</text>
+
+    <!-- Bar 6: Go 1.23 (EOL late 2025) -->
+    <text x="24" y="248" fill="#f87171" font-family="ui-monospace, monospace" font-size="12">go 1.23 &amp; older</text>
+    <rect x="150" y="234" width="131" height="20" rx="4" fill="#991b1b"/>
+    <text x="291" y="249" fill="#fca5a5" font-family="ui-monospace, monospace" font-size="12" font-weight="700">51 repos (8.9%) — Includes 1.14–1.21</text>
+  </g>
+</svg>

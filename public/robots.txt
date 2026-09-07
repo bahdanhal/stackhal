@@ -1,9 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /audit
+Disallow: /audit$
 Disallow: /contact$
-Disallow: /pl/audyt
+Disallow: /pl/audyt$
 Disallow: /pl/kontakt$
 Disallow: /healthz
 Disallow: /mcp
@@ -16,9 +16,9 @@ User-agent: PerplexityBot
 User-agent: Google-Extended
 Allow: /
 Disallow: /api/
-Disallow: /audit
+Disallow: /audit$
 Disallow: /contact$
-Disallow: /pl/audyt
+Disallow: /pl/audyt$
 Disallow: /pl/kontakt$
 Disallow: /healthz
 Disallow: /mcp

@@ -28,7 +28,13 @@
   <p class="lede">{{ 'home.lede'|trans }}</p>
   <div class="toolbox-orbit" aria-hidden="true">
     <span>DNS</span><span>CIDR</span><span>SEO</span><span>PKPass</span><span>Caddy</span>
-    <button class="catops-trigger" type="button" aria-label="{{ 'home.catops.trigger_label'|trans }}">SH</button>
+    <button class="catops-trigger" type="button" aria-label="{{ 'home.catops.trigger_label'|trans }}">
+      <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="10" cy="10" r="7"/>
+        <circle cx="10" cy="10" r="2" fill="currentColor"/>
+        <path d="M10 3v2M10 15v2M3 10h2M15 10h2"/>
+      </svg>
+    </button>
   </div>
   <ul class="toolbox-status" aria-label="{{ 'home.status.label'|trans }}">
     <li>{{ 'home.status.browser_first'|trans }}</li>
@@ -41,19 +47,15 @@
       <header class="tool-category-header"><h2 id="category-web">{{ 'home.categories.web'|trans }}</h2></header>
       <div class="tool-grid">
         <a class="tool-card" href="{{ path('geo_home', {_locale: app.request.locale}) }}">
-          <span class="tool-number">01</span>
           <h3>{{ 'home.geo.title'|trans }}</h3><p>{{ 'home.geo.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">
-          <span class="tool-number">02</span>
           <h3>{{ 'home.seo.title'|trans }}</h3><p>{{ 'home.seo.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('favicon_suite', {_locale: app.request.locale}) }}">
-          <span class="tool-number">03</span>
           <h3>{{ 'home.favicon_suite.title'|trans }}</h3><p>{{ 'home.favicon_suite.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('cors_sandbox', {_locale: app.request.locale}) }}">
-          <span class="tool-number">04</span>
           <h3>{{ 'home.cors_sandbox.title'|trans }}</h3><p>{{ 'home.cors_sandbox.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>
@@ -63,11 +65,9 @@
       <header class="tool-category-header"><h2 id="category-email">{{ 'home.categories.email'|trans }}</h2></header>
       <div class="tool-grid">
         <a class="tool-card" href="{{ path('bimi_studio', {_locale: app.request.locale}) }}">
-          <span class="tool-number">05</span>
           <h3>{{ 'home.bimi.title'|trans }}</h3><p>{{ 'home.bimi.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('domain_inspector_home', {_locale: app.request.locale}) }}">
-          <span class="tool-number">06</span>
           <h3>{{ 'home.domain_inspector.title'|trans }}</h3><p>{{ 'home.domain_inspector.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>
@@ -77,19 +77,15 @@
       <header class="tool-category-header"><h2 id="category-infrastructure">{{ 'home.categories.infrastructure'|trans }}</h2></header>
       <div class="tool-grid">
         <a class="tool-card" href="{{ path('caddy_transpiler', {_locale: app.request.locale}) }}">
-          <span class="tool-number">07</span>
           <h3>{{ 'home.caddy_transpiler.title'|trans }}</h3><p>{{ 'home.caddy_transpiler.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('cidr_matrix', {_locale: app.request.locale}) }}">
-          <span class="tool-number">08</span>
           <h3>{{ 'home.cidr_matrix.title'|trans }}</h3><p>{{ 'home.cidr_matrix.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('regex_transpiler', {_locale: app.request.locale}) }}">
-          <span class="tool-number">09</span>
           <h3>{{ 'home.regex_transpiler.title'|trans }}</h3><p>{{ 'home.regex_transpiler.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('dns_dag_tracer', {_locale: app.request.locale}) }}">
-          <span class="tool-number">10</span>
           <h3>{{ 'home.dns_dag_tracer.title'|trans }}</h3><p>{{ 'home.dns_dag_tracer.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>
@@ -99,11 +95,9 @@
       <header class="tool-category-header"><h2 id="category-mobile">{{ 'home.categories.mobile'|trans }}</h2></header>
       <div class="tool-grid">
         <a class="tool-card" href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">
-          <span class="tool-number">11</span>
           <h3>{{ 'home.pkpass.title'|trans }}</h3><p>{{ 'home.pkpass.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
         <a class="tool-card" href="{{ path('app_links_validator', {_locale: app.request.locale}) }}">
-          <span class="tool-number">12</span>
           <h3>{{ 'home.app_links.title'|trans }}</h3><p>{{ 'home.app_links.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>
@@ -113,7 +107,6 @@
       <header class="tool-category-header"><h2 id="category-ai-coding">{{ 'home.categories.ai_coding'|trans }}</h2></header>
       <div class="tool-grid">
         <a class="tool-card tool-card-wide" href="{{ path('ai_studio_extension', {_locale: app.request.locale}) }}">
-          <span class="tool-number">14</span>
           <h3>{{ 'home.ai_studio_extension.title'|trans }}</h3><p>{{ 'home.ai_studio_extension.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>
@@ -122,9 +115,9 @@
 
 
   <section class="toolbox-principles">
-    <div><b>01</b><h2>{{ 'home.principles.private.title'|trans }}</h2><p>{{ 'home.principles.private.text'|trans }}</p></div>
-    <div><b>02</b><h2>{{ 'home.principles.clear.title'|trans }}</h2><p>{{ 'home.principles.clear.text'|trans }}</p></div>
-    <div><b>03</b><h2>{{ 'home.principles.fast.title'|trans }}</h2><p>{{ 'home.principles.fast.text'|trans }}</p></div>
+    <div><h2>{{ 'home.principles.private.title'|trans }}</h2><p>{{ 'home.principles.private.text'|trans }}</p></div>
+    <div><h2>{{ 'home.principles.clear.title'|trans }}</h2><p>{{ 'home.principles.clear.text'|trans }}</p></div>
+    <div><h2>{{ 'home.principles.fast.title'|trans }}</h2><p>{{ 'home.principles.fast.text'|trans }}</p></div>
   </section>
 
   <section class="toolbox-faq" aria-labelledby="faq-title">

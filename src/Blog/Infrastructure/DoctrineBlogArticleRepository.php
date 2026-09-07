@@ -52,23 +52,6 @@ final class DoctrineBlogArticleRepository implements BlogArticleRepository
             ->setParameter('now', new \DateTimeImmutable())
             ->getQuery()
             ->getOneOrNullResult();
-
-        if ($article === null && $locale !== 'en') {
-            // Fallback to English version if available
-            /** @var BlogArticleEntity|null $article */
-            $article = $this->entityManager->createQueryBuilder()
-                ->select('article')
-                ->from(BlogArticleEntity::class, 'article')
-                ->andWhere('article.slug = :slug')
-                ->andWhere('article.locale = :locale')
-                ->andWhere('article.publishedAt <= :now')
-                ->setParameter('slug', $slug)
-                ->setParameter('locale', 'en')
-                ->setParameter('now', new \DateTimeImmutable())
-                ->getQuery()
-                ->getOneOrNullResult();
-        }
-
         return $article === null ? null : $this->map($article);
     }
 

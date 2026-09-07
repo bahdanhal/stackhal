@@ -83,7 +83,7 @@
 .page-caddy-transpiler .tool-page-intro h1 {
   max-width: 1000px;
   color: #171717;
-  font-family: Inter, "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: clamp(58px, 9vw, 118px);
   font-weight: 900;
   line-height: .82;
@@ -162,7 +162,7 @@
 
 .page-pkpass-inspector .tool-page-intro h1 {
   color: #ece8dd;
-  font-family: Inter, "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 780;
   text-shadow: none;
 }
@@ -221,7 +221,7 @@
     #95663e !important;
   background-size: 29px 31px, 23px 27px, auto !important;
   color: #28241f !important;
-  font-family: Inter, "Segoe UI", sans-serif !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 .page-blog-article main {
@@ -247,7 +247,7 @@
 .page-blog-article .article-header h1 {
   max-width: 930px;
   color: #28241f;
-  font-family: Inter, "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: clamp(28px, 3.8vw, 42px);
   font-weight: 850;
   line-height: 1.16;
@@ -258,7 +258,7 @@
 .page-blog-article .article-content h2,
 .page-blog-article .article-cta h2 {
   color: #28241f;
-  font-family: Inter, "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .page-blog-article .article-header {
@@ -295,7 +295,7 @@
 }
 
 .page-blog-article .article-cta-card h2 {
-  font-family: Inter, "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 16px;
   font-weight: 800;
   line-height: 1.3;
