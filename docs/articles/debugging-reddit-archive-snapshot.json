@@ -1,0 +1,1484 @@
+{
+  "observedDate": "2026-09-08",
+  "source": "Arctic Shift public API",
+  "documentation": "https://github.com/ArthurHeitmann/arctic_shift/tree/master/api",
+  "method": "Direct aggregate count by subreddit for August 2022 and August 2026, with Unix timestamps delimiting UTC calendar months. Monthly time series retained separately; slight endpoint differences are not silently reconciled.",
+  "primaryCounts": {
+    "learnprogramming": [
+      "5607",
+      "1910"
+    ],
+    "programminghelp": [
+      "140",
+      "44"
+    ],
+    "AskProgramming": [
+      "1035",
+      "275"
+    ]
+  },
+  "monthlySeries": {
+    "learnprogramming": [
+      {
+        "date": 1640995200,
+        "value": 5796
+      },
+      {
+        "date": 1643673600,
+        "value": 5348
+      },
+      {
+        "date": 1646092800,
+        "value": 5904
+      },
+      {
+        "date": 1648771200,
+        "value": 5764
+      },
+      {
+        "date": 1651363200,
+        "value": 5829
+      },
+      {
+        "date": 1654041600,
+        "value": 5418
+      },
+      {
+        "date": 1656633600,
+        "value": 5827
+      },
+      {
+        "date": 1659312000,
+        "value": 5608
+      },
+      {
+        "date": 1661990400,
+        "value": 5225
+      },
+      {
+        "date": 1664582400,
+        "value": 5478
+      },
+      {
+        "date": 1667260800,
+        "value": 5431
+      },
+      {
+        "date": 1669852800,
+        "value": 5035
+      },
+      {
+        "date": 1672531200,
+        "value": 4907
+      },
+      {
+        "date": 1675209600,
+        "value": 4350
+      },
+      {
+        "date": 1677628800,
+        "value": 4370
+      },
+      {
+        "date": 1680307200,
+        "value": 3860
+      },
+      {
+        "date": 1682899200,
+        "value": 3749
+      },
+      {
+        "date": 1685577600,
+        "value": 2787
+      },
+      {
+        "date": 1688169600,
+        "value": 4099
+      },
+      {
+        "date": 1690848000,
+        "value": 4009
+      },
+      {
+        "date": 1693526400,
+        "value": 3846
+      },
+      {
+        "date": 1696118400,
+        "value": 3973
+      },
+      {
+        "date": 1698796800,
+        "value": 3982
+      },
+      {
+        "date": 1701388800,
+        "value": 3529
+      },
+      {
+        "date": 1704067200,
+        "value": 3776
+      },
+      {
+        "date": 1706745600,
+        "value": 3766
+      },
+      {
+        "date": 1709251200,
+        "value": 3713
+      },
+      {
+        "date": 1711929600,
+        "value": 3472
+      },
+      {
+        "date": 1714521600,
+        "value": 3270
+      },
+      {
+        "date": 1717200000,
+        "value": 3237
+      },
+      {
+        "date": 1719792000,
+        "value": 3072
+      },
+      {
+        "date": 1722470400,
+        "value": 3252
+      },
+      {
+        "date": 1725148800,
+        "value": 2968
+      },
+      {
+        "date": 1727740800,
+        "value": 2990
+      },
+      {
+        "date": 1730419200,
+        "value": 2740
+      },
+      {
+        "date": 1733011200,
+        "value": 2700
+      },
+      {
+        "date": 1735689600,
+        "value": 3048
+      },
+      {
+        "date": 1738368000,
+        "value": 2744
+      },
+      {
+        "date": 1740787200,
+        "value": 3117
+      },
+      {
+        "date": 1743465600,
+        "value": 3069
+      },
+      {
+        "date": 1746057600,
+        "value": 3235
+      },
+      {
+        "date": 1748736000,
+        "value": 3169
+      },
+      {
+        "date": 1751328000,
+        "value": 3391
+      },
+      {
+        "date": 1754006400,
+        "value": 2900
+      },
+      {
+        "date": 1756684800,
+        "value": 2585
+      },
+      {
+        "date": 1759276800,
+        "value": 2589
+      },
+      {
+        "date": 1761955200,
+        "value": 2523
+      },
+      {
+        "date": 1764547200,
+        "value": 2546
+      },
+      {
+        "date": 1767225600,
+        "value": 2714
+      },
+      {
+        "date": 1769904000,
+        "value": 2424
+      },
+      {
+        "date": 1772323200,
+        "value": 2850
+      },
+      {
+        "date": 1775001600,
+        "value": 2780
+      },
+      {
+        "date": 1777593600,
+        "value": 2452
+      },
+      {
+        "date": 1780272000,
+        "value": 2183
+      },
+      {
+        "date": 1782864000,
+        "value": 1996
+      },
+      {
+        "date": 1785542400,
+        "value": 1911
+      }
+    ],
+    "programminghelp": [
+      {
+        "date": 1640995200,
+        "value": 136
+      },
+      {
+        "date": 1643673600,
+        "value": 184
+      },
+      {
+        "date": 1646092800,
+        "value": 212
+      },
+      {
+        "date": 1648771200,
+        "value": 185
+      },
+      {
+        "date": 1651363200,
+        "value": 207
+      },
+      {
+        "date": 1654041600,
+        "value": 136
+      },
+      {
+        "date": 1656633600,
+        "value": 144
+      },
+      {
+        "date": 1659312000,
+        "value": 140
+      },
+      {
+        "date": 1661990400,
+        "value": 141
+      },
+      {
+        "date": 1664582400,
+        "value": 179
+      },
+      {
+        "date": 1667260800,
+        "value": 150
+      },
+      {
+        "date": 1669852800,
+        "value": 146
+      },
+      {
+        "date": 1672531200,
+        "value": 123
+      },
+      {
+        "date": 1675209600,
+        "value": 113
+      },
+      {
+        "date": 1677628800,
+        "value": 112
+      },
+      {
+        "date": 1680307200,
+        "value": 124
+      },
+      {
+        "date": 1682899200,
+        "value": 102
+      },
+      {
+        "date": 1685577600,
+        "value": 74
+      },
+      {
+        "date": 1688169600,
+        "value": 68
+      },
+      {
+        "date": 1690848000,
+        "value": 60
+      },
+      {
+        "date": 1693526400,
+        "value": 90
+      },
+      {
+        "date": 1696118400,
+        "value": 72
+      },
+      {
+        "date": 1698796800,
+        "value": 86
+      },
+      {
+        "date": 1701388800,
+        "value": 79
+      },
+      {
+        "date": 1704067200,
+        "value": 74
+      },
+      {
+        "date": 1706745600,
+        "value": 66
+      },
+      {
+        "date": 1709251200,
+        "value": 90
+      },
+      {
+        "date": 1711929600,
+        "value": 78
+      },
+      {
+        "date": 1714521600,
+        "value": 63
+      },
+      {
+        "date": 1717200000,
+        "value": 52
+      },
+      {
+        "date": 1719792000,
+        "value": 58
+      },
+      {
+        "date": 1722470400,
+        "value": 54
+      },
+      {
+        "date": 1725148800,
+        "value": 72
+      },
+      {
+        "date": 1727740800,
+        "value": 94
+      },
+      {
+        "date": 1730419200,
+        "value": 58
+      },
+      {
+        "date": 1733011200,
+        "value": 64
+      },
+      {
+        "date": 1735689600,
+        "value": 78
+      },
+      {
+        "date": 1738368000,
+        "value": 48
+      },
+      {
+        "date": 1740787200,
+        "value": 57
+      },
+      {
+        "date": 1743465600,
+        "value": 58
+      },
+      {
+        "date": 1746057600,
+        "value": 58
+      },
+      {
+        "date": 1748736000,
+        "value": 58
+      },
+      {
+        "date": 1751328000,
+        "value": 48
+      },
+      {
+        "date": 1754006400,
+        "value": 78
+      },
+      {
+        "date": 1756684800,
+        "value": 51
+      },
+      {
+        "date": 1759276800,
+        "value": 71
+      },
+      {
+        "date": 1761955200,
+        "value": 77
+      },
+      {
+        "date": 1764547200,
+        "value": 63
+      },
+      {
+        "date": 1767225600,
+        "value": 89
+      },
+      {
+        "date": 1769904000,
+        "value": 47
+      },
+      {
+        "date": 1772323200,
+        "value": 42
+      },
+      {
+        "date": 1775001600,
+        "value": 41
+      },
+      {
+        "date": 1777593600,
+        "value": 35
+      },
+      {
+        "date": 1780272000,
+        "value": 55
+      },
+      {
+        "date": 1782864000,
+        "value": 49
+      },
+      {
+        "date": 1785542400,
+        "value": 44
+      }
+    ],
+    "AskProgramming": [
+      {
+        "date": 1640995200,
+        "value": 950
+      },
+      {
+        "date": 1643673600,
+        "value": 949
+      },
+      {
+        "date": 1646092800,
+        "value": 1086
+      },
+      {
+        "date": 1648771200,
+        "value": 1043
+      },
+      {
+        "date": 1651363200,
+        "value": 981
+      },
+      {
+        "date": 1654041600,
+        "value": 947
+      },
+      {
+        "date": 1656633600,
+        "value": 905
+      },
+      {
+        "date": 1659312000,
+        "value": 1037
+      },
+      {
+        "date": 1661990400,
+        "value": 975
+      },
+      {
+        "date": 1664582400,
+        "value": 1224
+      },
+      {
+        "date": 1667260800,
+        "value": 941
+      },
+      {
+        "date": 1669852800,
+        "value": 979
+      },
+      {
+        "date": 1672531200,
+        "value": 897
+      },
+      {
+        "date": 1675209600,
+        "value": 864
+      },
+      {
+        "date": 1677628800,
+        "value": 881
+      },
+      {
+        "date": 1680307200,
+        "value": 815
+      },
+      {
+        "date": 1682899200,
+        "value": 744
+      },
+      {
+        "date": 1685577600,
+        "value": 433
+      },
+      {
+        "date": 1688169600,
+        "value": 742
+      },
+      {
+        "date": 1690848000,
+        "value": 750
+      },
+      {
+        "date": 1693526400,
+        "value": 740
+      },
+      {
+        "date": 1696118400,
+        "value": 659
+      },
+      {
+        "date": 1698796800,
+        "value": 756
+      },
+      {
+        "date": 1701388800,
+        "value": 698
+      },
+      {
+        "date": 1704067200,
+        "value": 809
+      },
+      {
+        "date": 1706745600,
+        "value": 672
+      },
+      {
+        "date": 1709251200,
+        "value": 781
+      },
+      {
+        "date": 1711929600,
+        "value": 750
+      },
+      {
+        "date": 1714521600,
+        "value": 707
+      },
+      {
+        "date": 1717200000,
+        "value": 726
+      },
+      {
+        "date": 1719792000,
+        "value": 929
+      },
+      {
+        "date": 1722470400,
+        "value": 828
+      },
+      {
+        "date": 1725148800,
+        "value": 759
+      },
+      {
+        "date": 1727740800,
+        "value": 767
+      },
+      {
+        "date": 1730419200,
+        "value": 694
+      },
+      {
+        "date": 1733011200,
+        "value": 756
+      },
+      {
+        "date": 1735689600,
+        "value": 828
+      },
+      {
+        "date": 1738368000,
+        "value": 718
+      },
+      {
+        "date": 1740787200,
+        "value": 792
+      },
+      {
+        "date": 1743465600,
+        "value": 731
+      },
+      {
+        "date": 1746057600,
+        "value": 782
+      },
+      {
+        "date": 1748736000,
+        "value": 697
+      },
+      {
+        "date": 1751328000,
+        "value": 675
+      },
+      {
+        "date": 1754006400,
+        "value": 693
+      },
+      {
+        "date": 1756684800,
+        "value": 635
+      },
+      {
+        "date": 1759276800,
+        "value": 574
+      },
+      {
+        "date": 1761955200,
+        "value": 525
+      },
+      {
+        "date": 1764547200,
+        "value": 510
+      },
+      {
+        "date": 1767225600,
+        "value": 555
+      },
+      {
+        "date": 1769904000,
+        "value": 578
+      },
+      {
+        "date": 1772323200,
+        "value": 590
+      },
+      {
+        "date": 1775001600,
+        "value": 364
+      },
+      {
+        "date": 1777593600,
+        "value": 337
+      },
+      {
+        "date": 1780272000,
+        "value": 262
+      },
+      {
+        "date": 1782864000,
+        "value": 255
+      },
+      {
+        "date": 1785542400,
+        "value": 275
+      }
+    ],
+    "programming": [
+      {
+        "date": 1640995200,
+        "value": 3008
+      },
+      {
+        "date": 1643673600,
+        "value": 2554
+      },
+      {
+        "date": 1646092800,
+        "value": 2754
+      },
+      {
+        "date": 1648771200,
+        "value": 2908
+      },
+      {
+        "date": 1651363200,
+        "value": 3481
+      },
+      {
+        "date": 1654041600,
+        "value": 2875
+      },
+      {
+        "date": 1656633600,
+        "value": 2341
+      },
+      {
+        "date": 1659312000,
+        "value": 2726
+      },
+      {
+        "date": 1661990400,
+        "value": 2398
+      },
+      {
+        "date": 1664582400,
+        "value": 2625
+      },
+      {
+        "date": 1667260800,
+        "value": 2779
+      },
+      {
+        "date": 1669852800,
+        "value": 2663
+      },
+      {
+        "date": 1672531200,
+        "value": 2621
+      },
+      {
+        "date": 1675209600,
+        "value": 2512
+      },
+      {
+        "date": 1677628800,
+        "value": 2899
+      },
+      {
+        "date": 1680307200,
+        "value": 2388
+      },
+      {
+        "date": 1682899200,
+        "value": 2386
+      },
+      {
+        "date": 1685577600,
+        "value": 850
+      },
+      {
+        "date": 1688169600,
+        "value": 2012
+      },
+      {
+        "date": 1690848000,
+        "value": 2312
+      },
+      {
+        "date": 1693526400,
+        "value": 2226
+      },
+      {
+        "date": 1696118400,
+        "value": 2265
+      },
+      {
+        "date": 1698796800,
+        "value": 2277
+      },
+      {
+        "date": 1701388800,
+        "value": 2356
+      },
+      {
+        "date": 1704067200,
+        "value": 3006
+      },
+      {
+        "date": 1706745600,
+        "value": 2419
+      },
+      {
+        "date": 1709251200,
+        "value": 2209
+      },
+      {
+        "date": 1711929600,
+        "value": 2465
+      },
+      {
+        "date": 1714521600,
+        "value": 2424
+      },
+      {
+        "date": 1717200000,
+        "value": 2222
+      },
+      {
+        "date": 1719792000,
+        "value": 2388
+      },
+      {
+        "date": 1722470400,
+        "value": 2243
+      },
+      {
+        "date": 1725148800,
+        "value": 2053
+      },
+      {
+        "date": 1727740800,
+        "value": 1845
+      },
+      {
+        "date": 1730419200,
+        "value": 1886
+      },
+      {
+        "date": 1733011200,
+        "value": 1873
+      },
+      {
+        "date": 1735689600,
+        "value": 1776
+      },
+      {
+        "date": 1738368000,
+        "value": 1830
+      },
+      {
+        "date": 1740787200,
+        "value": 2009
+      },
+      {
+        "date": 1743465600,
+        "value": 2294
+      },
+      {
+        "date": 1746057600,
+        "value": 2127
+      },
+      {
+        "date": 1748736000,
+        "value": 2037
+      },
+      {
+        "date": 1751328000,
+        "value": 2322
+      },
+      {
+        "date": 1754006400,
+        "value": 2152
+      },
+      {
+        "date": 1756684800,
+        "value": 1965
+      },
+      {
+        "date": 1759276800,
+        "value": 2042
+      },
+      {
+        "date": 1761955200,
+        "value": 1917
+      },
+      {
+        "date": 1764547200,
+        "value": 1715
+      },
+      {
+        "date": 1767225600,
+        "value": 1946
+      },
+      {
+        "date": 1769904000,
+        "value": 1896
+      },
+      {
+        "date": 1772323200,
+        "value": 2607
+      },
+      {
+        "date": 1775001600,
+        "value": 2140
+      },
+      {
+        "date": 1777593600,
+        "value": 1821
+      },
+      {
+        "date": 1780272000,
+        "value": 1280
+      },
+      {
+        "date": 1782864000,
+        "value": 1087
+      },
+      {
+        "date": 1785542400,
+        "value": 832
+      }
+    ],
+    "global": [
+      {
+        "date": 1640995200,
+        "value": 32091070
+      },
+      {
+        "date": 1643673600,
+        "value": 29843162
+      },
+      {
+        "date": 1646092800,
+        "value": 32677372
+      },
+      {
+        "date": 1648771200,
+        "value": 33002461
+      },
+      {
+        "date": 1651363200,
+        "value": 34838318
+      },
+      {
+        "date": 1654041600,
+        "value": 34395243
+      },
+      {
+        "date": 1656633600,
+        "value": 37222497
+      },
+      {
+        "date": 1659312000,
+        "value": 38178278
+      },
+      {
+        "date": 1661990400,
+        "value": 35115343
+      },
+      {
+        "date": 1664582400,
+        "value": 35685149
+      },
+      {
+        "date": 1667260800,
+        "value": 33166590
+      },
+      {
+        "date": 1669852800,
+        "value": 35865148
+      },
+      {
+        "date": 1672531200,
+        "value": 36090941
+      },
+      {
+        "date": 1675209600,
+        "value": 33928901
+      },
+      {
+        "date": 1677628800,
+        "value": 39724726
+      },
+      {
+        "date": 1680307200,
+        "value": 52096583
+      },
+      {
+        "date": 1682899200,
+        "value": 38452513
+      },
+      {
+        "date": 1685577600,
+        "value": 42822763
+      },
+      {
+        "date": 1688169600,
+        "value": 45463791
+      },
+      {
+        "date": 1690848000,
+        "value": 46261966
+      },
+      {
+        "date": 1693526400,
+        "value": 42914432
+      },
+      {
+        "date": 1696118400,
+        "value": 40458773
+      },
+      {
+        "date": 1698796800,
+        "value": 38107467
+      },
+      {
+        "date": 1701388800,
+        "value": 39245797
+      },
+      {
+        "date": 1704067200,
+        "value": 41263034
+      },
+      {
+        "date": 1706745600,
+        "value": 39030731
+      },
+      {
+        "date": 1709251200,
+        "value": 41926097
+      },
+      {
+        "date": 1711929600,
+        "value": 40701692
+      },
+      {
+        "date": 1714521600,
+        "value": 39877545
+      },
+      {
+        "date": 1717200000,
+        "value": 38423968
+      },
+      {
+        "date": 1719792000,
+        "value": 40924291
+      },
+      {
+        "date": 1722470400,
+        "value": 41477365
+      },
+      {
+        "date": 1725148800,
+        "value": 38596990
+      },
+      {
+        "date": 1727740800,
+        "value": 38986549
+      },
+      {
+        "date": 1730419200,
+        "value": 38022510
+      },
+      {
+        "date": 1733011200,
+        "value": 38188332
+      },
+      {
+        "date": 1735689600,
+        "value": 39905771
+      },
+      {
+        "date": 1738368000,
+        "value": 36173322
+      },
+      {
+        "date": 1740787200,
+        "value": 39638148
+      },
+      {
+        "date": 1743465600,
+        "value": 38776626
+      },
+      {
+        "date": 1746057600,
+        "value": 40563984
+      },
+      {
+        "date": 1748736000,
+        "value": 40418275
+      },
+      {
+        "date": 1751328000,
+        "value": 42901790
+      },
+      {
+        "date": 1754006400,
+        "value": 44171502
+      },
+      {
+        "date": 1756684800,
+        "value": 42369473
+      },
+      {
+        "date": 1759276800,
+        "value": 43918631
+      },
+      {
+        "date": 1761955200,
+        "value": 42567430
+      },
+      {
+        "date": 1764547200,
+        "value": 42852649
+      },
+      {
+        "date": 1767225600,
+        "value": 46097805
+      },
+      {
+        "date": 1769904000,
+        "value": 41437718
+      },
+      {
+        "date": 1772323200,
+        "value": 45741335
+      },
+      {
+        "date": 1775001600,
+        "value": 44970660
+      },
+      {
+        "date": 1777593600,
+        "value": 47460430
+      },
+      {
+        "date": 1780272000,
+        "value": 44265212
+      },
+      {
+        "date": 1782864000,
+        "value": 45753220
+      },
+      {
+        "date": 1785542400,
+        "value": 45505703
+      }
+    ]
+  },
+  "directResponses": {
+    "utc_2022": {
+      "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?aggregate=subreddit&subreddit=learnprogramming&after=1659312000&before=1661990400",
+      "response": {
+        "data": [
+          {
+            "key": "learnprogramming",
+            "count": "5607"
+          }
+        ]
+      }
+    },
+    "utc_2026": {
+      "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?aggregate=subreddit&subreddit=learnprogramming&after=1785542400&before=1788220800",
+      "response": {
+        "data": [
+          {
+            "key": "learnprogramming",
+            "count": "1910"
+          }
+        ]
+      }
+    },
+    "utc_programminghelp_2022": {
+      "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?aggregate=subreddit&subreddit=programminghelp&after=1659312000&before=1661990400",
+      "response": {
+        "data": [
+          {
+            "key": "programminghelp",
+            "count": "140"
+          }
+        ]
+      }
+    },
+    "utc_programminghelp_2026": {
+      "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?aggregate=subreddit&subreddit=programminghelp&after=1785542400&before=1788220800",
+      "response": {
+        "data": [
+          {
+            "key": "programminghelp",
+            "count": "44"
+          }
+        ]
+      }
+    },
+    "utc_AskProgramming_2022": {
+      "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?aggregate=subreddit&subreddit=AskProgramming&after=1659312000&before=1661990400",
+      "response": {
+        "data": [
+          {
+            "key": "AskProgramming",
+            "count": "1035"
+          }
+        ]
+      }
+    },
+    "utc_AskProgramming_2026": {
+      "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?aggregate=subreddit&subreddit=AskProgramming&after=1785542400&before=1788220800",
+      "response": {
+        "data": [
+          {
+            "key": "AskProgramming",
+            "count": "275"
+          }
+        ]
+      }
+    }
+  },
+  "dailyResponses": {
+    "daily_2022": {
+      "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?aggregate=created_utc&frequency=day&subreddit=learnprogramming&after=2022-08-01&before=2022-09-01",
+      "response": {
+        "data": [
+          {
+            "created_utc": "2022-07-31T22:00:00.000Z",
+            "count": "189"
+          },
+          {
+            "created_utc": "2022-08-01T22:00:00.000Z",
+            "count": "200"
+          },
+          {
+            "created_utc": "2022-08-02T22:00:00.000Z",
+            "count": "189"
+          },
+          {
+            "created_utc": "2022-08-03T22:00:00.000Z",
+            "count": "197"
+          },
+          {
+            "created_utc": "2022-08-04T22:00:00.000Z",
+            "count": "184"
+          },
+          {
+            "created_utc": "2022-08-05T22:00:00.000Z",
+            "count": "159"
+          },
+          {
+            "created_utc": "2022-08-06T22:00:00.000Z",
+            "count": "183"
+          },
+          {
+            "created_utc": "2022-08-07T22:00:00.000Z",
+            "count": "213"
+          },
+          {
+            "created_utc": "2022-08-08T22:00:00.000Z",
+            "count": "183"
+          },
+          {
+            "created_utc": "2022-08-09T22:00:00.000Z",
+            "count": "147"
+          },
+          {
+            "created_utc": "2022-08-10T22:00:00.000Z",
+            "count": "183"
+          },
+          {
+            "created_utc": "2022-08-11T22:00:00.000Z",
+            "count": "175"
+          },
+          {
+            "created_utc": "2022-08-12T22:00:00.000Z",
+            "count": "173"
+          },
+          {
+            "created_utc": "2022-08-13T22:00:00.000Z",
+            "count": "155"
+          },
+          {
+            "created_utc": "2022-08-14T22:00:00.000Z",
+            "count": "188"
+          },
+          {
+            "created_utc": "2022-08-15T22:00:00.000Z",
+            "count": "196"
+          },
+          {
+            "created_utc": "2022-08-16T22:00:00.000Z",
+            "count": "172"
+          },
+          {
+            "created_utc": "2022-08-17T22:00:00.000Z",
+            "count": "208"
+          },
+          {
+            "created_utc": "2022-08-18T22:00:00.000Z",
+            "count": "155"
+          },
+          {
+            "created_utc": "2022-08-19T22:00:00.000Z",
+            "count": "159"
+          },
+          {
+            "created_utc": "2022-08-20T22:00:00.000Z",
+            "count": "152"
+          },
+          {
+            "created_utc": "2022-08-21T22:00:00.000Z",
+            "count": "164"
+          },
+          {
+            "created_utc": "2022-08-22T22:00:00.000Z",
+            "count": "195"
+          },
+          {
+            "created_utc": "2022-08-23T22:00:00.000Z",
+            "count": "189"
+          },
+          {
+            "created_utc": "2022-08-24T22:00:00.000Z",
+            "count": "198"
+          },
+          {
+            "created_utc": "2022-08-25T22:00:00.000Z",
+            "count": "202"
+          },
+          {
+            "created_utc": "2022-08-26T22:00:00.000Z",
+            "count": "175"
+          },
+          {
+            "created_utc": "2022-08-27T22:00:00.000Z",
+            "count": "186"
+          },
+          {
+            "created_utc": "2022-08-28T22:00:00.000Z",
+            "count": "150"
+          },
+          {
+            "created_utc": "2022-08-29T22:00:00.000Z",
+            "count": "204"
+          },
+          {
+            "created_utc": "2022-08-30T22:00:00.000Z",
+            "count": "184"
+          }
+        ]
+      }
+    },
+    "daily_2026": {
+      "url": "https://arctic-shift.photon-reddit.com/api/posts/search/aggregate?aggregate=created_utc&frequency=day&subreddit=learnprogramming&after=2026-08-01&before=2026-09-01",
+      "response": {
+        "data": [
+          {
+            "created_utc": "2026-07-31T22:00:00.000Z",
+            "count": "60"
+          },
+          {
+            "created_utc": "2026-08-01T22:00:00.000Z",
+            "count": "63"
+          },
+          {
+            "created_utc": "2026-08-02T22:00:00.000Z",
+            "count": "73"
+          },
+          {
+            "created_utc": "2026-08-03T22:00:00.000Z",
+            "count": "63"
+          },
+          {
+            "created_utc": "2026-08-04T22:00:00.000Z",
+            "count": "55"
+          },
+          {
+            "created_utc": "2026-08-05T22:00:00.000Z",
+            "count": "68"
+          },
+          {
+            "created_utc": "2026-08-06T22:00:00.000Z",
+            "count": "68"
+          },
+          {
+            "created_utc": "2026-08-07T22:00:00.000Z",
+            "count": "55"
+          },
+          {
+            "created_utc": "2026-08-08T22:00:00.000Z",
+            "count": "67"
+          },
+          {
+            "created_utc": "2026-08-09T22:00:00.000Z",
+            "count": "79"
+          },
+          {
+            "created_utc": "2026-08-10T22:00:00.000Z",
+            "count": "67"
+          },
+          {
+            "created_utc": "2026-08-11T22:00:00.000Z",
+            "count": "69"
+          },
+          {
+            "created_utc": "2026-08-12T22:00:00.000Z",
+            "count": "65"
+          },
+          {
+            "created_utc": "2026-08-13T22:00:00.000Z",
+            "count": "51"
+          },
+          {
+            "created_utc": "2026-08-14T22:00:00.000Z",
+            "count": "59"
+          },
+          {
+            "created_utc": "2026-08-15T22:00:00.000Z",
+            "count": "69"
+          },
+          {
+            "created_utc": "2026-08-16T22:00:00.000Z",
+            "count": "60"
+          },
+          {
+            "created_utc": "2026-08-17T22:00:00.000Z",
+            "count": "69"
+          },
+          {
+            "created_utc": "2026-08-18T22:00:00.000Z",
+            "count": "68"
+          },
+          {
+            "created_utc": "2026-08-19T22:00:00.000Z",
+            "count": "55"
+          },
+          {
+            "created_utc": "2026-08-20T22:00:00.000Z",
+            "count": "65"
+          },
+          {
+            "created_utc": "2026-08-21T22:00:00.000Z",
+            "count": "56"
+          },
+          {
+            "created_utc": "2026-08-22T22:00:00.000Z",
+            "count": "42"
+          },
+          {
+            "created_utc": "2026-08-23T22:00:00.000Z",
+            "count": "63"
+          },
+          {
+            "created_utc": "2026-08-24T22:00:00.000Z",
+            "count": "52"
+          },
+          {
+            "created_utc": "2026-08-25T22:00:00.000Z",
+            "count": "66"
+          },
+          {
+            "created_utc": "2026-08-26T22:00:00.000Z",
+            "count": "75"
+          },
+          {
+            "created_utc": "2026-08-27T22:00:00.000Z",
+            "count": "57"
+          },
+          {
+            "created_utc": "2026-08-28T22:00:00.000Z",
+            "count": "37"
+          },
+          {
+            "created_utc": "2026-08-29T22:00:00.000Z",
+            "count": "49"
+          },
+          {
+            "created_utc": "2026-08-30T22:00:00.000Z",
+            "count": "65"
+          }
+        ]
+      }
+    }
+  }
+}
