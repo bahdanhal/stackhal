@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'blog/base.html.twig' %}
 {% block title %}StackHal Blog · Practical Guides for Web Infrastructure{% endblock %}
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="Practical guides for email authentication, DNS, technical SEO, and developer infrastructure from StackHal.">{% endblock %}
@@ -11,36 +11,81 @@
   {% else %}
     <link rel="canonical" href="https://stackhal.com/blog">
     <link rel="alternate" hreflang="en" href="https://stackhal.com/blog">
+    <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog">
     <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog">
   {% endif %}
 {% endblock %}
-{% block stylesheets %}<link rel="stylesheet" href="/blog.css">{% endblock %}
 {% block language_switch %}
   {% if app.request.locale == 'pl' %}
     <a class="language-switch" href="{{ path('blog_index', {_locale: 'en'}) }}" hreflang="en">EN</a>
   {% else %}
-    <a class="language-switch" href="{{ path('landing', {_locale: 'pl'}) }}" hreflang="pl">PL</a>
+    <a class="language-switch" href="{{ path('blog_index', {_locale: 'pl'}) }}" hreflang="pl">PL</a>
   {% endif %}
 {% endblock %}
 {% block body %}
 <section class="blog-index-shell">
-  <div class="blog-index-intro">
-    <p class="article-kicker">STACKHAL FIELD NOTES</p>
-    <h1>Practical guides for the parts of the web that usually break quietly.</h1>
-    <p class="article-dek">Short, evidence-led explainers for email authentication, DNS, technical SEO, and developer infrastructure.</p>
+  <header class="journal-masthead">
+    <div class="journal-heading">
+      <h1>Field notes</h1>
+      <p>The StackHal blog, by Bahdan Hal.</p>
+    </div>
+    <p class="journal-intro">Investigations and practical guides to AI engineering and the infrastructure behind the web.</p>
+  </header>
+
+  {% if articles is not empty %}
+    {% set featured = articles|first %}
+    <section class="journal-feature{% if featured.visualLines is not empty %} has-visual{% endif %}" aria-labelledby="featured-title">
+      <div class="journal-feature-copy">
+        <p class="journal-label"><span class="journal-dot" aria-hidden="true"></span> Latest field note <span>/ {{ featured.category }}</span></p>
+        <h2 id="featured-title"><a href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ featured.title }}</a></h2>
+        <p class="journal-feature-dek">{{ featured.description }}</p>
+        <div class="journal-feature-footer">
+          <a class="journal-read" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">Read the story <span aria-hidden="true">↗</span></a>
+          <span>{{ featured.readTimeMinutes }} min read · <time datetime="{{ featured.publishedAt|date('Y-m-d') }}">{{ featured.publishedAt|date('d M Y') }}</time></span>
+        </div>
+      </div>
+      {% if featured.visualLines is not empty %}
+      <div class="journal-feature-visual" aria-hidden="true">
+        <div class="article-card-visual{% if featured.visualClass %} article-card-visual-{{ featured.visualClass }}{% endif %}">
+          {% for line in featured.visualLines %}<span>{{ line }}</span>{% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  <section class="journal-archive" aria-labelledby="archive-title" data-blog-archive>
+    <div class="journal-archive-header">
+      <h2 id="archive-title">The archive <span>{{ articles|length < 10 ? '0' : '' }}{{ articles|length }}</span></h2>
+      <div class="journal-search" data-blog-search hidden>
+        <label for="blog-search">Find a note</label>
+        <input id="blog-search" type="search" placeholder="Search titles or topics" autocomplete="off" aria-controls="journal-entries">
+      </div>
+    </div>
+    <div id="journal-entries" class="journal-entries">
+      {% for article in articles %}
+        <article class="journal-entry" data-blog-entry>
+          <div class="journal-entry-meta">
+            <time datetime="{{ article.publishedAt|date('Y-m-d') }}">{{ article.publishedAt|date('d M Y') }}</time>
+            <span>{{ article.readTimeMinutes }} min read</span>
+          </div>
+          <div class="journal-entry-copy">
+            <p class="journal-label">{{ article.category }}</p>
+            <h3><a href="{{ path('blog_article', {slug: article.slug, _locale: app.request.locale}) }}">{{ article.title }}</a></h3>
+            <p class="journal-entry-description">{{ article.description }}</p>
+          </div>
+          <span class="journal-entry-arrow" aria-hidden="true">↗</span>
+        </article>
+      {% else %}
+        <p class="journal-empty">The first field note is on its way. <a href="{{ path('landing', {_locale: app.request.locale}) }}">Explore the tools in the meantime.</a></p>
+      {% endfor %}
+    </div>
+    <p class="journal-empty" data-blog-empty hidden>No notes match your search. Try a topic such as DNS, PHP, or AI.</p>
+    <p class="journal-search-status" data-blog-status role="status" aria-live="polite"></p>
+  </section>
+  <div class="journal-colophon">
+    <span>Written by <a href="https://bahdanhal.pl/">Bahdan Hal</a>.</span>
+    <a href="{{ path('landing', {_locale: app.request.locale}) }}">Put it into practice. Explore the tools <span aria-hidden="true">↗</span></a>
   </div>
-  {% for article in articles %}
-    <a class="article-card" href="{{ path('blog_article', {slug: article.slug}) }}">
-      <div class="article-card-visual article-card-visual-{{ article.visualClass }}" aria-hidden="true">
-        {% for line in article.visualLines %}<span>{{ line }}</span>{% endfor %}
-      </div>
-      <div class="article-card-copy">
-        <p class="article-kicker">{{ article.category|upper }} · {{ article.readTimeMinutes }} MIN READ</p>
-        <h2>{{ article.title }}</h2>
-        <p>{{ article.description }}</p>
-        <strong>Read the guide →</strong>
-      </div>
-    </a>
-  {% endfor %}
 </section>
 {% endblock %}

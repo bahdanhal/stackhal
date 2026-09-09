@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'blog/base.html.twig' %}
 {% block title %}{{ article.title }} · StackHal{% endblock %}
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ article.description }}">{% endblock %}
@@ -21,8 +21,8 @@
     <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.slug }}">
   {% endif %}
 {% endblock %}
-{% block stylesheets %}<link rel="stylesheet" href="/blog.css?v=20260831000500">{% endblock %}
 {% block head_scripts %}
+  {{ parent() }}
   {% set article_url = app.request.locale == 'pl' ? ('https://stackhal.com/pl/blog/' ~ article.slug) : ('https://stackhal.com/blog/' ~ article.slug) %}
   {% set article_schema = {'@type': 'Article', '@id': article_url ~ '#article', 'headline': article.title, 'description': article.description, 'datePublished': article.publishedAt|date('Y-m-d'), 'dateModified': article.updatedAt|date('Y-m-d'), 'author': {'@id': 'https://stackhal.com/#stackhal'}, 'publisher': {'@id': 'https://stackhal.com/#stackhal'}, 'mainEntityOfPage': article_url, 'inLanguage': app.request.locale} %}
   {% set graph = [article_schema] %}
@@ -44,29 +44,45 @@
 {% endblock %}
 {% block body %}
 <article class="article-shell">
+  <nav class="journal-breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ path('blog_index', {_locale: app.request.locale}) }}">← All field notes</a>
+    <span>StackHal / Blog</span>
+  </nav>
   <header class="article-header">
-    <p class="article-kicker">{{ article.category|upper }} · {{ article.readTimeMinutes }} MIN READ · {{ article.publishedAt|date('F d, Y')|upper }}</p>
-    <h1>{{ article.title }}</h1>
-    <p class="article-dek">{{ article.description }}</p>
-    <div class="article-header-meta"><span>StackHal Field Notes</span><span>Updated {{ article.updatedAt|date('F d, Y') }}</span></div>
+    <div class="article-heading-copy">
+      <p class="article-kicker">{{ article.category|upper }} · {{ article.readTimeMinutes }} MIN READ · {{ article.publishedAt|date('F d, Y')|upper }}</p>
+      <h1>{{ article.title }}</h1>
+      <p class="article-dek">{{ article.description }}</p>
+      <div class="article-header-meta">
+        <span>By <a href="https://bahdanhal.pl/">Bahdan Hal</a></span>
+        <span>Updated <time datetime="{{ article.updatedAt|date('Y-m-d') }}">{{ article.updatedAt|date('F d, Y') }}</time></span>
+      </div>
+    </div>
   </header>
   <div class="article-layout">
     {% set externalCta = article.ctaPath starts with 'https://' %}
-    <aside class="article-toc" aria-label="On this page"><span>ON THIS PAGE</span><a href="#article-content">Article content</a><a href="#article-cta">Use the tool</a></aside>
     <div class="article-prose article-content" id="article-content">{{ article.contentHtml|raw }}</div>
     <aside class="article-sidebar">
+      <nav class="article-toc" aria-label="On this page">
+        <span>IN THIS NOTE</span>
+        <div data-article-sections></div>
+        <a href="#article-cta">Related tool ↗</a>
+      </nav>
       <div class="article-cta-card" id="article-cta">
         <p class="article-kicker">RELATED TOOL</p>
-        <h2>Test this directly in your browser.</h2>
-        <p>Run the check against your own domain or configuration without installing additional CLI tools.</p>
+        <h2>Put it to work.</h2>
+        <p>Continue with the tool behind this note.</p>
         <a class="cta-button" href="{{ article.ctaPath }}"{% if externalCta %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ article.ctaLabel }}</a>
       </div>
       <div class="article-author-card">
-        <p class="article-kicker">AUTHOR &amp; CONTEXT</p>
-        <p>Published by <strong>Bahdan Hal</strong>.</p>
+        <p class="article-kicker">STACKHAL FIELD NOTES</p>
+        <p>Investigations and practical guides by <a href="https://bahdanhal.pl/">Bahdan Hal</a>.</p>
       </div>
     </aside>
   </div>
+  <div class="journal-colophon">
+    <a href="{{ path('blog_index', {_locale: app.request.locale}) }}">← Back to the archive</a>
+    <span>StackHal / Field notes</span>
+  </div>
 </article>
 {% endblock %}
-{% block scripts %}<script src="/blog.js" defer></script>{% endblock %}

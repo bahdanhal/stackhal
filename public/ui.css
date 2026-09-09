@@ -25,13 +25,13 @@
 }
 
 .tool-page-intro h1 {
-  max-width: 1040px;
+  max-width: 860px;
   margin: 0;
   overflow-wrap: anywhere;
-  font-family: Georgia, serif;
-  font-size: clamp(40px, 4.9vw, 64px);
-  line-height: 1;
-  letter-spacing: -.04em;
+  font-family: Inter, "SF Pro Display", "Segoe UI", sans-serif;
+  font-size: clamp(30px, 3.8vw, 44px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
 }
 
 .tool-page-intro .lede {
