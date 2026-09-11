@@ -15,6 +15,16 @@ final readonly class AuditRuleEngine
      */
     public function evaluate(array $pages, array $redirectMatrix, array $robots, array $sitemap): array
     {
+        $dedupedPages = [];
+        foreach ($pages as $page) {
+            $key = $this->normalized($page['final_url'] ?? $page['url'] ?? '');
+            if ($key !== '' && isset($dedupedPages[$key])) {
+                continue;
+            }
+            $dedupedPages[$key] = $page;
+        }
+        $pages = array_values($dedupedPages);
+
         $issues = [];
         $add = static function (string $severity, string $code, string $title, string $detail, array $evidence = []) use (&$issues): void {
             $issues[] = compact('severity', 'code', 'title', 'detail', 'evidence');
@@ -88,15 +98,17 @@ final readonly class AuditRuleEngine
         }
 
         foreach ($titles as $title => $urls) {
-            if (count($urls) > 1) {
+            $uniqueUrls = array_values(array_unique($urls));
+            if (count($uniqueUrls) > 1) {
                 // phpcs:ignore Generic.Files.LineLength
-                $add('warning', 'duplicate-title', 'Duplicate page title', 'The title "' . $title . '" appears on ' . count($urls) . ' crawled pages.', array_slice($urls, 0, 10));
+                $add('warning', 'duplicate-title', 'Duplicate page title', 'The title "' . $title . '" appears on ' . count($uniqueUrls) . ' crawled pages.', array_slice($uniqueUrls, 0, 10));
             }
         }
         foreach ($hashes as $urls) {
-            if (count($urls) > 1) {
+            $uniqueUrls = array_values(array_unique($urls));
+            if (count($uniqueUrls) > 1) {
                 // phpcs:ignore Generic.Files.LineLength
-                $add('critical', 'duplicate-content', 'Duplicate page bodies found', count($urls) . ' URLs contain effectively identical text.', array_slice($urls, 0, 10));
+                $add('critical', 'duplicate-content', 'Duplicate page bodies found', count($uniqueUrls) . ' URLs contain effectively identical text.', array_slice($uniqueUrls, 0, 10));
             }
         }
         if ($unsafeParameterUrls !== []) {
@@ -152,6 +164,7 @@ final readonly class AuditRuleEngine
                 $missing[] = $page['final_url'];
             }
         }
+        $missing = array_values(array_unique($missing));
         if ($sitemapUrls !== [] && $missing !== []) {
             // phpcs:ignore Generic.Files.LineLength
             $add('warning', 'sitemap-coverage', 'Crawlable pages are absent from the sitemap', count($missing) . ' crawled 200 pages were not found in the sitemap.', array_slice($missing, 0, 15));

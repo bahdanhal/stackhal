@@ -137,7 +137,16 @@ final readonly class SiteAuditor
             'sitemap_errors' => count($sitemap['errors']),
         ]);
 
-        $crawl = $this->crawl($origin, [$initial['final_url'], $origin . '/'], $policy, $auditId);
+        $startUrls = [$initial['final_url']];
+        $rootUrl = $origin . '/';
+        if ($this->crawlKey($initial['final_url']) !== $this->crawlKey($rootUrl)) {
+            $targetIsRoot = $this->crawlKey($target) === $this->crawlKey($rootUrl)
+                || $this->crawlKey($target) === $this->crawlKey($origin);
+            if (!$targetIsRoot) {
+                $startUrls[] = $rootUrl;
+            }
+        }
+        $crawl = $this->crawl($origin, $startUrls, $policy, $auditId);
         $sitemap['sample_checks'] = $this->checkSitemapSample($sitemap['urls']);
         $trapProbes = $this->probeCrawlerTraps($origin, $crawl['pages']);
 
@@ -225,19 +234,39 @@ final readonly class SiteAuditor
         $parameterPages = 0;
 
         while ($queue !== [] && count($pages) < $this->maxPages) {
+            $queue = array_values(array_filter($queue, fn (string $url) => !isset($pages[$this->crawlKey($url)])));
+            if ($queue === []) {
+                break;
+            }
+
             $batch = array_splice($queue, 0, min($this->concurrency, $this->maxPages - count($pages)));
             foreach ($this->fetcher->fetchMany($batch) as $requestedUrl => $fetch) {
-                $page = $this->pageAnalyzer->analyze($fetch);
-                $pages[$requestedUrl] = $page;
+                $requestedKey = $this->crawlKey($requestedUrl);
+                $finalUrl = $fetch['final_url'];
+                $finalKey = $this->crawlKey($finalUrl);
+                $queued[$requestedKey] = true;
+                $queued[$finalKey] = true;
+
                 $this->auditLogger->log('page_fetched', [
                     'audit_id' => $auditId,
                     'requested_url' => $this->auditLogger->safeUrl($fetch['requested_url']),
-                    'final_url' => $this->auditLogger->safeUrl($fetch['final_url']),
+                    'final_url' => $this->auditLogger->safeUrl($finalUrl),
                     'status' => $fetch['status'],
                     'duration_ms' => $fetch['duration_ms'],
                     'redirects' => count($fetch['redirects']),
                     'error' => $this->auditLogger->safeError($fetch['error']),
                 ]);
+
+                if (!$this->isCrawlableInternal($origin, $finalUrl)) {
+                    continue;
+                }
+
+                if (isset($pages[$finalKey])) {
+                    continue;
+                }
+
+                $page = $this->pageAnalyzer->analyze($fetch);
+                $pages[$finalKey] = $page;
 
                 foreach ($page['links'] as $link) {
                     if (!$this->isCrawlableInternal($origin, $link)) {
@@ -247,7 +276,7 @@ final readonly class SiteAuditor
                         continue;
                     }
                     $key = $this->crawlKey($link);
-                    if (isset($queued[$key])) {
+                    if (isset($queued[$key]) || isset($pages[$key])) {
                         continue;
                     }
                     if (parse_url($link, PHP_URL_QUERY) !== null) {
