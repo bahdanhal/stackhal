@@ -34,6 +34,17 @@ SELECT ecosystem, COUNT(*) AS analysis_rows, COUNT(DISTINCT repo_name) AS analyz
        SUM(is_deprecated) AS scanner_flagged_rows,
        COUNT(DISTINCT CASE WHEN is_deprecated = 1 THEN repo_name END) AS flagged_repositories
 FROM dependencies GROUP BY ecosystem ORDER BY ecosystem;
+SELECT COUNT(DISTINCT repo_name) AS analyzed_repositories FROM dependencies;
+SELECT package_name, COUNT(DISTINCT repo_name) AS flagged_repositories
+FROM dependencies WHERE ecosystem = 'npm' AND is_deprecated = 1
+AND package_name IN ('next', 'eslint', 'recharts')
+GROUP BY package_name ORDER BY package_name;
+SELECT package_name, matched_version, COUNT(*) AS flagged_rows
+FROM dependencies WHERE ecosystem = 'npm' AND is_deprecated = 1
+AND ((package_name = 'next' AND matched_version IN ('14.2.15', '14.2.5'))
+OR (package_name = 'eslint' AND matched_version = '9.39.5')
+OR (package_name = 'recharts' AND matched_version = '2.12.7'))
+GROUP BY package_name, matched_version ORDER BY package_name, matched_version;
 -- Stored Go labels are historical scanner output, NOT observed compiler status.
 SELECT runtime_status AS stored_scanner_label, COUNT(*) AS repositories
 FROM repos WHERE language = 'Go' GROUP BY runtime_status ORDER BY runtime_status;

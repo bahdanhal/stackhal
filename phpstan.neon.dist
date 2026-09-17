@@ -6,6 +6,7 @@ parameters:
     scanFiles:
         - migrations/Version20260917120000.php
         - migrations/Version20260917220000.php
+        - migrations/Version20260917233000.php
     excludePaths:
         - tests/bootstrap.php
     reportUnmatchedIgnoredErrors: false
