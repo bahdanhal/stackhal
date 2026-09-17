@@ -66,14 +66,16 @@
       <nav class="article-toc" aria-label="On this page">
         <span>IN THIS NOTE</span>
         <div data-article-sections></div>
-        <a href="#article-cta">Related tool ↗</a>
+        {% if article.ctaPath and article.ctaLabel %}<a href="#article-cta">Related tool ↗</a>{% endif %}
       </nav>
+      {% if article.ctaPath and article.ctaLabel %}
       <div class="article-cta-card" id="article-cta">
         <p class="article-kicker">RELATED TOOL</p>
         <h2>Put it to work.</h2>
         <p>Continue with the tool behind this note.</p>
         <a class="cta-button" href="{{ article.ctaPath }}"{% if externalCta %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ article.ctaLabel }}</a>
       </div>
+      {% endif %}
       <div class="article-author-card">
         <p class="article-kicker">STACKHAL FIELD NOTES</p>
         <p>Investigations and practical guides by <a href="https://bahdanhal.pl/">Bahdan Hal</a>.</p>

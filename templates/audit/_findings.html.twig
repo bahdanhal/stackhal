@@ -1,0 +1,30 @@
+<section class="section">
+  <div class="section-title"><h2>{{ 'audit.report.findings'|trans }}</h2><span>{{ issueGroups|length }} {{ 'audit.report.finding_types'|trans }}</span></div>
+  {% if issueGroups is empty %}
+    <div class="empty">{{ 'audit.report.empty'|trans }}</div>
+  {% else %}
+    <div class="issues">
+    {% for group in issueGroups %}
+      <details class="issue severity-{{ group.severity }}" {{ loop.index <= 6 ? 'open' : '' }}>
+        <summary>
+          <span class="pill">{{ group.severity }}</span>
+          <strong>{{ ('audit.issues.' ~ group.code)|trans }}</strong>
+          {% if group.occurrences|length > 1 %}<span class="finding-count">{{ group.occurrences|length }}</span>{% endif %}
+          <code>{{ group.code }}</code>
+        </summary>
+        <div class="issue-body">
+          {% if group.occurrences|length > 1 %}<p class="group-intro">{{ 'audit.report.found_in'|trans({'%count%': group.occurrences|length}) }}</p>{% endif %}
+          <div class="occurrences">
+          {% for occurrence in group.occurrences %}
+            <details class="occurrence" {{ group.occurrences|length == 1 ? 'open' : '' }}>
+              <summary><b>#{{ loop.index }}</b><span>{{ occurrence.detail }}</span></summary>
+              {% if occurrence.evidence is not empty %}<pre>{{ occurrence.evidence|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES')) }}</pre>{% endif %}
+            </details>
+          {% endfor %}
+          </div>
+        </div>
+      </details>
+    {% endfor %}
+    </div>
+  {% endif %}
+</section>

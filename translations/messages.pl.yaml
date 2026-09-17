@@ -366,7 +366,12 @@ audit:
         q2: "Dlaczego parametry URL tworzą pułapki dla crawlerów?"
         a2: "Niekontrolowane kombinacje filtrów, sortowań i identyfikatorów sesji generują miliony powielonych stron, które marnują budżet skanowania bez wnoszenia wartości do indeksu."
         q3: "Jak canonical wpływa na widoczność w wyszukiwarce?"
-        a3: "Poprawny tag canonical konsoliduje sygnały rankingowe do wybranego adresu głównego i chroni przed kanibalizacją treści."
+        a3: "Sygnały canonical pomagają konsolidować sygnały z powielonych adresów URL i wskazują preferowany adres. Google może wybrać inny canonical; indeksowanie i pozycja nie są gwarantowane."
+    sample:
+        title: "Przykładowy raport: fikcyjna demonstracja"
+        note: "Stałe dane example.test pokazują format raportu, a nie prawdziwy skan. Nie pobieramy żadnej witryny i nie zużywamy limitu audytów."
+        canonical: "Przekierowanie HTTP prowadzi do /guide, ale canonical wskazuje /old-guide. Jeśli /guide jest preferowaną stroną, ujednolić przekierowania, tagi canonical i linki wewnętrzne do tego adresu. Jeśli konsolidacja do /old-guide jest zamierzona, sprawdzić tę stronę docelową."
+        robots: "robots.txt zwraca HTTP 404. Samo to nie blokuje indeksowania. Jeśli planowane są reguły skanowania, opublikować je pod tym adresem i sprawdzić; robots.txt nie zastępuje dyrektywy noindex."
     report:
         title: "Audyt SEO"
         new: "Nowy audyt"

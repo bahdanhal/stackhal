@@ -365,7 +365,12 @@ audit:
         q2: "Why do URL parameters cause crawl traps?"
         a2: "Uncapped sorting, filter combinations, and session IDs create millions of duplicate URLs that exhaust your search engine crawl budget without adding indexed value."
         q3: "How does canonicalization affect rankings?"
-        a3: "Proper canonical tags consolidate link equity to your preferred URL version and prevent duplicate content penalties across protocol (HTTP/HTTPS) and www/non-www variations."
+        a3: "Canonical signals help consolidate signals from duplicate URLs and indicate your preferred URL. Google may select a different canonical; indexing and ranking are not guaranteed."
+    sample:
+        title: "Sample report: fictional demonstration"
+        note: "These fixed example.test findings show the report format, not a real scan. No website is fetched and no audit allowance is used."
+        canonical: "The HTTP redirect ends at /guide, but its canonical points to /old-guide. If /guide is the preferred page, align redirects, canonical tags and internal links with that URL. If consolidation into /old-guide is intentional, verify that destination instead."
+        robots: "robots.txt returns HTTP 404. This does not itself block indexing. If crawl rules are intended, publish and verify them at this location; do not use robots.txt as a substitute for noindex."
     report:
         title: "SEO audit"
         new: "New audit"

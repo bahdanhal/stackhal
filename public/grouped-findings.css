@@ -11,6 +11,21 @@
   font-weight: 900;
 }
 
+.seo-sample {
+  margin-top: 2rem;
+  text-align: left;
+  min-width: 0;
+}
+
+.seo-sample pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.seo-sample .issue > summary {
+  flex-wrap: wrap;
+}
+
 .group-intro {
   color: var(--muted);
   font-size: 13px;

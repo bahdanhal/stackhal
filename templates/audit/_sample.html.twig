@@ -1,0 +1,16 @@
+{# Deterministic presentation fixture; no audit, network access, timing or score claims. #}
+{% set sampleGroups = [
+  {severity: 'warning', code: 'canonical-mismatch', occurrences: [{
+    detail: 'audit.sample.canonical'|trans,
+    evidence: {requested_url: 'http://example.test/guide', redirect_status: 301, final_url: 'https://example.test/guide', canonical: 'https://example.test/old-guide'}
+  }]},
+  {severity: 'warning', code: 'robots-missing', occurrences: [{
+    detail: 'audit.sample.robots'|trans,
+    evidence: {url: 'https://example.test/robots.txt', status: 404}
+  }]}
+] %}
+<section class="seo-sample" aria-labelledby="seo-sample-title">
+  <h2 id="seo-sample-title">{{ 'audit.sample.title'|trans }}</h2>
+  <p>{{ 'audit.sample.note'|trans }}</p>
+  {% include 'audit/_findings.html.twig' with {issueGroups: sampleGroups} only %}
+</section>
