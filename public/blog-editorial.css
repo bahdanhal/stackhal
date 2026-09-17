@@ -614,6 +614,12 @@ body.journal-page .census-table th:first-child {
   text-align: left;
 }
 
+body.journal-page .census-table th {
+  background: #e8e5dc;
+  color: #222924;
+  position: static;
+}
+
 body.journal-page .census-table tfoot {
   font-weight: 700;
 }
