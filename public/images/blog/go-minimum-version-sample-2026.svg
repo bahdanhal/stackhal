@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" role="img" aria-labelledby="title desc">
+  <title id="title">Go minimum-version lines in 575 retained repositories</title>
+  <desc id="desc">291 records declare Go 1.25 or below, 177 declare 1.26, 106 declare 1.27, and one has no parsed version. These are minimum requirements, not observed compiler versions.</desc>
+  <rect width="900" height="360" rx="12" fill="#f5f2eb"/>
+  <g font-family="system-ui, sans-serif" fill="#222924">
+    <text x="30" y="42" font-size="23" font-weight="700">Go minimum-version lines: 575 retained records</text>
+    <text x="30" y="70" font-size="15">Decoded from archived scanner labels; no builds were observed.</text>
+    <g font-size="17">
+      <text x="30" y="122">1.25 or below</text><rect x="220" y="100" width="550" height="32" rx="4" fill="#41685b"/><text x="786" y="122">291</text>
+      <text x="30" y="177">1.26</text><rect x="220" y="155" width="335" height="32" rx="4" fill="#41685b"/><text x="572" y="177">177</text>
+      <text x="30" y="232">1.27</text><rect x="220" y="210" width="200" height="32" rx="4" fill="#41685b"/><text x="437" y="232">106</text>
+      <text x="30" y="287">No parsed version</text><rect x="220" y="265" width="2" height="32" fill="#41685b"/><text x="239" y="287">1</text>
+    </g>
+    <text x="30" y="332" font-size="15">An older minimum does not prove an older compiler or an unsupported runtime.</text>
+  </g>
+</svg>

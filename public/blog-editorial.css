@@ -580,6 +580,50 @@ body.journal-page .article-content > :first-child {
   margin-top: 0;
 }
 
+body.journal-page .census-table-scroll {
+  overflow-x: auto;
+  margin: 28px 0;
+}
+
+body.journal-page .census-table-scroll:focus-visible {
+  outline: 2px solid var(--journal-accent);
+  outline-offset: 4px;
+}
+
+body.journal-page .census-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+body.journal-page .census-table caption {
+  text-align: left;
+  margin-bottom: 12px;
+  font-weight: 650;
+}
+
+body.journal-page .census-table th,
+body.journal-page .census-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+}
+
+body.journal-page .census-table th:first-child {
+  text-align: left;
+}
+
+body.journal-page .census-table tfoot {
+  font-weight: 700;
+}
+
+body.journal-page .article-content .article-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 body.journal-page .article-content p {
   color: #222924 !important;
   font-size: 18px;

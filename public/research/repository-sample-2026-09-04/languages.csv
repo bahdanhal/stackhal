@@ -1,0 +1,9 @@
+language,repositories,detected_manifests,parsed_declarations,sampled_counter,analysis_rows,scanner_flagged_rows
+C#,798,798,1536,0,0,0
+Go,575,575,14964,0,0,0
+Java,1267,1267,9359,0,0,0
+JavaScript,8706,3704,33446,22252,22272,370
+PHP,353,353,3554,2564,2564,5
+Python,9296,5793,78539,35812,35812,106
+Rust,623,623,8530,3456,3456,6
+TypeScript,12569,12209,251775,107682,107692,1700
