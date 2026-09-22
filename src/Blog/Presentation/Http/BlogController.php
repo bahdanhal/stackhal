@@ -23,8 +23,11 @@ final class BlogController extends AbstractController
             return $this->redirectToRoute('blog_index', ['_locale' => 'en'], Response::HTTP_MOVED_PERMANENTLY);
         }
 
+        $alternateLocale = $locale === 'pl' ? 'en' : 'pl';
+
         return $this->render('blog/index.html.twig', [
             'articles' => $published,
+            'hasAlternateLocale' => $articles->findPublished($alternateLocale) !== [],
         ]);
     }
 
@@ -65,6 +68,13 @@ final class BlogController extends AbstractController
             throw new NotFoundHttpException('Blog article not found.');
         }
 
-        return $this->render('blog/article.html.twig', ['article' => $article]);
+        $alternateLocale = $locale === 'pl' ? 'en' : 'pl';
+        $alternateAvailable = $article->getAlternateSlug() !== ''
+            && $articles->findPublishedBySlug($article->getAlternateSlug(), $alternateLocale) !== null;
+
+        return $this->render('blog/article.html.twig', [
+            'article' => $article,
+            'alternateAvailable' => $alternateAvailable,
+        ]);
     }
 }

@@ -52,15 +52,17 @@ final class BlogControllerTest extends TestCase
     {
         $article = $this->mockArticle('test-slug');
         $repo = $this->createMock(BlogArticleRepository::class);
-        $repo->expects(self::once())
+        $repo->expects(self::exactly(2))
             ->method('findPublished')
-            ->with('en')
-            ->willReturn([$article]);
+            ->willReturnCallback(static fn (string $locale): array => $locale === 'en' ? [$article] : []);
 
         $twig = $this->createMock(Environment::class);
         $twig->expects(self::once())
             ->method('render')
-            ->with('blog/index.html.twig', self::callback(static fn (array $data): bool => array_key_exists('articles', $data)))
+            ->with('blog/index.html.twig', [
+                'articles' => [$article],
+                'hasAlternateLocale' => false,
+            ])
             ->willReturn('<html>blog index</html>');
 
         $container = new Container();
@@ -190,7 +192,10 @@ final class BlogControllerTest extends TestCase
         $twig = $this->createMock(Environment::class);
         $twig->expects(self::once())
             ->method('render')
-            ->with('blog/article.html.twig', ['article' => $article])
+            ->with('blog/article.html.twig', [
+                'article' => $article,
+                'alternateAvailable' => false,
+            ])
             ->willReturn('<html>article content</html>');
 
         $container = new Container();

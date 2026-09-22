@@ -3,23 +3,30 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="Practical guides for email authentication, DNS, technical SEO, and developer infrastructure from StackHal.">{% endblock %}
 {% block canonical %}
-  {% if app.request.locale == 'pl' %}
-    <link rel="canonical" href="https://stackhal.com/pl/blog">
-    <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog">
-    <link rel="alternate" hreflang="en" href="https://stackhal.com/blog">
-    <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog">
+  {% set isPolish = app.request.locale == 'pl' %}
+  {% set currentUrl = isPolish ? 'https://stackhal.com/pl/blog' : 'https://stackhal.com/blog' %}
+  {% set currentLocale = isPolish ? 'pl' : 'en' %}
+  <link rel="canonical" href="{{ currentUrl }}">
+  <link rel="alternate" hreflang="{{ currentLocale }}" href="{{ currentUrl }}">
+  {% if hasAlternateLocale %}
+    {% if app.request.locale == 'pl' %}
+      <link rel="alternate" hreflang="en" href="https://stackhal.com/blog">
+      <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog">
+    {% else %}
+      <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog">
+      <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog">
+    {% endif %}
   {% else %}
-    <link rel="canonical" href="https://stackhal.com/blog">
-    <link rel="alternate" hreflang="en" href="https://stackhal.com/blog">
-    <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog">
-    <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog">
+    <link rel="alternate" hreflang="x-default" href="{{ currentUrl }}">
   {% endif %}
 {% endblock %}
 {% block language_switch %}
-  {% if app.request.locale == 'pl' %}
+  {% if hasAlternateLocale and app.request.locale == 'pl' %}
     <a class="language-switch" href="{{ path('blog_index', {_locale: 'en'}) }}" hreflang="en">EN</a>
-  {% else %}
+  {% elseif hasAlternateLocale %}
     <a class="language-switch" href="{{ path('blog_index', {_locale: 'pl'}) }}" hreflang="pl">PL</a>
+  {% else %}
+    <a class="language-switch" href="{{ path('landing', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
   {% endif %}
 {% endblock %}
 {% block body %}

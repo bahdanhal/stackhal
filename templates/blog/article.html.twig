@@ -3,22 +3,21 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ article.description }}">{% endblock %}
 {% block canonical %}
-  {% if article.alternateSlug %}
-    {% if app.request.locale == 'pl' %}
-      <link rel="canonical" href="https://stackhal.com/pl/blog/{{ article.slug }}">
-      <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog/{{ article.slug }}">
+  {% set isPolish = app.request.locale == 'pl' %}
+  {% set currentUrl = isPolish ? ('https://stackhal.com/pl/blog/' ~ article.slug) : ('https://stackhal.com/blog/' ~ article.slug) %}
+  {% set currentLocale = isPolish ? 'pl' : 'en' %}
+  <link rel="canonical" href="{{ currentUrl }}">
+  <link rel="alternate" hreflang="{{ currentLocale }}" href="{{ currentUrl }}">
+  {% if alternateAvailable %}
+    {% if isPolish %}
       <link rel="alternate" hreflang="en" href="https://stackhal.com/blog/{{ article.alternateSlug }}">
       <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.alternateSlug }}">
     {% else %}
-      <link rel="canonical" href="https://stackhal.com/blog/{{ article.slug }}">
-      <link rel="alternate" hreflang="en" href="https://stackhal.com/blog/{{ article.slug }}">
       <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog/{{ article.alternateSlug }}">
       <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.slug }}">
     {% endif %}
   {% else %}
-    <link rel="canonical" href="https://stackhal.com/blog/{{ article.slug }}">
-    <link rel="alternate" hreflang="en" href="https://stackhal.com/blog/{{ article.slug }}">
-    <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.slug }}">
+    <link rel="alternate" hreflang="x-default" href="{{ currentUrl }}">
   {% endif %}
 {% endblock %}
 {% block head_scripts %}
@@ -32,7 +31,7 @@
   <script type="application/ld+json">{{ {'@context': 'https://schema.org', '@graph': graph}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
 {% endblock %}
 {% block language_switch %}
-  {% if article.alternateSlug %}
+  {% if alternateAvailable %}
     {% if app.request.locale == 'pl' %}
       <a class="language-switch" href="{{ path('blog_article', {'slug': article.alternateSlug, '_locale': 'en'}) }}" hreflang="en">EN</a>
     {% else %}

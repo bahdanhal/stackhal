@@ -36,11 +36,14 @@ final class SitemapControllerTest extends TestCase
         self::assertStringContainsString('https://stackhal.com/pl/weryfikator-app-links', $content);
         self::assertStringContainsString('https://stackhal.com/pl/synchronizacja-plikow-ai-studio', $content);
         self::assertStringContainsString('https://stackhal.com/blog', $content);
+        self::assertStringNotContainsString('/composer-license-checker', $content);
+        self::assertStringNotContainsString('/composer-license-metadata-dependency-audit', $content);
+        self::assertStringNotContainsString('/domain-security', $content);
     }
 
     public function testSitemapWithEnglishOnlyArticlesDoesNotDuplicateOrEmitFakePolishHreflang(): void
     {
-        $now = new \DateTimeImmutable();
+        $now = new \DateTimeImmutable('2026-09-17T12:00:00+00:00');
         $article = new \App\Blog\Domain\BlogArticle(
             'single-article',
             'Title',
@@ -81,19 +84,29 @@ final class SitemapControllerTest extends TestCase
 
         // Exactly one <loc> entry for /blog
         self::assertSame(1, substr_count($content, '<loc>https://stackhal.com/blog</loc>'));
+
+        self::assertStringContainsString(
+            '<loc>https://stackhal.com/blog/single-article</loc><lastmod>2026-09-17</lastmod>',
+            $content
+        );
+        self::assertStringContainsString(
+            '<loc>https://stackhal.com/blog</loc><lastmod>2026-09-17</lastmod>',
+            $content
+        );
     }
 
     public function testSitemapWithBilingualArticlesGeneratesPairedEntries(): void
     {
-        $now = new \DateTimeImmutable();
+        $englishUpdatedAt = new \DateTimeImmutable('2026-09-17T12:00:00+00:00');
+        $polishUpdatedAt = new \DateTimeImmutable('2026-09-18T12:00:00+00:00');
         $enArticle = new \App\Blog\Domain\BlogArticle(
             'en-slug',
             'English Title',
             'Description',
             'Category',
             5,
-            $now,
-            $now,
+            $englishUpdatedAt,
+            $englishUpdatedAt,
             '<p>Content</p>',
             'CTA',
             '/cta',
@@ -109,8 +122,8 @@ final class SitemapControllerTest extends TestCase
             'Description',
             'Category',
             5,
-            $now,
-            $now,
+            $polishUpdatedAt,
+            $polishUpdatedAt,
             '<p>Content</p>',
             'CTA',
             '/cta',
@@ -139,5 +152,45 @@ final class SitemapControllerTest extends TestCase
         self::assertSame(1, substr_count($content, '<loc>https://stackhal.com/pl/blog/pl-slug</loc>'));
         self::assertSame(1, substr_count($content, '<loc>https://stackhal.com/blog</loc>'));
         self::assertSame(1, substr_count($content, '<loc>https://stackhal.com/pl/blog</loc>'));
+        self::assertStringContainsString(
+            '<loc>https://stackhal.com/blog/en-slug</loc><lastmod>2026-09-17</lastmod>',
+            $content
+        );
+        self::assertStringContainsString(
+            '<loc>https://stackhal.com/pl/blog/pl-slug</loc><lastmod>2026-09-18</lastmod>',
+            $content
+        );
+    }
+
+    public function testUnpublishedAlternateIsNotEmittedAsAWorkingPolishUrl(): void
+    {
+        $now = new \DateTimeImmutable('2026-09-17T12:00:00+00:00');
+        $article = new \App\Blog\Domain\BlogArticle(
+            'english-article',
+            'English Title',
+            'Description',
+            'Category',
+            5,
+            $now,
+            $now,
+            '<p>Content</p>',
+            'CTA',
+            '/cta',
+            'visual',
+            ['line1'],
+            [['name' => 'step1', 'text' => 'text1']],
+            'en',
+            'missing-polish-article'
+        );
+
+        $repo = $this->createStub(\App\Blog\Application\BlogArticleRepository::class);
+        $repo->method('findPublished')
+            ->willReturnCallback(static fn (?string $locale): array => $locale === 'en' ? [$article] : []);
+
+        $content = (string) (new SitemapController())($repo)->getContent();
+
+        self::assertStringContainsString('https://stackhal.com/blog/english-article', $content);
+        self::assertStringNotContainsString('https://stackhal.com/pl/blog/missing-polish-article', $content);
+        self::assertStringNotContainsString('<loc>https://stackhal.com/pl/blog</loc>', $content);
     }
 }

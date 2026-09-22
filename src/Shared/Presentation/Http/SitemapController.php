@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Shared\Presentation\Http;
 
 use App\Blog\Application\BlogArticleRepository;
+use App\Blog\Domain\BlogArticle;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -36,35 +37,56 @@ final readonly class SitemapController
             $entries[] = $this->entry($pl, $en, $pl);
         }
 
-        $hasPolishArticles = false;
+        $publishedEnglish = [];
+        $publishedPolish = [];
         if ($articles !== null) {
+            $publishedEnglish = $articles->findPublished('en');
             $publishedPolish = $articles->findPublished('pl');
-            $hasPolishArticles = $publishedPolish !== [];
         }
 
-        if ($hasPolishArticles) {
-            $entries[] = $this->entry('/blog', '/blog', '/pl/blog');
-            $entries[] = $this->entry('/pl/blog', '/blog', '/pl/blog');
+        if ($publishedPolish !== []) {
+            $entries[] = $this->entry(
+                '/blog',
+                '/blog',
+                '/pl/blog',
+                $this->latestUpdate($publishedEnglish)
+            );
+            $entries[] = $this->entry(
+                '/pl/blog',
+                '/blog',
+                '/pl/blog',
+                $this->latestUpdate($publishedPolish)
+            );
         } else {
-            $entries[] = $this->singleEntry('/blog', 'en');
+            $entries[] = $this->singleEntry('/blog', 'en', $this->latestUpdate($publishedEnglish));
         }
 
-        if ($articles !== null) {
-            foreach ($articles->findPublished('en') as $article) {
-                if ($article->getAlternateSlug() !== '') {
-                    $entries[] = $this->entry(
-                        '/blog/' . $article->getSlug(),
-                        '/blog/' . $article->getSlug(),
-                        '/pl/blog/' . $article->getAlternateSlug()
-                    );
-                    $entries[] = $this->entry(
-                        '/pl/blog/' . $article->getAlternateSlug(),
-                        '/blog/' . $article->getSlug(),
-                        '/pl/blog/' . $article->getAlternateSlug()
-                    );
-                } else {
-                    $entries[] = $this->singleEntry('/blog/' . $article->getSlug(), 'en');
-                }
+        $polishBySlug = [];
+        foreach ($publishedPolish as $article) {
+            $polishBySlug[$article->getSlug()] = $article;
+        }
+
+        foreach ($publishedEnglish as $article) {
+            $polishArticle = $polishBySlug[$article->getAlternateSlug()] ?? null;
+            if ($polishArticle instanceof BlogArticle) {
+                $entries[] = $this->entry(
+                    '/blog/' . $article->getSlug(),
+                    '/blog/' . $article->getSlug(),
+                    '/pl/blog/' . $polishArticle->getSlug(),
+                    $article->getUpdatedAt()
+                );
+                $entries[] = $this->entry(
+                    '/pl/blog/' . $polishArticle->getSlug(),
+                    '/blog/' . $article->getSlug(),
+                    '/pl/blog/' . $polishArticle->getSlug(),
+                    $polishArticle->getUpdatedAt()
+                );
+            } else {
+                $entries[] = $this->singleEntry(
+                    '/blog/' . $article->getSlug(),
+                    'en',
+                    $article->getUpdatedAt()
+                );
             }
         }
 
@@ -80,28 +102,36 @@ final readonly class SitemapController
         ]);
     }
 
-    private function singleEntry(string $location, string $locale): string
-    {
+    private function singleEntry(
+        string $location,
+        string $locale,
+        ?\DateTimeImmutable $lastModified = null
+    ): string {
         $base = 'https://stackhal.com';
 
-        $format = '  <url><loc>%s</loc>'
+        $format = '  <url><loc>%s</loc>%s'
             . '<xhtml:link rel="alternate" hreflang="%s" href="%s"/>'
             . '<xhtml:link rel="alternate" hreflang="x-default" href="%s"/></url>';
 
         return sprintf(
             $format,
             $base . $location,
+            $this->lastModified($lastModified),
             $locale,
             $base . $location,
             $base . $location
         );
     }
 
-    private function entry(string $location, string $english, string $polish): string
-    {
+    private function entry(
+        string $location,
+        string $english,
+        string $polish,
+        ?\DateTimeImmutable $lastModified = null
+    ): string {
         $base = 'https://stackhal.com';
 
-        $format = '  <url><loc>%s</loc>'
+        $format = '  <url><loc>%s</loc>%s'
             . '<xhtml:link rel="alternate" hreflang="en" href="%s"/>'
             . '<xhtml:link rel="alternate" hreflang="pl" href="%s"/>'
             . '<xhtml:link rel="alternate" hreflang="x-default" href="%s"/></url>';
@@ -109,9 +139,29 @@ final readonly class SitemapController
         return sprintf(
             $format,
             $base . $location,
+            $this->lastModified($lastModified),
             $base . $english,
             $base . $polish,
             $base . $english
         );
+    }
+
+    private function lastModified(?\DateTimeImmutable $lastModified): string
+    {
+        return $lastModified === null ? '' : '<lastmod>' . $lastModified->format('Y-m-d') . '</lastmod>';
+    }
+
+    /** @param list<BlogArticle> $articles */
+    private function latestUpdate(array $articles): ?\DateTimeImmutable
+    {
+        $latest = null;
+
+        foreach ($articles as $article) {
+            if ($latest === null || $article->getUpdatedAt() > $latest) {
+                $latest = $article->getUpdatedAt();
+            }
+        }
+
+        return $latest;
     }
 }
