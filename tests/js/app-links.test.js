@@ -102,4 +102,13 @@ assert.equal(brokenResult.assetLinksValid, false);
 assert.ok(brokenResult.diagnostics.some((d) => d.code === 'ERR_ASSETLINKS_MISSING_RELATION'));
 assert.ok(brokenResult.diagnostics.some((d) => d.code === 'ERR_ASSETLINKS_INVALID_FINGERPRINT'));
 
+const invalidAasaRoute = validateAppLinks({
+  applinks: { details: [{ appIDs: ['invalid'], components: [{ '/': '/*' }] }] }
+}, null, 'https://example.com/path');
+assert.equal(invalidAasaRoute.aasaValid, false);
+assert.equal(invalidAasaRoute.opensInApp, null);
+
+const malformedStatement = validateAppLinks(null, [null]);
+assert.equal(malformedStatement.assetLinksValid, false);
+
 console.log('Apple Universal Links & Android App Links JS test suite passed cleanly.');

@@ -43,6 +43,21 @@
       "title": "Malformed AASA JSON",
       "description": "The apple-app-site-association file is not valid JSON."
     },
+    "ERR_AASA_MISSING_DETAILS": {
+      "severity": "error",
+      "title": "AASA App Links Rules Missing",
+      "description": "The AASA document must contain a non-empty applinks.details array."
+    },
+    "ERR_AASA_MISSING_APP_ID": {
+      "severity": "error",
+      "title": "AASA App Identifier Missing",
+      "description": "Each AASA detail must declare at least one app identifier."
+    },
+    "ERR_AASA_MISSING_ROUTES": {
+      "severity": "error",
+      "title": "AASA Route Rules Missing",
+      "description": "Each AASA detail must declare components or paths."
+    },
     "ERR_AASA_INVALID_APP_ID": {
       "severity": "error",
       "title": "Invalid Apple App ID Format",
@@ -57,6 +72,31 @@
       "severity": "error",
       "title": "Android AssetLinks File Missing",
       "description": "The /.well-known/assetlinks.json file is unreachable or returns a non-200 HTTP status."
+    },
+    "ERR_ASSETLINKS_INVALID_JSON": {
+      "severity": "error",
+      "title": "Malformed AssetLinks JSON",
+      "description": "The assetlinks.json file is not valid JSON."
+    },
+    "ERR_ASSETLINKS_EMPTY": {
+      "severity": "error",
+      "title": "AssetLinks Statements Missing",
+      "description": "The document must contain at least one statement."
+    },
+    "ERR_ASSETLINKS_INVALID_TARGET": {
+      "severity": "error",
+      "title": "Android App Target Incomplete",
+      "description": "Each statement must identify a package and certificate fingerprint."
+    },
+    "ERR_NO_MANIFEST_INPUT": {
+      "severity": "error",
+      "title": "No Manifest Provided",
+      "description": "Offline validation requires at least one manifest."
+    },
+    "ERR_TEST_URL_INVALID": {
+      "severity": "error",
+      "title": "Invalid Test URL",
+      "description": "Live verification requires a complete HTTPS URL."
     },
     "ERR_ASSETLINKS_MISSING_RELATION": {
       "severity": "error",
@@ -80,13 +120,13 @@
     },
     "INFO_ROUTE_MATCHED_APP": {
       "severity": "info",
-      "title": "URL Successfully Routes to Native App",
-      "description": "The queried URL matches universal link pattern rules and will open inside the native application."
+      "title": "URL Matches an App Route Rule",
+      "description": "The URL path matches an included AASA rule. Actual app opening also depends on the installed app, entitlements, association state, and device context."
     },
     "INFO_ROUTE_FALLS_BACK_WEB": {
       "severity": "info",
-      "title": "URL Opens in Safari / Browser Fallback",
-      "description": "The queried URL does not match app route patterns or is explicitly excluded."
+      "title": "No Included AASA Route Match",
+      "description": "No included AASA path rule matched, or an exclusion matched."
     }
   },
   "presets": [

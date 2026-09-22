@@ -17,6 +17,36 @@ final class RegexTranspilerTest extends TestCase
         $this->service = new RegexTranspilerService();
     }
 
+    public function testMalformedPatternIsNotReportedAsCompatible(): void
+    {
+        $result = $this->service->transpile('(abc', RegexEngine::Pcre, RegexEngine::JavaScript);
+
+        self::assertFalse($result->isCompatible);
+        self::assertSame('ERR_INVALID_PATTERN', $result->diagnostics[0]->code);
+    }
+
+    public function testLossyAtomicAndPossessiveRewritesAreRejected(): void
+    {
+        $atomic = $this->service->transpile('(?>a|ab)c', RegexEngine::Pcre, RegexEngine::GoRe2);
+        $possessive = $this->service->transpile('a++a', RegexEngine::Pcre, RegexEngine::GoRe2);
+
+        self::assertFalse($atomic->isCompatible);
+        self::assertSame('(?>a|ab)c', $atomic->transpiledPattern);
+        self::assertFalse($possessive->isCompatible);
+        self::assertSame('a++a', $possessive->transpiledPattern);
+    }
+
+    public function testPcreInlineModifierIsNotClaimedCompatibleWithJavaScript(): void
+    {
+        $result = $this->service->transpile('(?i)^hello$', RegexEngine::Pcre, RegexEngine::JavaScript);
+
+        self::assertFalse($result->isCompatible);
+        self::assertContains(
+            'ERR_INLINE_MODIFIERS_REQUIRE_EXTERNAL_FLAGS',
+            array_map(static fn ($diagnostic): string => $diagnostic->code, $result->diagnostics)
+        );
+    }
+
     public function testTranspileNamedGroupFromPcreToGoRe2(): void
     {
         $pattern = '(?<uuid>[a-f0-9-]{36})';
@@ -40,17 +70,17 @@ final class RegexTranspilerTest extends TestCase
         self::assertContains('ERR_UNSUPPORTED_LOOKAROUND', $codes);
     }
 
-    public function testSimplifiesAtomicGroupAndPossessiveQuantifierForGoRe2(): void
+    public function testRejectsAtomicGroupAndPossessiveQuantifierWithoutSafeEquivalent(): void
     {
         $pattern = '(?>[a-z]++)';
         $result = $this->service->transpile($pattern, RegexEngine::Pcre, RegexEngine::GoRe2);
 
-        self::assertTrue($result->isCompatible);
-        self::assertSame('(?:[a-z]+)', $result->transpiledPattern);
+        self::assertFalse($result->isCompatible);
+        self::assertSame('(?>[a-z]++)', $result->transpiledPattern);
 
         $codes = array_map(static fn ($d) => $d->code, $result->diagnostics);
-        self::assertContains('WARN_ATOMIC_GROUP_CONVERTED', $codes);
-        self::assertContains('WARN_POSSESSIVE_QUANTIFIER_CONVERTED', $codes);
+        self::assertContains('ERR_ATOMIC_GROUP_NOT_EQUIVALENT', $codes);
+        self::assertContains('ERR_POSSESSIVE_QUANTIFIER_NOT_EQUIVALENT', $codes);
     }
 
     public function testTranspilesNamedGroupFromGoRe2ToJavaScript(): void

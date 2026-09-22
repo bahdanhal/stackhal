@@ -57,7 +57,7 @@
         <div class="preset-buttons" style="margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
           <span style="align-self: center; font-weight: 600; font-size: 0.875rem;">{{ 'cidr_matrix.form.presets'|trans }}:</span>
           {% for preset in presets %}
-            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('cidrs-textarea').value = '{{ preset.cidrs|join(', ') }}'; document.getElementById('cidr-form').submit();" style="cursor: pointer; padding: 0.35rem 0.75rem; border-radius: 0.375rem; font-size: 0.85rem;">
+            <button type="button" class="btn btn-sm btn-outline-secondary cidr-preset-btn" data-cidrs="{{ preset.cidrs|join('\n') }}" style="cursor: pointer; padding: 0.35rem 0.75rem; border-radius: 0.375rem; font-size: 0.85rem;">
               {{ preset.name }}
             </button>
           {% endfor %}
@@ -67,10 +67,12 @@
       <form id="cidr-form" method="post" action="{{ path('cidr_matrix', {_locale: app.request.locale}) }}">
         <div class="form-group" style="margin-bottom: 1.25rem;">
           <label for="cidrs-textarea" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ 'cidr_matrix.form.label_cidrs'|trans }}</label>
-          <textarea id="cidrs-textarea" name="cidrs" rows="4" style="width: 100%; font-family: monospace; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #334155; background: #0f172a; color: #f8fafc;" placeholder="e.g. 10.0.0.0/16, 10.0.32.0/20, 192.168.1.0/24">{{ raw_cidrs }}</textarea>
+          <textarea id="cidrs-textarea" name="cidrs" rows="6" required style="width: 100%; font-family: monospace; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #334155; background: #0f172a; color: #f8fafc;" placeholder="Paste CIDRs, Terraform, JSON, YAML, or route-table output. Networks are extracted automatically.">{{ raw_cidrs }}</textarea>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+        <details style="margin-bottom: 1.25rem;">
+          <summary>Advanced allocation overrides</summary>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
           <div class="form-group">
             <label for="parent-cidr" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ 'cidr_matrix.form.label_parent'|trans }}</label>
             <input type="text" id="parent-cidr" name="parent_cidr" value="{{ parent_cidr }}" placeholder="e.g. 10.0.0.0/16" style="width: 100%; font-family: monospace; padding: 0.6rem; border-radius: 0.5rem; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
@@ -79,7 +81,12 @@
             <label for="free-prefix" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">{{ 'cidr_matrix.form.label_free_prefix'|trans }}</label>
             <input type="number" id="free-prefix" name="requested_free_prefix" value="{{ requested_free_prefix }}" min="0" max="128" placeholder="e.g. 20 or 24" style="width: 100%; font-family: monospace; padding: 0.6rem; border-radius: 0.5rem; border: 1px solid #334155; background: #0f172a; color: #f8fafc;">
           </div>
-        </div>
+          </div>
+        </details>
+
+        {% if suggested_free_prefix is not null %}
+          <p style="color: var(--text-muted, #94a3b8);">Automatically searched for a free /{{ suggested_free_prefix }} inside the smallest common parent.</p>
+        {% endif %}
 
         <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem; background: #3b82f6; color: #ffffff; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer;">
           {{ 'cidr_matrix.form.submit'|trans }}
@@ -88,7 +95,7 @@
     </div>
 
     {% if result is not null %}
-      <div class="cidr-results-card card" style="background: var(--surface-card, #1e293b); padding: 1.5rem; border-radius: 0.75rem;">
+      <div class="cidr-results-card card" id="cidr-results" role="region" aria-live="polite" tabindex="-1" style="background: var(--surface-card, #1e293b); padding: 1.5rem; border-radius: 0.75rem;">
         <h2>{{ 'cidr_matrix.results.title'|trans }}</h2>
 
         {% if result.diagnostics|length > 0 %}
@@ -107,7 +114,8 @@
           <div class="free-subnet-box" style="padding: 1rem; background: #064e3b; border: 1px solid #10b981; border-radius: 0.5rem; margin-bottom: 1.5rem;">
             <h3 style="margin-top: 0; color: #a7f3d0;">{{ 'cidr_matrix.results.free_subnet_title'|trans }}</h3>
             <p style="margin: 0; font-size: 1.25rem; font-family: monospace; font-weight: bold; color: #34d399;">
-              {{ result.freeSubnetCidr }}
+              <span id="recommended-cidr">{{ result.freeSubnetCidr }}</span>
+              <button type="button" id="copy-recommended-cidr" class="btn btn-sm btn-outline-secondary">Copy</button>
             </p>
           </div>
         {% endif %}
@@ -148,13 +156,13 @@
             </div>
 
             <div class="cidr-tabs-nav" role="tablist">
-              <button type="button" class="cidr-tab-btn active" data-tab="tab-space-map" role="tab">
+              <button type="button" class="cidr-tab-btn active" data-tab="tab-space-map" role="tab" aria-selected="true" aria-controls="tab-space-map" tabindex="0">
                 <span>🗺️</span> {{ 'cidr_matrix.results.tabs.space_map'|trans }}
               </button>
-              <button type="button" class="cidr-tab-btn" data-tab="tab-cross-matrix" role="tab">
+              <button type="button" class="cidr-tab-btn" data-tab="tab-cross-matrix" role="tab" aria-selected="false" aria-controls="tab-cross-matrix" tabindex="-1">
                 <span>🔢</span> {{ 'cidr_matrix.results.tabs.cross_matrix'|trans }}
               </button>
-              <button type="button" class="cidr-tab-btn" data-tab="tab-partition-tree" role="tab">
+              <button type="button" class="cidr-tab-btn" data-tab="tab-partition-tree" role="tab" aria-selected="false" aria-controls="tab-partition-tree" tabindex="-1">
                 <span>🌳</span> {{ 'cidr_matrix.results.tabs.tree_view'|trans }}
               </button>
             </div>
@@ -163,19 +171,24 @@
             <div id="tab-space-map" class="cidr-tab-pane active" role="tabpanel">
               <div class="cidr-space-map">
                 {% if result.spacePartitions|length > 0 %}
-                  <div class="cidr-allocation-bar-wrapper">
-                    <div class="cidr-allocation-bar-header">
-                      <strong>{{ 'cidr_matrix.results.allocation_bar_title'|trans }}</strong>
-                      <span>{{ 'cidr_matrix.results.interactive_tip'|trans }}</span>
-                    </div>
-                    <div class="cidr-allocation-bar">
-                      {% for part in result.spacePartitions %}
-                        <div class="cidr-bar-segment {{ part.type }}" style="flex: {{ part.percentage }} 0 auto; min-width: 48px;" title="{{ part.cidr }} ({{ part.status_label }}) - {{ part.network_ip }} .. {{ part.broadcast_ip }} [{{ part.total_hosts }} hosts]">
-                          {{ part.cidr }}
+                  {% for version in ['v4', 'v6'] %}
+                    {% set family_parts = result.spacePartitions|filter(part => part.version == version) %}
+                    {% if family_parts|length > 0 %}
+                      <div class="cidr-allocation-bar-wrapper">
+                        <div class="cidr-allocation-bar-header">
+                          <strong>{{ version == 'v4' ? 'IPv4' : 'IPv6' }} · {{ 'cidr_matrix.results.allocation_bar_title'|trans }}</strong>
+                          <span>{{ 'cidr_matrix.results.interactive_tip'|trans }}</span>
                         </div>
-                      {% endfor %}
-                    </div>
-                  </div>
+                        <div class="cidr-allocation-bar">
+                          {% for part in family_parts %}
+                            <div class="cidr-bar-segment {{ part.type }}" style="flex: {{ part.percentage }} 0 auto; min-width: 48px;" title="{{ part.cidr }} ({{ part.status_label }}) - {{ part.network_ip }} .. {{ part.broadcast_ip }} [{{ part.total_hosts }} addresses]">
+                              {{ part.cidr }}
+                            </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
                 {% endif %}
 
                 <div class="cidr-treemap-grid">
@@ -187,7 +200,7 @@
                       </div>
                       <div class="cidr-map-meta">
                         <div><strong>Range:</strong> <code>{{ part.network_ip }} - {{ part.broadcast_ip }}</code></div>
-                        <div><strong>Prefix:</strong> /{{ part.prefix_length }} (<strong>{{ part.total_hosts }}</strong> hosts)</div>
+                        <div><strong>Prefix:</strong> /{{ part.prefix_length }} (<strong>{{ part.total_hosts }}</strong> addresses)</div>
                         <div><strong>Address Space Weight:</strong> ~{{ part.percentage }}%</div>
                       </div>
                       {% if part.conflicting_cidrs|length > 0 %}
@@ -250,14 +263,14 @@
                   <div class="tree-node">
                     <div class="tree-card {{ node.type == 'parent' ? 'root' : 'child' }}">
                       <span style="font-weight: bold; color: {{ node.type == 'parent' ? '#60a5fa' : '#f8fafc' }};">{{ node.cidr }}</span>
-                      <span style="color: #94a3b8; font-size: 0.8rem;">(<code>{{ node.network_ip }} - {{ node.broadcast_ip }}</code> &bull; {{ node.total_hosts }} hosts)</span>
+                      <span style="color: #94a3b8; font-size: 0.8rem;">(<code>{{ node.network_ip }} - {{ node.broadcast_ip }}</code> &bull; {{ node.total_hosts }} addresses)</span>
                     </div>
                     {% if node.children|length > 0 %}
                       <div class="tree-children">
                         {% for child in node.children %}
                           <div class="tree-card {{ child.type == 'recommended_free' ? 'recommended' : 'child' }}">
                             <span style="font-weight: bold; color: {{ child.type == 'recommended_free' ? '#34d399' : (child.type == 'contained' ? '#fbbf24' : '#93c5fd') }};">{{ child.cidr }}</span>
-                            <span style="color: #94a3b8; font-size: 0.8rem;">(<code>{{ child.network_ip }} - {{ child.broadcast_ip }}</code> &bull; {{ child.total_hosts }} hosts)</span>
+                            <span style="color: #94a3b8; font-size: 0.8rem;">(<code>{{ child.network_ip }} - {{ child.broadcast_ip }}</code> &bull; {{ child.total_hosts }} addresses)</span>
                             {% if child.type == 'recommended_free' %}
                               <span class="cidr-badge recommended_free">{{ 'cidr_matrix.results.legend.recommended'|trans }}</span>
                             {% elseif child.type == 'contained' %}

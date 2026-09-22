@@ -52,20 +52,40 @@ final readonly class TranspileDiagnostic
     public static function atomicGroupConverted(): self
     {
         return new self(
-            severity: self::SEVERITY_WARNING,
-            code: 'WARN_ATOMIC_GROUP_CONVERTED',
-            title: 'Atomic Group Converted to Non-Capturing',
-            description: 'Atomic group (?>...) was converted to non-capturing group (?:...) because RE2 does not backtrack.'
+            severity: self::SEVERITY_ERROR,
+            code: 'ERR_ATOMIC_GROUP_NOT_EQUIVALENT',
+            title: 'Atomic Group Has No Safe Equivalent',
+            description: 'Removing atomic behavior can change which strings match. The source pattern is preserved for manual rewriting.'
         );
     }
 
     public static function possessiveQuantifierConverted(): self
     {
         return new self(
-            severity: self::SEVERITY_WARNING,
-            code: 'WARN_POSSESSIVE_QUANTIFIER_CONVERTED',
-            title: 'Possessive Quantifier Simplified',
-            description: 'Possessive quantifier (++ or *+) was simplified to greedy quantifier (+ or *) in RE2.'
+            severity: self::SEVERITY_ERROR,
+            code: 'ERR_POSSESSIVE_QUANTIFIER_NOT_EQUIVALENT',
+            title: 'Possessive Quantifier Has No Safe Equivalent',
+            description: 'Replacing a possessive quantifier with a greedy one can change matching behavior. The source pattern is preserved.'
+        );
+    }
+
+    public static function invalidPattern(string $reason): self
+    {
+        return new self(
+            severity: self::SEVERITY_ERROR,
+            code: 'ERR_INVALID_PATTERN',
+            title: 'Invalid Regular Expression Syntax',
+            description: $reason
+        );
+    }
+
+    public static function inlineModifiersUnsupported(): self
+    {
+        return new self(
+            severity: self::SEVERITY_ERROR,
+            code: 'ERR_INLINE_MODIFIERS_REQUIRE_EXTERNAL_FLAGS',
+            title: 'JavaScript Requires External Flags',
+            description: 'JavaScript does not support this PCRE inline modifier group. Move supported modifiers to RegExp flags manually.'
         );
     }
 

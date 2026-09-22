@@ -105,6 +105,26 @@
       description:
         'Possessive quantifier (++ or *+) was simplified to greedy quantifier (+ or *) in RE2.',
     },
+    ERR_INVALID_PATTERN: {
+      severity: 'error',
+      title: 'Invalid Regular Expression Syntax',
+      description: 'The pattern is incomplete or structurally malformed and cannot be converted safely.',
+    },
+    ERR_ATOMIC_GROUP_NOT_EQUIVALENT: {
+      severity: 'error',
+      title: 'Atomic Group Has No Safe Equivalent',
+      description: 'Removing atomic behavior can change matching results. Rewrite this construct manually.',
+    },
+    ERR_POSSESSIVE_QUANTIFIER_NOT_EQUIVALENT: {
+      severity: 'error',
+      title: 'Possessive Quantifier Has No Safe Equivalent',
+      description: 'Replacing a possessive quantifier with a greedy one can change matching results.',
+    },
+    ERR_INLINE_MODIFIERS_REQUIRE_EXTERNAL_FLAGS: {
+      severity: 'error',
+      title: 'JavaScript Requires External Flags',
+      description: 'Move supported PCRE inline modifiers to JavaScript RegExp flags manually.',
+    },
     WARN_NAMED_GROUP_SYNTAX_TRANSPILLED: {
       severity: 'warning',
       title: 'Named Group Syntax Transpiled',
@@ -185,6 +205,19 @@
         diagnostics: targetEngine.isLinearTime
           ? [DIAGNOSTIC_CODES.INFO_LINEAR_TIME_GUARANTEED]
           : [],
+      };
+    }
+
+    const syntaxError = findBasicSyntaxError(pattern);
+    if (syntaxError) {
+      return {
+        engine: targetEngine.id,
+        engineName: targetEngine.name,
+        ecosystem: targetEngine.ecosystem,
+        isCompatible: false,
+        isLinearTime: targetEngine.isLinearTime,
+        transpiledPattern: pattern,
+        diagnostics: [{ ...DIAGNOSTIC_CODES.ERR_INVALID_PATTERN, description: syntaxError }],
       };
     }
 
@@ -273,10 +306,13 @@
 
         // Check possessive quantifier after character class e.g. [a-z]++
         const pq = checkPossessiveQuantifier(pattern, i, targetEngine);
-        if (pq) {
+          if (pq) {
           output += pq.output;
           i = pq.newIndex;
-          if (pq.converted) hasPossessiveQuantifier = true;
+          if (pq.converted) {
+            hasPossessiveQuantifier = true;
+            errorsFound = true;
+          }
         }
         continue;
       }
@@ -325,7 +361,8 @@
           if (pattern.startsWith('(?>', i)) {
             hasAtomicGroup = true;
             if (!targetEngine.supportsAtomicGroups) {
-              output += '(?:';
+              errorsFound = true;
+              output += '(?>';
               i += 3;
               continue;
             }
@@ -384,7 +421,10 @@
         if (pq) {
           output += pq.output;
           i = pq.newIndex;
-          if (pq.converted) hasPossessiveQuantifier = true;
+          if (pq.converted) {
+            hasPossessiveQuantifier = true;
+            errorsFound = true;
+          }
         }
         continue;
       }
@@ -395,6 +435,7 @@
         output += pq.output;
         i = pq.newIndex;
         hasPossessiveQuantifier = true;
+        errorsFound = true;
         continue;
       }
 
@@ -412,13 +453,17 @@
       diagnostics.push(DIAGNOSTIC_CODES.ERR_UNSUPPORTED_RECURSION);
     }
     if (hasAtomicGroup && !targetEngine.supportsAtomicGroups) {
-      diagnostics.push(DIAGNOSTIC_CODES.WARN_ATOMIC_GROUP_CONVERTED);
+      diagnostics.push(DIAGNOSTIC_CODES.ERR_ATOMIC_GROUP_NOT_EQUIVALENT);
     }
     if (hasPossessiveQuantifier && !targetEngine.supportsPossessiveQuantifiers) {
-      diagnostics.push(DIAGNOSTIC_CODES.WARN_POSSESSIVE_QUANTIFIER_CONVERTED);
+      diagnostics.push(DIAGNOSTIC_CODES.ERR_POSSESSIVE_QUANTIFIER_NOT_EQUIVALENT);
     }
     if (hasNamedGroupTranspiled) {
       diagnostics.push(DIAGNOSTIC_CODES.WARN_NAMED_GROUP_SYNTAX_TRANSPILLED);
+    }
+    if (targetEngine.id === 'javascript' && /^\(\?[imsxU-]+\)/.test(pattern)) {
+      errorsFound = true;
+      diagnostics.push(DIAGNOSTIC_CODES.ERR_INLINE_MODIFIERS_REQUIRE_EXTERNAL_FLAGS);
     }
 
     const isCompatible = !errorsFound;
@@ -446,7 +491,7 @@
 
     if ((char === '+' || char === '*' || char === '?') && index + 1 < length && pattern[index + 1] === '+') {
       if (!targetEngine.supportsPossessiveQuantifiers) {
-        return { output: char, newIndex: index + 2, converted: true };
+        return { output: char + '+', newIndex: index + 2, converted: true };
       }
       return { output: char + '+', newIndex: index + 2, converted: false };
     }
@@ -456,13 +501,69 @@
       if (closeBrace !== -1 && closeBrace + 1 < length && pattern[closeBrace + 1] === '+') {
         const quantifierBody = pattern.substring(index, closeBrace + 1);
         if (!targetEngine.supportsPossessiveQuantifiers) {
-          return { output: quantifierBody, newIndex: closeBrace + 2, converted: true };
+          return { output: quantifierBody + '+', newIndex: closeBrace + 2, converted: true };
         }
         return { output: quantifierBody + '+', newIndex: closeBrace + 2, converted: false };
       }
     }
 
     return null;
+  }
+
+  function findBasicSyntaxError(pattern) {
+    let depth = 0;
+    let inCharacterClass = false;
+    let escaped = false;
+
+    for (const char of pattern) {
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+      if (char === '\\') {
+        escaped = true;
+        continue;
+      }
+      if (char === '[' && !inCharacterClass) {
+        inCharacterClass = true;
+        continue;
+      }
+      if (char === ']' && inCharacterClass) {
+        inCharacterClass = false;
+        continue;
+      }
+      if (inCharacterClass) continue;
+      if (char === '(') depth++;
+      if (char === ')') {
+        if (depth === 0) return 'A closing parenthesis has no matching opening parenthesis.';
+        depth--;
+      }
+    }
+
+    if (escaped) return 'The pattern ends with an incomplete escape sequence.';
+    if (inCharacterClass) return 'A character class is not closed.';
+    if (depth > 0) return 'A group is not closed.';
+    return null;
+  }
+
+  function parseRegexInput(input) {
+    const trimmed = String(input || '').trim();
+    const jsLiteral = trimmed.match(/^\/((?:\\.|[^/])+)\/([dgimsuvy]*)$/);
+    if (jsLiteral) {
+      return { pattern: jsLiteral[1], sourceEngine: 'javascript', flags: jsLiteral[2], detected: true };
+    }
+
+    const python = trimmed.match(/(?:re\.compile\()?r?(['"])([\s\S]*?)\1\)?$/);
+    if (python && /re\.compile|^r?['"]/.test(trimmed)) {
+      return { pattern: python[2], sourceEngine: 'python', flags: '', detected: true };
+    }
+
+    const go = trimmed.match(/regexp\.MustCompile\((?:`([^`]*)`|"([^"]*)")\)/);
+    if (go) {
+      return { pattern: go[1] ?? go[2], sourceEngine: 'go_re2', flags: '', detected: true };
+    }
+
+    return { pattern: trimmed, sourceEngine: null, flags: '', detected: false };
   }
 
   /**
@@ -488,18 +589,44 @@
 
     let currentSourceEngine = 'pcre';
     let currentTargetEngine = 'go_re2';
+    let sourceEngineOverridden = false;
+    let latestResult = null;
 
     function renderUI() {
-      const sourcePattern = sourcePatternInput ? sourcePatternInput.value : '';
+      const sourceInput = sourcePatternInput ? sourcePatternInput.value : '';
+      const parsedInput = parseRegexInput(sourceInput);
+      const sourcePattern = parsedInput.pattern;
+      if (!sourceEngineOverridden && parsedInput.sourceEngine) {
+        currentSourceEngine = parsedInput.sourceEngine;
+        document.querySelectorAll('[data-source-engine]').forEach((button) => {
+          const selected = button.getAttribute('data-source-engine') === currentSourceEngine;
+          button.classList.toggle('active', selected);
+          button.setAttribute('aria-pressed', String(selected));
+        });
+      }
       const testText = testTextInput ? testTextInput.value : '';
 
       // Update source stats
       if (inputStatsEl) {
-        inputStatsEl.textContent = `${sourcePattern.length} chars`;
+        inputStatsEl.textContent = `${sourcePattern.length} chars · ${parsedInput.detected ? 'Auto-detected ' : ''}${ENGINES[currentSourceEngine].name}`;
+      }
+
+      if (!sourcePattern) {
+        latestResult = null;
+        if (targetOutputEl) targetOutputEl.textContent = 'Paste a regex or code snippet to analyze it.';
+        if (targetStatsEl) targetStatsEl.innerHTML = '<span class="status-pill">Awaiting pattern</span>';
+        if (advisoriesContainer) advisoriesContainer.innerHTML = '<div class="advisory-card advisory-empty"><p>No pattern analyzed yet.</p></div>';
+        if (matrixGridEl) matrixGridEl.innerHTML = '';
+        if (matchOutputEl) matchOutputEl.innerHTML = '<span class="text-muted">Add a test string after pasting a pattern.</span>';
+        [btnCopyTarget, btnCopySnippet].forEach((button) => {
+          if (button) button.disabled = true;
+        });
+        return;
       }
 
       // Transpile
       const result = transpileRegex(sourcePattern, currentSourceEngine, currentTargetEngine);
+      latestResult = result;
 
       // Output transpiled regex
       if (targetOutputEl) {
@@ -511,9 +638,16 @@
         } else if (result.warnings.length > 0) {
           targetStatsEl.innerHTML = '<span class="status-pill status-warning">⚠ Transpiled with Warnings</span>';
         } else {
-          targetStatsEl.innerHTML = '<span class="status-pill status-success">✓ 100% Compatible</span>';
+          targetStatsEl.innerHTML = '<span class="status-pill status-success">✓ No detected blockers</span>';
         }
       }
+
+      [btnCopyTarget, btnCopySnippet].forEach((button) => {
+        if (button) {
+          button.disabled = !result.isCompatible || !result.transpiledPattern;
+          button.setAttribute('aria-disabled', String(button.disabled));
+        }
+      });
 
       // Render Diagnostics
       renderDiagnostics(result, advisoriesContainer);
@@ -573,7 +707,7 @@
           ? '<span class="matrix-badge badge-incompatible">Incompatible</span>'
           : item.diagnostics.some((d) => d.severity === 'warning')
           ? '<span class="matrix-badge badge-warning">Adapted</span>'
-          : '<span class="matrix-badge badge-compatible">Compatible</span>';
+          : '<span class="matrix-badge badge-compatible">No detected blockers</span>';
 
         html += `
           <div class="${cardClass}" data-engine="${item.engine}">
@@ -678,8 +812,13 @@
     // Engine toggle listeners
     document.querySelectorAll('[data-source-engine]').forEach((btn) => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-source-engine]').forEach((b) => b.classList.remove('active'));
+        sourceEngineOverridden = true;
+        document.querySelectorAll('[data-source-engine]').forEach((b) => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         currentSourceEngine = btn.getAttribute('data-source-engine');
         renderUI();
       });
@@ -687,8 +826,12 @@
 
     document.querySelectorAll('[data-target-engine]').forEach((btn) => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-target-engine]').forEach((b) => b.classList.remove('active'));
+        document.querySelectorAll('[data-target-engine]').forEach((b) => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         currentTargetEngine = btn.getAttribute('data-target-engine');
         renderUI();
       });
@@ -705,6 +848,7 @@
 
           // Activate source engine
           currentSourceEngine = preset.sourceEngine;
+          sourceEngineOverridden = true;
           document.querySelectorAll('[data-source-engine]').forEach((b) => {
             b.classList.toggle('active', b.getAttribute('data-source-engine') === currentSourceEngine);
           });
@@ -740,6 +884,7 @@
     // Copy pattern
     if (btnCopyTarget) {
       btnCopyTarget.addEventListener('click', async () => {
+        if (!latestResult || !latestResult.isCompatible) return;
         const text = targetOutputEl ? targetOutputEl.textContent : '';
         if (!text) return;
         try {
@@ -758,6 +903,7 @@
     // Copy code snippet
     if (btnCopySnippet) {
       btnCopySnippet.addEventListener('click', async () => {
+        if (!latestResult || !latestResult.isCompatible) return;
         const text = targetOutputEl ? targetOutputEl.textContent : '';
         let snippet = '';
         if (currentTargetEngine === 'go_re2') {
@@ -781,12 +927,6 @@
           // fallback
         }
       });
-    }
-
-    // Initial default preset load
-    if (PRESETS.password_lookahead && sourcePatternInput && !sourcePatternInput.value) {
-      sourcePatternInput.value = PRESETS.password_lookahead.pattern;
-      if (testTextInput) testTextInput.value = PRESETS.password_lookahead.testText;
     }
 
     renderUI();
@@ -817,6 +957,8 @@
       ENGINES,
       DIAGNOSTIC_CODES,
       PRESETS,
+      findBasicSyntaxError,
+      parseRegexInput,
     };
   }
 })();

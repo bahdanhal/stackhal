@@ -23,6 +23,16 @@
       "title": "Invalid CIDR Format",
       "description": "Provided string is not a valid IPv4 or IPv6 CIDR notation (e.g. 10.0.0.0/16 or 2001:db8::/32)."
     },
+    "ERR_INVALID_PARENT_CIDR": {
+      "severity": "error",
+      "title": "Invalid Parent CIDR",
+      "description": "An explicit parent must be a valid IPv4 or IPv6 CIDR."
+    },
+    "ERR_INVALID_FREE_PREFIX": {
+      "severity": "error",
+      "title": "Invalid Free Subnet Prefix",
+      "description": "The requested prefix must fit the parent and address family."
+    },
     "ERR_OVERLAP_COLLISION": {
       "severity": "error",
       "title": "Subnet Overlap Collision",

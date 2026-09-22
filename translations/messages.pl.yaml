@@ -638,11 +638,11 @@ caddy_transpiler:
 pkpass:
     meta:
         title: "Apple Wallet (.pkpass) Studio & Open Platform · Wizualny kreator i emulator"
-        description: "Darmowy internetowy kreator kart Apple Wallet .pkpass, emulator, narzędzie do podpisywania WebCrypto i platforma deweloperska. Projektuj karty, skaluj grafiki, weryfikuj sumy SHA-1 i konwertuj do Google Wallet."
+        description: "Darmowy inspektor i kreator kart Apple Wallet .pkpass działający w przeglądarce. Sprawdzaj pass.json, odbudowuj manifest, analizuj strukturę podpisu i eksportuj niepodpisany pakiet."
     title: "Apple Wallet Studio"
     eyebrow: "WIZUALNY KREATOR KART I PLATFORMA DEWELOPERSKA"
     heading: "Apple Wallet (.pkpass) Studio & Open Platform"
-    lede: "Twórz, projektuj, badaj, podpisuj i automatyzuj karty Apple Wallet (.pkpass) oraz Google Wallet. Bezpieczne podpisywanie w przeglądarce (WebCrypto), automatyczne skalowanie grafik Canvas i REST API dla CI/CD."
+    lede: "Upuść plik .pkpass lub pass.json, aby automatycznie sprawdzić go w przeglądarce. Zweryfikuj schemat, sumy, grafiki, strukturę podpisu, kolory i kody, a następnie odbuduj niepodpisany pakiet do zaufanego podpisania."
     studio:
         designer: "Kreator kart"
         inspector: "Inspektor i linter"
@@ -675,15 +675,17 @@ pkpass:
         assets_title: "Asset Studio (skaler Canvas)"
         assets_subtitle: "Przeciągnij plik SVG, PNG, JPG lub WebP — automatyczne skalowanie do formatów Retina @2x i @3x."
         generate_assets: "Wygeneruj grafiki marki"
-        signing_title: "Silnik podpisywania cyfrowego"
-        sign_mode_browser: "Podpisywanie w przeglądarce (WebCrypto)"
+        signing_title: "Podpisywanie i eksport"
+        sign_mode_browser: "Granica odpowiedzialności podpisu"
+        signing_boundary_title: "Granica odpowiedzialności podpisu"
+        signing_boundary_text: "StackHal lokalnie analizuje strukturę podpisu, ale nie twierdzi, że tworzy w przeglądarce podpis PKCS#7 akceptowany przez Apple. Pobierz niepodpisany pakiet i podpisz manifest certyfikatem Apple Pass Type ID za pomocą wygenerowanej komendy OpenSSL lub sprawdzonej biblioteki serwerowej."
         sign_mode_unsigned: "Pakiet niepodpisany i skrypty CLI"
         upload_p12: "Wgraj plik PassCertificate.p12"
         p12_password: "Hasło do pliku P12"
         sign_download: "Podpisz i pobierz .pkpass"
         unsigned_download: "Pobierz niepodpisany .pkpass"
         code_title: "Wielojęzyczny generator kodu"
-        code_subtitle: "Gotowe fragmenty kodu dopasowane do bieżącej konfiguracji Twojej karty."
+        code_subtitle: "Przykłady implementacji dopasowane do bieżącej karty. Przed wdrożeniem sprawdź obsługę certyfikatów."
     presets:
         label: "Gotowe szablony"
         flight: "Karta pokładowa"
@@ -698,7 +700,7 @@ pkpass:
     emulator:
         title: "Interaktywny emulator karty"
     actions:
-        repack: "Napraw i pobierz .pkpass"
+        repack: "Odbuduj niepodpisany .pkpass"
         export_google: "Eksportuj JSON Google Wallet"
         download_json: "Pobierz pass.json"
     guide:
@@ -718,10 +720,10 @@ pkpass:
         a1: "Plik .pkpass to standardowe archiwum ZIP. Zawiera pass.json z układem pól, kolorami, datami i kodami kreskowymi. Ma też manifest.json z sumami SHA-1, podpis PKCS#7 oraz grafiki PNG: ikony, logo, baner i miniaturę."
         q2: "Czy mogę otworzyć plik .pkpass na systemie Android, Windows lub Linux?"
         a2: "Tak! To narzędzie działa w 100% w przeglądarce i renderuje wierną wizualizację karty pokładowej, biletu, karty stałego klienta lub kuponu wraz z czytelnym kodem kreskowym i QR."
-        q3: "Jak działa funkcja 'Napraw i pobierz .pkpass'?"
-        a3: "Jeśli zmodyfikujesz pass.json lub poprawisz uszkodzone pliki, kliknięcie 'Napraw i pobierz .pkpass' przelicza sumy SHA-1 wszystkich plików w archiwum, tworzy poprawny manifest.json i pobiera spakowany plik .pkpass."
+        q3: "Jak działa funkcja odbudowy niepodpisanego .pkpass?"
+        a3: "Odbudowanie przelicza sumy SHA-1, tworzy nowy manifest.json, usuwa stary podpis, który przestał być ważny, i pobiera niepodpisany pakiet. Przed instalacją musisz podpisać go certyfikatem Apple Pass Type ID."
         q4: "Czy mój bilet lub karta pokładowa jest przesyłana na Wasz serwer?"
-        a4: "Nie. Cała dekompresja archiwum ZIP, obliczanie sum kontrolnych SHA-1, parsowanie certyfikatów PKCS#7 i generowanie kodów kreskowych odbywa się 100% lokalnie w Twojej przeglądarce. Żadne dane nie są przesyłane ani przechowywane."
+        a4: "Pliki upuszczone w interfejsie są przetwarzane lokalnie w przeglądarce i nie są wysyłane. Oddzielne przykłady cURL i REST API jawnie przesyłają dane do StackHal w celu przetworzenia po stronie serwera."
 
 cidr_matrix:
     meta:

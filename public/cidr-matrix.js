@@ -25,20 +25,70 @@
 
     if (!tabButtons.length) return;
 
-    tabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetTab = btn.getAttribute('data-tab');
+    function activateTab(btn) {
+      const targetTab = btn.getAttribute('data-tab');
 
-        tabButtons.forEach(b => b.classList.remove('active'));
-        tabPanes.forEach(p => p.classList.remove('active'));
+      tabButtons.forEach(b => {
+        const selected = b === btn;
+        b.classList.toggle('active', selected);
+        b.setAttribute('aria-selected', String(selected));
+        b.tabIndex = selected ? 0 : -1;
+      });
+      tabPanes.forEach(p => p.classList.remove('active'));
 
-        btn.classList.add('active');
-        const activePane = document.getElementById(targetTab);
-        if (activePane) {
-          activePane.classList.add('active');
-        }
+      const activePane = document.getElementById(targetTab);
+      if (activePane) {
+        activePane.classList.add('active');
+      }
+    }
+
+    tabButtons.forEach((btn, index) => {
+      btn.addEventListener('click', () => activateTab(btn));
+      btn.addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let nextIndex = index;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabButtons.length;
+        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = tabButtons.length - 1;
+        activateTab(tabButtons[nextIndex]);
+        tabButtons[nextIndex].focus();
       });
     });
+  }
+
+  function initAutomaticInput() {
+    const form = document.getElementById('cidr-form');
+    const textarea = document.getElementById('cidrs-textarea');
+    const parent = document.getElementById('parent-cidr');
+    const prefix = document.getElementById('free-prefix');
+
+    if (!form || !textarea) return;
+
+    document.querySelectorAll('.cidr-preset-btn[data-cidrs]').forEach(button => {
+      button.addEventListener('click', () => {
+        textarea.value = button.getAttribute('data-cidrs') || '';
+        if (parent) parent.value = '';
+        if (prefix) prefix.value = '';
+        form.requestSubmit();
+      });
+    });
+
+    textarea.addEventListener('paste', () => {
+      window.setTimeout(() => {
+        if (textarea.value.trim()) form.requestSubmit();
+      }, 0);
+    });
+
+    const copyButton = document.getElementById('copy-recommended-cidr');
+    const recommended = document.getElementById('recommended-cidr');
+    if (copyButton && recommended) {
+      copyButton.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(recommended.textContent.trim());
+        copyButton.textContent = 'Copied';
+      });
+    }
   }
 
   function initMatrixCrosshair() {
@@ -96,11 +146,13 @@
   function init() {
     initTabs();
     initMatrixCrosshair();
+    initAutomaticInput();
   }
 
   return {
     init: init,
     initTabs: initTabs,
-    initMatrixCrosshair: initMatrixCrosshair
+    initMatrixCrosshair: initMatrixCrosshair,
+    initAutomaticInput: initAutomaticInput
   };
 });

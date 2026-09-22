@@ -68,32 +68,32 @@
         <button type="button" class="btn-preset" data-preset="brokenPass">{{ 'pkpass.presets.broken_demo'|trans }}</button>
       </div>
       <div>
-        <span class="privacy-badge">Zero-Knowledge · In-Browser Processing</span>
+        <span class="privacy-badge">Browser workspace stays local · REST API calls are server processed</span>
       </div>
     </div>
 
     <!-- Studio Mode Switcher Bar -->
     <div class="studio-mode-bar" id="studio-mode-bar">
-      <button type="button" class="btn-studio-mode active" data-studio-mode="designer">
+      <button type="button" class="btn-studio-mode active" data-studio-mode="designer" aria-pressed="true">
         <span class="studio-mode-icon">🎨</span> {{ 'pkpass.studio.designer'|trans }}
       </button>
-      <button type="button" class="btn-studio-mode" data-studio-mode="inspector">
+      <button type="button" class="btn-studio-mode" data-studio-mode="inspector" aria-pressed="false">
         <span class="studio-mode-icon">🔍</span> {{ 'pkpass.studio.inspector'|trans }}
       </button>
-      <button type="button" class="btn-studio-mode" data-studio-mode="signing">
+      <button type="button" class="btn-studio-mode" data-studio-mode="signing" aria-pressed="false">
         <span class="studio-mode-icon">🔐</span> {{ 'pkpass.studio.signing'|trans }}
       </button>
-      <button type="button" class="btn-studio-mode" data-studio-mode="code">
+      <button type="button" class="btn-studio-mode" data-studio-mode="code" aria-pressed="false">
         <span class="studio-mode-icon">💻</span> {{ 'pkpass.studio.code_export'|trans }}
       </button>
     </div>
 
     <!-- Drag & Drop Zone -->
-    <div class="pkpass-drop-zone" id="pkpass-drop-zone">
+    <div class="pkpass-drop-zone" id="pkpass-drop-zone" role="button" tabindex="0" aria-controls="pkpass-file-input" aria-describedby="pkpass-drop-hint">
       <div class="drop-icon">PKPASS</div>
       <strong class="drop-prompt">{{ 'pkpass.upload.drop_prompt'|trans }}</strong>
-      <span class="drop-hint">{{ 'pkpass.upload.formats'|trans }}</span>
-      <input type="file" id="pkpass-file-input" accept=".pkpass,.zip,.json" style="display: none;">
+      <span class="drop-hint" id="pkpass-drop-hint">{{ 'pkpass.upload.formats'|trans }}</span>
+      <input type="file" id="pkpass-file-input" accept=".pkpass,.zip,.json" class="visually-hidden-file-input" tabindex="-1">
     </div>
 
     <!-- Main Split-Screen Workspace -->
@@ -260,7 +260,7 @@
         <div class="studio-panel-view" id="studio-panel-inspector" style="display: none;">
           <!-- Status Header -->
           <div id="diag-status-summary" class="diag-summary-box status-valid">
-            <div class="diag-status-badge badge-valid">STATUS: VALID PASS</div>
+            <div class="diag-status-badge badge-valid">SAMPLE LOADED · UNSIGNED</div>
             <div class="diag-meta-row">
               <span>Pass Type: <strong>boardingPass</strong></span>
               <span>Org: <strong>LOT Polish Airlines</strong></span>
@@ -269,14 +269,14 @@
           </div>
 
           <!-- Inspector Tabs Navigation -->
-          <div class="inspector-tabs-nav">
-            <button type="button" class="inspector-tab-btn active" data-target="pane-manifest">SHA-1 Manifest</button>
-            <button type="button" class="inspector-tab-btn" data-target="pane-linter">Schema Linter</button>
-            <button type="button" class="inspector-tab-btn" data-target="pane-assets">Asset Checklist</button>
-            <button type="button" class="inspector-tab-btn" data-target="pane-signature">Signature</button>
-            <button type="button" class="inspector-tab-btn" data-target="pane-localizations">Localizations</button>
-            <button type="button" class="inspector-tab-btn" data-target="pane-contrast">Contrast</button>
-            <button type="button" class="inspector-tab-btn" data-target="pane-editor">Live JSON Editor</button>
+          <div class="inspector-tabs-nav" role="tablist" aria-label="PKPass inspection results">
+            <button type="button" class="inspector-tab-btn active" role="tab" aria-selected="true" aria-controls="pane-manifest" tabindex="0" data-target="pane-manifest">SHA-1 Manifest</button>
+            <button type="button" class="inspector-tab-btn" role="tab" aria-selected="false" aria-controls="pane-linter" tabindex="-1" data-target="pane-linter">Schema Linter</button>
+            <button type="button" class="inspector-tab-btn" role="tab" aria-selected="false" aria-controls="pane-assets" tabindex="-1" data-target="pane-assets">Asset Checklist</button>
+            <button type="button" class="inspector-tab-btn" role="tab" aria-selected="false" aria-controls="pane-signature" tabindex="-1" data-target="pane-signature">Signature</button>
+            <button type="button" class="inspector-tab-btn" role="tab" aria-selected="false" aria-controls="pane-localizations" tabindex="-1" data-target="pane-localizations">Localizations</button>
+            <button type="button" class="inspector-tab-btn" role="tab" aria-selected="false" aria-controls="pane-contrast" tabindex="-1" data-target="pane-contrast">Contrast</button>
+            <button type="button" class="inspector-tab-btn" role="tab" aria-selected="false" aria-controls="pane-editor" tabindex="-1" data-target="pane-editor">Live JSON Editor</button>
           </div>
 
           <!-- Panes -->
@@ -327,7 +327,9 @@
           </div>
 
           <div class="inspector-tab-pane" id="pane-editor" style="display: none;">
-            <textarea class="pkpass-json-editor-textarea" id="pkpass-json-editor" spellcheck="false"></textarea>
+            <label for="pkpass-json-editor">pass.json</label>
+            <textarea class="pkpass-json-editor-textarea" id="pkpass-json-editor" spellcheck="false" aria-describedby="pkpass-json-error"></textarea>
+            <div id="pkpass-json-error" role="alert" aria-live="assertive"></div>
           </div>
 
           <!-- Actions Bar -->
@@ -342,31 +344,16 @@
               {{ 'pkpass.actions.download_json'|trans }}
             </button>
           </div>
+          <div id="pkpass-action-status" role="status" aria-live="polite"></div>
         </div>
 
         <!-- STUDIO PANEL 3: Digital Signing & Export -->
         <div class="studio-panel-view" id="studio-panel-signing" style="display: none;">
           <div class="designer-card-section">
-            <h3 class="designer-section-title">{{ 'pkpass.studio.sign_mode_browser'|trans }}</h3>
+            <h3 class="designer-section-title">{{ 'pkpass.studio.signing_boundary_title'|trans }}</h3>
             <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.5; margin-bottom: 1rem;">
-              Apple requires passes to be cryptographically signed with your Apple Developer Pass Certificate.
-              Stackhal decrypts and signs your package <strong>100% inside your web browser via WebCrypto API</strong>.
-              Your private key and certificate never leave this browser tab.
+              {{ 'pkpass.studio.signing_boundary_text'|trans }}
             </p>
-            <div class="signing-form-box">
-              <div class="form-group">
-                <label for="ds-p12-file">{{ 'pkpass.studio.upload_p12'|trans }}</label>
-                <input type="file" id="ds-p12-file" class="studio-input" accept=".p12,.pfx">
-              </div>
-              <div class="form-group">
-                <label for="ds-p12-password">{{ 'pkpass.studio.p12_password'|trans }}</label>
-                <input type="password" id="ds-p12-password" class="studio-input" placeholder="Certificate export password">
-              </div>
-              <button type="button" class="btn-action-primary" id="btn-webcrypto-sign">
-                🔏 {{ 'pkpass.studio.sign_download'|trans }}
-              </button>
-              <div id="signing-status-msg" style="margin-top: 0.75rem; font-size: 0.85rem;"></div>
-            </div>
           </div>
 
           <div class="designer-card-section">

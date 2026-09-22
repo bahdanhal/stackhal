@@ -61,17 +61,19 @@
 
   <div class="transpiler-container" id="regex-transpiler-app" data-locale="{{ app.request.locale }}">
     <!-- Source & Target Dialect Selectors & Presets Toolbar -->
-    <div class="transpiler-toolbar ui-panel">
+    <details class="transpiler-toolbar ui-panel">
+      <summary>Advanced engine overrides and examples</summary>
+      <div style="margin-top: 1rem;">
       <div class="engine-selectors-row">
         <!-- Source Engine Selector -->
         <div class="engine-selector-group">
           <span class="selector-label">{{ 'regex_transpiler.source_label'|trans }}:</span>
           <div class="engine-btn-group" role="group" aria-label="{{ 'regex_transpiler.source_label'|trans }}">
-            <button type="button" class="btn-engine active" data-source-engine="pcre">PCRE (PHP/Nginx)</button>
-            <button type="button" class="btn-engine" data-source-engine="go_re2">Go RE2</button>
-            <button type="button" class="btn-engine" data-source-engine="javascript">JavaScript</button>
-            <button type="button" class="btn-engine" data-source-engine="python">Python</button>
-            <button type="button" class="btn-engine" data-source-engine="rust">Rust</button>
+            <button type="button" class="btn-engine active" aria-pressed="true" data-source-engine="pcre">PCRE (PHP/Nginx)</button>
+            <button type="button" class="btn-engine" aria-pressed="false" data-source-engine="go_re2">Go RE2</button>
+            <button type="button" class="btn-engine" aria-pressed="false" data-source-engine="javascript">JavaScript</button>
+            <button type="button" class="btn-engine" aria-pressed="false" data-source-engine="python">Python</button>
+            <button type="button" class="btn-engine" aria-pressed="false" data-source-engine="rust">Rust</button>
           </div>
         </div>
 
@@ -81,11 +83,11 @@
         <div class="engine-selector-group">
           <span class="selector-label">{{ 'regex_transpiler.target_label'|trans }}:</span>
           <div class="engine-btn-group" role="group" aria-label="{{ 'regex_transpiler.target_label'|trans }}">
-            <button type="button" class="btn-engine active" data-target-engine="go_re2">Go RE2</button>
-            <button type="button" class="btn-engine" data-target-engine="pcre">PCRE</button>
-            <button type="button" class="btn-engine" data-target-engine="javascript">JavaScript</button>
-            <button type="button" class="btn-engine" data-target-engine="python">Python</button>
-            <button type="button" class="btn-engine" data-target-engine="rust">Rust</button>
+            <button type="button" class="btn-engine active" aria-pressed="true" data-target-engine="go_re2">Go RE2</button>
+            <button type="button" class="btn-engine" aria-pressed="false" data-target-engine="pcre">PCRE</button>
+            <button type="button" class="btn-engine" aria-pressed="false" data-target-engine="javascript">JavaScript</button>
+            <button type="button" class="btn-engine" aria-pressed="false" data-target-engine="python">Python</button>
+            <button type="button" class="btn-engine" aria-pressed="false" data-target-engine="rust">Rust</button>
           </div>
         </div>
       </div>
@@ -98,7 +100,8 @@
         <button type="button" class="btn-preset" data-preset="quoted_string_possessive">{{ 'regex_transpiler.preset_possessive'|trans }}</button>
         <button type="button" class="btn-preset" data-preset="multiline_case_insensitive">{{ 'regex_transpiler.preset_slug'|trans }}</button>
       </div>
-    </div>
+      </div>
+    </details>
 
     <!-- Split Screen Workspace -->
     <div class="transpiler-workspace">
@@ -111,10 +114,10 @@
           </div>
         </div>
         <div class="editor-wrap">
-          <textarea id="source-pattern-input" class="regex-textarea" spellcheck="false" placeholder="{{ 'regex_transpiler.pattern_placeholder'|trans }}"></textarea>
+          <textarea id="source-pattern-input" class="regex-textarea" aria-labelledby="source-panel-title" spellcheck="false" placeholder="{{ 'regex_transpiler.pattern_placeholder'|trans }}"></textarea>
 
           <div class="sublabel">{{ 'regex_transpiler.test_string_label'|trans }}</div>
-          <textarea id="test-text-input" class="test-textarea" spellcheck="false" placeholder="{{ 'regex_transpiler.test_string_placeholder'|trans }}"></textarea>
+          <textarea id="test-text-input" class="test-textarea" aria-label="{{ 'regex_transpiler.test_string_label'|trans }}" spellcheck="false" placeholder="{{ 'regex_transpiler.test_string_placeholder'|trans }}"></textarea>
         </div>
         <div class="panel-footer">
           <span id="input-stats">0 chars</span>
@@ -136,14 +139,14 @@
           </div>
         </div>
         <div class="editor-wrap">
-          <pre class="regex-output-pre"><code id="target-output-code"></code></pre>
+          <pre class="regex-output-pre"><code id="target-output-code" aria-live="polite"></code></pre>
 
-          <div class="sublabel">{{ 'regex_transpiler.match_results_label'|trans }}: <span id="match-status-badge"></span></div>
+          <div class="sublabel">Browser JavaScript preview of the source pattern: <span id="match-status-badge" aria-live="polite"></span></div>
           <div id="match-results-preview" class="live-match-box"></div>
         </div>
         <div class="panel-footer">
-          <span id="target-stats"><span class="status-pill status-success">✓ 100% Compatible</span></span>
-          <span class="caddy-version-badge">AST Transpiled</span>
+          <span id="target-stats" role="status" aria-live="polite"><span class="status-pill">Awaiting analysis</span></span>
+          <span class="caddy-version-badge">Syntax analyzed</span>
         </div>
       </div>
     </div>
@@ -154,7 +157,7 @@
         <h3>{{ 'regex_transpiler.matrix_title'|trans }}</h3>
         <p>{{ 'regex_transpiler.matrix_subtitle'|trans }}</p>
       </div>
-      <div id="compatibility-matrix-grid" class="matrix-grid">
+      <div id="compatibility-matrix-grid" class="matrix-grid" aria-live="polite">
         <!-- Rendered via JS -->
       </div>
     </div>
@@ -164,7 +167,7 @@
       <div class="insights-header">
         <h3>{{ 'regex_transpiler.diagnostics_title'|trans }}</h3>
       </div>
-      <div id="advisories-container" class="advisories-grid">
+      <div id="advisories-container" class="advisories-grid" aria-live="polite">
         <div class="advisory-card advisory-empty">
           <p>{{ 'regex_transpiler.diagnostics_empty'|trans }}</p>
         </div>
@@ -254,18 +257,18 @@
             <tr>
               <td><strong>Atomic Groups <code>(?&gt;...)</code></strong></td>
               <td><span class="tag-support">✓ Native</span></td>
-              <td><span class="tag-adapted">➔ <code>(?:...)</code> non-capturing</span></td>
-              <td><span class="tag-adapted">➔ <code>(?:...)</code></span></td>
-              <td><span class="tag-adapted">➔ <code>(?:...)</code></span></td>
-              <td><span class="tag-adapted">➔ <code>(?:...)</code></span></td>
+              <td><span class="tag-forbidden">⛔ Manual rewrite</span></td>
+              <td><span class="tag-forbidden">⛔ Manual rewrite</span></td>
+              <td><span class="tag-forbidden">⛔ Manual rewrite</span></td>
+              <td><span class="tag-forbidden">⛔ Manual rewrite</span></td>
             </tr>
             <tr>
               <td><strong>Possessive Quantifiers <code>*+</code>, <code>++</code></strong></td>
               <td><span class="tag-support">✓ Native</span></td>
-              <td><span class="tag-adapted">➔ <code>*</code>, <code>+</code> greedy</span></td>
-              <td><span class="tag-adapted">➔ <code>*</code>, <code>+</code></span></td>
-              <td><span class="tag-adapted">➔ <code>*</code>, <code>+</code></span></td>
-              <td><span class="tag-adapted">➔ <code>*</code>, <code>+</code></span></td>
+              <td><span class="tag-forbidden">⛔ Manual rewrite</span></td>
+              <td><span class="tag-forbidden">⛔ Manual rewrite</span></td>
+              <td><span class="tag-forbidden">⛔ Manual rewrite</span></td>
+              <td><span class="tag-forbidden">⛔ Manual rewrite</span></td>
             </tr>
             <tr>
               <td><strong>Recursion <code>(?R)</code></strong></td>

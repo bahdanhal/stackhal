@@ -78,15 +78,25 @@
       "title": "Pattern Recursion Unsupported",
       "description": "Recursive subroutine calls (?R), (?1) are exclusive to PCRE and cannot be compiled in RE2, JS, or standard Python."
     },
-    "WARN_ATOMIC_GROUP_CONVERTED": {
-      "severity": "warning",
-      "title": "Atomic Group Converted to Non-Capturing",
-      "description": "Atomic group (?>...) was converted to non-capturing group (?:...) because RE2 does not backtrack."
+    "ERR_ATOMIC_GROUP_NOT_EQUIVALENT": {
+      "severity": "error",
+      "title": "Atomic Group Has No Safe Equivalent",
+      "description": "Removing atomic behavior can change matching results and requires a manual rewrite."
     },
-    "WARN_POSSESSIVE_QUANTIFIER_CONVERTED": {
-      "severity": "warning",
-      "title": "Possessive Quantifier Simplified",
-      "description": "Possessive quantifier (++ or *+) was simplified to greedy quantifier (+ or *) in RE2."
+    "ERR_POSSESSIVE_QUANTIFIER_NOT_EQUIVALENT": {
+      "severity": "error",
+      "title": "Possessive Quantifier Has No Safe Equivalent",
+      "description": "Replacing a possessive quantifier with a greedy one can change matching results."
+    },
+    "ERR_INVALID_PATTERN": {
+      "severity": "error",
+      "title": "Invalid Regular Expression Syntax",
+      "description": "The pattern is incomplete or structurally malformed."
+    },
+    "ERR_INLINE_MODIFIERS_REQUIRE_EXTERNAL_FLAGS": {
+      "severity": "error",
+      "title": "JavaScript Requires External Flags",
+      "description": "PCRE inline modifiers must be moved to JavaScript RegExp flags manually."
     },
     "WARN_NAMED_GROUP_SYNTAX_TRANSPILLED": {
       "severity": "warning",
@@ -152,15 +162,15 @@
       ]
     },
     {
-      "description": "PCRE atomic group and possessive quantifier simplified for Go RE2",
+      "description": "PCRE atomic group and possessive quantifier rejected when no safe Go RE2 equivalent exists",
       "pattern": "(?>[a-z]++)",
       "source_engine": "pcre",
       "target_engine": "go_re2",
-      "expected_compatible": true,
-      "expected_pattern": "(?:[a-z]+)",
-      "expected_warnings": [
-        "WARN_ATOMIC_GROUP_CONVERTED",
-        "WARN_POSSESSIVE_QUANTIFIER_CONVERTED"
+      "expected_compatible": false,
+      "expected_pattern": "(?>[a-z]++)",
+      "expected_error_codes": [
+        "ERR_ATOMIC_GROUP_NOT_EQUIVALENT",
+        "ERR_POSSESSIVE_QUANTIFIER_NOT_EQUIVALENT"
       ]
     },
     {

@@ -26,25 +26,6 @@
   } only %}
 
   <div class="transpiler-container" id="app-links-app" data-locale="{{ app.request.locale }}">
-    <!-- Presets Toolbar -->
-    <div class="transpiler-toolbar ui-panel">
-      <div class="preset-group">
-        <span class="preset-label">{{ 'app_links.presets_label'|trans }}:</span>
-        {% for preset in presets %}
-          <button
-            type="button"
-            class="btn-preset"
-            data-preset="{{ preset.id }}"
-            data-aasa="{{ preset.aasa_content is defined ? preset.aasa_content|json_encode : '' }}"
-            data-test-url="{{ preset.test_url }}"
-          >
-            {{ preset.name }}
-          </button>
-        {% endfor %}
-      </div>
-    </div>
-
-    <!-- Test URL Simulator Input -->
     <div class="ui-panel" style="padding: 1.5rem; margin-bottom: 1.5rem;">
       <form method="post" action="{{ path('app_links_validator', {_locale: app.request.locale}) }}" id="app-links-form">
         <div style="display: grid; grid-template-columns: 3fr auto; gap: 1rem; align-items: flex-end;">
@@ -53,18 +34,20 @@
               {{ 'app_links.test_url_label'|trans }}
             </label>
             <input
-              type="text"
+              type="url"
               name="test_url"
               id="test-url-input"
               value="{{ test_url }}"
               placeholder="https://example.com/products/wireless-headphones"
+              required
+              inputmode="url"
               style="width: 100%; padding: 0.65rem; background: var(--bg-surface, #1e293b); color: inherit; border: 1px solid var(--border-color, #334155); border-radius: 4px; font-family: monospace;"
             >
           </div>
           <div>
             <button
               type="submit"
-              id="btn-validate-app-links"
+              id="btn-fetch-app-links"
               class="btn-submit"
               style="padding: 0.65rem 1.5rem; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;"
             >
@@ -72,15 +55,31 @@
             </button>
           </div>
         </div>
+        <p class="automation-note">StackHal extracts the host, securely fetches both well-known manifests, validates their structure, and tests this path automatically.</p>
+      </form>
+    </div>
 
-        <!-- Manifests Editor Grid -->
+    <details class="transpiler-toolbar ui-panel" style="margin-bottom: 1.5rem;">
+      <summary>Offline manifest check and examples</summary>
+      <div class="preset-group" style="margin-top: 1rem;">
+        <span class="preset-label">{{ 'app_links.presets_label'|trans }}:</span>
+        {% for preset in presets %}
+          <button
+            type="button"
+            class="btn-preset"
+            data-preset="{{ preset.id }}"
+            data-aasa="{{ preset.aasa_content is defined ? preset.aasa_content|json_encode : '' }}"
+            data-assetlinks="{{ preset.assetlinks_content is defined ? preset.assetlinks_content|json_encode : '' }}"
+            data-test-url="{{ preset.test_url }}"
+          >{{ preset.name }}</button>
+        {% endfor %}
+      </div>
         <div class="manifest-grid" style="margin-top: 1.5rem;">
           <div>
             <label for="aasa-editor" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
               {{ 'app_links.aasa_label'|trans }}
             </label>
             <textarea
-              name="aasa_content"
               id="aasa-editor"
               class="code-editor-area"
               placeholder="Apple apple-app-site-association JSON..."
@@ -92,28 +91,30 @@
               {{ 'app_links.assetlinks_label'|trans }}
             </label>
             <textarea
-              name="assetlinks_content"
               id="assetlinks-editor"
               class="code-editor-area"
               placeholder="Android assetlinks.json JSON..."
             >{{ raw_assetlinks }}</textarea>
           </div>
         </div>
-      </form>
-    </div>
+      <button type="button" id="btn-validate-local-app-links" class="btn-submit">Check pasted manifests locally</button>
+      <p class="automation-note">Offline mode stays in this browser. Live URL checks send only the URL to StackHal so the server can retrieve public manifests.</p>
+    </details>
 
     <!-- Live Decision Banner -->
     <div
       id="routing-decision-banner"
-      class="routing-banner {% if result.opensInApp is same as(true) %}banner-app{% elseif result.opensInApp is same as(false) %}banner-web{% endif %}"
+      role="status"
+      aria-live="polite"
+      class="routing-banner {% if result is not null and result.opensInApp is same as(true) %}banner-app{% elseif result is not null and result.opensInApp is same as(false) %}banner-web{% endif %}"
     >
-      {% if result.opensInApp is same as(true) %}
-        <div class="banner-badge">{{ 'app_links.badge_app'|trans }}</div>
-        <div class="banner-title">{{ 'app_links.matched_app_title'|trans }}</div>
+      {% if result is not null and result.aasaValid and result.opensInApp is same as(true) %}
+        <div class="banner-badge">AASA RULE MATCH</div>
+        <div class="banner-title">The AASA manifest includes this path</div>
         <div class="banner-desc">{{ 'app_links.matched_pattern'|trans }}: <code>{{ result.matchedPattern }}</code></div>
-      {% elseif result.opensInApp is same as(false) %}
-        <div class="banner-badge">{{ 'app_links.badge_web'|trans }}</div>
-        <div class="banner-title">{{ 'app_links.matched_web_title'|trans }}</div>
+      {% elseif result is not null and result.aasaValid and result.opensInApp is same as(false) %}
+        <div class="banner-badge">NO AASA MATCH</div>
+        <div class="banner-title">No included AASA route matches this path</div>
         <div class="banner-desc">
           {% if result.matchedExclusion %}
             {{ 'app_links.excluded_by_rule'|trans }}: <code>{{ result.matchedPattern }}</code>
@@ -129,8 +130,10 @@
     <!-- Diagnostics Panel -->
     <div class="ui-panel" style="padding: 1.5rem;">
       <h3 style="margin-top: 0; margin-bottom: 1rem;">{{ 'app_links.diagnostics_title'|trans }}</h3>
-      <div id="app-links-diagnostics">
-        {% if result.diagnostics is empty %}
+      <div id="app-links-diagnostics" aria-live="polite">
+        {% if result is null %}
+          <div class="diag-item diag-info">Enter one HTTPS URL to run the live hosting and route checks.</div>
+        {% elseif result.diagnostics is empty %}
           <div class="diag-item diag-success">{{ 'app_links.all_passed'|trans }}</div>
         {% else %}
           {% for diag in result.diagnostics %}

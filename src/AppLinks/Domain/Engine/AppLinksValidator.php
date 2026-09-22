@@ -30,6 +30,21 @@ final class AppLinksValidator
             'title' => 'Malformed AASA JSON',
             'description' => 'The apple-app-site-association file is not valid JSON.',
         ],
+        'ERR_AASA_MISSING_DETAILS' => [
+            'severity' => 'error',
+            'title' => 'AASA App Links Rules Missing',
+            'description' => "The AASA document must contain a non-empty 'applinks.details' array.",
+        ],
+        'ERR_AASA_MISSING_APP_ID' => [
+            'severity' => 'error',
+            'title' => 'AASA App Identifier Missing',
+            'description' => "Each AASA detail must declare at least one 'appID' or 'appIDs' value.",
+        ],
+        'ERR_AASA_MISSING_ROUTES' => [
+            'severity' => 'error',
+            'title' => 'AASA Route Rules Missing',
+            'description' => "Each AASA detail must declare a non-empty 'components' or 'paths' array.",
+        ],
         'ERR_AASA_INVALID_APP_ID' => [
             'severity' => 'error',
             'title' => 'Invalid Apple App ID Format',
@@ -45,6 +60,36 @@ final class AppLinksValidator
             'severity' => 'error',
             'title' => 'Android AssetLinks File Missing',
             'description' => 'The /.well-known/assetlinks.json file is unreachable or returns a non-200 HTTP status.',
+        ],
+        'ERR_ASSETLINKS_INVALID_JSON' => [
+            'severity' => 'error',
+            'title' => 'Malformed AssetLinks JSON',
+            'description' => 'The assetlinks.json file is not valid JSON.',
+        ],
+        'ERR_ASSETLINKS_EMPTY' => [
+            'severity' => 'error',
+            'title' => 'AssetLinks Statements Missing',
+            'description' => 'The assetlinks.json document must contain at least one statement.',
+        ],
+        'ERR_ASSETLINKS_INVALID_TARGET' => [
+            'severity' => 'error',
+            'title' => 'Android App Target Incomplete',
+            'description' => "Each statement must identify an android_app package and at least one SHA-256 certificate fingerprint.",
+        ],
+        'ERR_NO_MANIFEST_INPUT' => [
+            'severity' => 'error',
+            'title' => 'No Manifest Provided',
+            'description' => 'Offline validation requires at least one manifest.',
+        ],
+        'ERR_TEST_URL_INVALID' => [
+            'severity' => 'error',
+            'title' => 'Invalid Test URL',
+            'description' => 'Enter a complete public HTTPS URL to verify live App Links hosting and routing.',
+        ],
+        'ERR_TEST_URL_DOMAIN_MISMATCH' => [
+            'severity' => 'error',
+            'title' => 'Test URL Does Not Match Manifest Host',
+            'description' => 'Route matching is only valid when the tested URL uses the domain that served the manifests.',
         ],
         'ERR_ASSETLINKS_MISSING_RELATION' => [
             'severity' => 'error',
@@ -70,14 +115,14 @@ final class AppLinksValidator
         ],
         'INFO_ROUTE_MATCHED_APP' => [
             'severity' => 'info',
-            'title' => 'URL Successfully Routes to Native App',
+            'title' => 'URL Matches an App Route Rule',
             // phpcs:ignore Generic.Files.LineLength
-            'description' => 'The queried URL matches universal link pattern rules and will open inside the native application.',
+            'description' => 'The URL path matches an included AASA rule. Actual app opening also depends on the installed app, entitlements, association state, and device context.',
         ],
         'INFO_ROUTE_FALLS_BACK_WEB' => [
             'severity' => 'info',
-            'title' => 'URL Opens in Safari / Browser Fallback',
-            'description' => 'The queried URL does not match app route patterns or is explicitly excluded.',
+            'title' => 'No Included AASA Route Match',
+            'description' => 'No included AASA path rule matched, or an exclusion matched.',
         ],
     ];
 
@@ -90,6 +135,8 @@ final class AppLinksValidator
         array|string|null $assetLinks = null,
         ?string $testUrl = null,
         ?string $domain = null,
+        bool $requireAasa = false,
+        bool $requireAssetLinks = false,
     ): AppLinksResult {
         /** @var list<AppLinksDiagnostic> $diagnostics */
         $diagnostics = [];
@@ -101,9 +148,20 @@ final class AppLinksValidator
         $opensInApp = null;
         $matchedPattern = null;
         $matchedExclusion = false;
+        $testUrlValid = $testUrl === null || $testUrl === ''
+            ? true
+            : $this->validateTestUrl($testUrl, $domain, $diagnostics);
 
         // Parse and validate Apple AASA
-        $parsedAasa = is_string($aasa) ? $this->parseJsonString($aasa, 'aasa', $diagnostics, $aasaValid) : $aasa;
+        $aasaProvided = is_array($aasa)
+            ? $aasa !== []
+            : !in_array(trim($aasa), ['', '{}'], true);
+        if (!$aasaProvided && $assetLinks === null && !$requireAasa && !$requireAssetLinks) {
+            $diagnostics[] = $this->createDiagnostic('ERR_NO_MANIFEST_INPUT');
+        }
+        $parsedAasa = !$aasaProvided
+            ? null
+            : (is_string($aasa) ? $this->parseJsonString($aasa, 'aasa', $diagnostics, $aasaValid) : $aasa);
 
         if ($parsedAasa !== null) {
             $aasaRaw = is_string($aasa) ? $aasa : json_encode($aasa, JSON_UNESCAPED_SLASHES);
@@ -114,9 +172,12 @@ final class AppLinksValidator
 
             $this->validateAasaStructure($parsedAasa, $diagnostics, $aasaAppIds, $aasaValid);
 
-            if ($testUrl !== null && $testUrl !== '') {
+            if ($aasaValid && $testUrl !== null && $testUrl !== '' && $testUrlValid) {
                 $this->evaluateUrlRouting($parsedAasa, $testUrl, $opensInApp, $matchedPattern, $matchedExclusion, $diagnostics);
             }
+        } elseif ($requireAasa) {
+            $aasaValid = false;
+            $diagnostics[] = $this->createDiagnostic('ERR_AASA_NOT_FOUND');
         }
 
         // Parse and validate Android AssetLinks if provided
@@ -128,6 +189,9 @@ final class AppLinksValidator
             if ($parsedAssetLinks !== null) {
                 $this->validateAssetLinksStructure($parsedAssetLinks, $diagnostics, $androidPackageNames, $assetLinksValid);
             }
+        } elseif ($requireAssetLinks) {
+            $assetLinksValid = false;
+            $diagnostics[] = $this->createDiagnostic('ERR_ASSETLINKS_NOT_FOUND');
         }
 
         $hasErrors = false;
@@ -175,7 +239,7 @@ final class AppLinksValidator
             return $decoded;
         } catch (\Throwable) {
             $valid = false;
-            $code = $type === 'aasa' ? 'ERR_AASA_INVALID_JSON' : 'ERR_ASSETLINKS_NOT_FOUND';
+            $code = $type === 'aasa' ? 'ERR_AASA_INVALID_JSON' : 'ERR_ASSETLINKS_INVALID_JSON';
             $diagnostics[] = $this->createDiagnostic($code);
 
             return null;
@@ -190,12 +254,17 @@ final class AppLinksValidator
     private function validateAasaStructure(array $aasa, array &$diagnostics, array &$appIds, bool &$valid): void
     {
         $details = $aasa['applinks']['details'] ?? null;
-        if (!is_array($details)) {
+        if (!is_array($details) || $details === []) {
+            $valid = false;
+            $diagnostics[] = $this->createDiagnostic('ERR_AASA_MISSING_DETAILS');
+
             return;
         }
 
         foreach ($details as $detail) {
             if (!is_array($detail)) {
+                $valid = false;
+                $diagnostics[] = $this->createDiagnostic('ERR_AASA_MISSING_ROUTES');
                 continue;
             }
 
@@ -205,6 +274,11 @@ final class AppLinksValidator
                 $ids = $detail['appIDs'];
             } elseif (isset($detail['appID']) && is_string($detail['appID'])) {
                 $ids = [$detail['appID']];
+            }
+
+            if ($ids === []) {
+                $valid = false;
+                $diagnostics[] = $this->createDiagnostic('ERR_AASA_MISSING_APP_ID');
             }
 
             foreach ($ids as $appId) {
@@ -223,6 +297,13 @@ final class AppLinksValidator
             if (isset($detail['paths']) && !isset($detail['components'])) {
                 $diagnostics[] = $this->createDiagnostic('WARN_LEGACY_AASA_PATHS');
             }
+
+            $components = $detail['components'] ?? null;
+            $paths = $detail['paths'] ?? null;
+            if ((!is_array($components) || $components === []) && (!is_array($paths) || $paths === [])) {
+                $valid = false;
+                $diagnostics[] = $this->createDiagnostic('ERR_AASA_MISSING_ROUTES');
+            }
         }
     }
 
@@ -235,8 +316,17 @@ final class AppLinksValidator
     {
         $statements = isset($assetLinks[0]) ? $assetLinks : [$assetLinks];
 
+        if ($assetLinks === []) {
+            $valid = false;
+            $diagnostics[] = $this->createDiagnostic('ERR_ASSETLINKS_EMPTY');
+
+            return;
+        }
+
         foreach ($statements as $statement) {
             if (!is_array($statement)) {
+                $valid = false;
+                $diagnostics[] = $this->createDiagnostic('ERR_ASSETLINKS_INVALID_TARGET');
                 continue;
             }
 
@@ -260,14 +350,49 @@ final class AppLinksValidator
                 $fingerprints = $target['sha256_cert_fingerprints'] ?? [];
                 $fingerprintsList = is_array($fingerprints) ? $fingerprints : [$fingerprints];
 
+                if (
+                    ($target['namespace'] ?? null) !== 'android_app'
+                    || !isset($target['package_name'])
+                    || !is_string($target['package_name'])
+                    || trim($target['package_name']) === ''
+                    || $fingerprintsList === []
+                ) {
+                    $valid = false;
+                    $diagnostics[] = $this->createDiagnostic('ERR_ASSETLINKS_INVALID_TARGET');
+                }
+
                 foreach ($fingerprintsList as $fp) {
                     if (!is_string($fp) || preg_match(self::ANDROID_FINGERPRINT_REGEX, $fp) !== 1) {
                         $valid = false;
                         $diagnostics[] = $this->createDiagnostic('ERR_ASSETLINKS_INVALID_FINGERPRINT');
                     }
                 }
+            } else {
+                $valid = false;
+                $diagnostics[] = $this->createDiagnostic('ERR_ASSETLINKS_INVALID_TARGET');
             }
         }
+    }
+
+    /**
+     * @param list<AppLinksDiagnostic> $diagnostics
+     */
+    private function validateTestUrl(string $testUrl, ?string $domain, array &$diagnostics): bool
+    {
+        $parts = parse_url($testUrl);
+        if (!is_array($parts) || ($parts['scheme'] ?? null) !== 'https' || !isset($parts['host'])) {
+            $diagnostics[] = $this->createDiagnostic('ERR_TEST_URL_INVALID');
+
+            return false;
+        }
+
+        if ($domain !== null && $domain !== '' && strtolower($parts['host']) !== strtolower($domain)) {
+            $diagnostics[] = $this->createDiagnostic('ERR_TEST_URL_DOMAIN_MISMATCH');
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

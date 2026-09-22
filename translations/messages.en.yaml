@@ -637,11 +637,11 @@ caddy_transpiler:
 pkpass:
     meta:
         title: "Apple Wallet (.pkpass) Studio & Open Platform · Visual Designer & Emulator"
-        description: "Free online Apple Wallet .pkpass visual designer, pixel-perfect emulator, WebCrypto signer, and developer platform. Design passes, scale assets, verify manifest SHA-1, and convert to Google Wallet."
+        description: "Free browser-based Apple Wallet .pkpass inspector and designer. Validate pass.json, rebuild manifests, inspect signature structure, scale assets, and export an unsigned package for trusted signing."
     title: "Apple Wallet Studio"
     eyebrow: "VISUAL PASS DESIGNER & DEVELOPER PLATFORM"
     heading: "Apple Wallet (.pkpass) Studio & Open Platform"
-    lede: "Build, design, inspect, sign, and automate Apple Wallet passes (.pkpass) and Google Wallet. Zero-knowledge in-browser WebCrypto signing, Canvas asset auto-scaler, and headless CI/CD REST API."
+    lede: "Drop a .pkpass or pass.json to inspect it automatically in your browser. Validate schema, hashes, assets, signature structure, colors, and barcodes; rebuild an unsigned package for trusted signing or use the explicit REST API in CI/CD."
     studio:
         designer: "Pass Designer"
         inspector: "Inspector & Linter"
@@ -674,15 +674,17 @@ pkpass:
         assets_title: "Asset Studio (Canvas Auto-Scaler)"
         assets_subtitle: "Drop any SVG, PNG, JPG, or WebP — automatically scaled into 1x, @2x, and @3x Retina PNGs."
         generate_assets: "Generate Branded Assets"
-        signing_title: "Dual-Mode Digital Signing Engine"
-        sign_mode_browser: "In-Browser WebCrypto Signer"
+        signing_title: "Signing & Export"
+        sign_mode_browser: "Signing Boundary"
+        signing_boundary_title: "Signing boundary"
+        signing_boundary_text: "StackHal validates signature structure locally but does not claim to create an Apple-valid PKCS#7 signature in the browser. Download the unsigned package and sign its manifest with your Apple Pass Type ID certificate using the generated OpenSSL command or a reviewed server library."
         sign_mode_unsigned: "Unsigned Export & CLI Commands"
         upload_p12: "Upload PassCertificate.p12"
         p12_password: "P12 Password"
         sign_download: "Sign & Download .pkpass"
         unsigned_download: "Download Unsigned .pkpass"
         code_title: "Polyglot Code Generator"
-        code_subtitle: "Ready-to-use production snippets tailored to your current pass configuration."
+        code_subtitle: "Generated implementation examples tailored to the current pass. Review certificate handling before production use."
     presets:
         label: "1-Click Presets"
         flight: "Boarding Pass"
@@ -697,7 +699,7 @@ pkpass:
     emulator:
         title: "Interactive Card Emulator"
     actions:
-        repack: "Fix & Re-pack .pkpass"
+        repack: "Rebuild Unsigned .pkpass"
         export_google: "Export Google Wallet JSON"
         download_json: "Download pass.json"
     guide:
@@ -717,10 +719,10 @@ pkpass:
         a1: "A .pkpass file is a standard ZIP archive containing pass.json (field layouts, colors, dates, barcodes), manifest.json (SHA-1 checksum dictionary of all files), signature (PKCS#7 signature from Apple Developer), and PNG image assets (icon, logo, strip, thumbnail)."
         q2: "Can I test and preview .pkpass files on Android, Windows, or Linux?"
         a2: "Yes! This tool provides a 100% client-side pixel-perfect web emulator that renders Apple Wallet boarding passes, concert tickets, loyalty cards, coupons, and generic passes directly in any modern browser."
-        q3: "How does the 'Fix & Re-pack' feature work?"
-        a3: "If you edit pass.json or fix broken files, clicking 'Fix & Re-pack' recalculates the SHA-1 checksum for every file in the package, regenerates a valid manifest.json, and downloads a clean, verified .pkpass ZIP bundle."
+        q3: "How does 'Rebuild Unsigned .pkpass' work?"
+        a3: "Rebuild recalculates each file's SHA-1 checksum, regenerates manifest.json, removes any now-invalid old signature, and downloads an unsigned package. You must sign that package with an Apple Pass Type ID certificate before installing it."
         q4: "Is my ticket or boarding pass uploaded to your server?"
-        a4: "No. All ZIP decompression, SHA-1 cryptographic hashing, PKCS#7 certificate parsing, and canvas/SVG barcode rendering take place 100% locally inside your web browser. Zero ticket data is ever uploaded or stored."
+        a4: "The browser workspace processes dropped files locally and does not upload them. The separate cURL and REST API examples explicitly send their request payload to StackHal for server-side processing; use those only when that behavior is appropriate."
 
 cidr_matrix:
     meta:

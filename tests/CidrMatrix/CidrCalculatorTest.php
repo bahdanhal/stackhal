@@ -77,6 +77,33 @@ final class CidrCalculatorTest extends TestCase
         self::assertSame('ERR_INVALID_CIDR', $result->diagnostics[0]->code);
     }
 
+    public function testInvalidExplicitParentDoesNotFallBackSilently(): void
+    {
+        $result = $this->calculator->analyze(['10.0.0.0/24'], 28, 'bad-parent');
+        $codes = array_map(static fn ($diagnostic): string => $diagnostic->code, $result->diagnostics);
+
+        self::assertNull($result->freeSubnetCidr);
+        self::assertContains('ERR_INVALID_PARENT_CIDR', $codes);
+        self::assertNotContains('ERR_SUBNET_EXHAUSTED', $codes);
+    }
+
+    public function testOutOfRangeIpv4PrefixIsReportedAsInvalid(): void
+    {
+        $result = $this->calculator->analyze(['10.0.0.0/24'], 33, '10.0.0.0/24');
+        $codes = array_map(static fn ($diagnostic): string => $diagnostic->code, $result->diagnostics);
+
+        self::assertNull($result->freeSubnetCidr);
+        self::assertContains('ERR_INVALID_FREE_PREFIX', $codes);
+        self::assertNotContains('ERR_SUBNET_EXHAUSTED', $codes);
+    }
+
+    public function testCommonParentIsDerivedForAutomaticAllocation(): void
+    {
+        $result = $this->calculator->analyze(['10.0.0.0/24', '10.0.2.0/24'], 24);
+
+        self::assertSame('10.0.1.0/24', $result->freeSubnetCidr);
+    }
+
     public function testPairwiseMatrixAndSpatialPartitions(): void
     {
         $result = $this->calculator->analyze(['10.0.0.0/16', '10.0.32.0/20']);

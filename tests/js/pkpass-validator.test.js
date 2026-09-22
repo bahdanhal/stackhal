@@ -103,6 +103,10 @@ async function runTests() {
   const phpCode = PkpassInspector.generateCodeSnippet('php', PkpassInspector.PRESETS.boardingPass);
   assert.ok(phpCode.includes('ZipArchive'), 'PHP snippet must use ZipArchive');
   assert.ok(phpCode.includes('openssl_pkcs7_sign'), 'PHP snippet must use openssl_pkcs7_sign');
+  assert.ok(
+    phpCode.includes('header(\'Content-Disposition: attachment; filename="pass.pkpass"\');'),
+    'PHP Content-Disposition header must use valid nested quoting'
+  );
 
   const tsCode = PkpassInspector.generateCodeSnippet('ts', PkpassInspector.PRESETS.boardingPass);
   assert.ok(tsCode.includes('@walletpass/pass-js'), 'TS snippet must import pass-js');

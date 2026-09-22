@@ -164,42 +164,75 @@ final readonly class CidrCalculator
         }
 
         // Free Subnet Allocation logic
-        $parentBlock = $parentCidrInput !== null ? CidrBlock::parse($parentCidrInput) : null;
+        $parentBlock = null;
+        $parentInputInvalid = false;
+        if ($parentCidrInput !== null) {
+            $parentBlock = CidrBlock::parse($parentCidrInput);
+            if ($parentBlock === null) {
+                $parentInputInvalid = true;
+                $diagnostics[] = new CidrDiagnostic(
+                    code: 'ERR_INVALID_PARENT_CIDR',
+                    severity: 'error',
+                    title: 'Invalid Parent CIDR',
+                    description: sprintf('The explicit parent "%s" is not a valid CIDR.', $parentCidrInput),
+                    context: $parentCidrInput
+                );
+            }
+        } else {
+            $parentBlock = $this->deriveCommonParent($parsedBlocks);
+        }
         $freeSubnetCidr = null;
         if ($requestedFreePrefix !== null) {
-            $allocParentBlock = $parentBlock ?? ($parsedBlocks[0] ?? null);
+            $allocParentBlock = $parentInputInvalid ? null : ($parentBlock ?? ($parsedBlocks[0] ?? null));
 
-            if ($allocParentBlock !== null && $requestedFreePrefix >= $allocParentBlock->prefixLength) {
-                $freeSubnetCidr = $this->findFreeSubnet(
-                    $allocParentBlock,
-                    $requestedFreePrefix,
-                    $parsedBlocks
-                );
-
-                if ($freeSubnetCidr !== null) {
+            if ($allocParentBlock !== null) {
+                $maxPrefix = $allocParentBlock->version === IpVersion::V4 ? 32 : 128;
+                if ($requestedFreePrefix < $allocParentBlock->prefixLength || $requestedFreePrefix > $maxPrefix) {
                     $diagnostics[] = new CidrDiagnostic(
-                        code: 'INFO_FREE_ALLOCATION_FOUND',
-                        severity: 'info',
-                        title: 'Free Allocation Available',
-                        description: sprintf(
-                            'Found available free subnet %s matching requested prefix /%d.',
-                            $freeSubnetCidr,
-                            $requestedFreePrefix
-                        ),
-                        context: $freeSubnetCidr
-                    );
-                } else {
-                    $diagnostics[] = new CidrDiagnostic(
-                        code: 'ERR_SUBNET_EXHAUSTED',
+                        code: 'ERR_INVALID_FREE_PREFIX',
                         severity: 'error',
-                        title: 'Subnet Space Exhausted',
+                        title: 'Invalid Free Subnet Prefix',
                         description: sprintf(
-                            'No contiguous free subnet of prefix /%d available inside %s.',
+                            'Prefix /%d must be between /%d and /%d for parent %s.',
                             $requestedFreePrefix,
+                            $allocParentBlock->prefixLength,
+                            $maxPrefix,
                             $allocParentBlock->normalizedCidr
                         ),
                         context: (string) $requestedFreePrefix
                     );
+                } else {
+                    $freeSubnetCidr = $this->findFreeSubnet(
+                        $allocParentBlock,
+                        $requestedFreePrefix,
+                        $parsedBlocks
+                    );
+
+                    if ($freeSubnetCidr !== null) {
+                        $diagnostics[] = new CidrDiagnostic(
+                            code: 'INFO_FREE_ALLOCATION_FOUND',
+                            severity: 'info',
+                            title: 'Free Allocation Available',
+                            description: sprintf(
+                                'Found available free subnet %s matching requested prefix /%d.',
+                                $freeSubnetCidr,
+                                $requestedFreePrefix
+                            ),
+                            context: $freeSubnetCidr
+                        );
+                    } else {
+                        $diagnostics[] = new CidrDiagnostic(
+                            code: 'ERR_SUBNET_EXHAUSTED',
+                            severity: 'error',
+                            title: 'Subnet Space Exhausted',
+                            description: sprintf(
+                                'No contiguous free subnet of prefix /%d available inside %s.',
+                                $requestedFreePrefix,
+                                $allocParentBlock->normalizedCidr
+                            ),
+                            context: (string) $requestedFreePrefix
+                        );
+                    }
                 }
             }
         }
@@ -224,6 +257,45 @@ final readonly class CidrCalculator
             spacePartitions: $spacePartitions,
             treeNodes: $treeNodes,
         );
+    }
+
+    /**
+     * @param list<CidrBlock> $blocks
+     */
+    private function deriveCommonParent(array $blocks): ?CidrBlock
+    {
+        if ($blocks === []) {
+            return null;
+        }
+
+        $version = $blocks[0]->version;
+        foreach ($blocks as $block) {
+            if ($block->version !== $version) {
+                return null;
+            }
+        }
+
+        $start = min(array_map(static fn (CidrBlock $block): string => $block->startBytes, $blocks));
+        $end = max(array_map(static fn (CidrBlock $block): string => $block->endBytes, $blocks));
+        $prefix = 0;
+
+        for ($i = 0, $length = strlen($start); $i < $length; $i++) {
+            $xor = ord($start[$i]) ^ ord($end[$i]);
+            if ($xor === 0) {
+                $prefix += 8;
+                continue;
+            }
+            for ($bit = 7; $bit >= 0; $bit--) {
+                if (($xor & (1 << $bit)) !== 0) {
+                    break 2;
+                }
+                $prefix++;
+            }
+        }
+
+        $network = inet_ntop($start);
+
+        return $network === false ? null : CidrBlock::parse(sprintf('%s/%d', $network, $prefix));
     }
 
     private function calculateOverlapCidr(

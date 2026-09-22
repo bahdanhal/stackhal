@@ -75,4 +75,14 @@ assert.ok(pyComp.isCompatible);
 assert.ok(!goComp.isCompatible);
 assert.ok(!rustComp.isCompatible);
 
+const malformed = transpileRegex('(abc', 'pcre', 'javascript');
+assert.equal(malformed.isCompatible, false);
+assert.ok(malformed.errors.some((error) => error.title === DIAGNOSTIC_CODES.ERR_INVALID_PATTERN.title));
+
+const inlineFlags = transpileRegex('(?i)^hello$', 'pcre', 'javascript');
+assert.equal(inlineFlags.isCompatible, false);
+assert.ok(inlineFlags.errors.some(
+  (error) => error.title === DIAGNOSTIC_CODES.ERR_INLINE_MODIFIERS_REQUIRE_EXTERNAL_FLAGS.title
+));
+
 console.log('Regex Dialect Transpiler JS test suite passed cleanly.');

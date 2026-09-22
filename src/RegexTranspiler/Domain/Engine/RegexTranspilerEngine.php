@@ -65,6 +65,17 @@ final class RegexTranspilerEngine
             );
         }
 
+        $syntaxError = $this->findBasicSyntaxError($pattern);
+        if ($syntaxError !== null) {
+            return new EngineCompatibility(
+                engine: $targetEngine,
+                isCompatible: false,
+                isLinearTime: $targetEngine->isLinearTime(),
+                transpiledPattern: $pattern,
+                diagnostics: [TranspileDiagnostic::invalidPattern($syntaxError)],
+            );
+        }
+
         $diagnostics = [];
         $errorsFound = false;
 
@@ -124,6 +135,7 @@ final class RegexTranspilerEngine
                     $i = $transpiledQuantifier['new_index'];
                     if ($transpiledQuantifier['converted']) {
                         $hasPossessiveQuantifier = true;
+                        $errorsFound = true;
                     }
                 }
                 continue;
@@ -162,6 +174,7 @@ final class RegexTranspilerEngine
                     $i = $transpiledQuantifier['new_index'];
                     if ($transpiledQuantifier['converted']) {
                         $hasPossessiveQuantifier = true;
+                        $errorsFound = true;
                     }
                 }
                 continue;
@@ -173,6 +186,7 @@ final class RegexTranspilerEngine
                 $output .= $transpiledQuantifier['output'];
                 $i = $transpiledQuantifier['new_index'];
                 $hasPossessiveQuantifier = true;
+                $errorsFound = true;
                 continue;
             }
 
@@ -198,6 +212,10 @@ final class RegexTranspilerEngine
         }
         if ($hasNamedGroupTranspiled) {
             $diagnostics[] = TranspileDiagnostic::namedGroupSyntaxTranspiled();
+        }
+        if ($targetEngine === RegexEngine::JavaScript && preg_match('/^\(\?[imsxU-]+\)/', $pattern) === 1) {
+            $errorsFound = true;
+            $diagnostics[] = TranspileDiagnostic::inlineModifiersUnsupported();
         }
 
         $isCompatible = !$errorsFound;
@@ -320,7 +338,9 @@ final class RegexTranspilerEngine
             $i += 3;
 
             if (!$targetEngine->supportsAtomicGroups()) {
-                return '(?:';
+                $errorsFound = true;
+
+                return '(?>';
             }
 
             return '(?>';
@@ -387,7 +407,7 @@ final class RegexTranspilerEngine
         if (($char === '+' || $char === '*' || $char === '?') && $index + 1 < $length && $pattern[$index + 1] === '+') {
             if (!$targetEngine->supportsPossessiveQuantifiers()) {
                 return [
-                    'output' => $char,
+                    'output' => $char . '+',
                     'new_index' => $index + 2,
                     'converted' => true,
                 ];
@@ -407,7 +427,7 @@ final class RegexTranspilerEngine
                 $quantifierBody = substr($pattern, $index, $closeBrace - $index + 1);
                 if (!$targetEngine->supportsPossessiveQuantifiers()) {
                     return [
-                        'output' => $quantifierBody,
+                        'output' => $quantifierBody . '+',
                         'new_index' => $closeBrace + 2,
                         'converted' => true,
                     ];
@@ -427,5 +447,56 @@ final class RegexTranspilerEngine
     private function startsWith(string $haystack, int $offset, string $needle): bool
     {
         return substr($haystack, $offset, strlen($needle)) === $needle;
+    }
+
+    private function findBasicSyntaxError(string $pattern): ?string
+    {
+        $depth = 0;
+        $inCharacterClass = false;
+        $escaped = false;
+        $length = strlen($pattern);
+
+        for ($i = 0; $i < $length; $i++) {
+            $char = $pattern[$i];
+            if ($escaped) {
+                $escaped = false;
+                continue;
+            }
+            if ($char === '\\') {
+                $escaped = true;
+                continue;
+            }
+            if ($char === '[' && !$inCharacterClass) {
+                $inCharacterClass = true;
+                continue;
+            }
+            if ($char === ']' && $inCharacterClass) {
+                $inCharacterClass = false;
+                continue;
+            }
+            if ($inCharacterClass) {
+                continue;
+            }
+            if ($char === '(') {
+                $depth++;
+            } elseif ($char === ')') {
+                if ($depth === 0) {
+                    return 'A closing parenthesis has no matching opening parenthesis.';
+                }
+                $depth--;
+            }
+        }
+
+        if ($escaped) {
+            return 'The pattern ends with an incomplete escape sequence.';
+        }
+        if ($inCharacterClass) {
+            return 'A character class is not closed.';
+        }
+        if ($depth > 0) {
+            return 'A group is not closed.';
+        }
+
+        return null;
     }
 }

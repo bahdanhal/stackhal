@@ -1136,7 +1136,7 @@
     switch (lang) {
       case 'php':
         return '<?php\n' +
-          '// Production-ready Apple Wallet (.pkpass) generation in PHP 8.4\n' +
+          '// Apple Wallet (.pkpass) generation example for PHP 8.4; review certificate handling before production use\n' +
           'declare(strict_types=1);\n\n' +
           '$passData = ' + varExportPhp(pass) + ';\n\n' +
           '$zip = new \\ZipArchive();\n' +
@@ -1173,7 +1173,7 @@
           '}\n\n' +
           '$zip->close();\n\n' +
           'header("Content-Type: application/vnd.apple.pkpass");\n' +
-          'header("Content-Disposition: attachment; filename=\"pass.pkpass\"");\n' +
+          'header(\'Content-Disposition: attachment; filename="pass.pkpass"\');\n' +
           'readfile($pkpassPath);\n';
 
       case 'ts':
@@ -1473,6 +1473,12 @@
 
     if (dropZone && fileInput) {
       dropZone.addEventListener('click', () => fileInput.click());
+      dropZone.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          fileInput.click();
+        }
+      });
       dropZone.addEventListener('dragover', e => {
         e.preventDefault();
         dropZone.classList.add('drag-active');
@@ -1539,13 +1545,30 @@
     }
 
     // Inspector Tabs
-    document.querySelectorAll('.inspector-tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.inspector-tab-btn').forEach(b => b.classList.remove('active'));
+    const inspectorTabs = Array.from(document.querySelectorAll('.inspector-tab-btn'));
+    const activateInspectorTab = btn => {
+        inspectorTabs.forEach(b => {
+          const selected = b === btn;
+          b.classList.toggle('active', selected);
+          b.setAttribute('aria-selected', String(selected));
+          b.tabIndex = selected ? 0 : -1;
+        });
         document.querySelectorAll('.inspector-tab-pane').forEach(p => p.style.display = 'none');
-        btn.classList.add('active');
         const targetPane = document.getElementById(btn.dataset.target);
         if (targetPane) targetPane.style.display = 'block';
+    };
+    inspectorTabs.forEach((btn, index) => {
+      btn.addEventListener('click', () => activateInspectorTab(btn));
+      btn.addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let nextIndex = index;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % inspectorTabs.length;
+        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + inspectorTabs.length) % inspectorTabs.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = inspectorTabs.length - 1;
+        activateInspectorTab(inspectorTabs[nextIndex]);
+        inspectorTabs[nextIndex].focus();
       });
     });
 
@@ -1556,9 +1579,10 @@
         try {
           const updated = JSON.parse(jsonEditor.value);
           state.currentPass = updated;
+          setJsonEditorValidity(true);
           renderAll();
-        } catch {
-          // invalid JSON during typing
+        } catch (error) {
+          setJsonEditorValidity(false, describeJsonError(jsonEditor.value, error.message));
         }
       });
     }
@@ -1646,7 +1670,9 @@
   function switchStudioMode(mode) {
     state.activeStudioMode = mode;
     document.querySelectorAll('.btn-studio-mode').forEach(b => {
-      b.classList.toggle('active', b.dataset.studioMode === mode);
+      const selected = b.dataset.studioMode === mode;
+      b.classList.toggle('active', selected);
+      b.setAttribute('aria-pressed', String(selected));
     });
     document.querySelectorAll('.studio-panel-view').forEach(p => p.style.display = 'none');
     const target = document.getElementById(`studio-panel-${mode}`);
@@ -1656,6 +1682,41 @@
     if (mode === 'inspector') renderDiagnostics();
     if (mode === 'signing') renderSigningStudio();
     if (mode === 'code') renderCodeGenerator();
+  }
+
+  function setJsonEditorValidity(valid, message) {
+    const editor = document.getElementById('pkpass-json-editor');
+    const error = document.getElementById('pkpass-json-error');
+    if (editor) editor.setAttribute('aria-invalid', String(!valid));
+    if (error) error.textContent = valid ? '' : `Invalid JSON: ${message}`;
+    [
+      'btn-repack-pkpass',
+      'btn-export-google-wallet',
+      'btn-download-json',
+      'btn-download-unsigned-pkpass',
+      'btn-download-pass-json-2',
+      'btn-copy-code-snippet',
+      'btn-autofix-contrast'
+    ].forEach(id => {
+      const button = document.getElementById(id);
+      if (button) button.disabled = !valid;
+    });
+  }
+
+  function describeJsonError(source, message) {
+    const positionMatch = String(message || '').match(/position\s+(\d+)/i);
+    if (!positionMatch) return message;
+    const position = Number(positionMatch[1]);
+    const before = source.slice(0, position);
+    const lines = before.split('\n');
+    return `Line ${lines.length}, column ${lines[lines.length - 1].length + 1}: ${message}`;
+  }
+
+  function announceAction(message, isError) {
+    const status = document.getElementById('pkpass-action-status');
+    if (!status) return;
+    status.textContent = message;
+    status.style.color = isError ? '#f87171' : '#34d399';
   }
 
   function switchPassStyle(newStyle) {
@@ -1869,10 +1930,10 @@
           <div class="field-items-list" data-group-list="${grp.key}">
             ${fields.map((f, idx) => `
               <div class="field-item-row" data-field-index="${idx}" data-field-group="${grp.key}">
-                <input type="text" class="studio-input f-key" placeholder="Key" value="${escapeHtml(f.key || '')}">
-                <input type="text" class="studio-input f-label" placeholder="Label" value="${escapeHtml(f.label || '')}">
-                <input type="text" class="studio-input f-val" placeholder="Value" value="${escapeHtml(String(f.value || ''))}">
-                <select class="studio-input f-type">
+                <input type="text" class="studio-input f-key" aria-label="${grp.label} field ${idx + 1} key" placeholder="Key" value="${escapeHtml(f.key || '')}">
+                <input type="text" class="studio-input f-label" aria-label="${grp.label} field ${idx + 1} label" placeholder="Label" value="${escapeHtml(f.label || '')}">
+                <input type="text" class="studio-input f-val" aria-label="${grp.label} field ${idx + 1} value" placeholder="Value" value="${escapeHtml(String(f.value || ''))}">
+                <select class="studio-input f-type" aria-label="${grp.label} field ${idx + 1} value type">
                   <option value="text" ${!f.dateStyle && !f.currencyCode && typeof f.value !== 'number' ? 'selected' : ''}>Text</option>
                   <option value="currency" ${f.currencyCode ? 'selected' : ''}>Currency</option>
                   <option value="number" ${typeof f.value === 'number' ? 'selected' : ''}>Number</option>
@@ -2007,72 +2068,6 @@
         `zip -r ${serial}.pkpass manifest.json signature pass.json *.png`;
     }
 
-    const signBtn = document.getElementById('btn-webcrypto-sign');
-    if (signBtn && !signBtn.dataset.bound) {
-      signBtn.dataset.bound = 'true';
-      signBtn.addEventListener('click', handleWebCryptoSign);
-    }
-  }
-
-  async function handleWebCryptoSign() {
-    const fileInput = document.getElementById('ds-p12-file');
-    const pwdInput = document.getElementById('ds-p12-password');
-    const statusMsg = document.getElementById('signing-status-msg');
-
-    if (!fileInput || !fileInput.files.length) {
-      if (statusMsg) {
-        statusMsg.innerHTML = '<span style="color: #f87171">⚠️ Please select a .p12 certificate file to sign.</span>';
-      }
-      return;
-    }
-
-    if (statusMsg) {
-      statusMsg.innerHTML = '<span style="color: #60a5fa">🔐 Decrypting PKCS#12 container in browser memory via WebCrypto...</span>';
-    }
-
-    try {
-      // In-browser WebCrypto signing demonstration & repack
-      const passJsonStr = JSON.stringify(state.currentPass, null, 2);
-      const filesToPack = Object.assign({}, state.rawArchiveFiles);
-      filesToPack['pass.json'] = passJsonStr;
-
-      const freshManifest = {};
-      Object.keys(filesToPack).forEach(fn => {
-        if (fn === 'manifest.json' || fn === 'signature') return;
-        freshManifest[fn] = sha1Sync(filesToPack[fn]);
-      });
-      filesToPack['manifest.json'] = JSON.stringify(freshManifest, null, 2);
-
-      // Create a deterministic simulated detached CMS signature based on manifest SHA-1
-      const manifestHash = sha1Sync(filesToPack['manifest.json']);
-      const sigBuffer = new Uint8Array(128);
-      sigBuffer[0] = 0x30; // DER Sequence
-      sigBuffer[1] = 0x81;
-      sigBuffer[2] = 0x7d;
-      for (let i = 0; i < manifestHash.length; i++) {
-        sigBuffer[10 + i] = manifestHash.charCodeAt(i);
-      }
-      filesToPack['signature'] = sigBuffer;
-
-      const zipBytes = createZipArchive(filesToPack);
-      const blob = new Blob([zipBytes], { type: 'application/vnd.apple.pkpass' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${state.currentPass.serialNumber || 'pass'}.pkpass`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      if (statusMsg) {
-        statusMsg.innerHTML = '<span style="color: #34d399">✓ Successfully signed and downloaded .pkpass package!</span>';
-      }
-    } catch (err) {
-      if (statusMsg) {
-        statusMsg.innerHTML = `<span style="color: #f87171">Signing failed: ${escapeHtml(err.message)}</span>`;
-      }
-    }
   }
 
   function renderCodeGenerator() {
@@ -2101,9 +2096,12 @@
         state.currentPass = JSON.parse(text);
         state.rawArchiveFiles = { 'pass.json': text };
         state.manifestMap = {};
+        setJsonEditorValidity(true);
         renderAll();
+        switchStudioMode('inspector');
+        announceAction('pass.json loaded and analyzed locally.', false);
       } catch (err) {
-        alert('Invalid JSON file: ' + err.message);
+        announceAction('Invalid JSON file: ' + err.message, true);
       }
       return;
     }
@@ -2118,6 +2116,7 @@
         state.currentPass = JSON.parse(passText);
       } else {
         alert('Archive does not contain pass.json manifest.');
+        announceAction('Archive does not contain a root-level pass.json manifest.', true);
         return;
       }
 
@@ -2139,8 +2138,11 @@
       });
 
       renderAll();
+      setJsonEditorValidity(true);
+      switchStudioMode('inspector');
+      announceAction('Package loaded and analyzed locally.', false);
     } catch (err) {
-      alert('Failed to parse archive: ' + err.message);
+      announceAction('Failed to parse archive: ' + err.message, true);
     }
   }
 
@@ -2389,9 +2391,13 @@
     const statusHeaderEl = document.getElementById('diag-status-summary');
     if (statusHeaderEl) {
       if (linterResult.isValid) {
-        statusHeaderEl.className = 'diag-summary-box status-valid';
+        const signature = parsePkcs7Signature(state.rawArchiveFiles['signature']);
+        const signatureLabel = signature.present && signature.valid
+          ? 'SCHEMA VALID · SIGNATURE STRUCTURE PRESENT'
+          : 'SCHEMA VALID · UNSIGNED';
+        statusHeaderEl.className = `diag-summary-box ${signature.present && signature.valid ? 'status-valid' : 'status-warning'}`;
         statusHeaderEl.innerHTML = `
-          <div class="diag-status-badge badge-valid">STATUS: VALID PASS</div>
+          <div class="diag-status-badge ${signature.present && signature.valid ? 'badge-valid' : 'badge-warning'}">${signatureLabel}</div>
           <div class="diag-meta-row">
             <span>Pass Type: <strong>${escapeHtml(linterResult.passType || 'generic')}</strong></span>
             <span>Org: <strong>${escapeHtml(pass.organizationName || '-')}</strong></span>
@@ -2507,7 +2513,8 @@
       } else {
         sigContainerEl.innerHTML = `
           <div class="sig-alert ${sigData.valid ? 'sig-alert-success' : 'sig-alert-error'}">
-            <h4>${sigData.valid ? 'Valid Apple Developer Signature' : 'Signature / Certificate Alert'}</h4>
+            <h4>${sigData.valid ? 'PKCS#7 Signature Structure Detected' : 'Signature / Certificate Alert'}</h4>
+            ${sigData.valid ? '<p>Structure and certificate metadata were parsed locally. Cryptographic trust and Apple installation are not verified here.</p>' : ''}
             <table class="sig-details-table">
               <tr><td>Team ID:</td><td><strong>${escapeHtml(sigData.teamIdentifier || 'Unknown')}</strong></td></tr>
               <tr><td>Pass Type:</td><td><code>${escapeHtml(sigData.passTypeIdentifier || 'Unknown')}</code></td></tr>
@@ -2592,7 +2599,7 @@
 
   function renderJsonEditor() {
     const jsonEditor = document.getElementById('pkpass-json-editor');
-    if (jsonEditor && document.activeElement !== jsonEditor) {
+    if (jsonEditor && jsonEditor.getAttribute('aria-invalid') !== 'true' && document.activeElement !== jsonEditor) {
       jsonEditor.value = JSON.stringify(state.currentPass, null, 2);
     }
   }
@@ -2602,6 +2609,7 @@
     const passJsonStr = JSON.stringify(state.currentPass, null, 2);
     const filesToPack = Object.assign({}, state.rawArchiveFiles);
     filesToPack['pass.json'] = passJsonStr;
+    delete filesToPack['signature'];
 
     // Generate fresh manifest.json with updated SHA-1 hashes
     const freshManifest = {};
@@ -2622,6 +2630,7 @@
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    announceAction('Downloaded an unsigned package with a rebuilt manifest. Sign it before installing on iOS.', false);
   }
 
   function handleExportGoogleWallet() {

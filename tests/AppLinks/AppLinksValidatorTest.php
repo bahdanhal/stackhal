@@ -127,4 +127,49 @@ final class AppLinksValidatorTest extends TestCase
         self::assertContains('ERR_ASSETLINKS_MISSING_RELATION', $result->getErrorCodes());
         self::assertContains('ERR_ASSETLINKS_INVALID_FINGERPRINT', $result->getErrorCodes());
     }
+
+    public function testEmptyDocumentsCannotPassValidation(): void
+    {
+        $result = $this->validator->validate('{}', '[]');
+        $missing = $this->validator->validate('{}');
+
+        self::assertFalse($result->isValid);
+        self::assertContains('ERR_ASSETLINKS_EMPTY', $result->getErrorCodes());
+        self::assertFalse($missing->isValid);
+        self::assertContains('ERR_NO_MANIFEST_INPUT', $missing->getErrorCodes());
+    }
+
+    public function testInvalidManifestCannotAdvertiseAnAppRouteMatch(): void
+    {
+        $result = $this->validator->validate(
+            ['applinks' => ['details' => [['appIDs' => ['invalid'], 'components' => [['/' => '/*']]]]]],
+            testUrl: 'https://example.com/path'
+        );
+
+        self::assertFalse($result->aasaValid);
+        self::assertNull($result->opensInApp);
+        self::assertNotContains('INFO_ROUTE_MATCHED_APP', $result->getInfoCodes());
+    }
+
+    public function testRouteRequiresHttpsUrlOnManifestDomain(): void
+    {
+        $manifest = [
+            'applinks' => [
+                'details' => [[
+                    'appIDs' => ['ABCDE12345.com.example.app'],
+                    'components' => [['/' => '/*']],
+                ]],
+            ],
+        ];
+
+        $http = $this->validator->validate($manifest, testUrl: 'http://example.com/path', domain: 'example.com');
+        $wrongHost = $this->validator->validate($manifest, testUrl: 'https://other.example/path', domain: 'example.com');
+
+        self::assertFalse($http->isValid);
+        self::assertNull($http->opensInApp);
+        self::assertContains('ERR_TEST_URL_INVALID', $http->getErrorCodes());
+        self::assertFalse($wrongHost->isValid);
+        self::assertNull($wrongHost->opensInApp);
+        self::assertContains('ERR_TEST_URL_DOMAIN_MISMATCH', $wrongHost->getErrorCodes());
+    }
 }

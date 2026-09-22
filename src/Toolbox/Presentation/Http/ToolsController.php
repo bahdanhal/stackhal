@@ -101,21 +101,26 @@ final class ToolsController extends AbstractController
     )]
     public function cidrMatrix(Request $request, CidrMatrixService $cidrService): Response
     {
-        $cidrsInput = (string) $request->request->get('cidrs', $request->query->get('cidrs', '10.0.0.0/16, 10.0.32.0/20'));
+        $cidrsInput = (string) $request->request->get('cidrs', $request->query->get('cidrs', ''));
         $parentCidr = (string) $request->request->get('parent_cidr', $request->query->get('parent_cidr', ''));
         $requestedFreePrefixString = (string) $request->request->get('requested_free_prefix', $request->query->get('requested_free_prefix', ''));
 
-        $cidrList = array_values(array_filter(array_map('trim', explode(',', str_replace(["\r\n", "\n", "\r"], ',', $cidrsInput)))));
-        $requestedFreePrefix = ctype_digit($requestedFreePrefixString) ? (int) $requestedFreePrefixString : null;
+        $cidrList = $cidrService->extractCidrs($cidrsInput);
+        $requestedFreePrefix = ctype_digit($requestedFreePrefixString)
+            ? (int) $requestedFreePrefixString
+            : $cidrService->suggestFreePrefix($cidrList);
         $parentCidrParam = $parentCidr !== '' ? $parentCidr : null;
 
-        $result = $cidrService->analyze($cidrList, $requestedFreePrefix, $parentCidrParam);
+        $result = $cidrList !== [] || $parentCidrParam !== null || $requestedFreePrefixString !== ''
+            ? $cidrService->analyze($cidrList, $requestedFreePrefix, $parentCidrParam)
+            : null;
         $presets = $cidrService->getPresets();
 
         return $this->render('tools/cidr_matrix.html.twig', [
             'raw_cidrs' => $cidrsInput,
             'parent_cidr' => $parentCidr,
             'requested_free_prefix' => $requestedFreePrefixString,
+            'suggested_free_prefix' => $requestedFreePrefixString === '' ? $requestedFreePrefix : null,
             'result' => $result,
             'presets' => $presets,
         ]);
@@ -219,19 +224,17 @@ final class ToolsController extends AbstractController
     public function appLinksValidator(Request $request, \App\AppLinks\Application\AppLinksService $service): Response
     {
         $presets = $service->getPresets();
-        $defaultAasa = is_string($encA = json_encode($presets[0]['aasa_content'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) ? $encA : '{}';
-        $defaultAssetLinks = is_string($encL = json_encode($presets[1]['assetlinks_content'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) ? $encL : '[]';
-        $defaultTestUrl = is_string($presets[0]['test_url'] ?? null) ? (string) $presets[0]['test_url'] : '';
+        $testUrl = (string) $request->request->get('test_url', $request->query->get('test_url', ''));
+        $result = null;
+        $aasaContent = '';
+        $assetLinksContent = '';
 
-        $testUrl = (string) $request->request->get('test_url', $request->query->get('test_url', $defaultTestUrl));
-        $aasaContent = (string) $request->request->get('aasa_content', $request->query->get('aasa_content', $defaultAasa));
-        $assetLinksContent = (string) $request->request->get('assetlinks_content', $request->query->get('assetlinks_content', $defaultAssetLinks));
-
-        $result = $service->validate(
-            aasa: $aasaContent,
-            assetLinks: $assetLinksContent !== '' ? $assetLinksContent : null,
-            testUrl: $testUrl !== '' ? $testUrl : null,
-        );
+        if ($request->isMethod('POST')) {
+            $host = parse_url($testUrl, PHP_URL_HOST);
+            $result = $service->validateDomain(is_string($host) ? $host : '', $testUrl !== '' ? $testUrl : null);
+            $aasaContent = $result->aasaRaw ?? '';
+            $assetLinksContent = $result->assetLinksRaw ?? '';
+        }
 
         return $this->render('tools/app_links.html.twig', [
             'test_url' => $testUrl,
