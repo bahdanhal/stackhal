@@ -416,8 +416,8 @@
           const aasaData = btn.getAttribute('data-aasa');
           const assetlinksData = btn.getAttribute('data-assetlinks');
           const testUrl = btn.getAttribute('data-test-url');
-          if (aasaData && aasaEditor) {
-            aasaEditor.value = aasaData;
+          if (aasaEditor) {
+            aasaEditor.value = aasaData || '';
           }
           if (testUrl && testUrlInput) {
             testUrlInput.value = testUrl;

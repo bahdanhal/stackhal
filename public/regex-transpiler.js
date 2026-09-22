@@ -93,18 +93,6 @@
       description:
         'Recursive subroutine calls (?R), (?1) are exclusive to PCRE and cannot be compiled in RE2, JS, or standard Python.',
     },
-    WARN_ATOMIC_GROUP_CONVERTED: {
-      severity: 'warning',
-      title: 'Atomic Group Converted to Non-Capturing',
-      description:
-        'Atomic group (?>...) was converted to non-capturing group (?:...) because RE2 does not backtrack.',
-    },
-    WARN_POSSESSIVE_QUANTIFIER_CONVERTED: {
-      severity: 'warning',
-      title: 'Possessive Quantifier Simplified',
-      description:
-        'Possessive quantifier (++ or *+) was simplified to greedy quantifier (+ or *) in RE2.',
-    },
     ERR_INVALID_PATTERN: {
       severity: 'error',
       title: 'Invalid Regular Expression Syntax',
@@ -566,6 +554,36 @@
     return { pattern: trimmed, sourceEngine: null, flags: '', detected: false };
   }
 
+  function applySourceFlags(result, flags) {
+    if (!flags) return result;
+
+    const flagError = {
+      code: 'ERR_JAVASCRIPT_FLAGS_NOT_TRANSLATED',
+      severity: 'error',
+      title: 'JavaScript Flags Need Manual Mapping',
+      description: `The /${flags} flags are not included in other engines' pattern output. Choose JavaScript to copy a snippet with those flags, or map them manually before using another engine.`
+    };
+    const flagInfo = {
+      code: 'INFO_JAVASCRIPT_FLAGS_IN_SNIPPET',
+      severity: 'info',
+      title: 'JavaScript Flags Preserved in Code Snippet',
+      description: `The /${flags} flags are preserved in the JavaScript code snippet. A plain pattern alone does not contain flags.`
+    };
+
+    result.matrix = result.matrix.map(item => item.engine === 'javascript'
+      ? { ...item, diagnostics: [...item.diagnostics, flagInfo] }
+      : { ...item, isCompatible: false, diagnostics: [...item.diagnostics, flagError] });
+
+    const diagnostic = result.targetEngine === 'javascript' ? flagInfo : flagError;
+    result.diagnostics = [...result.diagnostics, diagnostic];
+    if (diagnostic.severity === 'error') {
+      result.isCompatible = false;
+      result.errors = [...result.errors, diagnostic];
+    }
+
+    return result;
+  }
+
   /**
    * UI Initialization and Event Handling
    */
@@ -591,13 +609,15 @@
     let currentTargetEngine = 'go_re2';
     let sourceEngineOverridden = false;
     let latestResult = null;
+    let latestParsedInput = null;
 
     function renderUI() {
       const sourceInput = sourcePatternInput ? sourcePatternInput.value : '';
       const parsedInput = parseRegexInput(sourceInput);
+      latestParsedInput = parsedInput;
       const sourcePattern = parsedInput.pattern;
-      if (!sourceEngineOverridden && parsedInput.sourceEngine) {
-        currentSourceEngine = parsedInput.sourceEngine;
+      if (!sourceEngineOverridden) {
+        currentSourceEngine = parsedInput.sourceEngine || 'pcre';
         document.querySelectorAll('[data-source-engine]').forEach((button) => {
           const selected = button.getAttribute('data-source-engine') === currentSourceEngine;
           button.classList.toggle('active', selected);
@@ -608,7 +628,7 @@
 
       // Update source stats
       if (inputStatsEl) {
-        inputStatsEl.textContent = `${sourcePattern.length} chars · ${parsedInput.detected ? 'Auto-detected ' : ''}${ENGINES[currentSourceEngine].name}`;
+        inputStatsEl.textContent = `${sourcePattern.length} chars · ${parsedInput.detected ? 'Auto-detected ' : ''}${ENGINES[currentSourceEngine].name}${parsedInput.flags ? ` /${parsedInput.flags}` : ''}`;
       }
 
       if (!sourcePattern) {
@@ -625,7 +645,7 @@
       }
 
       // Transpile
-      const result = transpileRegex(sourcePattern, currentSourceEngine, currentTargetEngine);
+      const result = applySourceFlags(transpileRegex(sourcePattern, currentSourceEngine, currentTargetEngine), parsedInput.flags);
       latestResult = result;
 
       // Output transpiled regex
@@ -644,7 +664,8 @@
 
       [btnCopyTarget, btnCopySnippet].forEach((button) => {
         if (button) {
-          button.disabled = !result.isCompatible || !result.transpiledPattern;
+          button.disabled = !result.isCompatible || !result.transpiledPattern
+            || (button === btnCopyTarget && currentTargetEngine === 'javascript' && Boolean(parsedInput.flags));
           button.setAttribute('aria-disabled', String(button.disabled));
         }
       });
@@ -656,7 +677,7 @@
       renderMatrix(result.matrix, matrixGridEl, currentTargetEngine);
 
       // Run live match evaluation against test text
-      renderLiveMatches(result, testText, matchOutputEl, matchStatusEl);
+      renderLiveMatches(result, testText, matchOutputEl, matchStatusEl, parsedInput.flags);
     }
 
     function renderDiagnostics(result, container) {
@@ -744,7 +765,7 @@
       container.innerHTML = html;
     }
 
-    function renderLiveMatches(result, testText, outputEl, statusEl) {
+    function renderLiveMatches(result, testText, outputEl, statusEl, sourceFlags) {
       if (!outputEl) return;
 
       if (!testText) {
@@ -762,7 +783,7 @@
       try {
         // Convert (?P<name>...) to (?<name>...) for JS RegExp runner
         const jsPattern = result.sourcePattern.replace(/\(\?P<([a-zA-Z0-9_]+)>/g, '(?<$1>');
-        const rx = new RegExp(jsPattern, 'g');
+        const rx = new RegExp(jsPattern, Array.from(new Set(`${sourceFlags}g`)).join(''));
 
         let match;
         let lastIndex = 0;
@@ -913,7 +934,8 @@
         } else if (currentTargetEngine === 'rust') {
           snippet = `let rx = Regex::new(r"${text}").unwrap();`;
         } else {
-          snippet = `const rx = /${text}/g;`;
+          const flags = latestParsedInput && latestParsedInput.flags ? latestParsedInput.flags : 'g';
+          snippet = `const rx = new RegExp(${JSON.stringify(text)}, ${JSON.stringify(flags)});`;
         }
 
         try {
@@ -959,6 +981,7 @@
       PRESETS,
       findBasicSyntaxError,
       parseRegexInput,
+      applySourceFlags,
     };
   }
 })();

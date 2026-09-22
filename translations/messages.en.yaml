@@ -733,7 +733,7 @@ cidr_matrix:
     lede: "Detect IP range collisions across AWS VPCs, Kubernetes clusters, and VPN meshes, visualize tree partitions, and calculate available free subnet allocations."
     form:
         title: "CIDR Blocks Input"
-        help: "Enter comma-separated or newline-separated IPv4 or IPv6 CIDR blocks (e.g. 10.0.0.0/16, 10.0.32.0/20)."
+        help: "Paste IPv4 or IPv6 CIDRs from a list, Terraform, JSON, YAML, or route output. Networks are extracted automatically."
         presets: "1-Click Presets"
         label_cidrs: "CIDR Subnets"
         label_parent: "Parent CIDR Range (Optional)"
@@ -773,10 +773,10 @@ cidr_matrix:
 regex_transpiler:
     meta:
         title: "Regex Dialect Transpiler & Compatibility Matrix · PCRE to Go RE2"
-        description: "Transpile and validate regular expressions across PCRE, Go RE2, JavaScript, Python, and Rust. Eliminate ReDoS with guaranteed O(N) linear time analysis."
+        description: "Check regex syntax across PCRE, Go RE2, JavaScript, Python, and Rust, with safe rewrites and explicit incompatibility warnings."
     eyebrow: "REGEX ENGINE · PCRE ➔ GO RE2"
     heading: "Regex Dialect Transpiler & Compatibility Matrix"
-    lede: "Transpile complex regular expressions between PCRE, Go RE2, JavaScript, Python, and Rust. Detect lookaround errors, convert possessive & atomic groups, and verify ReDoS linear-time safety."
+    lede: "Paste a regex or code snippet to compare PCRE, Go RE2, JavaScript, Python, and Rust. See supported rewrites, unsupported syntax, and matching behavior before copying a result."
     source_label: "Source dialect"
     target_label: "Target engine"
     presets_label: "Presets"
@@ -794,37 +794,37 @@ regex_transpiler:
     copy_snippet_btn: "Copy Code Snippet"
     match_results_label: "Live Match Highlights"
     matrix_title: "5-Engine Cross-Dialect Compatibility Matrix"
-    matrix_subtitle: "Real-time evaluation of syntax support, time complexity, and AST transformations across all major regex engines."
+    matrix_subtitle: "Real-time checks of syntax support and selected safe rewrites across five regex engines."
     diagnostics_title: "Syntax Diagnostics & Engine Advisories"
     diagnostics_empty: "No syntax warnings or incompatibility issues found."
     cheatsheet_title: "Regex Engine Feature & Complexity Comparison"
     table:
         feature: "Feature / Capability"
-    why_re2_title: "Why Go RE2 & Rust Eliminate ReDoS Entirely"
+    why_re2_title: "Why Go RE2 & Rust Avoid Catastrophic Backtracking"
     why_re2_intro: "Traditional regex engines (PCRE, JS, Python) use recursive backtracking, making them vulnerable to Regular Expression Denial of Service (ReDoS). Go RE2 and Rust use deterministic finite automata (DFA/NFA) with guaranteed linear execution time."
     benefits:
         redos:
             title: "Zero Catastrophic Backtracking"
-            text: "RE2 guarantees execution in time proportional to the length of the input text O(N), completely eliminating CPU freeze vulnerabilities."
+            text: "RE2 matches supported patterns in time proportional to input length, avoiding catastrophic backtracking. Applications still need limits on input and resource use."
         linear:
-            title: "Predictable Microsecond Latency"
-            text: "Whether the input text is 10 bytes or 10 megabytes, RE2 matches in strict linear passes without unbounded stack memory usage."
+            title: "Predictable Scaling"
+            text: "Matching work scales with input length. Large inputs still take more time and memory."
         security:
-            title: "Untrusted User Input Safe"
-            text: "You can safely allow end users to supply custom regex search filters in Kubernetes, Envoy, and cloud microservices without risking server outage."
+            title: "Safer User-Provided Filters"
+            text: "RE2 and Rust regex avoid catastrophic backtracking, but services should still cap pattern size, input size, and resource use."
         syntax:
             title: "Standardized Named Groups"
             text: "Uses Go standard syntax (?P<name>...) matching Python and Rust conventions."
     faq:
         title: "Frequently Asked Questions"
         q1: "Why does Go RE2 reject lookahead (?=...) and lookbehind (?<=...)?"
-        a1: "Lookaround assertions require backtracking to verify conditions ahead or behind without consuming characters. To mathematically guarantee linear O(N) runtime and prevent ReDoS attacks, RE2 strictly forbids all lookaround syntax."
+        a1: "RE2 does not support lookaround assertions. The matrix marks these patterns as incompatible so you can rewrite the surrounding matching logic explicitly."
         q2: "Why are backreferences forbidden in RE2?"
         a2: "Matching regular expressions with backreferences (like \\1 or \\k<name>) is proven to be NP-complete, requiring exponential worst-case time in backtracking engines. RE2 disallows backreferences to maintain strict linear performance."
         q3: "How does the transpiler handle atomic groups (?>...) and possessive quantifiers ++?"
-        a3: "Atomic groups and possessive quantifiers exist in PCRE to suppress backtracking. Since RE2 never backtracks by default, atomic groups are converted into non-capturing groups (?:...), and possessive quantifiers (++) are simplified to standard greedy quantifiers (+)."
+        a3: "The transpiler keeps these constructs unchanged and marks targets without support as incompatible. Removing atomic or possessive behavior can change which strings match, so rewrite and test them manually."
         q4: "Is regex transpilation and test matching performed securely?"
-        a4: "Yes! 100% of the transpilation, AST parsing, matrix evaluation, and live regex matching runs entirely in your browser using client-side JavaScript. No regex patterns or test strings are sent to our servers."
+        a4: "Yes. Syntax checks, selected rewrites, the compatibility matrix, and live preview run in your browser. Regex patterns and test strings are not sent to our servers."
 
 favicon_suite:
     meta:

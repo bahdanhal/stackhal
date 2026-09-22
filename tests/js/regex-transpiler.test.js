@@ -4,7 +4,7 @@ const path = require('node:path');
 
 // Load client-side transpiler module
 const transpilerPath = path.resolve(__dirname, '../../public/regex-transpiler.js');
-const { transpileRegex, ENGINES, DIAGNOSTIC_CODES } = require(transpilerPath);
+const { transpileRegex, ENGINES, DIAGNOSTIC_CODES, parseRegexInput, applySourceFlags } = require(transpilerPath);
 
 // Load specification
 const specPath = path.resolve(__dirname, '../../specs/regex-transpiler.spec.json');
@@ -84,5 +84,19 @@ assert.equal(inlineFlags.isCompatible, false);
 assert.ok(inlineFlags.errors.some(
   (error) => error.title === DIAGNOSTIC_CODES.ERR_INLINE_MODIFIERS_REQUIRE_EXTERNAL_FLAGS.title
 ));
+
+const javascriptLiteral = parseRegexInput('/(?<name>foo)+/i');
+assert.equal(javascriptLiteral.sourceEngine, 'javascript');
+assert.equal(javascriptLiteral.flags, 'i');
+assert.equal(parseRegexInput('(abc').sourceEngine, null);
+
+const flaggedGo = applySourceFlags(transpileRegex(javascriptLiteral.pattern, 'javascript', 'go_re2'), javascriptLiteral.flags);
+assert.equal(flaggedGo.isCompatible, false);
+assert.ok(flaggedGo.errors.some((error) => error.code === 'ERR_JAVASCRIPT_FLAGS_NOT_TRANSLATED'));
+assert.equal(flaggedGo.matrix.find((item) => item.engine === 'go_re2').isCompatible, false);
+
+const flaggedJavaScript = applySourceFlags(transpileRegex(javascriptLiteral.pattern, 'javascript', 'javascript'), javascriptLiteral.flags);
+assert.equal(flaggedJavaScript.isCompatible, true);
+assert.ok(flaggedJavaScript.diagnostics.some((diagnostic) => diagnostic.code === 'INFO_JAVASCRIPT_FLAGS_IN_SNIPPET'));
 
 console.log('Regex Dialect Transpiler JS test suite passed cleanly.');

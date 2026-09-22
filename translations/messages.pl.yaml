@@ -734,7 +734,7 @@ cidr_matrix:
     lede: "Wykrywaj konflikty adresacji IP w VPC AWS, klastrach Kubernetes i sieciach VPN, wizualizuj podziały adresów i automatycznie alokuj wolne podsieci."
     form:
         title: "Dane wejściowe bloków CIDR"
-        help: "Wprowadź bloki CIDR IPv4 lub IPv6 rozdzielone przecinkami lub nowymi liniami (np. 10.0.0.0/16, 10.0.32.0/20)."
+        help: "Wklej zakresy CIDR IPv4 lub IPv6 z listy, Terraform, JSON, YAML albo tablicy routingu. Sieci zostaną wyodrębnione automatycznie."
         presets: "Gotowe wzorce (jedno kliknięcie)"
         label_cidrs: "Podsieci CIDR"
         label_parent: "Nadrzędny zakres CIDR (Opcjonalnie)"
@@ -774,10 +774,10 @@ cidr_matrix:
 regex_transpiler:
     meta:
         title: "Konwerter dialektów Regex i matryca zgodności · PCRE do Go RE2"
-        description: "Transpiluj i waliduj wyrażenia regularne między PCRE, Go RE2, JavaScriptem, Pythonem a Rustem. Eliminuj podatności ReDoS z gwarancją czasu liniowego O(N)."
+        description: "Sprawdzaj składnię regex w PCRE, Go RE2, JavaScripcie, Pythonie i Ruście. Zobacz bezpieczne przekształcenia i ostrzeżenia o niezgodności."
     eyebrow: "SILNIKI REGEX · PCRE ➔ GO RE2"
     heading: "Konwerter dialektów Regex i matryca zgodności"
-    lede: "Konwertuj złożone wyrażenia regularne między PCRE, Go RE2, JavaScriptem, Pythonem a Rustem. Wykrywaj błędy asercji lookaround, przekształcaj grupy atomowe i kwantyfikatory zachłanne oraz weryfikuj odporność na ReDoS."
+    lede: "Wklej regex lub fragment kodu i porównaj zgodność z PCRE, Go RE2, JavaScriptem, Pythonem i Rustem. Sprawdź bezpieczne przekształcenia, nieobsługiwaną składnię i wynik przed skopiowaniem."
     source_label: "Dialekt źródłowy"
     target_label: "Silnik docelowy"
     presets_label: "Gotowe wzorce"
@@ -795,37 +795,37 @@ regex_transpiler:
     copy_snippet_btn: "Kopiuj fragment kodu"
     match_results_label: "Podgląd dopasowań na żywo"
     matrix_title: "Matryca zgodności dla 5 silników Regex"
-    matrix_subtitle: "Ocena wsparcia składni, złożoności obliczeniowej oraz automatycznych przekształceń AST dla wszystkich wiodących silników."
+    matrix_subtitle: "Sprawdzanie składni i wybranych bezpiecznych przekształceń w pięciu silnikach regex."
     diagnostics_title: "Diagnostyka składni i zalecenia silnika"
     diagnostics_empty: "Nie wykryto żadnych ostrzeżeń składniowych ani niezgodności."
     cheatsheet_title: "Porównanie możliwości i złożoności silników Regex"
     table:
         feature: "Cecha / Możliwość"
-    why_re2_title: "Dlaczego Go RE2 i Rust całkowicie eliminują ReDoS"
+    why_re2_title: "Dlaczego Go RE2 i Rust unikają katastrofalnego backtrackingu"
     why_re2_intro: "Tradycyjne silniki (PCRE, JS, Python) używają backtrackingu. W skrajnych przypadkach może on zablokować procesor w ataku ReDoS. Go RE2 i Rust korzystają z automatów skończonych (DFA/NFA), które gwarantują czas liniowy."
     benefits:
         redos:
             title: "Zero katastrofalnego backtrackingu"
-            text: "RE2 gwarantuje czas wykonania wprost proporcjonalny do długości tekstu O(N), całkowicie eliminując ryzyko zawieszenia procesora."
+            text: "RE2 dopasowuje obsługiwane wzorce w czasie proporcjonalnym do długości tekstu i unika katastrofalnego backtrackingu. Aplikacja nadal powinna ograniczać rozmiar danych i zużycie zasobów."
         linear:
-            title: "Przewidywalne opóźnienia mikrosekundowe"
-            text: "Bez względu na to, czy tekst ma 10 bajtów czy 10 megabajtów, dopasowanie następuje w stałym tempie bez niekontrolowanego rozrostu stosu pamięci."
+            title: "Przewidywalne skalowanie"
+            text: "Koszt dopasowania rośnie wraz z długością tekstu. Duże dane nadal wymagają więcej czasu i pamięci."
         security:
-            title: "Bezpieczne filtry od użytkowników"
-            text: "Możesz bezpiecznie przyjmować dowolne filtry regex od użytkowników w Kubernetes, Envoy i mikroserwisach chmurowych bez obaw o awarię."
+            title: "Bezpieczniejsze filtry użytkowników"
+            text: "RE2 i Rust regex unikają katastrofalnego backtrackingu, ale usługa nadal powinna ograniczać rozmiar wzorców, danych i zużycie zasobów."
         syntax:
             title: "Standaryzowane grupy nazwane"
             text: "Używa standardowej składni Go (?P<name>...) zgodnej z Pythonem i Rustem."
     faq:
         title: "Najczęściej zadawane pytania"
         q1: "Dlaczego Go RE2 odrzuca lookahead (?=...) i lookbehind (?<=...)?"
-        a1: "Asercje lookaround wymagają nawracania w celu sprawdzenia warunków przed lub za wskaźnikiem bez konsumpcji znaków. Aby matematycznie zagwarantować liniowy czas O(N) i wyeliminować ataki ReDoS, RE2 zabrania asercji wyprzedzających i wstecznych."
+        a1: "RE2 nie obsługuje asercji lookaround. Matryca oznacza takie wzorce jako niezgodne, aby można było jawnie przepisać otaczającą logikę dopasowania."
         q2: "Dlaczego referencje wsteczne (backreferences) są zabronione w RE2?"
         a2: "Dopasowywanie wyrażeń z referencjami wstecznymi (takimi jak \\1 lub \\k<name>) jest problemem NP-zupełnym i w pesymistycznym przypadku wymaga wykładniczego czasu. RE2 ich nie obsługuje, aby utrzymać stałą wydajność liniową."
         q3: "Jak konwerter obsługuje grupy atomowe (?>...) i kwantyfikatory zachłanne ++?"
-        a3: "Grupy atomowe i kwantyfikatory zaborcze służą w PCRE do ograniczania backtrackingu. Ponieważ RE2 w ogóle nie nawraca, grupy atomowe są zamieniane na grupy nieprzechwytujące (?:...), a kwantyfikatory ++ na standardowe zachłanne (+)."
+        a3: "Transpiler zachowuje te konstrukcje bez zmian i oznacza nieobsługujące ich silniki jako niezgodne. Usunięcie atomowości lub zachłanności może zmienić dopasowania, dlatego trzeba przepisać i przetestować wzorzec ręcznie."
         q4: "Czy przetwarzanie regex i tekstu jest bezpieczne?"
-        a4: "Tak! 100% parsowania AST, oceny matrycy i dopasowywania wzorców wykonuje się lokalnie w Twojej przeglądarce za pomocą JavaScriptu. Żadne dane nie trafiają na nasze serwery."
+        a4: "Tak. Sprawdzanie składni, wybrane przekształcenia, matryca zgodności i podgląd dopasowań działają lokalnie w przeglądarce. Wzorce i tekst testowy nie trafiają na nasze serwery."
 
 favicon_suite:
     meta:
