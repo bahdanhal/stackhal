@@ -28,7 +28,7 @@
   <div class="transpiler-container" id="app-links-app" data-locale="{{ app.request.locale }}">
     <div class="ui-panel" style="padding: 1.5rem; margin-bottom: 1.5rem;">
       <form method="post" action="{{ path('app_links_validator', {_locale: app.request.locale}) }}" id="app-links-form">
-        <div style="display: grid; grid-template-columns: 3fr auto; gap: 1rem; align-items: flex-end;">
+        <div class="app-links-url-row">
           <div>
             <label for="test-url-input" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
               {{ 'app_links.test_url_label'|trans }}

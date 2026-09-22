@@ -9,6 +9,24 @@
   margin-top: 2rem;
 }
 
+.app-links-url-row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+@media (max-width: 640px) {
+  .app-links-url-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .app-links-url-row .btn-submit {
+    width: 100%;
+  }
+}
+
 .ui-panel {
   background: var(--surface-card, #1e293b);
   border: 1px solid #334155;

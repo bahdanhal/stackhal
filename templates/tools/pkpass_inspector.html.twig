@@ -56,7 +56,15 @@
   } only %}
 
   <div class="pkpass-container" id="pkpass-inspector-app" data-locale="{{ app.request.locale }}">
-    <!-- Preset & Drop Toolbar -->
+    <!-- Drag & Drop Zone -->
+    <div class="pkpass-drop-zone" id="pkpass-drop-zone" role="button" tabindex="0" aria-controls="pkpass-file-input" aria-describedby="pkpass-drop-hint">
+      <div class="drop-icon">PKPASS</div>
+      <strong class="drop-prompt">{{ 'pkpass.upload.drop_prompt'|trans }}</strong>
+      <span class="drop-hint" id="pkpass-drop-hint">{{ 'pkpass.upload.formats'|trans }}</span>
+      <input type="file" id="pkpass-file-input" accept=".pkpass,.zip,.json" class="visually-hidden-file-input" tabindex="-1">
+    </div>
+
+    <!-- Preset Toolbar -->
     <div class="pkpass-toolbar">
       <div class="preset-group">
         <span class="preset-label">{{ 'pkpass.presets.label'|trans }}:</span>
@@ -86,14 +94,6 @@
       <button type="button" class="btn-studio-mode" data-studio-mode="code" aria-pressed="false">
         <span class="studio-mode-icon">💻</span> {{ 'pkpass.studio.code_export'|trans }}
       </button>
-    </div>
-
-    <!-- Drag & Drop Zone -->
-    <div class="pkpass-drop-zone" id="pkpass-drop-zone" role="button" tabindex="0" aria-controls="pkpass-file-input" aria-describedby="pkpass-drop-hint">
-      <div class="drop-icon">PKPASS</div>
-      <strong class="drop-prompt">{{ 'pkpass.upload.drop_prompt'|trans }}</strong>
-      <span class="drop-hint" id="pkpass-drop-hint">{{ 'pkpass.upload.formats'|trans }}</span>
-      <input type="file" id="pkpass-file-input" accept=".pkpass,.zip,.json" class="visually-hidden-file-input" tabindex="-1">
     </div>
 
     <!-- Main Split-Screen Workspace -->
