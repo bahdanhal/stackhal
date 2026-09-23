@@ -178,20 +178,28 @@
   min-height: 480px;
 }
 
-.apple-card-container {
+.wallet-preview-note {
+  margin: 0.25rem 1rem 1rem;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.apple-pass-wrapper {
   perspective: 1200px;
   width: 100%;
   max-width: 360px;
 }
 
-.apple-card-flip-wrap {
+.apple-pass-card-container {
   width: 100%;
   position: relative;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
 }
 
-.apple-card-flip-wrap.is-flipped {
+.apple-pass-card-container.is-flipped {
   transform: rotateY(180deg);
 }
 
@@ -210,6 +218,18 @@
 }
 
 .pass-card-back {
+  pointer-events: none;
+}
+
+.apple-pass-card-container.is-flipped .pass-card-front {
+  pointer-events: none;
+}
+
+.apple-pass-card-container.is-flipped .pass-card-back {
+  pointer-events: auto;
+}
+
+.pass-card-back {
   position: absolute;
   top: 0;
   left: 0;
@@ -220,22 +240,70 @@
   box-sizing: border-box;
 }
 
-.pass-header-row {
+.pass-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1.25rem;
 }
 
-.pass-logo-wrap {
+.pass-logo-section {
   display: flex;
   align-items: center;
   gap: 0.4rem;
 }
 
-.pass-logo-icon {
-  font-size: 1.2rem;
-  line-height: 1;
+.pass-logo-image {
+  display: block;
+  max-width: 120px;
+  max-height: 42px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.pass-card-front > :not(.pass-background-image) {
+  position: relative;
+  z-index: 1;
+}
+
+.pass-background-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(10px);
+  opacity: 0.7;
+  transform: scale(1.12);
+}
+
+.pass-body {
+  position: relative;
+}
+
+.pass-strip-image {
+  display: block;
+  width: 100%;
+  max-height: 115px;
+  object-fit: cover;
+  margin-bottom: 0.75rem;
+}
+
+.pass-thumbnail-image {
+  float: right;
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  margin: 0 0 0.5rem 0.75rem;
+}
+
+.pass-footer-image {
+  display: block;
+  max-width: 100%;
+  max-height: 18px;
+  object-fit: contain;
+  margin: auto auto 0.5rem;
 }
 
 .pass-logo-text {

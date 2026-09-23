@@ -1,5 +1,5 @@
 /**
- * Apple Wallet (.pkpass) Inspector, Pixel-Perfect Emulator & Debugger
+ * Apple Wallet (.pkpass) Inspector, Visual Preview & Debugger
  * 100% Client-Side Engine (Privacy-First)
  */
 (function(root, factory) {
@@ -1445,10 +1445,10 @@
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.fillStyle = fgHex;
-        ctx.font = `bold ${Math.floor(h * 0.48)}px sans-serif`;
+        ctx.font = `bold ${Math.floor(h * 0.52)}px sans-serif`;
         ctx.textAlign = 'left';
         ctx.textBaseline = 'middle';
-        ctx.fillText(org.substring(0, 18), 10, h / 2);
+        ctx.fillText(initials, 10, h / 2);
 
         const dataUrl = canvas.toDataURL('image/png');
         const bin = atob(dataUrl.split(',')[1]);
@@ -2194,8 +2194,26 @@
     updateCardFlip();
   }
 
-  function renderAppleWalletCardHtml() {
-    const pass = state.currentPass;
+  function pngAssetDataUri(files, baseName, locale) {
+    const names = [`${baseName}@3x.png`, `${baseName}@2x.png`, `${baseName}.png`];
+    const prefixes = locale && locale !== 'default' ? [`${locale}.lproj/`, ''] : [''];
+    for (const prefix of prefixes) {
+      for (const name of names) {
+        const bytes = files[prefix + name];
+        if (!(bytes instanceof Uint8Array) || bytes.length < 8 ||
+            bytes[0] !== 137 || bytes[1] !== 80 || bytes[2] !== 78 || bytes[3] !== 71 ||
+            bytes[4] !== 13 || bytes[5] !== 10 || bytes[6] !== 26 || bytes[7] !== 10) continue;
+        let binary = '';
+        for (let i = 0; i < bytes.length; i += 8192) {
+          binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+        }
+        return `data:image/png;base64,${btoa(binary)}`;
+      }
+    }
+    return null;
+  }
+
+  function renderAppleWalletCardHtml(pass = state.currentPass, files = state.rawArchiveFiles, flipped = state.isFlipped, locale = state.currentLocale) {
     const passType = PASS_STYLES.find(s => pass[s] && typeof pass[s] === 'object') || 'generic';
     const styleDict = pass[passType] || {};
 
@@ -2203,6 +2221,11 @@
     const fgColor = pass.foregroundColor || 'rgb(255, 255, 255)';
     const labelColor = pass.labelColor || 'rgb(156, 163, 175)';
     const logoText = pass.logoText || pass.organizationName || 'Apple Wallet';
+    const logoImage = pngAssetDataUri(files, 'logo', locale);
+    const stripImage = ['eventTicket', 'coupon', 'storeCard'].includes(passType) ? pngAssetDataUri(files, 'strip', locale) : null;
+    const thumbnailImage = ['eventTicket', 'generic'].includes(passType) && !stripImage ? pngAssetDataUri(files, 'thumbnail', locale) : null;
+    const backgroundImage = passType === 'eventTicket' && !stripImage ? pngAssetDataUri(files, 'background', locale) : null;
+    const footerImage = passType === 'boardingPass' ? pngAssetDataUri(files, 'footer', locale) : null;
 
     // Headers
     const headersHtml = (styleDict.headerFields || []).map(f => `
@@ -2281,11 +2304,13 @@
 
     return `
       <div class="apple-pass-wrapper">
-        <div class="apple-pass-card-container ${state.isFlipped ? 'is-flipped' : ''}" id="apple-pass-card">
+        <div class="apple-pass-card-container ${flipped ? 'is-flipped' : ''}" id="apple-pass-card">
           <!-- Front Face -->
           <div class="apple-pass-card pass-card-front" style="background-color: ${bgColor}; color: ${fgColor};">
+            ${backgroundImage ? `<img class="pass-background-image" src="${backgroundImage}" alt="">` : ''}
             <div class="pass-header">
               <div class="pass-logo-section">
+                ${logoImage ? `<img class="pass-logo-image" src="${logoImage}" alt="">` : ''}
                 <span class="pass-logo-text" style="color: ${fgColor}">${escapeHtml(logoText)}</span>
               </div>
               <div class="pass-header-fields">
@@ -2294,6 +2319,8 @@
             </div>
 
             <div class="pass-body">
+              ${stripImage ? `<img class="pass-strip-image" src="${stripImage}" alt="">` : ''}
+              ${thumbnailImage ? `<img class="pass-thumbnail-image" src="${thumbnailImage}" alt="">` : ''}
               <div class="pass-primary-row">
                 ${primaryHtml}
               </div>
@@ -2302,6 +2329,7 @@
               ${auxiliaryHtml ? `<div class="pass-fields-grid auxiliary-grid">${auxiliaryHtml}</div>` : ''}
             </div>
 
+            ${footerImage ? `<img class="pass-footer-image" src="${footerImage}" alt="">` : ''}
             ${barcodeHtml}
 
             <div class="pass-footer-bar">
@@ -2690,6 +2718,7 @@
     renderBarcode,
     autoFixColors,
     generateCodeSnippet,
+    renderAppleWalletCardHtml,
     ASSET_SPECS,
     PRESETS,
     initUI

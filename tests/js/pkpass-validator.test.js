@@ -127,6 +127,33 @@ async function runTests() {
   assert.equal(PkpassInspector.ASSET_SPECS.icon.variants[1].w, 58);
   assert.equal(PkpassInspector.ASSET_SPECS.icon.variants[2].w, 87);
 
+  // 13. Preview uses supported PNG assets instead of dropping them silently.
+  const png = new Uint8Array(Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9sTYQAAAAASUVORK5CYII=',
+    'base64'
+  ));
+  const ticketFiles = {
+    'logo.png': png,
+    'strip.png': png,
+    'thumbnail.png': png,
+    'background.png': png
+  };
+  const ticketPreview = PkpassInspector.renderAppleWalletCardHtml(PkpassInspector.PRESETS.eventTicket, ticketFiles);
+  assert.match(ticketPreview, /class="pass-logo-image"/);
+  assert.match(ticketPreview, /class="pass-strip-image"/);
+  assert.doesNotMatch(ticketPreview, /class="pass-thumbnail-image"/);
+  assert.doesNotMatch(ticketPreview, /class="pass-background-image"/);
+  assert.match(ticketPreview, /src="data:image\/png;base64,/);
+
+  const boardingPreview = PkpassInspector.renderAppleWalletCardHtml(
+    PkpassInspector.PRESETS.boardingPass,
+    { 'footer.png': png, 'logo.png': new Uint8Array([0, 1, 2]) },
+    true
+  );
+  assert.match(boardingPreview, /class="pass-footer-image"/);
+  assert.match(boardingPreview, /apple-pass-card-container is-flipped/);
+  assert.doesNotMatch(boardingPreview, /class="pass-logo-image"/);
+
   console.log('All Apple Wallet .pkpass JS tests passed cleanly!');
 }
 

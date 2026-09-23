@@ -125,7 +125,7 @@ home:
         text: "Trace authoritative DNS delegation from root (.) to TLD and name servers, detect lame delegations and visualize resolution DAGs."
     pkpass:
         title: "Apple Wallet (.pkpass) Inspector & Debugger"
-        text: "Pixel-perfect Apple Wallet & Google Wallet emulator, SHA-1 manifest validator, PKCS#7 certificate inspector, and 1-click package repair."
+        text: "Browser-based Apple Wallet and Google Wallet previews, SHA-1 manifest validation, PKCS#7 certificate inspection, and unsigned package repair."
     app_links:
         title: "Apple Universal Links & Android App Links"
         text: "Validate Apple AASA and Android AssetLinks manifests, test URL routing patterns, and diagnose deeplink failures."
@@ -697,7 +697,8 @@ pkpass:
         drop_prompt: "Drop .pkpass, .zip, or pass.json here to inspect"
         formats: "Supports Apple Wallet .pkpass bundles, ZIP archives, or raw pass.json manifests"
     emulator:
-        title: "Interactive Card Emulator"
+        title: "Interactive Card Preview"
+        note: "Visual approximation for debugging. Layout can differ by Wallet version and device; confirm the final signed pass in Apple Wallet."
     actions:
         repack: "Rebuild Unsigned .pkpass"
         export_google: "Export Google Wallet JSON"
@@ -718,7 +719,7 @@ pkpass:
         q1: "What is inside an Apple Wallet .pkpass file?"
         a1: "A .pkpass file is a standard ZIP archive containing pass.json (field layouts, colors, dates, barcodes), manifest.json (SHA-1 checksum dictionary of all files), signature (PKCS#7 signature from Apple Developer), and PNG image assets (icon, logo, strip, thumbnail)."
         q2: "Can I test and preview .pkpass files on Android, Windows, or Linux?"
-        a2: "Yes! This tool provides a 100% client-side pixel-perfect web emulator that renders Apple Wallet boarding passes, concert tickets, loyalty cards, coupons, and generic passes directly in any modern browser."
+        a2: "Yes. The browser previews pass fields, colors, barcodes, and supported package images locally. It is a debugging preview, not a pixel-identical Apple Wallet rendering; confirm the final signed pass on an iPhone."
         q3: "How does 'Rebuild Unsigned .pkpass' work?"
         a3: "Rebuild recalculates each file's SHA-1 checksum, regenerates manifest.json, removes any now-invalid old signature, and downloads an unsigned package. You must sign that package with an Apple Pass Type ID certificate before installing it."
         q4: "Is my ticket or boarding pass uploaded to your server?"

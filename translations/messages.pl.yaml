@@ -126,7 +126,7 @@ home:
         text: "Sprawdź aktualne rekordy DNS i zobacz serwery autorytatywne przypisane do domeny."
     pkpass:
         title: "Inspektor i debugger Apple Wallet (.pkpass)"
-        text: "Wierny emulator kart Apple Wallet i Google Wallet, weryfikator sum kontrolnych SHA-1 w manifest.json, podgląd certyfikatów PKCS#7 i naprawa archiwum jednym kliknięciem."
+        text: "Podgląd kart Apple Wallet i Google Wallet w przeglądarce, weryfikacja sum SHA-1 w manifest.json, analiza certyfikatów PKCS#7 i odbudowa niepodpisanego archiwum."
     app_links:
         title: "Apple Universal Links & Android App Links"
         text: "Waliduj manifesty Apple AASA i Android AssetLinks, testuj reguły routingu URL i diagnozuj błędy deeplinków."
@@ -698,7 +698,8 @@ pkpass:
         drop_prompt: "Przeciągnij plik .pkpass, .zip lub pass.json tutaj"
         formats: "Obsługuje pakiety Apple Wallet .pkpass, archiwa ZIP oraz pliki pass.json"
     emulator:
-        title: "Interaktywny emulator karty"
+        title: "Interaktywny podgląd karty"
+        note: "Podgląd do diagnostyki, nie wierna kopia Apple Wallet. Układ może się różnić zależnie od wersji i urządzenia; sprawdź podpisaną kartę w Apple Wallet."
     actions:
         repack: "Odbuduj niepodpisany .pkpass"
         export_google: "Eksportuj JSON Google Wallet"
@@ -719,7 +720,7 @@ pkpass:
         q1: "Co znajduje się wewnątrz pliku .pkpass?"
         a1: "Plik .pkpass to standardowe archiwum ZIP. Zawiera pass.json z układem pól, kolorami, datami i kodami kreskowymi. Ma też manifest.json z sumami SHA-1, podpis PKCS#7 oraz grafiki PNG: ikony, logo, baner i miniaturę."
         q2: "Czy mogę otworzyć plik .pkpass na systemie Android, Windows lub Linux?"
-        a2: "Tak! To narzędzie działa w 100% w przeglądarce i renderuje wierną wizualizację karty pokładowej, biletu, karty stałego klienta lub kuponu wraz z czytelnym kodem kreskowym i QR."
+        a2: "Tak. Podgląd pól, kolorów, kodów i obsługiwanych grafik działa lokalnie w przeglądarce. Nie jest kopią Apple Wallet piksel po pikselu; ostatecznie sprawdź podpisaną kartę na iPhonie."
         q3: "Jak działa funkcja odbudowy niepodpisanego .pkpass?"
         a3: "Odbudowanie przelicza sumy SHA-1, tworzy nowy manifest.json, usuwa stary podpis, który przestał być ważny, i pobiera niepodpisany pakiet. Przed instalacją musisz podpisać go certyfikatem Apple Pass Type ID."
         q4: "Czy mój bilet lub karta pokładowa jest przesyłana na Wasz serwer?"
