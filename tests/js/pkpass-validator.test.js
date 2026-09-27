@@ -40,6 +40,66 @@ async function runTests() {
   assert.ok(errorCodes.includes('ERR_INVALID_TRANSIT_TYPE'), 'Must detect invalid transit type');
   assert.ok(errorCodes.includes('WARN_LOW_COLOR_CONTRAST'), 'Must detect unreadable color contrast');
 
+  // 5a. Diagnostic lead prioritizes actionable evidence and scopes checks to input type.
+  const validJson = JSON.stringify(PkpassInspector.PRESETS.boardingPass);
+  const completeFiles = {
+    'pass.json': validJson,
+    'manifest.json': 'present',
+    'icon.png': new Uint8Array([1]),
+    'icon@2x.png': new Uint8Array([2]),
+    signature: new Uint8Array([0x30, 0x00])
+  };
+  const completeManifest = {
+    'pass.json': PkpassInspector.sha1Sync(validJson),
+    'icon.png': PkpassInspector.sha1Sync(completeFiles['icon.png']),
+    'icon@2x.png': PkpassInspector.sha1Sync(completeFiles['icon@2x.png'])
+  };
+  const validResult = PkpassInspector.validatePassJson(PkpassInspector.PRESETS.boardingPass);
+  assert.equal(
+    PkpassInspector.getDiagnosticPriorityForTest(validResult, completeFiles, completeManifest, 'bundle').kind,
+    'signature-unverified',
+    'A structurally present signature must retain the local trust limitation'
+  );
+  assert.equal(
+    PkpassInspector.getDiagnosticPriorityForTest(validResult, { ...completeFiles, signature: new Uint8Array([3]) }, completeManifest, 'bundle').kind,
+    'signature-invalid',
+    'A non-DER signature file must not be described as a detected signature structure'
+  );
+  assert.equal(
+    PkpassInspector.getDiagnosticPriorityForTest(validResult, { 'pass.json': validJson }, {}, 'json').kind,
+    'schema-only',
+    'A JSON file must not imply package or signature verification'
+  );
+  assert.equal(
+    PkpassInspector.getDiagnosticPriorityForTest(validResult, { 'pass.json': validJson }, {}, 'sample').kind,
+    'sample-preview',
+    'Sample preview state is separate from a user uploaded pass'
+  );
+  assert.equal(
+    PkpassInspector.getDiagnosticPriorityForTest(validResult, { ...completeFiles, 'icon@2x.png': undefined }, completeManifest, 'bundle').kind,
+    'manifest',
+    'A manifest reference to a missing file must be surfaced first'
+  );
+  const manifestWithoutIcon = { ...completeManifest };
+  delete manifestWithoutIcon['icon@2x.png'];
+  const filesWithoutIcon = { ...completeFiles };
+  delete filesWithoutIcon['icon@2x.png'];
+  assert.equal(
+    PkpassInspector.getDiagnosticPriorityForTest(validResult, filesWithoutIcon, manifestWithoutIcon, 'bundle').kind,
+    'assets',
+    'A missing required icon must be surfaced before signature trust caveats'
+  );
+  assert.equal(
+    PkpassInspector.getDiagnosticPriorityForTest(brokenResult, completeFiles, completeManifest, 'bundle').kind,
+    'schema',
+    'Schema errors must take priority over later package checks'
+  );
+  assert.equal(
+    PkpassInspector.escapeHtml('<img src=x onerror=alert(1)>'),
+    '&lt;img src=x onerror=alert(1)&gt;',
+    'Diagnostic evidence must be escaped before HTML rendering'
+  );
+
   // 6. WCAG Color Contrast Math
   const black = [0, 0, 0];
   const white = [255, 255, 255];

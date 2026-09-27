@@ -108,11 +108,21 @@
   grid-template-columns: 420px 1fr;
   gap: 1.5rem;
   align-items: start;
+  min-width: 0;
+}
+
+.pkpass-workspace-grid > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 @media (max-width: 1024px) {
   .pkpass-workspace-grid {
     grid-template-columns: 1fr;
+  }
+
+  .inspector-panel {
+    order: -1;
   }
 }
 
@@ -711,6 +721,7 @@
 .inspector-tabs-nav {
   display: flex;
   flex-wrap: wrap;
+  min-width: 0;
   gap: 0.35rem;
   border-bottom: 1px solid #334155;
   padding-bottom: 0.5rem;
@@ -743,6 +754,12 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
+}
+
+.inspector-tab-pane {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .diag-table th {
@@ -1014,6 +1031,9 @@
 
 /* Live JSON Editor */
 .pkpass-json-editor-textarea {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
   width: 100%;
   min-height: 300px;
   background: #0f172a;
@@ -1156,6 +1176,75 @@
 
 .studio-mode-icon {
   font-size: 1.1rem;
+}
+
+.diag-sample-notice,
+.diag-priority-card,
+.diag-editing-note {
+  margin: 0 0 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: 9px;
+  line-height: 1.5;
+}
+
+.diag-sample-notice {
+  color: #dbeafe;
+  background: #172554;
+  border: 1px solid #1d4ed8;
+}
+
+.diag-priority-card {
+  color: #e2e8f0;
+  background: #111827;
+  border: 1px solid #475569;
+}
+
+.diag-priority-card strong {
+  display: block;
+  color: #f8fafc;
+  font-size: 1rem;
+}
+
+.diag-priority-card p {
+  margin: 0.4rem 0;
+}
+
+.diag-priority-card span {
+  display: block;
+  color: #bfdbfe;
+  font-size: 0.9rem;
+}
+
+.diag-view-findings {
+  margin-top: 0.75rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid #64748b;
+  border-radius: 6px;
+  color: #f8fafc;
+  background: #1e293b;
+  cursor: pointer;
+}
+
+.diag-priority-card.priority-schema,
+.diag-priority-card.priority-manifest,
+.diag-priority-card.priority-signature-missing {
+  border-color: #b45309;
+  background: #271b12;
+}
+
+.diag-priority-card.priority-contrast {
+  border-color: #a16207;
+}
+
+.diag-priority-card.priority-clear {
+  border-color: #15803d;
+}
+
+.diag-editing-note {
+  margin-bottom: 0.35rem;
+  padding: 0;
+  color: #94a3b8;
+  font-size: 0.84rem;
 }
 
 /* Designer Sections */

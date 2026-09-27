@@ -55,7 +55,29 @@
     lede: 'pkpass.lede'|trans
   } only %}
 
-  <div class="pkpass-container" id="pkpass-inspector-app" data-locale="{{ app.request.locale }}">
+  <div class="pkpass-container" id="pkpass-inspector-app" data-locale="{{ app.request.locale }}"
+       data-next-action="{{ 'pkpass.inspector.next_action'|trans }}"
+       data-no-issues="{{ 'pkpass.inspector.no_issues'|trans }}"
+       data-priority-schema="{{ 'pkpass.inspector.priority_schema'|trans }}"
+       data-schema-only="{{ 'pkpass.inspector.schema_only'|trans }}"
+       data-priority-manifest="{{ 'pkpass.inspector.priority_manifest'|trans }}"
+       data-signature-missing="{{ 'pkpass.inspector.signature_missing'|trans }}"
+       data-signature-unverified="{{ 'pkpass.inspector.signature_unverified'|trans }}"
+       data-priority-assets="{{ 'pkpass.inspector.priority_assets'|trans }}"
+       data-priority-contrast="{{ 'pkpass.inspector.priority_contrast'|trans }}"
+       data-finding-code="{{ 'pkpass.inspector.finding_code'|trans }}"
+       data-finding-field="{{ 'pkpass.inspector.finding_field'|trans }}"
+       data-current-value="{{ 'pkpass.inspector.current_value'|trans }}"
+       data-schema-fix-next="{{ 'pkpass.inspector.schema_fix_next'|trans }}"
+       data-view-findings="{{ 'pkpass.inspector.view_findings'|trans }}"
+       data-demo-notice="{{ 'pkpass.inspector.demo_notice'|trans }}"
+       data-sample-preview="{{ 'pkpass.inspector.sample_preview'|trans }}"
+       data-json-schema-only="{{ 'pkpass.inspector.json_schema_only'|trans }}"
+       data-upload-bundle="{{ 'pkpass.inspector.upload_bundle'|trans }}"
+       data-no-priority-issue="{{ 'pkpass.inspector.no_priority_issue'|trans }}"
+       data-input-error-title="{{ 'pkpass.inspector.input_error_title'|trans }}"
+       data-input-error-default="{{ 'pkpass.inspector.input_error_default'|trans }}"
+       data-input-error-next="{{ 'pkpass.inspector.input_error_next'|trans }}">
     <!-- Drag & Drop Zone -->
     <div class="pkpass-drop-zone" id="pkpass-drop-zone" role="button" tabindex="0" aria-controls="pkpass-file-input" aria-describedby="pkpass-drop-hint">
       <div class="drop-icon">PKPASS</div>
@@ -82,10 +104,10 @@
 
     <!-- Studio Mode Switcher Bar -->
     <div class="studio-mode-bar" id="studio-mode-bar">
-      <button type="button" class="btn-studio-mode active" data-studio-mode="designer" aria-pressed="true">
+      <button type="button" class="btn-studio-mode" data-studio-mode="designer" aria-pressed="false">
         <span class="studio-mode-icon">🎨</span> {{ 'pkpass.studio.designer'|trans }}
       </button>
-      <button type="button" class="btn-studio-mode" data-studio-mode="inspector" aria-pressed="false">
+      <button type="button" class="btn-studio-mode active" data-studio-mode="inspector" aria-pressed="true">
         <span class="studio-mode-icon">🔍</span> {{ 'pkpass.studio.inspector'|trans }}
       </button>
       <button type="button" class="btn-studio-mode" data-studio-mode="signing" aria-pressed="false">
@@ -118,7 +140,7 @@
       <div class="inspector-panel">
 
         <!-- STUDIO PANEL 1: Visual Pass Designer -->
-        <div class="studio-panel-view" id="studio-panel-designer" style="display: block;">
+        <div class="studio-panel-view" id="studio-panel-designer" style="display: none;">
           <div class="designer-card-section">
             <h3 class="designer-section-title">{{ 'pkpass.studio.type_label'|trans }}</h3>
             <div class="pass-style-selector-grid" id="designer-style-selector">
@@ -258,7 +280,13 @@
         </div>
 
         <!-- STUDIO PANEL 2: Pass Inspector & Linter -->
-        <div class="studio-panel-view" id="studio-panel-inspector" style="display: none;">
+        <div class="studio-panel-view" id="studio-panel-inspector" style="display: block;">
+          <div class="diag-sample-notice" id="diag-sample-notice" role="status">
+            {{ 'pkpass.inspector.demo_notice'|trans }}
+          </div>
+          <div class="diag-priority-card" id="diag-priority-card" aria-live="polite"></div>
+          <div class="diag-editing-note">{{ 'pkpass.inspector.editing_note'|trans }}</div>
+          <button type="button" class="btn-action-secondary" id="btn-edit-this-pass">{{ 'pkpass.inspector.edit_pass'|trans }}</button>
           <!-- Status Header -->
           <div id="diag-status-summary" class="diag-summary-box status-valid">
             <div class="diag-status-badge badge-valid">SAMPLE LOADED · UNSIGNED</div>

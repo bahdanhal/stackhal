@@ -1103,7 +1103,9 @@
     currentLocale: 'default',
     walletMode: 'apple', // 'apple' or 'google'
     isFlipped: false,
-    activeStudioMode: 'designer', // 'designer', 'inspector', 'signing', 'code'
+    activeStudioMode: 'inspector', // 'designer', 'inspector', 'signing', 'code'
+    inputKind: 'sample',
+    inputError: null,
     activeCodeLang: 'php' // 'php', 'ts', 'python', 'go', 'curl'
   };
 
@@ -1500,6 +1502,15 @@
       });
     }
 
+    const inspectorPanel = document.getElementById('studio-panel-inspector');
+    if (inspectorPanel) {
+      inspectorPanel.addEventListener('click', event => {
+        if (event.target.closest('#diag-view-findings')) {
+          document.querySelector('.inspector-tab-btn[data-target="pane-linter"]')?.click();
+        }
+      });
+    }
+
     // Studio Mode Switcher
     document.querySelectorAll('.btn-studio-mode').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1665,6 +1676,14 @@
 
     // Initial render
     loadPreset('boardingPass');
+    switchStudioMode('inspector');
+    const editButton = document.getElementById('btn-edit-this-pass');
+    if (editButton) {
+      editButton.addEventListener('click', () => {
+        document.querySelector('.inspector-tab-btn[data-target="pane-editor"]')?.click();
+        document.getElementById('pkpass-json-editor')?.focus();
+      });
+    }
   }
 
   function switchStudioMode(mode) {
@@ -1682,6 +1701,72 @@
     if (mode === 'inspector') renderDiagnostics();
     if (mode === 'signing') renderSigningStudio();
     if (mode === 'code') renderCodeGenerator();
+  }
+
+  function getDiagnosticPriority(linterResult, files, manifest, inputKind = state.inputKind) {
+    if (inputKind === 'error') return { kind: 'input-error' };
+    const schemaError = linterResult.findings.find(f => f.severity === 'error');
+    if (schemaError) return { kind: 'schema', finding: schemaError };
+
+    if (inputKind === 'sample' && !linterResult.findings.some(f => f.code === 'WARN_LOW_COLOR_CONTRAST')) {
+      return { kind: 'sample-preview' };
+    }
+
+    const packageFiles = files && files['pass.json'];
+    if (!packageFiles) return { kind: 'schema', finding: null };
+    if (files['manifest.json']) {
+      const manifestIssue = Object.keys(manifest || {}).find(name => {
+        if (!files[name]) return true;
+        return sha1Sync(files[name]).toLowerCase() !== String(manifest[name]).toLowerCase();
+      }) || Object.keys(files).find(name => name !== 'manifest.json' && name !== 'signature' && !Object.prototype.hasOwnProperty.call(manifest || {}, name));
+      if (manifestIssue) return { kind: 'manifest', file: manifestIssue };
+    } else if (inputKind === 'bundle') {
+      return { kind: 'manifest', file: 'manifest.json' };
+    }
+
+    if (inputKind === 'bundle') {
+      const missingAsset = ['icon.png', 'icon@2x.png'].find(name => !files[name]);
+      if (missingAsset) return { kind: 'assets', file: missingAsset };
+    }
+
+    const contrastWarning = linterResult.findings.find(f => f.code === 'WARN_LOW_COLOR_CONTRAST');
+    if (contrastWarning) return { kind: 'contrast', finding: contrastWarning };
+    if (inputKind === 'bundle') {
+      const signature = parsePkcs7Signature(files.signature);
+      if (!signature.present) return { kind: 'signature-missing' };
+      if (signature.error) return { kind: 'signature-invalid', detail: signature.error };
+      return { kind: 'signature-unverified' };
+    }
+    return { kind: inputKind === 'json' ? 'schema-only' : 'clear' };
+  }
+
+  function getDiagnosticPriorityForTest(linterResult, files, manifest, inputKind) {
+    return getDiagnosticPriority(linterResult, files, manifest, inputKind);
+  }
+
+  function readPassField(pass, field) {
+    const segments = field.replace(/\[(\d+)\]/g, '.$1').split('.');
+    let value = pass;
+    for (const segment of segments) {
+      if (value === null || value === undefined || typeof value !== 'object') return undefined;
+      value = value[segment];
+    }
+    return value;
+  }
+
+  function showInputError(message) {
+    state.inputKind = 'error';
+    state.inputError = message;
+    state.rawArchiveFiles = {};
+    state.manifestMap = {};
+    state.localizations = {};
+    state.currentPass = {};
+    renderAll();
+    const jsonEditor = document.getElementById('pkpass-json-editor');
+    if (jsonEditor) jsonEditor.value = '';
+    setJsonEditorValidity(false, message);
+    switchStudioMode('inspector');
+    announceAction(message, true);
   }
 
   function setJsonEditorValidity(valid, message) {
@@ -2094,6 +2179,8 @@
       const text = await file.text();
       try {
         state.currentPass = JSON.parse(text);
+        state.inputKind = 'json';
+        state.inputError = null;
         state.rawArchiveFiles = { 'pass.json': text };
         state.manifestMap = {};
         setJsonEditorValidity(true);
@@ -2101,7 +2188,7 @@
         switchStudioMode('inspector');
         announceAction('pass.json loaded and analyzed locally.', false);
       } catch (err) {
-        announceAction('Invalid JSON file: ' + err.message, true);
+        showInputError('Invalid JSON file: ' + err.message);
       }
       return;
     }
@@ -2110,19 +2197,23 @@
       const buffer = await file.arrayBuffer();
       const files = await parseZipArchive(buffer);
       state.rawArchiveFiles = files;
+      state.inputKind = 'bundle';
+      state.inputError = null;
 
       if (files['pass.json']) {
         const passText = new TextDecoder('utf-8').decode(files['pass.json']);
         state.currentPass = JSON.parse(passText);
       } else {
-        alert('Archive does not contain pass.json manifest.');
-        announceAction('Archive does not contain a root-level pass.json manifest.', true);
+        showInputError('Archive does not contain a root-level pass.json manifest.');
         return;
       }
 
       if (files['manifest.json']) {
         const manifestText = new TextDecoder('utf-8').decode(files['manifest.json']);
         state.manifestMap = JSON.parse(manifestText);
+        if (!state.manifestMap || typeof state.manifestMap !== 'object' || Array.isArray(state.manifestMap)) {
+          throw new Error('manifest.json must contain a JSON object.');
+        }
       } else {
         state.manifestMap = {};
       }
@@ -2142,11 +2233,13 @@
       switchStudioMode('inspector');
       announceAction('Package loaded and analyzed locally.', false);
     } catch (err) {
-      announceAction('Failed to parse archive: ' + err.message, true);
+      showInputError('Failed to parse archive: ' + err.message);
     }
   }
 
   function loadPreset(key) {
+    state.inputKind = 'sample';
+    state.inputError = null;
     state.currentPass = JSON.parse(JSON.stringify(PRESETS[key] || PRESETS.boardingPass));
     const passJsonStr = JSON.stringify(state.currentPass, null, 2);
     state.rawArchiveFiles = {
@@ -2415,15 +2508,96 @@
     const pass = state.currentPass;
     const linterResult = validatePassJson(pass);
 
+    const sampleNotice = document.getElementById('diag-sample-notice');
+    if (sampleNotice) sampleNotice.hidden = state.inputKind !== 'sample';
+
+    const priorityEl = document.getElementById('diag-priority-card');
+    if (priorityEl) {
+      const priority = getDiagnosticPriority(linterResult, state.rawArchiveFiles, state.manifestMap);
+      const appData = document.getElementById('pkpass-inspector-app')?.dataset;
+      const translated = key => (appData && appData[key]) || '';
+      const finding = priority.finding;
+      let title;
+      let evidence;
+      let next;
+      if (priority.kind === 'schema') {
+        title = finding ? finding.title : (translated('prioritySchema') || 'Fix schema errors first');
+        const fieldValue = finding && finding.field ? readPassField(pass, finding.field) : undefined;
+        const reportedValue = fieldValue === undefined ? 'missing' : JSON.stringify(fieldValue);
+        evidence = finding
+          ? `${translated('findingCode')}: ${finding.code} · ${translated('findingField')}: ${finding.field || 'pass.json'} · ${translated('currentValue')}: ${reportedValue} · ${finding.description}`
+          : 'The input is not a valid PassKit JSON object.';
+        next = finding && finding.field
+          ? `${translated('schemaFixNext')} (${finding.field})`
+          : translated('schemaFixNext');
+      } else if (priority.kind === 'manifest') {
+        title = translated('priorityManifest');
+        evidence = `${priority.file} is missing from the bundle or its SHA-1 differs from manifest.json.`;
+        next = title;
+      } else if (priority.kind === 'signature-missing') {
+        title = translated('signatureMissing');
+        evidence = 'The uploaded bundle has no signature file.';
+        next = title;
+      } else if (priority.kind === 'signature-invalid') {
+        title = translated('signatureInvalid');
+        evidence = priority.detail;
+        next = title;
+      } else if (priority.kind === 'signature-unverified') {
+        title = translated('signatureUnverified');
+        evidence = 'A signature file is present. This local inspection does not verify cryptographic trust or Apple Wallet installation.';
+        next = 'Review signing credentials and validate the signed package in your signing environment.';
+      } else if (priority.kind === 'assets') {
+        title = translated('priorityAssets');
+        evidence = `${priority.file} is absent from the uploaded bundle.`;
+        next = title;
+      } else if (priority.kind === 'contrast') {
+        title = translated('priorityContrast');
+        evidence = finding.description;
+        next = title;
+      } else if (priority.kind === 'schema-only') {
+        title = translated('schemaOnly') || 'Schema check only';
+        evidence = translated('jsonSchemaOnly');
+        next = translated('uploadBundle');
+      } else if (priority.kind === 'sample-preview') {
+        title = translated('samplePreview');
+        evidence = translated('demoNotice');
+        next = translated('uploadBundle');
+      } else if (priority.kind === 'input-error') {
+        title = translated('inputErrorTitle');
+        evidence = state.inputError || translated('inputErrorDefault');
+        next = translated('inputErrorNext');
+      } else {
+        title = translated('noPriorityIssue');
+        evidence = translated('noIssues');
+        next = translated('noPriorityIssue');
+      }
+      priorityEl.className = `diag-priority-card priority-${priority.kind}`;
+      const findingsButton = priority.kind === 'schema'
+        ? `<button type="button" class="diag-view-findings" id="diag-view-findings">${escapeHtml(translated('viewFindings'))}</button>`
+        : '';
+      priorityEl.innerHTML = `<strong>${escapeHtml(title)}</strong><p>${escapeHtml(evidence)}</p><span>${escapeHtml(translated('nextAction'))}: ${escapeHtml(next)}</span>${findingsButton}`;
+    }
+
     // 1. Status Summary Header
     const statusHeaderEl = document.getElementById('diag-status-summary');
     if (statusHeaderEl) {
-      if (linterResult.isValid) {
-        const signature = parsePkcs7Signature(state.rawArchiveFiles['signature']);
-        const signatureLabel = signature.present && signature.valid
-          ? 'SCHEMA VALID · SIGNATURE STRUCTURE PRESENT'
-          : 'SCHEMA VALID · UNSIGNED';
-        statusHeaderEl.className = `diag-summary-box ${signature.present && signature.valid ? 'status-valid' : 'status-warning'}`;
+      if (state.inputKind === 'error') {
+        statusHeaderEl.className = 'diag-summary-box status-errors';
+        statusHeaderEl.innerHTML = `<div class="diag-status-badge badge-error">${escapeHtml(state.inputError || 'Unable to inspect this file')}</div>`;
+      } else if (linterResult.isValid) {
+        const signature = state.inputKind === 'bundle'
+          ? parsePkcs7Signature(state.rawArchiveFiles['signature'])
+          : { present: false, valid: false };
+        const signatureLabel = state.inputKind === 'sample'
+          ? 'SAMPLE PREVIEW · NOT AN UPLOADED PASS'
+          : (state.inputKind === 'json'
+            ? 'SCHEMA CHECK · PACKAGE NOT INSPECTED'
+            : (!signature.present
+              ? 'SCHEMA VALID · SIGNATURE MISSING'
+              : (signature.error
+                ? 'SCHEMA VALID · SIGNATURE FILE INVALID'
+                : 'SCHEMA VALID · SIGNATURE STRUCTURE DETECTED, TRUST UNVERIFIED')));
+        statusHeaderEl.className = `diag-summary-box ${state.inputKind === 'bundle' && signature.present ? 'status-valid' : 'status-warning'}`;
         statusHeaderEl.innerHTML = `
           <div class="diag-status-badge ${signature.present && signature.valid ? 'badge-valid' : 'badge-warning'}">${signatureLabel}</div>
           <div class="diag-meta-row">
@@ -2714,6 +2888,8 @@
     parseRgb,
     calculateContrastRatio,
     validatePassJson,
+    getDiagnosticPriorityForTest,
+    escapeHtml,
     convertToGoogleWallet,
     renderBarcode,
     autoFixColors,

@@ -11,6 +11,7 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\Exception\AbortMigration;
 use DoctrineMigrations\Version20260917120000;
+use DoctrineMigrations\Version20260927120000;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
@@ -19,6 +20,7 @@ final class EditorialCorrectionMigrationTest extends TestCase
     protected function setUp(): void
     {
         require_once dirname(__DIR__, 2) . '/migrations/Version20260917120000.php';
+        require_once dirname(__DIR__, 2) . '/migrations/Version20260927120000.php';
     }
 
     public function testCorrectionsMakeClaimsAndLimitationsExplicit(): void
@@ -91,6 +93,50 @@ final class EditorialCorrectionMigrationTest extends TestCase
         self::assertSame(2, $connection->fetchOne('SELECT COUNT(*) FROM blog_articles'));
     }
 
+    public function testForwardMigrationUpdatesExistingArticleAndPreservesSurroundingEdits(): void
+    {
+        $connection = $this->connection();
+        $historicalMigration = new Version20260917120000($connection, new NullLogger());
+        $historicalMigration->up(new Schema());
+        $this->execute($connection, $historicalMigration);
+
+        $historicalArticle = $connection->fetchAssociative('SELECT content_html FROM blog_articles WHERE slug = ? AND locale = ?', ['bmad-vs-gsd-ai-agent-frameworks-benchmark', 'en']);
+        self::assertIsArray($historicalArticle);
+        self::assertStringContainsString('Correction: no measured winner', $historicalArticle['content_html']);
+
+        $editedContent = '<p class="custom-editorial-note">Retain this later addition.</p>' . $historicalArticle['content_html'];
+        $connection->executeStatement("UPDATE blog_articles SET content_html = ?, updated_at = '2000-01-01' WHERE slug = ? AND locale = ?", [$editedContent, 'bmad-vs-gsd-ai-agent-frameworks-benchmark', 'en']);
+
+        $migration = new Version20260927120000($connection, new NullLogger());
+        $migration->up(new Schema());
+        $this->execute($connection, $migration);
+
+        $article = $connection->fetchAssociative('SELECT * FROM blog_articles WHERE slug = ? AND locale = ?', ['bmad-vs-gsd-ai-agent-frameworks-benchmark', 'en']);
+        self::assertIsArray($article);
+        self::assertStringContainsString('Retain this later addition.', $article['content_html']);
+        self::assertStringContainsString('Where role decomposition can help', $article['content_html']);
+        self::assertStringContainsString('task uncertainty, team structure, and the cost of coordination', $article['content_html']);
+        self::assertStringContainsString('track completion, defects, cost, and review effort', $article['content_html']);
+        self::assertStringNotContainsString('Correction: no measured winner', $article['content_html']);
+        self::assertSame('Compare role-based and spec-driven AI coding workflows by task clarity, handoff cost, parallelism, and the evidence needed to review completed work.', $article['description']);
+        self::assertSame('BMAD vs GSD: An Engineering Tradeoff Guide', $article['title']);
+        self::assertSame('AI engineering opinion', $article['category']);
+        self::assertNotSame('2000-01-01', $article['updated_at']);
+        self::assertSame('Original', $connection->fetchOne('SELECT title FROM blog_articles WHERE slug = ? AND locale = ?', ['bmad-vs-gsd-ai-agent-frameworks-benchmark', 'pl']));
+    }
+
+    public function testForwardMigrationAbortsWhenTargetCopyWasEdited(): void
+    {
+        $connection = $this->connection();
+        $connection->executeStatement(
+            "UPDATE blog_articles SET content_html = '<p>Newer editorial version</p>' WHERE slug = ? AND locale = ?",
+            ['bmad-vs-gsd-ai-agent-frameworks-benchmark', 'en']
+        );
+
+        $this->expectException(AbortMigration::class);
+        (new Version20260927120000($connection, new NullLogger()))->up(new Schema());
+    }
+
     private function connection(): Connection
     {
         $connection = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
@@ -103,7 +149,7 @@ final class EditorialCorrectionMigrationTest extends TestCase
         return $connection;
     }
 
-    private function execute(Connection $connection, Version20260917120000 $migration): void
+    private function execute(Connection $connection, Version20260917120000|Version20260927120000 $migration): void
     {
         foreach ($migration->getSql() as $query) {
             $connection->executeStatement($query->getStatement(), $query->getParameters(), $query->getTypes());
