@@ -302,63 +302,80 @@
     return output;
   }
 
-  // --- 3. PKCS#7 & ASN.1 DER Certificate Inspector ---
+  // --- 3. PKCS#7 SignedData envelope inspection ---
   function parsePkcs7Signature(buffer) {
     if (!buffer || buffer.length === 0) {
-      return { present: false, valid: false, error: 'Signature file missing' };
+      return { present: false, structureDetected: false, error: 'Signature file missing' };
     }
 
     const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
-
     try {
-      if (bytes[0] !== 0x30) {
-        return { present: true, valid: false, error: 'Invalid PKCS#7 signature header (not DER sequence)' };
-      }
-
-      const str = Array.from(bytes).map(b => String.fromCharCode(b)).join('');
-      
-      const teamIdMatch = str.match(/([A-Z0-9]{10})/);
-      const passTypeMatch = str.match(/(pass\.[a-zA-Z0-9.\-_]+)/);
-      const isAppleWwdr = str.includes('Apple Worldwide Developer Relations') || str.includes('Apple Inc.');
-
-      const dateMatches = str.match(/\d{12,14}Z/g);
-      let notBefore = null;
-      let notAfter = null;
-      let isExpired = false;
-
-      if (dateMatches && dateMatches.length >= 2) {
-        const parseAsn1Date = s => {
-          if (s.length === 13) {
-            const yy = parseInt(s.substring(0, 2), 10);
-            const year = yy >= 50 ? 1900 + yy : 2000 + yy;
-            return new Date(Date.UTC(year, parseInt(s.substring(2, 4), 10) - 1, parseInt(s.substring(4, 6), 10), parseInt(s.substring(6, 8), 10), parseInt(s.substring(8, 10), 10), parseInt(s.substring(10, 12), 10)));
+      const read = (offset, limit) => {
+        if (offset + 2 > limit) throw new Error('Incomplete DER element');
+        const tag = bytes[offset];
+        let length = bytes[offset + 1];
+        let headerEnd = offset + 2;
+        if (length & 0x80) {
+          const count = length & 0x7f;
+          if (count === 0 || count > 4 || headerEnd + count > limit || bytes[headerEnd] === 0) {
+            throw new Error('Invalid DER length');
           }
-          return new Date(Date.UTC(parseInt(s.substring(0, 4), 10), parseInt(s.substring(4, 6), 10) - 1, parseInt(s.substring(6, 8), 10), parseInt(s.substring(8, 10), 10), parseInt(s.substring(10, 12), 10), parseInt(s.substring(12, 14), 10)));
-        };
-
-        try {
-          notBefore = parseAsn1Date(dateMatches[0]);
-          notAfter = parseAsn1Date(dateMatches[1]);
-          isExpired = notAfter < new Date();
-        } catch {
-          // ignore date parse issues
+          length = 0;
+          for (let i = 0; i < count; i++) length = length * 256 + bytes[headerEnd++];
+          if (length < 128) throw new Error('Non-canonical DER length');
         }
-      }
-
-      return {
-        present: true,
-        valid: !isExpired && isAppleWwdr,
-        teamIdentifier: teamIdMatch ? teamIdMatch[1] : null,
-        passTypeIdentifier: passTypeMatch ? passTypeMatch[1] : null,
-        issuer: isAppleWwdr ? 'Apple Worldwide Developer Relations Certification Authority' : 'Unknown / Self-Signed',
-        isAppleWwdr: isAppleWwdr,
-        notBefore: notBefore ? notBefore.toISOString().split('T')[0] : null,
-        notAfter: notAfter ? notAfter.toISOString().split('T')[0] : null,
-        isExpired: isExpired,
-        rawLength: bytes.length,
+        const end = headerEnd + length;
+        if (end > limit) throw new Error('Truncated DER element');
+        return { tag, start: headerEnd, end };
       };
-    } catch (e) {
-      return { present: true, valid: false, error: e.message };
+      const root = read(0, bytes.length);
+      if (root.tag !== 0x30 || root.end !== bytes.length) throw new Error('Expected a complete DER ContentInfo sequence');
+      const oid = read(root.start, root.end);
+      const signedDataOid = [0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x07, 0x02];
+      if (oid.tag !== 0x06 || oid.end - oid.start !== signedDataOid.length ||
+          !signedDataOid.every((byte, index) => bytes[oid.start + index] === byte)) {
+        throw new Error('ContentInfo is not PKCS#7 SignedData');
+      }
+      const wrapper = read(oid.end, root.end);
+      if (wrapper.tag !== 0xa0 || wrapper.end !== root.end) throw new Error('SignedData wrapper is missing');
+      const signedData = read(wrapper.start, wrapper.end);
+      if (signedData.tag !== 0x30 || signedData.end !== wrapper.end) throw new Error('SignedData is incomplete');
+      let cursor = signedData.start;
+      for (const tag of [0x02, 0x31, 0x30]) {
+        const field = read(cursor, signedData.end);
+        if (field.tag !== tag || field.start === field.end) throw new Error('SignedData has an invalid field structure');
+        cursor = field.end;
+      }
+      while (cursor < signedData.end && (bytes[cursor] === 0xa0 || bytes[cursor] === 0xa1)) {
+        cursor = read(cursor, signedData.end).end;
+      }
+      const signers = read(cursor, signedData.end);
+      if (signers.tag !== 0x31 || signers.start === signers.end || signers.end !== signedData.end) {
+        throw new Error('SignedData signer information is missing');
+      }
+      const signer = read(signers.start, signers.end);
+      if (signer.tag !== 0x30 || signer.start === signer.end || signer.end !== signers.end) {
+        throw new Error('SignedData signer information is incomplete');
+      }
+      let signerCursor = signer.start;
+      for (const tag of [0x02, 0x30, 0x30]) {
+        const field = read(signerCursor, signer.end);
+        if (field.tag !== tag) throw new Error('SignedData signer information is incomplete');
+        signerCursor = field.end;
+      }
+      if (bytes[signerCursor] === 0xa0) signerCursor = read(signerCursor, signer.end).end;
+      for (const tag of [0x30, 0x04]) {
+        const field = read(signerCursor, signer.end);
+        if (field.tag !== tag || field.start === field.end) {
+          throw new Error('SignedData signer information is incomplete');
+        }
+        signerCursor = field.end;
+      }
+      if (bytes[signerCursor] === 0xa1) signerCursor = read(signerCursor, signer.end).end;
+      if (signerCursor !== signer.end) throw new Error('SignedData signer information has trailing data');
+      return { present: true, structureDetected: true, rawLength: bytes.length };
+    } catch (error) {
+      return { present: true, structureDetected: false, error: error.message };
     }
   }
 
@@ -1394,10 +1411,10 @@
     renderAll();
   }
 
-  function generateBrandedCanvasAssets() {
+  function generateBrandedCanvasAssets(shouldRender = true) {
     const pass = state.currentPass;
     const org = pass.organizationName || 'Wallet Pass';
-    const initials = org.split(/\\s+/).map(w => w[0]).join('').substring(0, 2).toUpperCase() || 'WP';
+    const initials = org.split(/\s+/).map(w => w[0]).join('').substring(0, 2).toUpperCase() || 'WP';
 
     const bgRgb = parseRgb(pass.backgroundColor) || [37, 99, 235];
     const fgRgb = parseRgb(pass.foregroundColor) || [255, 255, 255];
@@ -1461,7 +1478,7 @@
       }
     });
 
-    renderAll();
+    if (shouldRender) renderAll();
   }
 
   // --- 14. UI Initialization & Renderers ---
@@ -1660,7 +1677,7 @@
     // Generate Branded Assets button
     const genAssetsBtn = document.getElementById('btn-generate-branded-assets');
     if (genAssetsBtn) {
-      genAssetsBtn.addEventListener('click', generateBrandedCanvasAssets);
+      genAssetsBtn.addEventListener('click', () => generateBrandedCanvasAssets());
     }
 
     // Designer Style Selectors
@@ -2243,25 +2260,18 @@
     state.currentPass = JSON.parse(JSON.stringify(PRESETS[key] || PRESETS.boardingPass));
     const passJsonStr = JSON.stringify(state.currentPass, null, 2);
     state.rawArchiveFiles = {
-      'pass.json': passJsonStr,
-      'icon.png': new Uint8Array(29 * 29),
-      'icon@2x.png': new Uint8Array(58 * 58)
+      'pass.json': passJsonStr
     };
+    state.manifestMap = { 'pass.json': sha1Sync(passJsonStr) };
+    generateBrandedCanvasAssets(false);
     if (key === 'brokenPass') {
-      state.manifestMap = {
-        'pass.json': 'a1b2c3d4e5f678901234567890abcdef12345678', // intentional mismatch!
-        'icon.png': sha1Sync(state.rawArchiveFiles['icon.png'])
-      };
+      state.manifestMap['pass.json'] = 'a1b2c3d4e5f678901234567890abcdef12345678';
       delete state.rawArchiveFiles['icon@2x.png'];
-    } else {
-      state.manifestMap = {
-        'pass.json': sha1Sync(passJsonStr),
-        'icon.png': sha1Sync(state.rawArchiveFiles['icon.png']),
-        'icon@2x.png': sha1Sync(state.rawArchiveFiles['icon@2x.png'])
-      };
+      delete state.manifestMap['icon@2x.png'];
     }
     state.localizations = {};
     state.isFlipped = false;
+    setJsonEditorValidity(true);
     renderAll();
   }
 
@@ -2532,28 +2542,28 @@
           : translated('schemaFixNext');
       } else if (priority.kind === 'manifest') {
         title = translated('priorityManifest');
-        evidence = `${priority.file} is missing from the bundle or its SHA-1 differs from manifest.json.`;
-        next = title;
+        evidence = `${priority.file}: ${translated('manifestEvidence')}`;
+        next = translated('manifestNext');
       } else if (priority.kind === 'signature-missing') {
         title = translated('signatureMissing');
-        evidence = 'The uploaded bundle has no signature file.';
-        next = title;
+        evidence = translated('signatureMissingEvidence');
+        next = translated('signatureNext');
       } else if (priority.kind === 'signature-invalid') {
         title = translated('signatureInvalid');
-        evidence = priority.detail;
-        next = title;
+        evidence = translated('signatureInvalidEvidence');
+        next = translated('signatureNext');
       } else if (priority.kind === 'signature-unverified') {
         title = translated('signatureUnverified');
-        evidence = 'A signature file is present. This local inspection does not verify cryptographic trust or Apple Wallet installation.';
-        next = 'Review signing credentials and validate the signed package in your signing environment.';
+        evidence = translated('signatureUnverifiedEvidence');
+        next = translated('signatureVerifyNext');
       } else if (priority.kind === 'assets') {
         title = translated('priorityAssets');
-        evidence = `${priority.file} is absent from the uploaded bundle.`;
-        next = title;
+        evidence = `${priority.file}: ${translated('assetsEvidence')}`;
+        next = translated('assetsNext');
       } else if (priority.kind === 'contrast') {
         title = translated('priorityContrast');
-        evidence = finding.description;
-        next = title;
+        evidence = translated('contrastEvidence');
+        next = translated('contrastNext');
       } else if (priority.kind === 'schema-only') {
         title = translated('schemaOnly') || 'Schema check only';
         evidence = translated('jsonSchemaOnly');
@@ -2587,19 +2597,20 @@
       } else if (linterResult.isValid) {
         const signature = state.inputKind === 'bundle'
           ? parsePkcs7Signature(state.rawArchiveFiles['signature'])
-          : { present: false, valid: false };
+          : { present: false, structureDetected: false };
+        const labels = document.getElementById('pkpass-inspector-app')?.dataset || {};
         const signatureLabel = state.inputKind === 'sample'
-          ? 'SAMPLE PREVIEW · NOT AN UPLOADED PASS'
+          ? labels.statusSample
           : (state.inputKind === 'json'
-            ? 'SCHEMA CHECK · PACKAGE NOT INSPECTED'
+            ? labels.statusJson
             : (!signature.present
-              ? 'SCHEMA VALID · SIGNATURE MISSING'
+              ? labels.statusSignatureMissing
               : (signature.error
-                ? 'SCHEMA VALID · SIGNATURE FILE INVALID'
-                : 'SCHEMA VALID · SIGNATURE STRUCTURE DETECTED, TRUST UNVERIFIED')));
-        statusHeaderEl.className = `diag-summary-box ${state.inputKind === 'bundle' && signature.present ? 'status-valid' : 'status-warning'}`;
+                ? labels.statusSignatureInvalid
+                : labels.statusSignatureUnverified)));
+        statusHeaderEl.className = 'diag-summary-box status-warning';
         statusHeaderEl.innerHTML = `
-          <div class="diag-status-badge ${signature.present && signature.valid ? 'badge-valid' : 'badge-warning'}">${signatureLabel}</div>
+          <div class="diag-status-badge badge-warning">${escapeHtml(signatureLabel)}</div>
           <div class="diag-meta-row">
             <span>Pass Type: <strong>${escapeHtml(linterResult.passType || 'generic')}</strong></span>
             <span>Org: <strong>${escapeHtml(pass.organizationName || '-')}</strong></span>
@@ -2708,21 +2719,16 @@
       if (!sigData.present) {
         sigContainerEl.innerHTML = `
           <div class="sig-alert sig-alert-warning">
-            <h4>No PKCS#7 Signature Found</h4>
-            <p>File <code>signature</code> is missing. iOS requires a digital signature signed by an Apple Developer Pass Type ID certificate.</p>
+            <h4>${escapeHtml(document.getElementById('pkpass-inspector-app')?.dataset.signatureMissing || '')}</h4>
+            <p>${escapeHtml(document.getElementById('pkpass-inspector-app')?.dataset.signatureMissingEvidence || '')}</p>
           </div>
         `;
       } else {
+        const data = document.getElementById('pkpass-inspector-app')?.dataset || {};
         sigContainerEl.innerHTML = `
-          <div class="sig-alert ${sigData.valid ? 'sig-alert-success' : 'sig-alert-error'}">
-            <h4>${sigData.valid ? 'PKCS#7 Signature Structure Detected' : 'Signature / Certificate Alert'}</h4>
-            ${sigData.valid ? '<p>Structure and certificate metadata were parsed locally. Cryptographic trust and Apple installation are not verified here.</p>' : ''}
-            <table class="sig-details-table">
-              <tr><td>Team ID:</td><td><strong>${escapeHtml(sigData.teamIdentifier || 'Unknown')}</strong></td></tr>
-              <tr><td>Pass Type:</td><td><code>${escapeHtml(sigData.passTypeIdentifier || 'Unknown')}</code></td></tr>
-              <tr><td>Issuer:</td><td>${escapeHtml(sigData.issuer || 'Unknown')}</td></tr>
-              <tr><td>Expires:</td><td>${escapeHtml(sigData.notAfter || 'Unknown')} ${sigData.isExpired ? '<span class="pill-error">EXPIRED</span>' : '<span class="pill-ok">Active</span>'}</td></tr>
-            </table>
+          <div class="sig-alert ${sigData.structureDetected ? 'sig-alert-warning' : 'sig-alert-error'}">
+            <h4>${escapeHtml(sigData.structureDetected ? data.signatureUnverified : data.signatureInvalid)}</h4>
+            <p>${escapeHtml(sigData.structureDetected ? data.signatureUnverifiedEvidence : data.signatureInvalidEvidence)}</p>
           </div>
         `;
       }

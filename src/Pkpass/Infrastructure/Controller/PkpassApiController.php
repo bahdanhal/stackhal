@@ -385,6 +385,7 @@ final class PkpassApiController extends AbstractController
     /**
      * @return array{
      *   present: bool,
+     *   cryptographicallyVerified: bool,
      *   algorithm: string|null,
      *   teamIdentifier: string|null,
      *   passTypeIdentifier: string|null,
@@ -397,6 +398,7 @@ final class PkpassApiController extends AbstractController
         if ($signatureBytes === null || $signatureBytes === '') {
             return [
                 'present' => false,
+                'cryptographicallyVerified' => false,
                 'algorithm' => null,
                 'teamIdentifier' => null,
                 'passTypeIdentifier' => null,
@@ -405,37 +407,14 @@ final class PkpassApiController extends AbstractController
             ];
         }
 
-        $teamIdentifier = null;
-        $passTypeIdentifier = null;
-        $expiresAt = null;
-        $isExpired = false;
-        $algorithm = 'sha256WithRSAEncryption';
-
-        if (preg_match('/([A-Z0-9]{10})/', $signatureBytes, $m)) {
-            $teamIdentifier = $m[1];
-        }
-        if (preg_match('/(pass\.[a-zA-Z0-9.\-_]+)/', $signatureBytes, $m)) {
-            $passTypeIdentifier = $m[1];
-        }
-
-        if (preg_match_all('/\d{12,14}Z/', $signatureBytes, $dateMatches) && count($dateMatches[0]) >= 2) {
-            $dateStr = $dateMatches[0][1];
-            try {
-                $dt = new \DateTimeImmutable($dateStr);
-                $expiresAt = $dt->format(\DateTimeInterface::ATOM);
-                $isExpired = $dt < new \DateTimeImmutable();
-            } catch (\Exception) {
-                // Ignore date parsing failure
-            }
-        }
-
         return [
             'present' => true,
-            'algorithm' => $algorithm,
-            'teamIdentifier' => $teamIdentifier,
-            'passTypeIdentifier' => $passTypeIdentifier,
-            'expiresAt' => $expiresAt,
-            'isExpired' => $isExpired,
+            'cryptographicallyVerified' => false,
+            'algorithm' => null,
+            'teamIdentifier' => null,
+            'passTypeIdentifier' => null,
+            'expiresAt' => null,
+            'isExpired' => null,
         ];
     }
 

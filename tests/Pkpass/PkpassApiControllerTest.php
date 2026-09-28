@@ -141,6 +141,7 @@ final class PkpassApiControllerTest extends TestCase
         $zip->addFromString('pass.json', $passJson);
         $zip->addFromString('manifest.json', $manifestJson);
         $zip->addFromString('icon.png', $iconData);
+        $zip->addFromString('signature', '0Apple Inc. pass.example BAHDAN9988 20301231235959Z');
         $zip->close();
 
         $uploadedFile = new UploadedFile($tempZip, 'ticket.pkpass', 'application/vnd.apple.pkpass', null, true);
@@ -154,8 +155,14 @@ final class PkpassApiControllerTest extends TestCase
 
         self::assertTrue($data['valid']);
         self::assertTrue($data['manifest']['verified']);
-        self::assertSame(3, $data['manifest']['totalFiles']);
+        self::assertSame(4, $data['manifest']['totalFiles']);
         self::assertEmpty($data['manifest']['missingFiles']);
+        self::assertTrue($data['signature']['present']);
+        self::assertFalse($data['signature']['cryptographicallyVerified']);
+        self::assertNull($data['signature']['algorithm']);
+        self::assertNull($data['signature']['teamIdentifier']);
+        self::assertNull($data['signature']['passTypeIdentifier']);
+        self::assertNull($data['signature']['expiresAt']);
 
         @unlink($tempZip);
     }

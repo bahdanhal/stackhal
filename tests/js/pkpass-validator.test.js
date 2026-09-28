@@ -47,7 +47,7 @@ async function runTests() {
     'manifest.json': 'present',
     'icon.png': new Uint8Array([1]),
     'icon@2x.png': new Uint8Array([2]),
-    signature: new Uint8Array([0x30, 0x00])
+    signature: Uint8Array.from(Buffer.from('303706092a864886f70d010702a02a302802010131023000300b06092a864886f70d0107013112301002010130003002010130020101040101', 'hex'))
   };
   const completeManifest = {
     'pass.json': PkpassInspector.sha1Sync(validJson),
@@ -58,7 +58,13 @@ async function runTests() {
   assert.equal(
     PkpassInspector.getDiagnosticPriorityForTest(validResult, completeFiles, completeManifest, 'bundle').kind,
     'signature-unverified',
-    'A structurally present signature must retain the local trust limitation'
+    'A SignedData envelope must retain the local trust limitation'
+  );
+  assert.equal(PkpassInspector.parsePkcs7Signature(completeFiles.signature).structureDetected, true);
+  assert.equal(
+    PkpassInspector.parsePkcs7Signature(new TextEncoder().encode('0Apple Inc. pass.example ABCDEFGHIJ')).structureDetected,
+    false,
+    'A DER-like prefix and embedded text must not be treated as a signature'
   );
   assert.equal(
     PkpassInspector.getDiagnosticPriorityForTest(validResult, { ...completeFiles, signature: new Uint8Array([3]) }, completeManifest, 'bundle').kind,
