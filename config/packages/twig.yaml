@@ -1,4 +1,6 @@
 twig:
   file_name_pattern: '*.twig'
+  globals:
+    article_illustrations: '@App\Blog\Presentation\ArticleIllustrations'
   paths:
     '%kernel.project_dir%/templates': ~

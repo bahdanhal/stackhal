@@ -41,8 +41,8 @@
 
   {% if articles is not empty %}
     {% set featured = articles|first %}
-    {% set hasIllustration = featured.slug == 'debugging-is-almost-dead-in-2026' %}
-    <section class="journal-feature{% if hasIllustration or featured.visualLines is not empty %} has-visual{% endif %}" aria-labelledby="featured-title">
+    {% set illustration = article_illustrations.forArticle(featured) %}
+    <section class="journal-feature{% if illustration or featured.visualLines is not empty %} has-visual{% endif %}" aria-labelledby="featured-title">
       <div class="journal-feature-copy">
         <p class="journal-label"><span class="journal-dot" aria-hidden="true"></span> Latest field note <span>/ {{ featured.category }}</span></p>
         <h2 id="featured-title"><a href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ featured.title }}</a></h2>
@@ -52,9 +52,9 @@
           <span>{{ featured.readTimeMinutes }} min read · <time datetime="{{ featured.publishedAt|date('Y-m-d') }}">{{ featured.publishedAt|date('d M Y') }}</time></span>
         </div>
       </div>
-      {% if hasIllustration %}
+      {% if illustration %}
       <a class="journal-feature-illustration" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}" tabindex="-1" aria-hidden="true">
-        <img src="/images/atelier/debugging-evidence.webp" width="1000" height="667" alt="" fetchpriority="high">
+        <img src="{{ illustration.path }}" width="1000" height="667" alt="" fetchpriority="high" decoding="async">
       </a>
       {% elseif featured.visualLines is not empty %}
       <div class="journal-feature-visual" aria-hidden="true">
@@ -76,11 +76,17 @@
     </div>
     <div id="journal-entries" class="journal-entries">
       {% for article in articles %}
-        <article class="journal-entry" data-blog-entry>
+        {% set illustration = article_illustrations.forArticle(article) %}
+        <article class="journal-entry{% if illustration %} has-illustration{% endif %}" data-blog-entry>
           <div class="journal-entry-meta">
             <time datetime="{{ article.publishedAt|date('Y-m-d') }}">{{ article.publishedAt|date('d M Y') }}</time>
             <span>{{ article.readTimeMinutes }} min read</span>
           </div>
+          {% if illustration %}
+          <a class="journal-entry-illustration" href="{{ path('blog_article', {slug: article.slug, _locale: app.request.locale}) }}" tabindex="-1" aria-hidden="true">
+            <img src="{{ illustration.path }}" width="1000" height="667" alt="" loading="lazy" decoding="async">
+          </a>
+          {% endif %}
           <div class="journal-entry-copy">
             <p class="journal-label">{{ article.category }}</p>
             <h3><a href="{{ path('blog_article', {slug: article.slug, _locale: app.request.locale}) }}">{{ article.title }}</a></h3>

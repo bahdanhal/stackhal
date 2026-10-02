@@ -24,6 +24,10 @@
   {{ parent() }}
   {% set article_url = app.request.locale == 'pl' ? ('https://stackhal.com/pl/blog/' ~ article.slug) : ('https://stackhal.com/blog/' ~ article.slug) %}
   {% set article_schema = {'@type': 'Article', '@id': article_url ~ '#article', 'headline': article.title, 'description': article.description, 'datePublished': article.publishedAt|date('Y-m-d'), 'dateModified': article.updatedAt|date('Y-m-d'), 'author': {'@id': 'https://stackhal.com/#stackhal'}, 'publisher': {'@id': 'https://stackhal.com/#stackhal'}, 'mainEntityOfPage': article_url, 'inLanguage': app.request.locale} %}
+  {% set illustration = article_illustrations.forArticle(article) %}
+  {% if illustration %}
+    {% set article_schema = article_schema|merge({'image': 'https://stackhal.com' ~ illustration.path}) %}
+  {% endif %}
   {% set graph = [article_schema] %}
   {% if article.howToSteps is not empty %}
     {% set graph = graph|merge([{'@type': 'HowTo', '@id': article_url ~ '#howto', 'name': article.title, 'step': article.howToSteps|map(step => {'@type': 'HowToStep', 'name': step.name, 'text': step.text})}]) %}
@@ -58,10 +62,11 @@
       </div>
     </div>
   </header>
-  {% if article.slug == 'debugging-is-almost-dead-in-2026' %}
+  {% set illustration = article_illustrations.forArticle(article) %}
+  {% if illustration %}
   <figure class="article-editorial-illustration">
-    <img src="/images/atelier/debugging-evidence.webp" width="1000" height="667" alt="An inspection lens examining a stack of red and black evidence plates." fetchpriority="high">
-    <figcaption>Fig. 02 / Follow the evidence.</figcaption>
+    <img src="{{ illustration.path }}" width="1000" height="667" alt="{{ illustration.alt }}" fetchpriority="high" decoding="async">
+    <figcaption>{{ illustration.caption }}</figcaption>
   </figure>
   {% endif %}
   <div class="article-layout">

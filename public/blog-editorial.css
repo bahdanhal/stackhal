@@ -36,6 +36,9 @@ body.journal-page .blog-index-shell, body.journal-page .article-shell { max-widt
 .journal-search input { width: 220px; min-height: 44px; color: var(--ink); border: 0; border-bottom: 1px solid var(--line); background: #fff; padding: 8px 0; font-size: 12px; border-radius: 0; }
 .journal-entry { display: grid; grid-template-columns: 140px minmax(0, 1fr) 24px; gap: 32px; padding: 30px 0; border-top: 1px solid var(--line); }
 .journal-entry:last-child { border-bottom: 1px solid var(--line); }
+.journal-entry.has-illustration { grid-template-columns: 140px 150px minmax(0, 1fr) 24px; align-items: center; }
+.journal-entry-illustration { display: block; }
+.journal-entry-illustration img { display: block; width: 100%; height: auto; }
 .journal-entry-meta { display: grid; align-content: start; gap: 7px; color: var(--muted); padding-top: 2px; }
 .journal-entry h3 { margin: 10px 0; font: 500 clamp(23px, 2.8vw, 32px)/1.1 var(--sans); letter-spacing: -.04em; }
 .journal-entry-description { max-width: 680px; color: var(--muted); font-size: 13px; line-height: 1.7; margin: 0; }
@@ -96,6 +99,7 @@ body.journal-page .blog-index-shell, body.journal-page .article-shell { max-widt
   .journal-heading > p { margin-top: 24px; }
   .journal-feature.has-visual { gap: 24px; }
   .journal-entry { grid-template-columns: 100px minmax(0, 1fr) 20px; gap: 24px; }
+  .journal-entry.has-illustration { grid-template-columns: 90px 120px minmax(0, 1fr) 20px; gap: 20px; }
   .article-layout { grid-template-columns: minmax(0, 1fr) 180px; gap: 36px; }
   .article-editorial-illustration img { margin-left: 0; }
 }
@@ -109,6 +113,8 @@ body.journal-page .blog-index-shell, body.journal-page .article-shell { max-widt
   .journal-search { justify-content: space-between; }
   .journal-search input { width: 65%; }
   .journal-entry { grid-template-columns: minmax(0, 1fr) 20px; gap: 12px; padding: 24px 0; }
+  .journal-entry.has-illustration { grid-template-columns: minmax(0, 1fr) 20px; gap: 12px; }
+  .journal-entry-illustration { grid-column: 1 / -1; width: 150px; margin: 4px 0; }
   .journal-entry-meta { display: flex; flex-wrap: wrap; gap: 16px; grid-column: 1 / -1; }
   .journal-entry h3 { font-size: 26px; }
   .journal-breadcrumb { margin-bottom: 32px; }
