@@ -33,7 +33,7 @@
 <section class="blog-index-shell">
   <header class="journal-masthead">
     <div class="journal-heading">
-      <h1>Field notes</h1>
+      <h1>Field notes<span>.</span></h1>
       <p>The StackHal blog, by Bahdan Hal.</p>
     </div>
     <p class="journal-intro">Investigations and practical guides to AI engineering and the infrastructure behind the web.</p>
@@ -41,7 +41,8 @@
 
   {% if articles is not empty %}
     {% set featured = articles|first %}
-    <section class="journal-feature{% if featured.visualLines is not empty %} has-visual{% endif %}" aria-labelledby="featured-title">
+    {% set hasIllustration = featured.slug == 'debugging-is-almost-dead-in-2026' %}
+    <section class="journal-feature{% if hasIllustration or featured.visualLines is not empty %} has-visual{% endif %}" aria-labelledby="featured-title">
       <div class="journal-feature-copy">
         <p class="journal-label"><span class="journal-dot" aria-hidden="true"></span> Latest field note <span>/ {{ featured.category }}</span></p>
         <h2 id="featured-title"><a href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ featured.title }}</a></h2>
@@ -51,7 +52,11 @@
           <span>{{ featured.readTimeMinutes }} min read · <time datetime="{{ featured.publishedAt|date('Y-m-d') }}">{{ featured.publishedAt|date('d M Y') }}</time></span>
         </div>
       </div>
-      {% if featured.visualLines is not empty %}
+      {% if hasIllustration %}
+      <a class="journal-feature-illustration" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}" tabindex="-1" aria-hidden="true">
+        <img src="/images/atelier/debugging-evidence.webp" width="1000" height="667" alt="" fetchpriority="high">
+      </a>
+      {% elseif featured.visualLines is not empty %}
       <div class="journal-feature-visual" aria-hidden="true">
         <div class="article-card-visual{% if featured.visualClass %} article-card-visual-{{ featured.visualClass }}{% endif %}">
           {% for line in featured.visualLines %}<span>{{ line }}</span>{% endfor %}

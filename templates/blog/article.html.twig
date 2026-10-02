@@ -58,6 +58,12 @@
       </div>
     </div>
   </header>
+  {% if article.slug == 'debugging-is-almost-dead-in-2026' %}
+  <figure class="article-editorial-illustration">
+    <img src="/images/atelier/debugging-evidence.webp" width="1000" height="667" alt="An inspection lens examining a stack of red and black evidence plates." fetchpriority="high">
+    <figcaption>Fig. 02 / Follow the evidence.</figcaption>
+  </figure>
+  {% endif %}
   <div class="article-layout">
     {% set externalCta = article.ctaPath starts with 'https://' %}
     <div class="article-prose article-content" id="article-content">{{ article.contentHtml|raw }}</div>

@@ -9,7 +9,7 @@
   <link rel="alternate" hreflang="x-default" href="https://stackhal.com/">
 {% endblock %}
 {% block stylesheets %}
-  <link rel="stylesheet" href="/hero-explosion.css">
+  <link rel="stylesheet" href="/hero-explosion.css?v=20261002-1">
   <link rel="stylesheet" href="/cat-ops.css">
 {% endblock %}
 
@@ -23,24 +23,29 @@
   data-catops-running-status="{{ 'home.catops.running_status'|trans }}"
   data-catops-resolved-status="{{ 'home.catops.resolved_status'|trans }}"
 >
-  <button class="eyebrow catops-mobile-trigger" type="button" data-catops-mobile-trigger>{{ 'home.eyebrow'|trans }}</button>
-  <h1 data-catops-heading>{{ 'home.heading_start'|trans }}</h1>
-  <p class="lede">{{ 'home.lede'|trans }}</p>
-  <div class="toolbox-orbit" aria-hidden="true">
-    <span>DNS</span><span>CIDR</span><span>SEO</span><span>PKPass</span><span>Caddy</span>
-    <button class="catops-trigger" type="button" aria-label="{{ 'home.catops.trigger_label'|trans }}">
-      <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="10" cy="10" r="7"/>
-        <circle cx="10" cy="2" fill="currentColor"/>
-        <path d="M10 3v2M10 15v2M3 10h2M15 10h2"/>
-      </svg>
-    </button>
+  <div class="atelier-home-intro">
+    <div class="atelier-home-copy">
+      <button class="eyebrow catops-mobile-trigger" type="button" data-catops-mobile-trigger>{{ 'home.eyebrow'|trans }}</button>
+      <h1 data-catops-heading><span>{{ 'home.heading_start'|trans }}</span> <span>{{ 'home.heading_middle'|trans }}</span> <em>{{ 'home.heading_emphasis'|trans }}</em></h1>
+      <p class="lede">{{ 'home.lede'|trans }}</p>
+      <div class="atelier-incident-controls">
+        <button type="button" data-catops-mobile-trigger>{{ 'home.deploy_cat'|trans }} <span aria-hidden="true">↗</span></button>
+        <button type="button" data-hero-detonate>{{ 'home.detonate'|trans }} <span aria-hidden="true">✳</span></button>
+      </div>
+      <ul class="toolbox-status" aria-label="{{ 'home.status.label'|trans }}">
+        <li>{{ 'home.status.browser_first'|trans }}</li>
+        <li>{{ 'home.status.no_signup'|trans }}</li>
+        <li>{{ 'home.status.observable_results'|trans }}</li>
+      </ul>
+    </div>
+    <div class="atelier-home-art">
+      <img src="/images/atelier/inspection-machine.webp" width="1000" height="667" alt="{{ 'home.illustration_alt'|trans }}" fetchpriority="high">
+      <div class="toolbox-orbit">
+        <button class="catops-trigger" type="button" aria-label="{{ 'home.catops.trigger_label'|trans }}"><span aria-hidden="true">✳</span></button>
+      </div>
+      <p class="atelier-art-caption">{{ 'home.illustration_caption'|trans }}</p>
+    </div>
   </div>
-  <ul class="toolbox-status" aria-label="{{ 'home.status.label'|trans }}">
-    <li>{{ 'home.status.browser_first'|trans }}</li>
-    <li>{{ 'home.status.no_signup'|trans }}</li>
-    <li>{{ 'home.status.observable_results'|trans }}</li>
-  </ul>
 
   <div class="tool-catalog">
     <section class="tool-category" aria-labelledby="category-web">
@@ -176,6 +181,6 @@
   <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'WebApplication','@id':'https://stackhal.com/#app','url':'https://stackhal.com/','name':'StackHal Developer Utilities Suite','applicationCategory':'DeveloperApplication','operatingSystem':'All','browserRequirements':'Requires JavaScript. Requires HTML5.','offers':{'@type':'Offer','price':'0','priceCurrency':'USD'},'description':('home.lede'|trans),'author':{'@id':'https://stackhal.com/#stackhal'},'publisher':{'@id':'https://stackhal.com/#stackhal'}},{'@type':'FAQPage','@id':'https://stackhal.com/#faq','mainEntity':[{'@type':'Question','name':('home.faq.q1'|trans),'acceptedAnswer':{'@type':'Answer','text':('home.faq.a1'|trans)}},{'@type':'Question','name':('home.faq.q2'|trans),'acceptedAnswer':{'@type':'Answer','text':('home.faq.a2'|trans)}},{'@type':'Question','name':('home.faq.q3'|trans),'acceptedAnswer':{'@type':'Answer','text':('home.faq.a3'|trans)}},{'@type':'Question','name':('home.faq.q4'|trans),'acceptedAnswer':{'@type':'Answer','text':('home.faq.a4'|trans)}}]}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
 {% endblock %}
 {% block scripts %}
-  <script src="/hero-explosion.js" defer></script>
-  <script src="/cat-ops.js" defer></script>
+  <script src="/hero-explosion.js?v=20261002-1" defer></script>
+  <script src="/cat-ops.js?v=20261002-1" defer></script>
 {% endblock %}

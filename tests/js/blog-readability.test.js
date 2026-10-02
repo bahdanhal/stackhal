@@ -2,8 +2,8 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const css = fs.readFileSync(path.join(__dirname, '../../public/page-remix.css'), 'utf8');
-const paperColor = '#f7f0de';
+const css = fs.readFileSync(path.join(__dirname, '../../public/blog-editorial.css'), 'utf8');
+const paperColor = '#ffffff';
 
 function ruleFor(selector) {
   const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

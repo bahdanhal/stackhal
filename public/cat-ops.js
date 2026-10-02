@@ -55,8 +55,12 @@
       return null;
     }
 
+    const originalHeading = heading.cloneNode(true);
+    originalHeading.querySelectorAll('.hero-explosion-canvas').forEach(function (canvas) {
+      canvas.remove();
+    });
     const original = {
-      heading: heading.textContent,
+      heading: originalHeading.innerHTML,
       eyebrow: eyebrow.textContent,
       statuses: statusItems.map(function (item) { return item.textContent; })
     };
@@ -97,7 +101,7 @@
     }
 
     function restoreCopy() {
-      heading.textContent = original.heading;
+      heading.innerHTML = original.heading;
       window.dispatchEvent(new window.CustomEvent('stackhal:hero-copy-changed'));
       eyebrow.textContent = original.eyebrow;
       setStatuses(original.statuses);

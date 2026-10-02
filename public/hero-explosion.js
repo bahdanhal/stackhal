@@ -230,6 +230,9 @@
       }
     });
     window.addEventListener('stackhal:detonate', explode);
+    hero.querySelectorAll('[data-hero-detonate]').forEach(function (button) {
+      button.addEventListener('click', explode);
+    });
     window.addEventListener('stackhal:hero-copy-changed', attachCanvas);
     scheduleExplosion(1800);
     return { explode: explode };
