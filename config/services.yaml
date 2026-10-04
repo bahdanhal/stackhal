@@ -13,7 +13,7 @@ parameters:
   env(ANALYTICS_BEACON_MODE): 'true'
   env(AI_PROVIDER): 'anthropic'
   env(AI_SUMMARY_MODEL): 'claude-haiku-4-5-20251001'
-  env(MARKET_ADMIN_TOKEN): ''
+  env(MCP_ADMIN_TOKEN): ''
   audit.max_pages: '%env(int:AUDIT_MAX_PAGES)%'
   audit.concurrency: '%env(int:AUDIT_CONCURRENCY)%'
   audit.batch_delay_ms: '%env(int:AUDIT_BATCH_DELAY_MS)%'
@@ -139,7 +139,7 @@ services:
 
   App\Mcp\AdminAccess:
     arguments:
-      $token: '%env(MARKET_ADMIN_TOKEN)%'
+      $token: '%env(MCP_ADMIN_TOKEN)%'
 
   App\Audit\Presentation\Http\AuditController:
     arguments:
