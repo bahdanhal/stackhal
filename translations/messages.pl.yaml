@@ -36,7 +36,6 @@ base:
         income: "UoP / UZ / UoD / B2B"
         geo: "Analizator GEO"
         seo: "Analizator SEO"
-        market: "Ceny używanych rzeczy"
         bimi: "BIMI Studio"
         domain_inspector: "Inspektor domen"
         caddy_transpiler: "Konwerter Caddyfile"
@@ -53,7 +52,6 @@ base:
         income: "Kalkulator wynagrodzeń"
         geo: "Analizator GEO"
         seo: "Analizator SEO"
-        market: "Indeks cen używanych rzeczy w Polsce"
         bimi: "BIMI Studio i konwerter SVG"
         domain_inspector: "Inspektor bezpieczeństwa domen i BIMI"
         caddy_transpiler: "Konwerter Nginx i Apache do Caddyfile"
@@ -130,9 +128,6 @@ home:
     seo:
         title: "Techniczny audyt SEO"
         text: "Znajdź błędy przekierowań, pułapki crawlerów, duplikaty adresów, problemy canonical i luki w mapie witryny."
-    market:
-        title: "Indeks cen używanych w Polsce"
-        text: "Śledź ręcznie weryfikowane przez Bahdana obserwacje porównywalnych cen ofertowych z historią i jawnymi ograniczeniami."
     favicon_suite:
         title: "Generator Favicon & SVG Dark-Mode"
         text: "Generuj adaptacyjne wektorowe ikony SVG dla trybu ciemnego, pliki ICO o wielu rozdzielczościach, Apple Touch Icon i pakiety PWA."

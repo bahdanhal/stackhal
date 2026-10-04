@@ -36,7 +36,6 @@ base:
         income: "UoP / UZ / UoD / B2B"
         geo: "GEO analyzer"
         seo: "SEO analyzer"
-        market: "Used goods prices"
         bimi: "BIMI Studio"
         domain_inspector: "Domain inspector"
         caddy_transpiler: "Caddyfile Transpiler"
@@ -53,7 +52,6 @@ base:
         income: "Polish income calculator"
         geo: "GEO analyzer"
         seo: "SEO analyzer"
-        market: "Poland used-goods price index"
         bimi: "BIMI Studio & SVG Converter"
         domain_inspector: "Domain email security inspector"
         caddy_transpiler: "Nginx & Apache to Caddyfile Transpiler"
@@ -129,9 +127,6 @@ home:
     seo:
         title: "Technical SEO audit"
         text: "Find redirect mistakes, crawler traps, duplicate URL spaces, canonical problems, and sitemap gaps."
-    market:
-        title: "Poland used-goods price index"
-        text: "Follow Bahdan's manually reviewed snapshots of comparable second-hand asking prices, with history and transparent limitations."
     favicon_suite:
         title: "Favicon Kitchen & Dark-Mode SVG Suite"
         text: "Generate dark-mode adaptive vector favicons, multi-resolution ICOs, Apple touch icons, and Android PWA bundles with safe-zone masking."
