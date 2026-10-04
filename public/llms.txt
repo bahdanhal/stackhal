@@ -21,7 +21,7 @@
 ## Ecosystem applications
 
 - [Bahdan Hal Portfolio](https://bahdanhal.pl/): backend consulting and production engineering
-- [IleZa.pl](https://ileza.pl/): Polish used tech price radar and salary calculator
+- [IleZa.pl](https://ileza.pl/): Manual editorial fair prices for any product category in Poland, plus a salary calculator
 
 ## Data access
 
