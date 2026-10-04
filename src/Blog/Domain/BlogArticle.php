@@ -6,6 +6,8 @@ namespace App\Blog\Domain;
 
 final readonly class BlogArticle
 {
+    public const AGENT_CONVERSATIONS_CATEGORY = 'Agent conversations';
+
     /**
      * @param list<string> $visualLines
      * @param list<array{name: string, text: string}> $howToSteps
@@ -65,6 +67,11 @@ final readonly class BlogArticle
     public function getCategory(): string
     {
         return $this->category;
+    }
+
+    public function isAgentConversationDigest(): bool
+    {
+        return $this->category === self::AGENT_CONVERSATIONS_CATEGORY;
     }
 
     public function getReadTimeMinutes(): int

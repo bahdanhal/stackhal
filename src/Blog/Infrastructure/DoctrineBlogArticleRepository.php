@@ -16,7 +16,7 @@ final class DoctrineBlogArticleRepository implements BlogArticleRepository
     }
 
     /** @return list<BlogArticle> */
-    public function findPublished(?string $locale = null): array
+    public function findPublished(?string $locale = null, ?string $category = null): array
     {
         $qb = $this->entityManager->createQueryBuilder()
             ->select('article')
@@ -27,6 +27,11 @@ final class DoctrineBlogArticleRepository implements BlogArticleRepository
         if ($locale !== null && $locale !== '') {
             $qb->andWhere('article.locale = :locale')
                 ->setParameter('locale', $locale);
+        }
+
+        if ($category !== null) {
+            $qb->andWhere('article.category = :category')
+                ->setParameter('category', $category);
         }
 
         /** @var list<BlogArticleEntity> $articles */

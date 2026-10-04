@@ -47,6 +47,26 @@ final class DoctrineBlogArticleRepositoryTest extends DoctrineTestCase
         self::assertNull($this->repository()->findPublishedBySlug('english-only', 'pl'));
     }
 
+    public function testDigestArchiveFiltersLocaleCategoryAndScheduledEditions(): void
+    {
+        $english = $this->article('digest-en', new \DateTimeImmutable('-1 hour'), 'en');
+        $polish = $this->article('digest-pl', new \DateTimeImmutable('-1 hour'), 'pl');
+        $future = $this->article('future-digest', new \DateTimeImmutable('+1 day'), 'en');
+        foreach ([$english, $polish, $future] as $digest) {
+            $digest->setCategory(BlogArticle::AGENT_CONVERSATIONS_CATEGORY);
+            $this->entityManager->persist($digest);
+        }
+        $this->entityManager->persist($this->article('ordinary-guide', new \DateTimeImmutable('-1 hour')));
+        $this->entityManager->flush();
+
+        $repository = $this->repository();
+        $editions = $repository->findPublished('en', BlogArticle::AGENT_CONVERSATIONS_CATEGORY);
+        self::assertSame(['digest-en'], array_map(static fn (BlogArticle $article): string => $article->getSlug(), $editions));
+        self::assertTrue($editions[0]->isAgentConversationDigest());
+        self::assertSame('digest-pl', $repository->findPublished('pl', BlogArticle::AGENT_CONVERSATIONS_CATEGORY)[0]->getSlug());
+        self::assertCount(3, $repository->findPublished());
+    }
+
     private function repository(): DoctrineBlogArticleRepository
     {
         return new DoctrineBlogArticleRepository($this->entityManager);

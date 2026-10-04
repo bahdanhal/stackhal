@@ -57,6 +57,7 @@
         <nav class="primary-nav" aria-label="{{ 'base.navigation'|trans }}">
           <a href="{{ path('landing', {_locale: app.request.locale}) }}">{{ 'common.all_tools'|trans }}</a>
           <a href="{{ path('blog_index', {_locale: app.request.locale}) }}">{{ 'base.nav.blog'|trans }}</a>
+          <a href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">{{ 'agent_digest.nav'|trans }}</a>
           <a href="{{ path('geo_home', {_locale: app.request.locale}) }}">{{ 'base.nav.geo'|trans }}</a>
           <a href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">{{ 'base.nav.seo'|trans }}</a>
         </nav>
@@ -74,6 +75,7 @@
             <a href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">{{ 'base.nav.pkpass'|trans }}</a>
             <a href="{{ path('app_links_validator', {_locale: app.request.locale}) }}">{{ 'base.nav.app_links'|trans }}</a>
             <a href="{{ path('ai_studio_extension', {_locale: app.request.locale}) }}">{{ 'base.nav.ai_studio_extension'|trans }}</a>
+            <a href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">{{ 'agent_digest.nav'|trans }}</a>
           </nav>
         </details>
         {% block language_switch %}

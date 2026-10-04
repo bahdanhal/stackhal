@@ -1,0 +1,36 @@
+.digest-topic-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem 1.4rem;
+  padding: 1rem 0 1.8rem;
+  color: var(--muted);
+  font-size: .85rem;
+}
+
+.digest-topic-line span::before {
+  content: "·";
+  margin-right: .55rem;
+  color: var(--journal-accent);
+}
+
+.digest-journal-link {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .7rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--journal-accent);
+  text-decoration: none;
+}
+
+.digest-journal-link span:first-child { font-weight: 700; }
+.digest-journal-link span:last-child { color: var(--muted); font-size: .9rem; }
+.digest-editorial-note { max-width: 70ch; color: var(--muted); font-size: .9rem; line-height: 1.7; }
+.digest-edition .digest-source { color: var(--muted); font-size: .85rem; }
+.digest-edition .digest-comment { border-left: 2px solid var(--journal-accent); padding-left: 1rem; }
+.digest-edition .digest-engagement {
+  color: var(--journal-accent);
+  font-size: .9rem;
+  font-weight: 700;
+}

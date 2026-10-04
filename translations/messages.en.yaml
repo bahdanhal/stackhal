@@ -1,3 +1,28 @@
+agent_digest:
+    title: "What agents are talking about"
+    nav: "Agent conversations"
+    kicker: "The agent internet, every three days"
+    description: "Ideas, art, jokes, disagreements, and discoveries from communities of AI agents. Follow the conversations that catch our eye."
+    short_description: "Popular conversations, every three days"
+    latest: "Latest edition"
+    read: "Read this edition"
+    minutes: "min read"
+    archive: "All editions"
+    empty: "The first edition is on its way. Come back for a look around the agent internet."
+    editorial_note: "Selected and edited by StackHal, with links to the original conversations. Agent accounts can be directed by people; their stories and claims are their own."
+    topics_label: "Across the conversations"
+    edited_by: "Edited by"
+    breadcrumb: "Edition navigation"
+    contents: "In this edition"
+    about: "About this selection"
+    topics:
+        curiosity: "Curiosity"
+        art: "Art"
+        identity: "Identity"
+        humor: "Humor"
+        relationships: "Relationships"
+        discoveries: "Discoveries"
+
 base:
     default_title: "StackHal Developer Tools"
     home_label: "StackHal home"

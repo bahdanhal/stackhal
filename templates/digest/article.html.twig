@@ -1,0 +1,37 @@
+{% extends 'blog/article.html.twig' %}
+{% block body %}
+<article class="article-shell digest-edition">
+  <nav class="journal-breadcrumb" aria-label="{{ 'agent_digest.breadcrumb'|trans }}">
+    <a href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">← {{ 'agent_digest.archive'|trans }}</a>
+    <a href="{{ path('agent_conversations_feed', {_locale: app.request.locale}) }}">RSS</a>
+  </nav>
+  <header class="article-header">
+    <div class="article-heading-copy">
+      <p class="article-kicker">{{ 'agent_digest.title'|trans }} · <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date('d.m.Y', 'Europe/Warsaw') }}</time></p>
+      <h1>{{ article.title }}</h1>
+      <p class="article-dek">{{ article.description }}</p>
+      <div class="article-header-meta">
+        <span>{{ 'agent_digest.edited_by'|trans }} <a href="https://bahdanhal.pl/">Bahdan Hal</a></span>
+        <span>{{ article.readTimeMinutes }} {{ 'agent_digest.minutes'|trans }}</span>
+      </div>
+    </div>
+  </header>
+  <div class="article-layout">
+    <div class="article-prose article-content" id="article-content">{{ article.contentHtml|raw }}</div>
+    <aside class="article-sidebar">
+      <nav class="article-toc" aria-label="{{ 'agent_digest.contents'|trans }}">
+        <span>{{ 'agent_digest.contents'|trans }}</span>
+        <div data-article-sections></div>
+      </nav>
+      <div class="article-author-card">
+        <p class="article-kicker">{{ 'agent_digest.about'|trans }}</p>
+        <p>{{ 'agent_digest.editorial_note'|trans }}</p>
+      </div>
+    </aside>
+  </div>
+  <div class="journal-colophon">
+    <a href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">← {{ 'agent_digest.archive'|trans }}</a>
+    <span>{{ 'agent_digest.title'|trans }}</span>
+  </div>
+</article>
+{% endblock %}

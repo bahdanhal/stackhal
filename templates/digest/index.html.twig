@@ -1,0 +1,72 @@
+{% extends 'blog/base.html.twig' %}
+{% block title %}{{ 'agent_digest.title'|trans }} · StackHal{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}<meta name="description" content="{{ 'agent_digest.description'|trans }}">{% endblock %}
+{% block canonical %}
+  <link rel="canonical" href="https://stackhal.com{{ path('agent_conversations', {_locale: app.request.locale}) }}">
+  <link rel="alternate" hreflang="en" href="https://stackhal.com{{ path('agent_conversations', {_locale: 'en'}) }}">
+  <link rel="alternate" hreflang="pl" href="https://stackhal.com{{ path('agent_conversations', {_locale: 'pl'}) }}">
+  <link rel="alternate" hreflang="x-default" href="https://stackhal.com{{ path('agent_conversations', {_locale: 'en'}) }}">
+{% endblock %}
+{% block head_scripts %}
+  {{ parent() }}
+  <link rel="alternate" type="application/rss+xml" title="{{ 'agent_digest.title'|trans }}" href="{{ path('agent_conversations_feed', {_locale: app.request.locale}) }}">
+{% endblock %}
+{% block language_switch %}
+  {% set alternate = app.request.locale == 'pl' ? 'en' : 'pl' %}
+  <a class="language-switch" href="{{ path('agent_conversations', {_locale: alternate}) }}" hreflang="{{ alternate }}">{{ alternate|upper }}</a>
+{% endblock %}
+{% block body %}
+<section class="blog-index-shell digest-index">
+  <header class="journal-masthead">
+    <div class="journal-heading">
+      <p class="journal-label">{{ 'agent_digest.kicker'|trans }}</p>
+      <h1>{{ 'agent_digest.title'|trans }}</h1>
+    </div>
+    <p class="journal-intro">{{ 'agent_digest.description'|trans }}</p>
+  </header>
+  <div class="digest-topic-line" aria-label="{{ 'agent_digest.topics_label'|trans }}">
+    {% for topic in ['curiosity', 'art', 'identity', 'humor', 'relationships', 'discoveries'] %}
+      <span>{{ ('agent_digest.topics.' ~ topic)|trans }}</span>
+    {% endfor %}
+  </div>
+  {% if articles is not empty %}
+    {% set featured = articles|first %}
+    <section class="journal-feature" aria-labelledby="digest-latest-title">
+      <div class="journal-feature-copy">
+        <p class="journal-label"><span class="journal-dot" aria-hidden="true"></span> {{ 'agent_digest.latest'|trans }}</p>
+        <h2 id="digest-latest-title"><a href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ featured.title }}</a></h2>
+        <p class="journal-feature-dek">{{ featured.description }}</p>
+        <div class="journal-feature-footer">
+          <a class="journal-read" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ 'agent_digest.read'|trans }} ↗</a>
+          <span>{{ featured.readTimeMinutes }} {{ 'agent_digest.minutes'|trans }} · <time datetime="{{ featured.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ featured.publishedAt|date('d.m.Y', 'Europe/Warsaw') }}</time></span>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  <section class="journal-archive" aria-labelledby="digest-archive-title">
+    <div class="journal-archive-header">
+      <h2 id="digest-archive-title">{{ 'agent_digest.archive'|trans }} <span>{{ articles|length }}</span></h2>
+      <a class="journal-read" href="{{ path('agent_conversations_feed', {_locale: app.request.locale}) }}">RSS ↗</a>
+    </div>
+    <div class="journal-entries">
+      {% for article in articles %}
+        <article class="journal-entry">
+          <div class="journal-entry-meta">
+            <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date('d.m.Y', 'Europe/Warsaw') }}</time>
+            <span>{{ article.readTimeMinutes }} {{ 'agent_digest.minutes'|trans }}</span>
+          </div>
+          <div class="journal-entry-copy">
+            <h3><a href="{{ path('blog_article', {slug: article.slug, _locale: app.request.locale}) }}">{{ article.title }}</a></h3>
+            <p class="journal-entry-description">{{ article.description }}</p>
+          </div>
+          <span class="journal-entry-arrow" aria-hidden="true">↗</span>
+        </article>
+      {% else %}
+        <p class="journal-empty">{{ 'agent_digest.empty'|trans }}</p>
+      {% endfor %}
+    </div>
+  </section>
+  <p class="digest-editorial-note">{{ 'agent_digest.editorial_note'|trans }}</p>
+</section>
+{% endblock %}

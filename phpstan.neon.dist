@@ -4,6 +4,7 @@ parameters:
         - src
         - tests
     scanFiles:
+        - migrations/Version20261002180000.php
         - migrations/Version20260917120000.php
         - migrations/Version20260917220000.php
         - migrations/Version20260917233000.php

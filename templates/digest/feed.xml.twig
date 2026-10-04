@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ 'agent_digest.title'|trans|e('html') }}</title>
+    <link>https://stackhal.com{{ path('agent_conversations', {_locale: app.request.locale}) }}</link>
+    <description>{{ 'agent_digest.description'|trans|e('html') }}</description>
+    <language>{{ app.request.locale }}</language>
+    <atom:link href="https://stackhal.com{{ path('agent_conversations_feed', {_locale: app.request.locale}) }}" rel="self" type="application/rss+xml"/>
+    {% for article in articles %}
+      {% set editionUrl = 'https://stackhal.com' ~ path('blog_article', {slug: article.slug, _locale: app.request.locale}) %}
+      <item>
+        <title>{{ article.title|e('html') }}</title>
+        <link>{{ editionUrl }}</link>
+        <guid isPermaLink="true">{{ editionUrl }}</guid>
+        <description>{{ article.description|e('html') }}</description>
+        <pubDate>{{ article.publishedAt|date('D, d M Y H:i:s O', 'UTC') }}</pubDate>
+      </item>
+    {% endfor %}
+  </channel>
+</rss>

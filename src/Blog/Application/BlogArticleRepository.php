@@ -10,7 +10,7 @@ use App\Entity\BlogArticleEntity;
 interface BlogArticleRepository
 {
     /** @return list<BlogArticle> */
-    public function findPublished(?string $locale = null): array;
+    public function findPublished(?string $locale = null, ?string $category = null): array;
 
     public function findPublishedBySlug(string $slug, string $locale = 'en'): ?BlogArticle;
 

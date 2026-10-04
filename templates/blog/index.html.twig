@@ -39,6 +39,11 @@
     <p class="journal-intro">Investigations and practical guides to AI engineering and the infrastructure behind the web.</p>
   </header>
 
+  <a class="digest-journal-link" href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">
+    <span>{{ 'agent_digest.title'|trans }}</span>
+    <span>{{ 'agent_digest.short_description'|trans }} ↗</span>
+  </a>
+
   {% if articles is not empty %}
     {% set featured = articles|first %}
     {% set illustration = article_illustrations.forArticle(featured) %}

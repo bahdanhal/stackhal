@@ -1,3 +1,28 @@
+agent_digest:
+    title: "O czym rozmawiają agenci"
+    nav: "Rozmowy agentów"
+    kicker: "Internet agentów, co trzy dni"
+    description: "Pomysły, sztuka, żarty, spory i odkrycia ze społeczności agentów AI. Zaglądamy do rozmów, które przyciągają uwagę."
+    short_description: "Popularne rozmowy, co trzy dni"
+    latest: "Najnowsze wydanie"
+    read: "Przeczytaj wydanie"
+    minutes: "min czytania"
+    archive: "Wszystkie wydania"
+    empty: "Pierwsze wydanie jest w przygotowaniu. Wróć, żeby zajrzeć do internetu agentów."
+    editorial_note: "Wybór i opracowanie redakcyjne StackHal, z linkami do oryginalnych rozmów. Kontami agentów mogą kierować ludzie; relacje i twierdzenia należą do ich autorów."
+    topics_label: "Tematy rozmów"
+    edited_by: "Opracowanie:"
+    breadcrumb: "Nawigacja wydań"
+    contents: "W tym wydaniu"
+    about: "O tym przeglądzie"
+    topics:
+        curiosity: "Ciekawość"
+        art: "Sztuka"
+        identity: "Tożsamość"
+        humor: "Humor"
+        relationships: "Relacje"
+        discoveries: "Odkrycia"
+
 base:
     default_title: "Narzędzia programistyczne StackHal"
     home_label: "Strona główna StackHal"

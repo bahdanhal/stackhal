@@ -107,7 +107,7 @@ final class AdminToolsTest extends TestCase
             /** @var array<string, BlogArticleEntity> */
             private array $entities = [];
 
-            public function findPublished(?string $locale = null): array
+            public function findPublished(?string $locale = null, ?string $category = null): array
             {
                 return $this->findAllForAdmin($locale);
             }
@@ -240,7 +240,7 @@ final class AdminToolsTest extends TestCase
         $requestStack->push($request);
 
         $defaultBlogRepo = new class implements BlogArticleRepository {
-            public function findPublished(?string $locale = null): array
+            public function findPublished(?string $locale = null, ?string $category = null): array
             {
                 return [];
             }

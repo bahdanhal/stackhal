@@ -72,7 +72,7 @@ final class BlogController extends AbstractController
         $alternateAvailable = $article->getAlternateSlug() !== ''
             && $articles->findPublishedBySlug($article->getAlternateSlug(), $alternateLocale) !== null;
 
-        return $this->render('blog/article.html.twig', [
+        return $this->render($article->isAgentConversationDigest() ? 'digest/article.html.twig' : 'blog/article.html.twig', [
             'article' => $article,
             'alternateAvailable' => $alternateAvailable,
         ]);
