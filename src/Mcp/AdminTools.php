@@ -63,8 +63,8 @@ final readonly class AdminTools
                     $thirtyDaysAgo,
                 ),
             ],
-            'seo_audits' => $this->auditStatistics($seoEvents, $sevenDaysAgo, $thirtyDaysAgo),
-            'geo_audits' => $this->auditStatistics($geoEvents, $sevenDaysAgo, $thirtyDaysAgo),
+            'seo_audits' => $this->auditStatistics($seoEvents, $sevenDaysAgo),
+            'geo_audits' => $this->auditStatistics($geoEvents, $sevenDaysAgo),
             'traffic' => $this->trafficAnalytics->summary($now),
             'lead_sources' => $this->frequencies(array_map(static fn (Lead $lead): string => $lead->source, $leads)),
         ]);
@@ -401,19 +401,17 @@ final readonly class AdminTools
 
     /**
      * @param list<array<string, mixed>> $events
-     * @return array{total: int, completed: int, failed: int, last_7_days: int, last_30_days: int}
+     * @return array{retention_days: int, total: int, completed: int, failed: int, last_7_days: int}
      */
     private function auditStatistics(
         array $events,
         \DateTimeImmutable $sevenDaysAgo,
-        \DateTimeImmutable $thirtyDaysAgo,
     ): array {
         $runs = $this->auditRuns($events);
         $total = count($runs);
         $completed = 0;
         $failed = 0;
         $last7 = 0;
-        $last30 = 0;
 
         foreach ($runs as $run) {
             if (($run['status'] ?? null) === 'completed') {
@@ -434,17 +432,15 @@ final readonly class AdminTools
             if ($date >= $sevenDaysAgo) {
                 ++$last7;
             }
-            if ($date >= $thirtyDaysAgo) {
-                ++$last30;
-            }
         }
 
+        // Audit logs are pruned after the retention window, so totals never reach further back.
         return [
+            'retention_days' => $this->auditLogger->retentionDays(),
             'total' => $total,
             'completed' => $completed,
             'failed' => $failed,
             'last_7_days' => $last7,
-            'last_30_days' => $last30,
         ];
     }
 

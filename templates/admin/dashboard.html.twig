@@ -19,7 +19,7 @@
         {# Metric Cards #}
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 30px;">
             <div style="background: #12141c; border: 1px solid var(--line, #232736); border-radius: 12px; padding: 20px;">
-                <div style="font-size: 11px; font-weight: 700; color: var(--muted, #94a3b8); text-transform: uppercase;">Total SEO Audits</div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--muted, #94a3b8); text-transform: uppercase;">SEO Audits ({{ audit_retention_days }} Days)</div>
                 <div style="font-size: 32px; font-weight: 800; color: var(--ink, #ffffff); margin-top: 4px;">{{ total_audits }}</div>
             </div>
             <div style="background: #12141c; border: 1px solid var(--line, #232736); border-radius: 12px; padding: 20px;">
@@ -27,7 +27,7 @@
                 <div style="font-size: 32px; font-weight: 800; color: var(--accent, #6366f1); margin-top: 4px;">{{ audits_last_7_days }}</div>
             </div>
             <div style="background: #12141c; border: 1px solid var(--line, #232736); border-radius: 12px; padding: 20px;">
-                <div style="font-size: 11px; font-weight: 700; color: var(--muted, #94a3b8); text-transform: uppercase;">Total GEO Audits</div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--muted, #94a3b8); text-transform: uppercase;">GEO Audits ({{ audit_retention_days }} Days)</div>
                 <div style="font-size: 32px; font-weight: 800; color: var(--ink, #ffffff); margin-top: 4px;">{{ total_geo_audits }}</div>
             </div>
             <div style="background: #12141c; border: 1px solid var(--line, #232736); border-radius: 12px; padding: 20px;">

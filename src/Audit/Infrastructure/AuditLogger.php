@@ -14,6 +14,11 @@ final readonly class AuditLogger implements AuditLoggerPort
     ) {
     }
 
+    public function retentionDays(): int
+    {
+        return max(1, $this->retentionDays);
+    }
+
     public function newAuditId(): string
     {
         return bin2hex(random_bytes(6));
@@ -114,7 +119,7 @@ final readonly class AuditLogger implements AuditLoggerPort
 
     public function pruneExpired(): int
     {
-        $cutoff = time() - max(1, $this->retentionDays) * 86400;
+        $cutoff = time() - $this->retentionDays() * 86400;
         $deleted = 0;
         foreach (glob(rtrim($this->directory, '/') . '/audit-*.jsonl') ?: [] as $file) {
             if (is_file($file) && filemtime($file) < $cutoff) {

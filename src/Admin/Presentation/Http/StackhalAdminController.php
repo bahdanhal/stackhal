@@ -120,6 +120,7 @@ final class StackhalAdminController extends AbstractController
 
         return $this->render('admin/dashboard.html.twig', [
             'traffic' => $traffic,
+            'audit_retention_days' => $this->auditLogger->retentionDays(),
             'recent_audits' => array_slice($seoRuns, 0, 30),
             'total_audits' => count($seoRuns),
             'audits_last_7_days' => count(array_filter(

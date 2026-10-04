@@ -89,6 +89,8 @@ final class AdminToolsTest extends TestCase
         $audits = json_decode($tools->recentAudits(10), true, flags: JSON_THROW_ON_ERROR);
 
         self::assertSame(1, $statistics['submissions']['contact_leads']['last_7_days']);
+        self::assertSame(14, $statistics['seo_audits']['retention_days']);
+        self::assertArrayNotHasKey('last_30_days', $statistics['seo_audits']);
         self::assertSame(2, $statistics['seo_audits']['total']);
         self::assertSame(2, $statistics['seo_audits']['last_7_days']);
         self::assertSame(1, $statistics['seo_audits']['completed']);
