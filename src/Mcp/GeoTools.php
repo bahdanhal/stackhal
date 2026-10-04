@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\Geo\Application\GeoAnalyzer;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class GeoTools
@@ -16,8 +17,10 @@ final readonly class GeoTools
 
     #[McpTool(
         name: 'analyze_geo_readiness',
+        title: 'Analyze GEO Readiness',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Analyze Generative Engine Optimization (GEO) signals and AI crawler readiness for a web page (schema, citations, provenance, answer structure, llms.txt, AI bot robots rules).'
+        description: 'Analyze Generative Engine Optimization (GEO) signals and AI crawler readiness for a web page (schema, citations, provenance, answer structure, llms.txt, AI bot robots rules).',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: true),
     )]
     public function analyzeGeo(
         #[Schema(description: 'The web page URL to analyze for GEO readiness.')]

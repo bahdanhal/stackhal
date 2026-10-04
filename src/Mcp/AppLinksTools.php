@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\AppLinks\Application\AppLinksService;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class AppLinksTools
@@ -16,8 +17,10 @@ final readonly class AppLinksTools
 
     #[McpTool(
         name: 'validate_app_links',
+        title: 'Validate Universal Links and App Links',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Inspect and validate Apple App Site Association (apple-app-site-association) and Android Digital Asset Links (assetlinks.json) files, HTTPS hosting rules, and test URL path routing.'
+        description: 'Inspect and validate Apple App Site Association (apple-app-site-association) and Android Digital Asset Links (assetlinks.json) files, HTTPS hosting rules, and test URL path routing.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: true),
     )]
     public function validateAppLinks(
         // phpcs:ignore Generic.Files.LineLength

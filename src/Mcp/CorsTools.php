@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\Cors\Application\CorsSandboxService;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class CorsTools
@@ -19,8 +20,10 @@ final readonly class CorsTools
      */
     #[McpTool(
         name: 'diagnose_cors_policy',
+        title: 'Diagnose CORS Policy',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Analyze CORS HTTP request and response headers for wildcard/credential security violations, missing Vary: Origin, preflight OPTIONS handling, and header exposure.'
+        description: 'Analyze CORS HTTP request and response headers for wildcard/credential security violations, missing Vary: Origin, preflight OPTIONS handling, and header exposure.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function diagnoseCorsPolicy(
         #[Schema(description: 'The incoming HTTP request Origin header (e.g. "https://app.example.com").')]

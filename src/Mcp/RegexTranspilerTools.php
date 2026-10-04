@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\RegexTranspiler\Application\RegexTranspilerService;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class RegexTranspilerTools
@@ -16,8 +17,10 @@ final readonly class RegexTranspilerTools
 
     #[McpTool(
         name: 'transpile_regex_engine',
+        title: 'Convert Regex Between Engines',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Transpile and analyze regular expressions across engines (PCRE, Go RE2, JavaScript, Python re, Rust regex) with compatibility checks and ReDoS safety analysis.'
+        description: 'Transpile and analyze regular expressions across engines (PCRE, Go RE2, JavaScript, Python re, Rust regex) with compatibility checks and ReDoS safety analysis.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function transpileRegexEngine(
         #[Schema(description: 'The regular expression pattern string to analyze and transpile.')]

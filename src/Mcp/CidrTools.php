@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\CidrMatrix\Application\CidrMatrixService;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class CidrTools
@@ -19,8 +20,10 @@ final readonly class CidrTools
      */
     #[McpTool(
         name: 'calculate_cidr_overlap',
+        title: 'Calculate CIDR Overlap',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Analyze IPv4/IPv6 CIDR subnets for range collisions, full containment, 2D bit-tree matrix partition, and available free subnet allocation.'
+        description: 'Analyze IPv4/IPv6 CIDR subnets for range collisions, full containment, 2D bit-tree matrix partition, and available free subnet allocation.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function calculateCidrOverlap(
         #[Schema(description: 'Array of IPv4 or IPv6 CIDR strings to analyze for collisions and tree partition.')]

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.bahdanhal/stackhal",
+  "title": "Stackhal",
+  "description": "Outside-in DNS, email security, SEO, GEO and app-link checks plus developer utilities.",
+  "version": "1.2.0",
+  "websiteUrl": "https://stackhal.com/",
+  "repository": {
+    "url": "https://github.com/bahdanhal/stackhal",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://stackhal.com/mcp"
+    }
+  ]
+}

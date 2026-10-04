@@ -12,6 +12,7 @@ use App\Entity\BlogArticleEntity;
 use Bahdan\LeadCaptureBundle\Domain\Lead;
 use Bahdan\LeadCaptureBundle\Domain\LeadRepository;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class AdminTools
@@ -27,8 +28,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'get_admin_dashboard_statistics',
+        title: 'Admin: Dashboard Statistics',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: Get privacy-preserving traffic, submission, and SEO audit statistics. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: Get privacy-preserving traffic, submission, and SEO audit statistics. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function statistics(): string
     {
@@ -69,8 +72,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'list_admin_recent_audits',
+        title: 'Admin: Recent Audits',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: List recent SEO audit runs with sanitized targets, status, score and runtime details. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: List recent SEO audit runs with sanitized targets, status, score and runtime details. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function recentAudits(
         #[Schema(description: 'Maximum audit runs to return, from 1 to 100.')] int $limit = 50,
@@ -99,8 +104,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'list_admin_contact_leads',
+        title: 'Admin: Contact Leads',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: List recent private consultation requests, including contact details and messages. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: List recent private consultation requests, including contact details and messages. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function contactLeads(
         #[Schema(description: 'Maximum contact leads to return, from 1 to 100.')] int $limit = 50,
@@ -136,8 +143,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'list_admin_blog_articles',
+        title: 'Admin: List Blog Articles',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: List blog articles across locales with metadata, word counts, and readability scores. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: List blog articles across locales with metadata, word counts, and readability scores. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function blogArticles(
         #[Schema(description: 'Filter by locale ("en" or "pl"), or omit for all.')] ?string $locale = null,
@@ -182,8 +191,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'get_admin_blog_article',
+        title: 'Admin: Get Blog Article',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: Get complete blog article content, HTML, and readability analysis by slug. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: Get complete blog article content, HTML, and readability analysis by slug. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function getBlogArticle(
         #[Schema(description: 'URL slug of the article.')] string $slug,
@@ -228,8 +239,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'save_admin_blog_article',
+        title: 'Admin: Save Blog Article',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: Create or update a blog article directly with automatic smart-character cleanup and plain ASCII normalization. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: Create or update a blog article directly with automatic smart-character cleanup and plain ASCII normalization. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false),
     )]
     public function saveBlogArticle(
         #[Schema(description: 'URL slug of the article.')] string $slug,
@@ -315,8 +328,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'delete_admin_blog_article',
+        title: 'Admin: Delete Blog Article',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: Delete a blog article by slug and locale. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: Delete a blog article by slug and locale. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false),
     )]
     public function deleteBlogArticle(
         #[Schema(description: 'URL slug of the article to delete.')] string $slug,

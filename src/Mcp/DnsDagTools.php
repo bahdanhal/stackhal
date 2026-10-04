@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\DnsDagTracer\Application\DnsDagTracerService;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class DnsDagTools
@@ -16,8 +17,10 @@ final readonly class DnsDagTools
 
     #[McpTool(
         name: 'trace_dns_delegation',
+        title: 'Trace DNS Delegation',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Query live DNS records and inspect the authoritative nameservers returned for a domain.'
+        description: 'Query live DNS records and inspect the authoritative nameservers returned for a domain.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: true),
     )]
     public function traceDnsDelegation(
         #[Schema(description: 'The target domain name (e.g. "example.com") to query using the application host resolver.')]

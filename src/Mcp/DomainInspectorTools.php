@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\DomainInspector\Application\DomainInspector;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class DomainInspectorTools
@@ -16,8 +17,10 @@ final readonly class DomainInspectorTools
 
     #[McpTool(
         name: 'inspect_domain_security',
+        title: 'Inspect Domain Email Security',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Inspect domain email security and deliverability standards: DMARC (BIMI compliance), BIMI DNS & SVG reachability, MTA-STS (RFC 8461), SMTP TLS-RPT (RFC 8460), SPF and MX records.'
+        description: 'Inspect domain email security and deliverability standards: DMARC (BIMI compliance), BIMI DNS & SVG reachability, MTA-STS (RFC 8461), SMTP TLS-RPT (RFC 8460), SPF and MX records.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: true),
     )]
     public function inspectDomain(
         #[Schema(description: 'The domain name to inspect (e.g. stripe.com, example.com).')]

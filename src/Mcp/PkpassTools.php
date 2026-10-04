@@ -7,6 +7,7 @@ namespace App\Mcp;
 use App\Pkpass\Application\PkpassInspector;
 use App\Pkpass\Domain\Engine\PkpassValidator;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class PkpassTools
@@ -19,8 +20,10 @@ final readonly class PkpassTools
 
     #[McpTool(
         name: 'inspect_apple_pkpass',
+        title: 'Inspect Apple Wallet Pass',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Inspect and validate Apple Wallet .pkpass JSON structure (pass.json) or package manifests: checks required keys, pass styles, dates, ISO 8601 timezones, transit types, barcodes, and color contrast.'
+        description: 'Inspect and validate Apple Wallet .pkpass JSON structure (pass.json) or package manifests: checks required keys, pass styles, dates, ISO 8601 timezones, transit types, barcodes, and color contrast.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function inspectApplePkpass(
         #[Schema(description: 'The raw pass.json JSON string to inspect and validate.')]
@@ -43,8 +46,10 @@ final readonly class PkpassTools
 
     #[McpTool(
         name: 'generate_apple_pkpass_spec',
+        title: 'Generate Apple Wallet pass.json',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Generate a production-ready, fully compliant Apple Wallet pass.json specification based on pass type, metadata, colors, barcode, and field values.'
+        description: 'Generate a production-ready, fully compliant Apple Wallet pass.json specification based on pass type, metadata, colors, barcode, and field values.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function generateApplePkpassSpec(
         // phpcs:ignore Generic.Files.LineLength
@@ -192,8 +197,10 @@ final readonly class PkpassTools
 
     #[McpTool(
         name: 'repair_apple_pkpass_spec',
+        title: 'Repair Apple Wallet pass.json',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Automatically repair and sanitize broken Apple Wallet pass.json manifests: fixes missing formatVersion, prefixes passTypeIdentifier, ensures 10-character team ID, normalizes dates to ISO 8601 with timezones, and auto-corrects low contrast.'
+        description: 'Automatically repair and sanitize broken Apple Wallet pass.json manifests: fixes missing formatVersion, prefixes passTypeIdentifier, ensures 10-character team ID, normalizes dates to ISO 8601 with timezones, and auto-corrects low contrast.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function repairApplePkpassSpec(
         #[Schema(description: 'The raw, broken pass.json JSON string to repair.')]

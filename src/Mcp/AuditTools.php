@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\Audit\Application\SiteAuditor;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class AuditTools
@@ -16,8 +17,10 @@ final readonly class AuditTools
 
     #[McpTool(
         name: 'audit_website_seo',
+        title: 'Technical SEO Audit',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Run a deterministic technical SEO audit for a public website URL. Checks canonicals, title tags, headings, robots.txt, sitemaps, redirects, crawl traps, and indexability.'
+        description: 'Run a deterministic technical SEO audit for a public website URL. Checks canonicals, title tags, headings, robots.txt, sitemaps, redirects, crawl traps, and indexability.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: true),
     )]
     public function auditWebsite(
         #[Schema(description: 'The public website URL to audit (e.g. https://example.com).')]

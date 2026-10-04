@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\FaviconSuite\Application\FaviconSuiteService;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class FaviconTools
@@ -16,8 +17,10 @@ final readonly class FaviconTools
 
     #[McpTool(
         name: 'generate_favicon_suite',
+        title: 'Generate Favicon Suite',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Generate modern multi-platform favicon bundle (adaptive dark-mode SVG, multi-resolution ICO, Apple Touch Icon, Android PWA icons, webmanifest) and minimal HTML tags from SVG or image input.'
+        description: 'Generate modern multi-platform favicon bundle (adaptive dark-mode SVG, multi-resolution ICO, Apple Touch Icon, Android PWA icons, webmanifest) and minimal HTML tags from SVG or image input.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function generateFaviconSuite(
         #[Schema(description: 'The raw SVG XML markup string to convert into modern multi-platform favicon suite.')]

@@ -7,6 +7,7 @@ namespace App\Mcp;
 use App\CaddyTranspiler\Application\CaddyTranspiler;
 use App\CaddyTranspiler\Domain\Model\ServerType;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class CaddyTranspilerTools
@@ -17,8 +18,10 @@ final readonly class CaddyTranspilerTools
 
     #[McpTool(
         name: 'transpile_to_caddyfile',
+        title: 'Convert Nginx or Apache Config to Caddyfile',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Transpile Nginx (nginx.conf, server blocks) or Apache (.htaccess, VirtualHost) web server configuration to clean, idiomatic Caddyfile with migration advisories.'
+        description: 'Transpile Nginx (nginx.conf, server blocks) or Apache (.htaccess, VirtualHost) web server configuration to clean, idiomatic Caddyfile with migration advisories.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function transpileToCaddyfile(
         #[Schema(description: 'The raw web server configuration string (nginx.conf, server block, .htaccess, or VirtualHost) to transpile.')]

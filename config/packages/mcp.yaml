@@ -2,11 +2,11 @@ mcp:
   servers:
     default:
       name: 'StackHal DevTools & Audits MCP'
-      version: '1.1.0'
-      description: 'Online developer tools: Caddyfile transpiler, Apple PKPass inspector, CIDR matrix, DMARC/BIMI domain inspector, and SEO/GEO audits.'
+      version: '1.2.0'
+      description: 'Outside-in checks and developer utilities: DNS delegation, email security (DMARC, SPF, BIMI, MTA-STS), technical SEO and GEO audits, Universal/App Links, CORS, CIDR, Caddyfile and regex conversion, Apple Wallet passes, favicons.'
       website_url: 'https://stackhal.com/'
       instructions: |
-        Public tools provide Caddyfile transpilation, Apple PKPass inspection, CIDR subnet diagnostics, domain security audits (DMARC, SPF, BIMI), and SEO audits. Administrative tools require an Authorization: Bearer header.
+        Public tools need no authentication. Five of them make live requests from the Stackhal server to the public internet: trace_dns_delegation, inspect_domain_security, audit_website_seo, analyze_geo_readiness, and validate_app_links. The others work only on the input you pass: transpile_to_caddyfile, transpile_regex_engine, calculate_cidr_overlap, diagnose_cors_policy, generate_favicon_suite, inspect_apple_pkpass, generate_apple_pkpass_spec, and repair_apple_pkpass_spec.
       transports:
         http: true
         stdio: true
