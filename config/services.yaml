@@ -68,6 +68,9 @@ services:
   Bahdan\SafeHttpClient\UrlGuard:
     alias: App\Shared\Infrastructure\Http\UrlGuard
 
+  Bahdan\SafeHttpClient\DnsResolverInterface:
+    alias: App\Shared\Infrastructure\Http\NativeHostResolver
+
   Bahdan\SafeHttpClient\SafeHttpFetcher:
     alias: App\Shared\Infrastructure\Http\SafeHttpFetcher
 
