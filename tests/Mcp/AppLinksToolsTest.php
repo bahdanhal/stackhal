@@ -18,7 +18,7 @@ final class AppLinksToolsTest extends TestCase
         $fetcher = new class () implements HttpFetcher {
             public function fetch(string $url, int $maxRedirects = 8): array
             {
-                $isAasa = str_contains($url, 'apple-app-site-association');
+                $isAasa = str_contains($url, 'app-site-association');
                 $body = $isAasa
                     ? <<<'JSON'
 {"applinks":{"details":[{"appIDs":["ABCDE12345.com.example.app"],"components":[{"/":"/products/*"}]}]}}
@@ -79,6 +79,7 @@ JSON;
         self::assertTrue($data['result']['opens_in_app']);
         self::assertSame('/products/*', $data['result']['matched_pattern']);
         self::assertNotEmpty($data['result']['diagnostics']);
+        self::assertSame('in_sync', $data['result']['apple_cdn']['state']);
     }
 
     public function testValidateAppLinksToolEmptyDomain(): void

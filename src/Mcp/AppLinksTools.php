@@ -19,7 +19,7 @@ final readonly class AppLinksTools
         name: 'validate_app_links',
         title: 'Validate Universal Links and App Links',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Inspect and validate Apple App Site Association (apple-app-site-association) and Android Digital Asset Links (assetlinks.json) files, HTTPS hosting rules, and test URL path routing.',
+        description: 'Inspect and validate Apple App Site Association (apple-app-site-association) and Android Digital Asset Links (assetlinks.json) files, HTTPS hosting rules, and test URL path routing, and compare the origin AASA with the copy on Apple\'s CDN.',
         annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: true),
     )]
     public function validateAppLinks(

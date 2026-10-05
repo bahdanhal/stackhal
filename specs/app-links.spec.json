@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Apple Universal Links (AASA) & Android App Links Specification",
   "description": "Formal contract definition for validating Apple App Site Association (AASA) and Android Digital Asset Links (assetlinks.json) files, HTTPS hosting requirements, and URL path component pattern matching.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "apple_aasa": {
     "standard_paths": [
       "/.well-known/apple-app-site-association",
@@ -127,6 +127,36 @@
       "severity": "info",
       "title": "No Included AASA Route Match",
       "description": "No included AASA path rule matched, or an exclusion matched."
+    },
+    "ERR_AASA_CDN_FETCH_FAILED": {
+      "severity": "error",
+      "title": "Apple CDN Cannot Fetch Your AASA",
+      "description": "The origin serves the file, but Apple's CDN reports that it could not retrieve it."
+    },
+    "WARN_AASA_CDN_OUT_OF_SYNC": {
+      "severity": "warning",
+      "title": "Apple CDN Serves a Different AASA",
+      "description": "Apple's CDN returns a copy that differs from the file on the origin server."
+    },
+    "WARN_AASA_CDN_ORIGIN_MISMATCH": {
+      "severity": "warning",
+      "title": "Apple CDN Has an AASA the Well-Known URL Did Not Return",
+      "description": "Apple's CDN serves an association file that the well-known URL did not return."
+    },
+    "INFO_AASA_CDN_IN_SYNC": {
+      "severity": "info",
+      "title": "Apple CDN Copy Matches Your Server",
+      "description": "Apple's CDN serves the same association file as the origin server."
+    },
+    "INFO_AASA_CDN_FAILURE_REPORTED": {
+      "severity": "info",
+      "title": "Apple CDN Reports a Fetch Failure",
+      "description": "Apple's CDN reports why it could not retrieve the association file."
+    },
+    "INFO_AASA_CDN_UNCHECKED": {
+      "severity": "info",
+      "title": "Apple CDN Not Checked",
+      "description": "Apple's CDN response could not be read, so the cached copy was not compared."
     }
   },
   "presets": [

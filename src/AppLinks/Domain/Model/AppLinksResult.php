@@ -25,6 +25,7 @@ final readonly class AppLinksResult
         public ?string $domain = null,
         public ?string $aasaRaw = null,
         public ?string $assetLinksRaw = null,
+        public ?AppleCdnReport $appleCdn = null,
     ) {
     }
 
@@ -89,6 +90,7 @@ final readonly class AppLinksResult
             'android_package_names' => $this->androidPackageNames,
             'test_url' => $this->testUrl,
             'domain' => $this->domain,
+            'apple_cdn' => $this->appleCdn?->toArray(),
             'diagnostics' => array_map(
                 static fn (AppLinksDiagnostic $d): array => $d->toArray(),
                 $this->diagnostics
