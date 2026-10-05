@@ -28,17 +28,20 @@ final readonly class AuditTools
     ): string {
         try {
             $report = $this->auditor->audit($url);
+            $issues = $report['issues'] ?? [];
+            // Counted from the returned list: $report['counts'] counts each issue code once, however often it occurs.
+            $severities = array_count_values(array_column($issues, 'severity'));
 
             return $this->json([
                 'target' => $report['target'] ?? $url,
                 'status' => 'completed',
                 'summary' => [
                     'pages_crawled' => $report['summary']['pages_crawled'] ?? 0,
-                    'critical_issues' => $report['summary']['critical'] ?? 0,
-                    'warnings' => $report['summary']['warning'] ?? 0,
-                    'info_items' => $report['summary']['info'] ?? 0,
+                    'critical_issues' => $severities['critical'] ?? 0,
+                    'warnings' => $severities['warning'] ?? 0,
+                    'info_items' => $severities['info'] ?? 0,
                 ],
-                'issues' => $report['grouped_issues'] ?? $report['issues'] ?? [],
+                'issues' => $issues,
                 'redirect_matrix' => $report['redirect_matrix'] ?? [],
                 'robots_summary' => $report['robots']['status'] ?? null,
                 'sitemap_summary' => [
