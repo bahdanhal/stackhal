@@ -62,10 +62,50 @@ final class AppLinksServiceCdnTest extends TestCase
             self::CDN_URL => [200, self::AASA, ['apple-from' => [self::ORIGIN_URL . ', ' . self::WWW_URL]]],
         ], $this->requestLog());
 
-        $result = (new AppLinksService(httpFetcher: $fetcher))->validateDomain('example.com');
+        $result = (new AppLinksService(httpFetcher: $fetcher))
+            ->validateDomain('example.com', 'https://example.com/products/shoes');
 
         self::assertSame('in_sync', $result->toArray()['apple_cdn']['state']);
         self::assertSame(self::WWW_URL, $result->toArray()['apple_cdn']['compared_with']);
+        self::assertTrue($result->isValid);
+        self::assertTrue($result->aasaValid);
+        self::assertTrue($result->opensInApp);
+        self::assertContains('WARN_AASA_REDIRECT_FOLLOWED', $result->getWarningCodes());
+        self::assertNotContains('ERR_AASA_REDIRECT_FORBIDDEN', $result->getErrorCodes());
+        self::assertNotContains('ERR_AASA_NOT_FOUND', $result->getErrorCodes());
+    }
+
+    public function testKeepsRedirectAsAnErrorWhenAppleCdnHasNoCopy(): void
+    {
+        $fetcher = $this->fetcher([
+            self::ORIGIN_URL => [301, '', ['location' => [self::WWW_URL]]],
+            self::WWW_URL => [200, self::AASA, []],
+            self::CDN_URL => [404, 'Not Found', ['apple-failure-reason' => ['SWCERR00101 Bad HTTP Response: 301']]],
+        ], $this->requestLog());
+
+        $result = (new AppLinksService(httpFetcher: $fetcher))->validateDomain('example.com');
+
+        self::assertFalse($result->isValid);
+        self::assertContains('ERR_AASA_REDIRECT_FORBIDDEN', $result->getErrorCodes());
+        self::assertNotContains('WARN_AASA_REDIRECT_FOLLOWED', $result->getWarningCodes());
+        self::assertContains('INFO_AASA_CDN_FAILURE_REPORTED', $result->getInfoCodes());
+    }
+
+    public function testValidatesTheLegacyRootPathFileWhenAppleServesItFromThere(): void
+    {
+        $rootUrl = 'https://example.com/apple-app-site-association';
+        $fetcher = $this->fetcher([
+            self::ORIGIN_URL => [404, 'Not Found', []],
+            $rootUrl => [200, self::AASA, []],
+            self::CDN_URL => [200, self::AASA, ['apple-from' => [$rootUrl]]],
+        ], $this->requestLog());
+
+        $result = (new AppLinksService(httpFetcher: $fetcher))->validateDomain('example.com');
+
+        self::assertTrue($result->aasaValid);
+        self::assertNotContains('ERR_AASA_NOT_FOUND', $result->getErrorCodes());
+        self::assertSame($rootUrl, $result->toArray()['apple_cdn']['compared_with']);
+        self::assertSame(['ABCDE12345.com.example.app'], $result->aasaAppIds);
     }
 
     public function testWarnsWhenOnlyAppleCdnHasACopy(): void
@@ -129,6 +169,21 @@ final class AppLinksServiceCdnTest extends TestCase
                 $this->requested->append($url);
                 [$status, $body, $headers] = $this->responses[$url]
                     ?? (str_ends_with($url, '/assetlinks.json') ? [200, $this->assetLinks, []] : [404, '', []]);
+
+                // The real fetcher reports a redirect it may not follow as a failed request listing the hop.
+                if ($status >= 300 && $status < 400 && $maxRedirects === 0) {
+                    return [
+                        'requested_url' => $url,
+                        'final_url' => $headers['location'][0] ?? $url,
+                        'status' => 0,
+                        'headers' => [],
+                        'body' => '',
+                        'content_type' => '',
+                        'duration_ms' => 1,
+                        'redirects' => [['url' => $url, 'status' => $status, 'location' => $headers['location'][0] ?? null]],
+                        'error' => 'Too many redirects.',
+                    ];
+                }
 
                 return [
                     'requested_url' => $url,

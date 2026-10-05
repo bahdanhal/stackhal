@@ -66,6 +66,11 @@ final readonly class AppLinksService
             ? $assetLinksResponse['body']
             : null;
 
+        [$cdnReport, $appleSource] = $this->appleCdnReport($cleanDomain, $aasaContent !== '', $aasaContent);
+        if ($appleSource !== null) {
+            $aasaContent = $appleSource['body'];
+        }
+
         $result = $this->validator->validate(
             $aasaContent,
             $assetLinksContent !== '' ? $assetLinksContent : null,
@@ -76,13 +81,27 @@ final readonly class AppLinksService
         );
 
         $extraDiagnostics = [];
-        if ($aasaResponse['status'] >= 300 && $aasaResponse['status'] < 400) {
-            $extraDiagnostics[] = new AppLinksDiagnostic(
-                code: 'ERR_AASA_REDIRECT_FORBIDDEN',
-                severity: 'error',
-                title: 'HTTP Redirect Forbidden on AASA',
-                description: 'The AASA well-known URL redirected instead of returning the file directly.'
-            );
+        // With no redirects allowed the fetcher reports a redirect as a failed request that lists the hop.
+        $aasaRedirected = $aasaResponse['redirects'] !== []
+            || ($aasaResponse['status'] >= 300 && $aasaResponse['status'] < 400);
+        if ($aasaRedirected) {
+            $extraDiagnostics[] = $appleSource !== null
+                ? new AppLinksDiagnostic(
+                    code: 'WARN_AASA_REDIRECT_FOLLOWED',
+                    severity: 'warning',
+                    title: 'AASA Well-Known URL Redirects',
+                    description: sprintf(
+                        "The well-known URL redirects, and Apple's CDN followed it to %s. Apple's documentation asks "
+                        . 'for the file to be served with no redirects, so serve it directly to avoid depending on this.',
+                        $appleSource['url'],
+                    ),
+                )
+                : new AppLinksDiagnostic(
+                    code: 'ERR_AASA_REDIRECT_FORBIDDEN',
+                    severity: 'error',
+                    title: 'HTTP Redirect Forbidden on AASA',
+                    description: 'The AASA well-known URL redirected instead of returning the file directly.'
+                );
         }
         foreach ([$aasaResponse, $assetLinksResponse] as $response) {
             $contentType = strtolower(trim(explode(';', $response['content_type'])[0]));
@@ -96,7 +115,6 @@ final readonly class AppLinksService
             }
         }
 
-        $cdnReport = $this->appleCdnReport($cleanDomain, $aasaContent !== '', $aasaContent);
         if ($cdnReport !== null) {
             $extraDiagnostics = [...$extraDiagnostics, ...$cdnReport->diagnostics];
         }
@@ -126,11 +144,17 @@ final readonly class AppLinksService
         );
     }
 
-    private function appleCdnReport(string $domain, bool $originServed, string $originBody): ?AppleCdnReport
+    /**
+     * Returns the CDN report and, when the well-known URL did not serve the file, the other same-domain URL
+     * Apple fetched it from together with that URL's current body.
+     *
+     * @return array{0: ?AppleCdnReport, 1: ?array{url: string, body: string}}
+     */
+    private function appleCdnReport(string $domain, bool $originServed, string $originBody): array
     {
         $cdnUrl = $this->cdnComparator->cdnUrl($domain);
         if ($cdnUrl === null || $this->httpFetcher === null) {
-            return null;
+            return [null, null];
         }
 
         $originUrl = $this->cdnComparator->originUrl($domain);
@@ -138,13 +162,17 @@ final readonly class AppLinksService
         try {
             $response = $this->httpFetcher->fetch($cdnUrl, maxRedirects: 0);
         } catch (\Throwable $exception) {
-            return $this->cdnComparator->compare($cdnUrl, $originUrl, $originServed, $originBody, 0, '', [], $exception->getMessage());
+            return [
+                $this->cdnComparator->compare($cdnUrl, $originUrl, $originServed, $originBody, 0, '', [], $exception->getMessage()),
+                null,
+            ];
         }
 
         // Apple may have followed a redirect or used the legacy root path; compare against the URL it reports.
         $alternate = !$originServed && $response['status'] === 200 && $response['error'] === null
             ? $this->cdnComparator->alternateSource($domain, $response['headers'])
             : null;
+        $appleSource = null;
         if ($alternate !== null) {
             try {
                 $alternateResponse = $this->httpFetcher->fetch($alternate, maxRedirects: 0);
@@ -160,19 +188,23 @@ final readonly class AppLinksService
                 $originUrl = $alternate;
                 $originServed = true;
                 $originBody = $alternateResponse['body'];
+                $appleSource = ['url' => $alternate, 'body' => $originBody];
             }
         }
 
-        return $this->cdnComparator->compare(
-            $cdnUrl,
-            $originUrl,
-            $originServed,
-            $originBody,
-            $response['status'],
-            $response['body'],
-            $response['headers'],
-            $response['error'],
-        );
+        return [
+            $this->cdnComparator->compare(
+                $cdnUrl,
+                $originUrl,
+                $originServed,
+                $originBody,
+                $response['status'],
+                $response['body'],
+                $response['headers'],
+                $response['error'],
+            ),
+            $appleSource,
+        ];
     }
 
     /**

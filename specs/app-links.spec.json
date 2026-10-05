@@ -36,7 +36,7 @@
     "ERR_AASA_REDIRECT_FORBIDDEN": {
       "severity": "error",
       "title": "HTTP Redirect Forbidden on AASA",
-      "description": "Apple CDN and iOS strictly forbid HTTP 301/302 redirects when fetching AASA files."
+      "description": "The AASA well-known URL redirects instead of returning the file, and Apple's CDN serves no copy fetched through the redirect."
     },
     "ERR_AASA_INVALID_JSON": {
       "severity": "error",
@@ -142,6 +142,11 @@
       "severity": "warning",
       "title": "Apple CDN Has an AASA the Well-Known URL Did Not Return",
       "description": "Apple's CDN serves an association file that the well-known URL did not return."
+    },
+    "WARN_AASA_REDIRECT_FOLLOWED": {
+      "severity": "warning",
+      "title": "AASA Well-Known URL Redirects",
+      "description": "The well-known URL redirects and Apple's CDN followed it, although Apple asks for the file to be served with no redirects."
     },
     "INFO_AASA_CDN_IN_SYNC": {
       "severity": "info",

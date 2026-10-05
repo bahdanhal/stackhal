@@ -23,7 +23,8 @@ final class AppLinksValidator
         'ERR_AASA_REDIRECT_FORBIDDEN' => [
             'severity' => 'error',
             'title' => 'HTTP Redirect Forbidden on AASA',
-            'description' => 'Apple CDN and iOS strictly forbid HTTP 301/302 redirects when fetching AASA files.',
+            // phpcs:ignore Generic.Files.LineLength
+            'description' => "The AASA well-known URL redirects instead of returning the file, and Apple's CDN serves no copy fetched through the redirect.",
         ],
         'ERR_AASA_INVALID_JSON' => [
             'severity' => 'error',
