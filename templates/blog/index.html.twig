@@ -54,7 +54,7 @@
         <p class="journal-feature-dek">{{ featured.description }}</p>
         <div class="journal-feature-footer">
           <a class="journal-read" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">Read the story <span aria-hidden="true">↗</span></a>
-          <span>{{ featured.readTimeMinutes }} min read · <time datetime="{{ featured.publishedAt|date('Y-m-d') }}">{{ featured.publishedAt|date('d M Y') }}</time></span>
+          <span>{{ featured.readTimeMinutes }} min read · <time datetime="{{ featured.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ featured.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time></span>
         </div>
       </div>
       {% if illustration %}
@@ -84,7 +84,7 @@
         {% set illustration = article_illustrations.forArticle(article) %}
         <article class="journal-entry{% if illustration %} has-illustration{% endif %}" data-blog-entry>
           <div class="journal-entry-meta">
-            <time datetime="{{ article.publishedAt|date('Y-m-d') }}">{{ article.publishedAt|date('d M Y') }}</time>
+            <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time>
             <span>{{ article.readTimeMinutes }} min read</span>
           </div>
           {% if illustration %}

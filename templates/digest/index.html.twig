@@ -39,7 +39,7 @@
         <p class="journal-feature-dek">{{ featured.description }}</p>
         <div class="journal-feature-footer">
           <a class="journal-read" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ 'agent_digest.read'|trans }} ↗</a>
-          <span>{{ featured.readTimeMinutes }} {{ 'agent_digest.minutes'|trans }} · <time datetime="{{ featured.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ featured.publishedAt|date('d.m.Y', 'Europe/Warsaw') }}</time></span>
+          <span>{{ featured.readTimeMinutes }} {{ 'agent_digest.minutes'|trans }} · <time datetime="{{ featured.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ featured.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time></span>
         </div>
       </div>
     </section>
@@ -53,7 +53,7 @@
       {% for article in articles %}
         <article class="journal-entry">
           <div class="journal-entry-meta">
-            <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date('d.m.Y', 'Europe/Warsaw') }}</time>
+            <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time>
             <span>{{ article.readTimeMinutes }} {{ 'agent_digest.minutes'|trans }}</span>
           </div>
           <div class="journal-entry-copy">

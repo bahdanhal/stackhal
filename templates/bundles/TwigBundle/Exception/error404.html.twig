@@ -5,191 +5,40 @@
 
 {% block stylesheets %}
 <style>
-  .error-hero-stackhal {
-    padding: clamp(3rem, 7vw, 5.5rem) 1.5rem clamp(4rem, 9vw, 7rem);
-    max-width: 1040px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 2;
-  }
-  .terminal-box {
-    background: rgba(13, 17, 23, 0.85);
-    border: 1px solid rgba(56, 189, 248, 0.25);
-    border-radius: 12px;
-    padding: clamp(1.5rem, 4vw, 2.5rem);
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(16px);
-    margin-bottom: 2.5rem;
-  }
-  .terminal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    margin-bottom: 1.5rem;
-    font-family: var(--font-mono, ui-monospace, monospace);
-    font-size: 0.8125rem;
-  }
-  .terminal-dots {
-    display: flex;
-    gap: 0.4rem;
-  }
-  .terminal-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-  }
-  .dot-red { background: #ff5f56; }
-  .dot-yellow { background: #ffbd2e; }
-  .dot-green { background: #27c93f; }
-  
-  .terminal-badge {
-    color: #f43f5e;
-    background: rgba(244, 63, 94, 0.12);
-    border: 1px solid rgba(244, 63, 94, 0.3);
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-  }
-  .error-code-stackhal {
-    font-family: var(--font-mono, ui-monospace, monospace);
-    font-size: clamp(3.5rem, 9vw, 6rem);
-    font-weight: 800;
-    color: #38bdf8;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    text-shadow: 0 0 30px rgba(56, 189, 248, 0.35);
-    margin-bottom: 1rem;
-  }
-  .error-title-stackhal {
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    font-weight: 700;
-    color: #f8fafc;
-    margin: 0 0 1rem;
-    letter-spacing: -0.02em;
-  }
-  .error-p-stackhal {
-    font-size: clamp(1rem, 1.3vw, 1.125rem);
-    color: #94a3b8;
-    line-height: 1.6;
-    max-width: 650px;
-    margin: 0 0 2rem;
-  }
-  .error-actions-stackhal {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.875rem;
-  }
-  .btn-terminal-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.85rem 1.6rem;
-    background: #38bdf8;
-    color: #090a0f;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 0.9375rem;
-    font-family: var(--font-mono, ui-monospace, monospace);
-    text-decoration: none;
-    transition: all 0.2s ease;
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
-  }
-  .btn-terminal-primary:hover {
-    background: #7dd3fc;
-    color: #090a0f;
-    transform: translateY(-1px);
-    box-shadow: 0 0 25px rgba(56, 189, 248, 0.45);
-  }
-  .btn-terminal-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.85rem 1.6rem;
-    background: rgba(255, 255, 255, 0.05);
-    color: #f1f5f9;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    font-family: var(--font-mono, ui-monospace, monospace);
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-  .btn-terminal-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: #38bdf8;
-    color: #38bdf8;
-  }
-  .tools-catalog {
-    margin-top: 2rem;
-  }
-  .tools-catalog-title {
-    display: block;
-    font-family: var(--font-mono, ui-monospace, monospace);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #64748b;
-    margin-bottom: 1.25rem;
-  }
-  .tools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
-  }
-  .tool-tile {
-    display: flex;
-    flex-direction: column;
-    padding: 1.125rem 1.25rem;
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    text-decoration: none;
-    color: #f8fafc;
-    transition: all 0.2s ease;
-  }
-  .tool-tile:hover {
-    background: rgba(30, 41, 59, 0.8);
-    border-color: rgba(56, 189, 248, 0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  }
-  .tool-tile strong {
-    font-size: 0.9375rem;
-    color: #f8fafc;
-    margin-bottom: 0.35rem;
-  }
-  .tool-tile span {
-    font-size: 0.8125rem;
-    color: #94a3b8;
-    line-height: 1.4;
-  }
+  .error-hero-stackhal { max-width: 1280px; margin: 0 auto; padding: 64px 40px 80px; }
+  .terminal-box { max-width: 720px; margin-bottom: 64px; }
+  .terminal-badge { display: block; margin-bottom: 28px; color: var(--muted); font: 11px/1.6 var(--mono); letter-spacing: .015em; }
+  .error-code-stackhal { margin-bottom: 20px; color: var(--ink); font: 500 clamp(64px, 11vw, 132px)/.95 var(--sans); letter-spacing: -.065em; }
+  .error-code-stackhal span { color: var(--orange); }
+  .error-title-stackhal { margin: 0 0 16px; font: 500 clamp(24px, 3vw, 34px)/1.1 var(--sans); letter-spacing: -.045em; }
+  .error-p-stackhal { max-width: 520px; margin: 0 0 28px; color: var(--muted); font-size: 15px; line-height: 1.7; }
+  .error-actions-stackhal { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn-terminal-primary, .btn-terminal-secondary { display: inline-flex; align-items: center; gap: 18px; min-height: 48px; padding: 0 20px; border: 1px solid #202020; background: #202020; color: #fff; font: 500 14px var(--sans); text-decoration: none; }
+  .btn-terminal-primary:hover { border-color: #a3261b; background: #a3261b; color: #fff; }
+  .btn-terminal-secondary { border-color: var(--line); background: #fff; color: var(--ink); }
+  .btn-terminal-secondary:hover { border-color: var(--ink); background: #f6f6f6; color: #a3261b; }
+  .tools-catalog-title { display: block; margin-bottom: 20px; color: var(--muted); font: 11px var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); column-gap: 36px; }
+  .tool-tile { display: flex; flex-direction: column; gap: 6px; padding: 20px 0; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+  .tool-tile strong { font: 500 19px/1.15 var(--sans); letter-spacing: -.04em; }
+  .tool-tile span { color: var(--muted); font-size: 13px; line-height: 1.5; }
+  .tool-tile:hover strong { color: #a3261b; }
+  @media (max-width: 600px) { .error-hero-stackhal { padding: 40px 20px 64px; } }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="error-hero-stackhal">
   <div class="terminal-box">
-    <div class="terminal-header">
-      <div class="terminal-dots">
-        <span class="terminal-dot dot-red"></span>
-        <span class="terminal-dot dot-yellow"></span>
-        <span class="terminal-dot dot-green"></span>
-      </div>
-      <span class="terminal-badge">{{ 'error404.eyebrow'|trans }}</span>
-    </div>
+    <span class="terminal-badge">{{ 'error404.eyebrow'|trans }}</span>
 
-    <div class="error-code-stackhal">404 // NULL_ROUTE</div>
+    <div class="error-code-stackhal" aria-hidden="true">404<span>.</span></div>
     <h1 class="error-title-stackhal">{{ 'error404.heading'|trans }}</h1>
     <p class="error-p-stackhal">{{ 'error404.description'|trans }}</p>
 
     <div class="error-actions-stackhal">
       <a href="{{ path('landing', {_locale: app.request ? app.request.locale : 'en'}) }}" class="btn-terminal-primary">
-        $ cd /tools ↵
+        {{ 'common.all_tools'|trans }} <span aria-hidden="true">→</span>
       </a>
       <a href="{{ path('domain_inspector_home', {_locale: app.request ? app.request.locale : 'en'}) }}" class="btn-terminal-secondary">
         {{ 'error404.diagnostic_button'|trans }}

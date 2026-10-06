@@ -28,6 +28,7 @@ base:
     home_label: "StackHal home"
     brand: "StackHal"
     navigation: "Tools and language"
+    skip: "Skip to content"
     nav:
         blog: "Blog"
         geo: "GEO analyzer"
@@ -44,6 +45,7 @@ base:
         ai_studio_extension: "AI Studio Local Sync"
         cors_sandbox: "CORS Sandbox"
         more: "Tools"
+        reading: "Reading"
     context:
         geo: "GEO analyzer"
         seo: "SEO analyzer"
@@ -57,12 +59,12 @@ base:
     contact: "Contact"
 
 error404:
-    title: "404 - ROUTE_NOT_FOUND · StackHal"
-    eyebrow: "STATUS_CODE: 404_NOT_FOUND"
-    heading: "Route resolution failed."
-    description: "The requested URI could not be mapped to any known tool, diagnostic pipeline, or endpoint in the registry."
+    title: "Page not found · StackHal"
+    eyebrow: "Error 404 · Page not found"
+    heading: "This page is not here."
+    description: "The address may be mistyped, or the page has moved. Every tool is still one click away."
     diagnostic_button: "Domain Inspector"
-    explore_heading: "Developer Utilities Catalog:"
+    explore_heading: "Popular tools"
 
 common:
     all_tools: "All tools"
@@ -87,6 +89,8 @@ home:
     heading_middle: "under"
     deploy_cat: "Deploy cat"
     detonate: "Do not press"
+    cta_primary: "Audit a website"
+    cta_tools: "Browse all tools"
     illustration_alt: "A black cat supervising a red inspection machine with lenses, cables, and diagnostic instruments."
     illustration_caption: "Fig. 01 / Infrastructure, under feline supervision."
     catops:
@@ -112,37 +116,37 @@ home:
         title: "Technical SEO audit"
         text: "Find redirect mistakes, crawler traps, duplicate URL spaces, canonical problems, and sitemap gaps."
     favicon_suite:
-        title: "Favicon Kitchen & Dark-Mode SVG Suite"
+        title: "Favicon Suite"
         text: "Generate dark-mode adaptive vector favicons, multi-resolution ICOs, Apple touch icons, and Android PWA bundles with safe-zone masking."
     bimi:
-        title: "BIMI Studio & Live Inbox Simulator"
+        title: "BIMI Studio"
         text: "Prepare strict SVG Tiny 1.2 PS brand marks with safe-zone padding and live inbox simulator for Gmail, Apple Mail, and Yahoo."
     domain_inspector:
         title: "Domain security & deliverability"
         text: "1-click verification of DMARC policies, BIMI records, MTA-STS strict transport security, SMTP TLS-RPT, and SPF."
     caddy_transpiler:
-        title: "Nginx & Apache ➔ Caddyfile Converter"
+        title: "Nginx & Apache → Caddyfile"
         text: "Convert Nginx server blocks and Apache .htaccess into clean, idiomatic Caddyfiles with real-time smart mapping, migration advisories and 1-click presets."
     cidr_matrix:
-        title: "Visual CIDR & Subnet Overlap Matrix"
+        title: "CIDR & Subnet Matrix"
         text: "Analyze IPv4/IPv6 CIDR blocks, detect IP range overlap collisions, view 2D spatial tree partitions, and find available free subnets."
     regex_transpiler:
-        title: "Regex Dialect Transpiler & Compatibility Matrix"
+        title: "Regex Dialect Transpiler"
         text: "Transpile regular expressions between PCRE, JavaScript, Python, Go, and Rust dialects with automated feature and edge-case warnings."
     dns_dag_tracer:
         title: "Live DNS Delegation Trace"
         text: "Trace authoritative DNS delegation from root (.) to TLD and name servers, detect lame delegations and visualize resolution DAGs."
     pkpass:
-        title: "Apple Wallet (.pkpass) Inspector & Debugger"
+        title: "Apple Wallet Pass Inspector"
         text: "Browser-based Apple Wallet and Google Wallet previews, SHA-1 manifest validation, PKCS#7 certificate inspection, and unsigned package repair."
     app_links:
-        title: "Apple Universal Links & Android App Links"
+        title: "Universal Links & App Links"
         text: "Validate Apple AASA and Android AssetLinks manifests, test URL routing patterns, and diagnose deeplink failures."
     cors_sandbox:
-        title: "CORS Policy & Preflight Sandbox"
+        title: "CORS & Preflight Sandbox"
         text: "Diagnose cross-origin headers, preflight OPTIONS requests, wildcard credentials safety, and browser max-age limits."
     ai_studio_extension:
-        title: "AI Studio Local File Sync & Codebase Context"
+        title: "AI Studio Local File Sync"
         text: "Open-source Chrome extension for packing repository context, reviewing AI-generated diffs, and syncing approved changes directly to your local workspace."
     principles:
         private:

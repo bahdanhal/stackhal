@@ -31,13 +31,13 @@
 
       <div>
         {% if report.bimiReadiness == 'ready' %}
-          <span class="bimi-readiness-pill pill-ready">✨ {{ 'domain_inspector.bimi_status.ready'|trans }}</span>
+          <span class="bimi-readiness-pill pill-ready">{{ 'domain_inspector.bimi_status.ready'|trans }}</span>
         {% elseif report.bimiReadiness == 'dmarc_upgrade_needed' %}
-          <span class="bimi-readiness-pill pill-action-needed">⚠️ {{ 'domain_inspector.bimi_status.dmarc_needed'|trans }}</span>
+          <span class="bimi-readiness-pill pill-action-needed">{{ 'domain_inspector.bimi_status.dmarc_needed'|trans }}</span>
         {% elseif report.bimiReadiness == 'eligible_missing_bimi' %}
           <span class="bimi-readiness-pill pill-action-needed">ℹ️ {{ 'domain_inspector.bimi_status.eligible_no_bimi'|trans }}</span>
         {% else %}
-          <span class="bimi-readiness-pill pill-not-ready">❌ {{ 'domain_inspector.bimi_status.not_ready'|trans }}</span>
+          <span class="bimi-readiness-pill pill-not-ready">{{ 'domain_inspector.bimi_status.not_ready'|trans }}</span>
         {% endif %}
       </div>
     </div>
@@ -47,7 +47,7 @@
       <form action="{{ path('domain_inspector_check', {_locale: app.request.locale}) }}" method="POST" style="display: flex; gap: 0.75rem; align-items: center;">
         <input type="text" name="domain" class="inspector-domain-input" value="{{ report.domain }}" style="padding: 0.5rem 0.75rem; font-size: 0.95rem;">
         <button type="submit" class="btn-primary-action" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
-          🔄 {{ 'domain_inspector.recheck_btn'|trans }}
+          {{ 'domain_inspector.recheck_btn'|trans }}
         </button>
       </form>
     </div>
@@ -58,7 +58,7 @@
       <div class="protocol-card">
         <div class="protocol-header">
           <div class="protocol-title">
-            <span>🛡️ DMARC Policy</span>
+            <span>DMARC Policy</span>
             <span class="protocol-rfc">RFC 7489</span>
           </div>
           <span class="status-badge status-{{ report.dmarc.status }}">{{ report.dmarc.status }}</span>
@@ -73,10 +73,10 @@
 
         {% if report.dmarc.recommendedFix %}
           <div class="fix-recommendation-box">
-            <h4>💡 {{ 'domain_inspector.fix_header'|trans }}</h4>
+            <h4>{{ 'domain_inspector.fix_header'|trans }}</h4>
             <div class="fix-code-block">
               <code>{{ report.dmarc.recommendedFix }}</code>
-              <button class="copy-mini-btn" onclick="navigator.clipboard.writeText('{{ report.dmarc.recommendedFix|e('js') }}'); this.textContent='{{ 'domain_inspector.copied'|trans }}';">📋 {{ 'domain_inspector.copy'|trans }}</button>
+              <button class="copy-mini-btn" onclick="navigator.clipboard.writeText('{{ report.dmarc.recommendedFix|e('js') }}'); this.textContent='{{ 'domain_inspector.copied'|trans }}';">{{ 'domain_inspector.copy'|trans }}</button>
             </div>
           </div>
         {% endif %}
@@ -86,7 +86,7 @@
       <div class="protocol-card">
         <div class="protocol-header">
           <div class="protocol-title">
-            <span>🟣 BIMI Brand Avatar</span>
+            <span>BIMI Brand Avatar</span>
             <span class="protocol-rfc">BIMI Group / Draft RFC</span>
           </div>
           <span class="status-badge status-{{ report.bimi.status }}">{{ report.bimi.status }}</span>
@@ -111,14 +111,14 @@
 
         {% if report.bimi.recommendedFix %}
           <div class="fix-recommendation-box">
-            <h4>💡 {{ 'domain_inspector.fix_header'|trans }}</h4>
+            <h4>{{ 'domain_inspector.fix_header'|trans }}</h4>
             <div class="fix-code-block">
               <code>{{ report.bimi.recommendedFix }}</code>
-              <button class="copy-mini-btn" onclick="navigator.clipboard.writeText('{{ report.bimi.recommendedFix|e('js') }}'); this.textContent='{{ 'domain_inspector.copied'|trans }}';">📋 {{ 'domain_inspector.copy'|trans }}</button>
+              <button class="copy-mini-btn" onclick="navigator.clipboard.writeText('{{ report.bimi.recommendedFix|e('js') }}'); this.textContent='{{ 'domain_inspector.copied'|trans }}';">{{ 'domain_inspector.copy'|trans }}</button>
             </div>
             <div style="margin-top: 0.5rem;">
               <a href="{{ path('bimi_studio', {_locale: app.request.locale}) }}" style="color: #60a5fa; font-size: 0.85rem; text-decoration: underline;">
-                ✨ {{ 'domain_inspector.open_bimi_studio'|trans }} →
+                {{ 'domain_inspector.open_bimi_studio'|trans }} →
               </a>
             </div>
           </div>
@@ -129,7 +129,7 @@
       <div class="protocol-card">
         <div class="protocol-header">
           <div class="protocol-title">
-            <span>🔒 MTA-STS Strict Transport Security</span>
+            <span>MTA-STS Strict Transport Security</span>
             <span class="protocol-rfc">RFC 8461</span>
           </div>
           <span class="status-badge status-{{ report.mtaSts.status }}">{{ report.mtaSts.status }}</span>
@@ -144,10 +144,10 @@
 
         {% if report.mtaSts.recommendedFix %}
           <div class="fix-recommendation-box">
-            <h4>💡 {{ 'domain_inspector.fix_header'|trans }}</h4>
+            <h4>{{ 'domain_inspector.fix_header'|trans }}</h4>
             <div class="fix-code-block">
               <code>{{ report.mtaSts.recommendedFix }}</code>
-              <button class="copy-mini-btn" onclick="navigator.clipboard.writeText('{{ report.mtaSts.recommendedFix|e('js') }}'); this.textContent='{{ 'domain_inspector.copied'|trans }}';">📋 {{ 'domain_inspector.copy'|trans }}</button>
+              <button class="copy-mini-btn" onclick="navigator.clipboard.writeText('{{ report.mtaSts.recommendedFix|e('js') }}'); this.textContent='{{ 'domain_inspector.copied'|trans }}';">{{ 'domain_inspector.copy'|trans }}</button>
             </div>
           </div>
         {% endif %}
@@ -157,7 +157,7 @@
       <div class="protocol-card">
         <div class="protocol-header">
           <div class="protocol-title">
-            <span>📊 SMTP TLS Reporting (TLS-RPT)</span>
+            <span>SMTP TLS Reporting (TLS-RPT)</span>
             <span class="protocol-rfc">RFC 8460</span>
           </div>
           <span class="status-badge status-{{ report.tlsRpt.status }}">{{ report.tlsRpt.status }}</span>
@@ -172,10 +172,10 @@
 
         {% if report.tlsRpt.recommendedFix %}
           <div class="fix-recommendation-box">
-            <h4>💡 {{ 'domain_inspector.fix_header'|trans }}</h4>
+            <h4>{{ 'domain_inspector.fix_header'|trans }}</h4>
             <div class="fix-code-block">
               <code>{{ report.tlsRpt.recommendedFix }}</code>
-              <button class="copy-mini-btn" onclick="navigator.clipboard.writeText('{{ report.tlsRpt.recommendedFix|e('js') }}'); this.textContent='{{ 'domain_inspector.copied'|trans }}';">📋 {{ 'domain_inspector.copy'|trans }}</button>
+              <button class="copy-mini-btn" onclick="navigator.clipboard.writeText('{{ report.tlsRpt.recommendedFix|e('js') }}'); this.textContent='{{ 'domain_inspector.copied'|trans }}';">{{ 'domain_inspector.copy'|trans }}</button>
             </div>
           </div>
         {% endif %}
@@ -185,7 +185,7 @@
       <div class="protocol-card">
         <div class="protocol-header">
           <div class="protocol-title">
-            <span>✉️ SPF Sender Policy Framework</span>
+            <span>SPF Sender Policy Framework</span>
             <span class="protocol-rfc">RFC 7208</span>
           </div>
           <span class="status-badge status-{{ report.spf.status }}">{{ report.spf.status }}</span>
@@ -200,10 +200,10 @@
 
         {% if report.spf.recommendedFix %}
           <div class="fix-recommendation-box">
-            <h4>💡 {{ 'domain_inspector.fix_header'|trans }}</h4>
+            <h4>{{ 'domain_inspector.fix_header'|trans }}</h4>
             <div class="fix-code-block">
               <code>{{ report.spf.recommendedFix }}</code>
-              <button class="copy-mini-btn" onclick="navigator.clipboard.writeText('{{ report.spf.recommendedFix|e('js') }}'); this.textContent='{{ 'domain_inspector.copied'|trans }}';">📋 {{ 'domain_inspector.copy'|trans }}</button>
+              <button class="copy-mini-btn" onclick="navigator.clipboard.writeText('{{ report.spf.recommendedFix|e('js') }}'); this.textContent='{{ 'domain_inspector.copied'|trans }}';">{{ 'domain_inspector.copy'|trans }}</button>
             </div>
           </div>
         {% endif %}
@@ -213,7 +213,7 @@
       <div class="protocol-card">
         <div class="protocol-header">
           <div class="protocol-title">
-            <span>📮 Mail Exchangers (MX)</span>
+            <span>Mail Exchangers (MX)</span>
             <span class="protocol-rfc">RFC 5321</span>
           </div>
           <span class="status-badge status-{{ report.mx.status }}">{{ report.mx.status }}</span>

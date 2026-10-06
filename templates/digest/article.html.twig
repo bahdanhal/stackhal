@@ -7,7 +7,7 @@
   </nav>
   <header class="article-header">
     <div class="article-heading-copy">
-      <p class="article-kicker">{{ 'agent_digest.title'|trans }} · <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date('d.m.Y', 'Europe/Warsaw') }}</time></p>
+      <p class="article-kicker">{{ 'agent_digest.title'|trans }} · <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time></p>
       <h1>{{ article.title }}</h1>
       <p class="article-dek">{{ article.description }}</p>
       <div class="article-header-meta">

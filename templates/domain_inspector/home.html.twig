@@ -73,7 +73,7 @@
             autofocus
           >
           <button type="submit" class="btn-primary-action ui-button ui-button-primary">
-            ⚡ {{ 'domain_inspector.check_btn'|trans }}
+            {{ 'domain_inspector.check_btn'|trans }}
           </button>
         </div>
 
@@ -87,7 +87,7 @@
 
         {% if error is defined and error is not empty %}
           <div class="ui-alert">
-            ⚠️ {{ error }}
+            {{ error }}
           </div>
         {% endif %}
       </form>
@@ -96,28 +96,28 @@
     <!-- Feature Highlights -->
     <div class="ui-grid inspector-feature-grid">
       <div class="ui-panel inspector-feature-card">
-        <h3>✅ {{ 'domain_inspector.features.dmarc.title'|trans }}</h3>
+        <h3>{{ 'domain_inspector.features.dmarc.title'|trans }}</h3>
         <p class="ui-muted">
           {{ 'domain_inspector.features.dmarc.text'|trans }}
         </p>
       </div>
 
       <div class="ui-panel inspector-feature-card">
-        <h3>🟣 {{ 'domain_inspector.features.bimi.title'|trans }}</h3>
+        <h3>{{ 'domain_inspector.features.bimi.title'|trans }}</h3>
         <p class="ui-muted">
           {{ 'domain_inspector.features.bimi.text'|trans }}
         </p>
       </div>
 
       <div class="ui-panel inspector-feature-card">
-        <h3>🔒 {{ 'domain_inspector.features.mta_sts.title'|trans }}</h3>
+        <h3>{{ 'domain_inspector.features.mta_sts.title'|trans }}</h3>
         <p class="ui-muted">
           {{ 'domain_inspector.features.mta_sts.text'|trans }}
         </p>
       </div>
 
       <div class="ui-panel inspector-feature-card">
-        <h3>📊 {{ 'domain_inspector.features.tls_rpt.title'|trans }}</h3>
+        <h3>{{ 'domain_inspector.features.tls_rpt.title'|trans }}</h3>
         <p class="ui-muted">
           {{ 'domain_inspector.features.tls_rpt.text'|trans }}
         </p>

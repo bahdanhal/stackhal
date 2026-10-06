@@ -9,7 +9,7 @@
   <link rel="alternate" hreflang="x-default" href="https://stackhal.com/">
 {% endblock %}
 {% block stylesheets %}
-  <link rel="stylesheet" href="/hero-explosion.css?v=20261002-1">
+  <link rel="stylesheet" href="/hero-explosion.css?v=20261006-1">
   <link rel="stylesheet" href="/cat-ops.css">
 {% endblock %}
 
@@ -28,6 +28,10 @@
       <button class="eyebrow catops-mobile-trigger" type="button" data-catops-mobile-trigger>{{ 'home.eyebrow'|trans }}</button>
       <h1 data-catops-heading><span>{{ 'home.heading_start'|trans }}</span> <span>{{ 'home.heading_middle'|trans }}</span> <em>{{ 'home.heading_emphasis'|trans }}</em></h1>
       <p class="lede">{{ 'home.lede'|trans }}</p>
+      <div class="atelier-home-actions">
+        <a class="atelier-cta" href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">{{ 'home.cta_primary'|trans }} <span aria-hidden="true">→</span></a>
+        <a class="atelier-cta atelier-cta-quiet" href="#tools">{{ 'home.cta_tools'|trans }} <span aria-hidden="true">↓</span></a>
+      </div>
       <div class="atelier-incident-controls">
         <button type="button" data-catops-mobile-trigger>{{ 'home.deploy_cat'|trans }} <span aria-hidden="true">↗</span></button>
         <button type="button" data-hero-detonate>{{ 'home.detonate'|trans }} <span aria-hidden="true">✳</span></button>
@@ -47,7 +51,7 @@
     </div>
   </div>
 
-  <div class="tool-catalog">
+  <div class="tool-catalog" id="tools">
     <section class="tool-category" aria-labelledby="category-web">
       <header class="tool-category-header"><h2 id="category-web">{{ 'home.categories.web'|trans }}</h2></header>
       <div class="tool-grid">

@@ -36,7 +36,7 @@
     <link rel="stylesheet" href="/page-remix.css?v=20260831000500">
   {% else %}
     <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="/atelier.css?v=20261002-1">
+    <link rel="stylesheet" href="/atelier.css?v=20261006-1">
   {% endif %}
   <script src="/contact.js" defer></script>
   <script src="/psa-space-background.js" defer></script>
@@ -44,6 +44,7 @@
   {% block head_scripts %}{% endblock %}
 </head>
 <body class="stackhal-site page-{{ current_route|replace({'_': '-'}) }} {% block body_class %}{% endblock %}">
+  <a class="skip-link" href="#main">{{ 'base.skip'|trans }}</a>
   <header class="site-header">
     <div class="topbar">
       <div class="brand-lockup">
@@ -64,18 +65,39 @@
         <details class="tool-menu">
           <summary>{{ 'base.nav.more'|trans }}</summary>
           <nav class="tool-menu-panel" aria-label="{{ 'base.nav.more'|trans }}">
-            <a href="{{ path('favicon_suite', {_locale: app.request.locale}) }}">{{ 'base.nav.favicon_suite'|trans }}</a>
-            <a href="{{ path('cors_sandbox', {_locale: app.request.locale}) }}">{{ 'base.nav.cors_sandbox'|trans }}</a>
-            <a href="{{ path('bimi_studio', {_locale: app.request.locale}) }}">{{ 'base.nav.bimi'|trans }}</a>
-            <a href="{{ path('domain_inspector_home', {_locale: app.request.locale}) }}">{{ 'base.nav.domain_inspector'|trans }}</a>
-            <a href="{{ path('caddy_transpiler', {_locale: app.request.locale}) }}">{{ 'base.nav.caddy_transpiler'|trans }}</a>
-            <a href="{{ path('cidr_matrix', {_locale: app.request.locale}) }}">{{ 'base.nav.cidr_matrix'|trans }}</a>
-            <a href="{{ path('regex_transpiler', {_locale: app.request.locale}) }}">{{ 'base.nav.regex_transpiler'|trans }}</a>
-            <a href="{{ path('dns_dag_tracer', {_locale: app.request.locale}) }}">{{ 'base.nav.dns_dag_tracer'|trans }}</a>
-            <a href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">{{ 'base.nav.pkpass'|trans }}</a>
-            <a href="{{ path('app_links_validator', {_locale: app.request.locale}) }}">{{ 'base.nav.app_links'|trans }}</a>
-            <a href="{{ path('ai_studio_extension', {_locale: app.request.locale}) }}">{{ 'base.nav.ai_studio_extension'|trans }}</a>
-            <a href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">{{ 'agent_digest.nav'|trans }}</a>
+            <div class="tool-menu-group">
+              <span class="tool-menu-label">{{ 'home.categories.web'|trans }}</span>
+              <a href="{{ path('geo_home', {_locale: app.request.locale}) }}">{{ 'base.nav.geo'|trans }}</a>
+              <a href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">{{ 'base.nav.seo'|trans }}</a>
+              <a href="{{ path('favicon_suite', {_locale: app.request.locale}) }}">{{ 'base.nav.favicon_suite'|trans }}</a>
+              <a href="{{ path('cors_sandbox', {_locale: app.request.locale}) }}">{{ 'base.nav.cors_sandbox'|trans }}</a>
+            </div>
+            <div class="tool-menu-group">
+              <span class="tool-menu-label">{{ 'home.categories.email'|trans }}</span>
+              <a href="{{ path('bimi_studio', {_locale: app.request.locale}) }}">{{ 'base.nav.bimi'|trans }}</a>
+              <a href="{{ path('domain_inspector_home', {_locale: app.request.locale}) }}">{{ 'base.nav.domain_inspector'|trans }}</a>
+            </div>
+            <div class="tool-menu-group">
+              <span class="tool-menu-label">{{ 'home.categories.infrastructure'|trans }}</span>
+              <a href="{{ path('caddy_transpiler', {_locale: app.request.locale}) }}">{{ 'base.nav.caddy_transpiler'|trans }}</a>
+              <a href="{{ path('cidr_matrix', {_locale: app.request.locale}) }}">{{ 'base.nav.cidr_matrix'|trans }}</a>
+              <a href="{{ path('regex_transpiler', {_locale: app.request.locale}) }}">{{ 'base.nav.regex_transpiler'|trans }}</a>
+              <a href="{{ path('dns_dag_tracer', {_locale: app.request.locale}) }}">{{ 'base.nav.dns_dag_tracer'|trans }}</a>
+            </div>
+            <div class="tool-menu-group">
+              <span class="tool-menu-label">{{ 'home.categories.mobile'|trans }}</span>
+              <a href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">{{ 'base.nav.pkpass'|trans }}</a>
+              <a href="{{ path('app_links_validator', {_locale: app.request.locale}) }}">{{ 'base.nav.app_links'|trans }}</a>
+            </div>
+            <div class="tool-menu-group">
+              <span class="tool-menu-label">{{ 'home.categories.ai_coding'|trans }}</span>
+              <a href="{{ path('ai_studio_extension', {_locale: app.request.locale}) }}">{{ 'base.nav.ai_studio_extension'|trans }}</a>
+            </div>
+            <div class="tool-menu-group">
+              <span class="tool-menu-label">{{ 'base.nav.reading'|trans }}</span>
+              <a href="{{ path('blog_index', {_locale: app.request.locale}) }}">{{ 'base.nav.blog'|trans }}</a>
+              <a href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">{{ 'agent_digest.nav'|trans }}</a>
+            </div>
           </nav>
         </details>
         {% block language_switch %}
@@ -92,14 +114,24 @@
     {% endif %}
   </header>
   {% block ambient_background %}
-    {% if not (current_route starts with 'stackhal_admin_') %}
+    {% if current_route == 'landing' %}
       <canvas class="psa-space-background" aria-hidden="true" role="presentation" data-nosnippet></canvas>
     {% endif %}
   {% endblock %}
-  <main>{% block body %}{% endblock %}</main>
+  <main id="main">{% block body %}{% endblock %}</main>
   <footer>{{ 'base.footer'|trans }} · <a class="footer-contact" href="mailto:bahdan.hal@hotmail.com">{{ 'base.contact'|trans }}</a><br><span class="copyright">© {{ "now"|date("Y") }} StackHal · <a class="copyright-link" href="https://bahdanhal.pl/">Bahdan Hal</a> · <a class="copyright-link" href="https://ileza.pl/" target="_blank" rel="noopener">IleZa ↗</a></span></footer>
   {% block scripts %}{% endblock %}
   <script>
+    (function(){
+      var menu=document.querySelector('.tool-menu');
+      if(!menu)return;
+      document.addEventListener('keydown',function(event){
+        if(event.key==='Escape'&&menu.open){menu.open=false;menu.querySelector('summary').focus();}
+      });
+      document.addEventListener('click',function(event){
+        if(menu.open&&!menu.contains(event.target)){menu.open=false;}
+      });
+    })();
     (function(){
       if(location.pathname.startsWith('/admin')||navigator.doNotTrack==='1'||window.doNotTrack==='1'||navigator.globalPrivacyControl)return;
       var d=JSON.stringify({p:location.pathname,r:document.referrer||null,s:new URLSearchParams(location.search).get('utm_source')});

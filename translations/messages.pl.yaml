@@ -28,6 +28,7 @@ base:
     home_label: "Strona główna StackHal"
     brand: "StackHal"
     navigation: "Narzędzia i język"
+    skip: "Przejdź do treści"
     nav:
         blog: "Blog"
         geo: "Analizator GEO"
@@ -44,6 +45,7 @@ base:
         ai_studio_extension: "Lokalna synchronizacja AI Studio"
         cors_sandbox: "Piaskownica CORS"
         more: "Narzędzia"
+        reading: "Do czytania"
     context:
         geo: "Analizator GEO"
         seo: "Analizator SEO"
@@ -57,12 +59,12 @@ base:
     contact: "Kontakt"
 
 error404:
-    title: "404 - ROUTE_NOT_FOUND · StackHal"
-    eyebrow: "STATUS_CODE: 404_NOT_FOUND"
-    heading: "Nie odnaleziono trasy."
-    description: "Podany adres URI nie pasuje do żadnego zarejestrowanego narzędzia programistycznego, potoku diagnostycznego ani punktu końcowego."
+    title: "Nie znaleziono strony · StackHal"
+    eyebrow: "Błąd 404 · Nie znaleziono strony"
+    heading: "Tej strony tu nie ma."
+    description: "Adres może zawierać literówkę albo strona została przeniesiona. Wszystkie narzędzia są nadal o jedno kliknięcie stąd."
     diagnostic_button: "Inspektor domen"
-    explore_heading: "Katalog narzędzi deweloperskich:"
+    explore_heading: "Popularne narzędzia"
 
 common:
     all_tools: "Wszystkie narzędzia"
@@ -87,6 +89,8 @@ home:
     heading_middle: "pod"
     deploy_cat: "Wypuść kota"
     detonate: "Nie naciskaj"
+    cta_primary: "Sprawdź stronę"
+    cta_tools: "Zobacz wszystkie narzędzia"
     illustration_alt: "Czarny kot nadzorujący czerwoną maszynę z soczewkami, kablami i przyrządami diagnostycznymi."
     illustration_caption: "Rys. 01 / Infrastruktura pod kocim nadzorem."
     catops:
@@ -112,37 +116,37 @@ home:
         title: "Techniczny audyt SEO"
         text: "Znajdź błędy przekierowań, pułapki crawlerów, duplikaty adresów, problemy canonical i luki w mapie witryny."
     favicon_suite:
-        title: "Generator Favicon & SVG Dark-Mode"
+        title: "Generator favicon"
         text: "Generuj adaptacyjne wektorowe ikony SVG dla trybu ciemnego, pliki ICO o wielu rozdzielczościach, Apple Touch Icon i pakiety PWA."
     bimi:
-        title: "BIMI Studio i symulator skrzynek pocztowych"
+        title: "BIMI Studio"
         text: "Przygotuj zgodne logo SVG Tiny 1.2 PS z marginesami bezpiecznymi i przetestuj awatar na żywo w Gmailu, Apple Mail i Yahoo."
     domain_inspector:
-        title: "Inspektor bezpieczeństwa domen i dostarczalności"
+        title: "Bezpieczeństwo domeny i dostarczalność"
         text: "Szybka weryfikacja polityk DMARC, rekordów BIMI, szyfrowania MTA-STS, raportów SMTP TLS-RPT oraz SPF."
     caddy_transpiler:
-        title: "Nginx i Apache ➔ Caddyfile Converter"
+        title: "Nginx i Apache → Caddyfile"
         text: "Konwertuj bloki serwera Nginx oraz Apache .htaccess na czysty, czytelny Caddyfile w czasie rzeczywistym, z inteligentnymi podpowiedziami i gotowymi presetami."
     cidr_matrix:
-        title: "Wizualna matryca CIDR i nakładania się podsieci"
+        title: "Matryca CIDR i podsieci"
         text: "Analizuj bloki CIDR IPv4/IPv6, wykrywaj kolizje podsieci, wizualizuj struktury drzewiaste 2D i znajduj wolne podsieci."
     regex_transpiler:
-        title: "Konwerter dialektów Regex i matryca zgodności"
+        title: "Konwerter dialektów Regex"
         text: "Konwertuj wyrażenia regularne PCRE do Go RE2, JavaScript, Pythona i Rusta, weryfikuj bezpieczeństwo asercji i eliminuj podatności ReDoS w czasie liniowym O(N)."
     dns_dag_tracer:
         title: "Śledzenie delegacji DNS na żywo"
         text: "Sprawdź aktualne rekordy DNS i zobacz serwery autorytatywne przypisane do domeny."
     pkpass:
-        title: "Inspektor i debugger Apple Wallet (.pkpass)"
+        title: "Inspektor kart Apple Wallet"
         text: "Podgląd kart Apple Wallet i Google Wallet w przeglądarce, weryfikacja sum SHA-1 w manifest.json, analiza certyfikatów PKCS#7 i odbudowa niepodpisanego archiwum."
     app_links:
-        title: "Apple Universal Links & Android App Links"
+        title: "Universal Links i App Links"
         text: "Waliduj manifesty Apple AASA i Android AssetLinks, testuj reguły routingu URL i diagnozuj błędy deeplinków."
     cors_sandbox:
-        title: "Piaskownica polityk CORS i Preflight"
+        title: "Piaskownica CORS i Preflight"
         text: "Diagnozuj nagłówki cross-origin, zapytania OPTIONS, bezpieczeństwo wildcard z poświadczeniami oraz limity max-age."
     ai_studio_extension:
-        title: "AI Studio Local File Sync & Codebase Context"
+        title: "AI Studio Local File Sync"
         text: "Otwarte rozszerzenie Chrome do pakowania kontekstu repozytorium, przeglądania diffów wygenerowanych przez AI i synchronizacji zatwierdzonych zmian z lokalnym projektem."
     principles:
         private:
