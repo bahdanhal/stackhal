@@ -23,6 +23,26 @@ agent_digest:
         relationships: "Relacje"
         discoveries: "Odkrycia"
 
+blog_index:
+    title: "Blog StackHal · Praktyczne poradniki o infrastrukturze sieciowej"
+    description: "Praktyczne poradniki StackHal o uwierzytelnianiu poczty, DNS, technicznym SEO i infrastrukturze dla programistów."
+    heading: "Notatki z praktyki"
+    byline: "Blog StackHal, pisze Bahdan Hal."
+    intro: "Analizy i praktyczne poradniki o inżynierii AI oraz infrastrukturze, na której działa sieć."
+    latest: "Najnowsza notatka"
+    read: "Przeczytaj"
+    minutes: "min czytania"
+    archive: "Archiwum"
+    search_label: "Znajdź notatkę"
+    search_placeholder: "Szukaj w tytułach i tematach"
+    empty: "Pierwsza notatka jest w drodze."
+    empty_link: "Tymczasem zobacz narzędzia."
+    no_match: "Żadna notatka nie pasuje do wyszukiwania. Spróbuj tematu takiego jak DNS, PHP lub AI."
+    found_one: "Znaleziono notatek: %count%."
+    found_many: "Znaleziono notatek: %count%."
+    written_by: "Autor:"
+    tools_link: "Sprawdź w praktyce. Zobacz narzędzia"
+
 base:
     default_title: "Narzędzia programistyczne StackHal"
     home_label: "Strona główna StackHal"

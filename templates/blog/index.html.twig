@@ -1,7 +1,7 @@
 {% extends 'blog/base.html.twig' %}
-{% block title %}StackHal Blog · Practical Guides for Web Infrastructure{% endblock %}
+{% block title %}{{ 'blog_index.title'|trans }}{% endblock %}
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
-{% block description %}<meta name="description" content="Practical guides for email authentication, DNS, technical SEO, and developer infrastructure from StackHal.">{% endblock %}
+{% block description %}<meta name="description" content="{{ 'blog_index.description'|trans }}">{% endblock %}
 {% block canonical %}
   {% set isPolish = app.request.locale == 'pl' %}
   {% set currentUrl = isPolish ? 'https://stackhal.com/pl/blog' : 'https://stackhal.com/blog' %}
@@ -33,10 +33,10 @@
 <section class="blog-index-shell">
   <header class="journal-masthead">
     <div class="journal-heading">
-      <h1>Field notes<span>.</span></h1>
-      <p>The StackHal blog, by Bahdan Hal.</p>
+      <h1>{{ 'blog_index.heading'|trans }}<span>.</span></h1>
+      <p>{{ 'blog_index.byline'|trans }}</p>
     </div>
-    <p class="journal-intro">Investigations and practical guides to AI engineering and the infrastructure behind the web.</p>
+    <p class="journal-intro">{{ 'blog_index.intro'|trans }}</p>
   </header>
 
   <a class="digest-journal-link" href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">
@@ -49,12 +49,12 @@
     {% set illustration = article_illustrations.forArticle(featured) %}
     <section class="journal-feature{% if illustration or featured.visualLines is not empty %} has-visual{% endif %}" aria-labelledby="featured-title">
       <div class="journal-feature-copy">
-        <p class="journal-label"><span class="journal-dot" aria-hidden="true"></span> Latest field note <span>/ {{ featured.category }}</span></p>
+        <p class="journal-label"><span class="journal-dot" aria-hidden="true"></span> {{ 'blog_index.latest'|trans }} <span>/ {{ featured.category }}</span></p>
         <h2 id="featured-title"><a href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ featured.title }}</a></h2>
         <p class="journal-feature-dek">{{ featured.description }}</p>
         <div class="journal-feature-footer">
-          <a class="journal-read" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">Read the story <span aria-hidden="true">↗</span></a>
-          <span>{{ featured.readTimeMinutes }} min read · <time datetime="{{ featured.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ featured.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time></span>
+          <a class="journal-read" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ 'blog_index.read'|trans }} <span aria-hidden="true">↗</span></a>
+          <span>{{ featured.readTimeMinutes }} {{ 'blog_index.minutes'|trans }} · <time datetime="{{ featured.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ featured.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time></span>
         </div>
       </div>
       {% if illustration %}
@@ -73,10 +73,10 @@
 
   <section class="journal-archive" aria-labelledby="archive-title" data-blog-archive>
     <div class="journal-archive-header">
-      <h2 id="archive-title">The archive <span>{{ articles|length < 10 ? '0' : '' }}{{ articles|length }}</span></h2>
+      <h2 id="archive-title">{{ 'blog_index.archive'|trans }} <span>{{ articles|length < 10 ? '0' : '' }}{{ articles|length }}</span></h2>
       <div class="journal-search" data-blog-search hidden>
-        <label for="blog-search">Find a note</label>
-        <input id="blog-search" type="search" placeholder="Search titles or topics" autocomplete="off" aria-controls="journal-entries">
+        <label for="blog-search">{{ 'blog_index.search_label'|trans }}</label>
+        <input id="blog-search" type="search" placeholder="{{ 'blog_index.search_placeholder'|trans }}" autocomplete="off" aria-controls="journal-entries">
       </div>
     </div>
     <div id="journal-entries" class="journal-entries">
@@ -85,7 +85,7 @@
         <article class="journal-entry{% if illustration %} has-illustration{% endif %}" data-blog-entry>
           <div class="journal-entry-meta">
             <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time>
-            <span>{{ article.readTimeMinutes }} min read</span>
+            <span>{{ article.readTimeMinutes }} {{ 'blog_index.minutes'|trans }}</span>
           </div>
           {% if illustration %}
           <a class="journal-entry-illustration" href="{{ path('blog_article', {slug: article.slug, _locale: app.request.locale}) }}" tabindex="-1" aria-hidden="true">
@@ -100,15 +100,15 @@
           <span class="journal-entry-arrow" aria-hidden="true">↗</span>
         </article>
       {% else %}
-        <p class="journal-empty">The first field note is on its way. <a href="{{ path('landing', {_locale: app.request.locale}) }}">Explore the tools in the meantime.</a></p>
+        <p class="journal-empty">{{ 'blog_index.empty'|trans }} <a href="{{ path('landing', {_locale: app.request.locale}) }}">{{ 'blog_index.empty_link'|trans }}</a></p>
       {% endfor %}
     </div>
-    <p class="journal-empty" data-blog-empty hidden>No notes match your search. Try a topic such as DNS, PHP, or AI.</p>
-    <p class="journal-search-status" data-blog-status role="status" aria-live="polite"></p>
+    <p class="journal-empty" data-blog-empty hidden>{{ 'blog_index.no_match'|trans }}</p>
+    <p class="journal-search-status" data-blog-status data-found-one="{{ 'blog_index.found_one'|trans }}" data-found-many="{{ 'blog_index.found_many'|trans }}" role="status" aria-live="polite"></p>
   </section>
   <div class="journal-colophon">
-    <span>Written by <a href="https://bahdanhal.pl/">Bahdan Hal</a>.</span>
-    <a href="{{ path('landing', {_locale: app.request.locale}) }}">Put it into practice. Explore the tools <span aria-hidden="true">↗</span></a>
+    <span>{{ 'blog_index.written_by'|trans }} <a href="https://bahdanhal.pl/">Bahdan Hal</a>.</span>
+    <a href="{{ path('landing', {_locale: app.request.locale}) }}">{{ 'blog_index.tools_link'|trans }} <span aria-hidden="true">↗</span></a>
   </div>
 </section>
 {% endblock %}

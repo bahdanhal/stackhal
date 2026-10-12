@@ -23,6 +23,26 @@ agent_digest:
         relationships: "Relationships"
         discoveries: "Discoveries"
 
+blog_index:
+    title: "StackHal Blog · Practical Guides for Web Infrastructure"
+    description: "Practical guides for email authentication, DNS, technical SEO, and developer infrastructure from StackHal."
+    heading: "Field notes"
+    byline: "The StackHal blog, by Bahdan Hal."
+    intro: "Investigations and practical guides to AI engineering and the infrastructure behind the web."
+    latest: "Latest field note"
+    read: "Read the story"
+    minutes: "min read"
+    archive: "The archive"
+    search_label: "Find a note"
+    search_placeholder: "Search titles or topics"
+    empty: "The first field note is on its way."
+    empty_link: "Explore the tools in the meantime."
+    no_match: "No notes match your search. Try a topic such as DNS, PHP, or AI."
+    found_one: "%count% note found."
+    found_many: "%count% notes found."
+    written_by: "Written by"
+    tools_link: "Put it into practice. Explore the tools"
+
 base:
     default_title: "StackHal Developer Tools"
     home_label: "StackHal home"

@@ -27,7 +27,8 @@ if (blogSearch) {
       emptyMessage.hidden = visibleCount > 0 || entries.length === 0;
     }
     if (status) {
-      status.textContent = `${visibleCount} ${visibleCount === 1 ? 'note' : 'notes'} found.`;
+      const template = visibleCount === 1 ? status.dataset.foundOne : status.dataset.foundMany;
+      status.textContent = (template || '%count% notes found.').replace('%count%', String(visibleCount));
     }
   });
 }
