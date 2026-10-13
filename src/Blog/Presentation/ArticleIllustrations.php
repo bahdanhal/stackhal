@@ -10,7 +10,7 @@ final class ArticleIllustrations
 {
     /** @var array<string, array{file: string, alt: string, caption: string}> */
     private const ARTWORKS = [
-        'debugging-is-almost-dead-in-2026' => [
+        'debugging-is-dead' => [
             'file' => 'debugging-evidence',
             'alt' => 'An inspection lens examining a stack of red and black evidence plates.',
             'caption' => 'Follow the evidence.',

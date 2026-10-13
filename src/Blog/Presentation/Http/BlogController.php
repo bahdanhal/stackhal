@@ -13,6 +13,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class BlogController extends AbstractController
 {
+    /** @var array<string, string> */
+    private const MOVED_ARTICLES = [
+        'debugging-is-almost-dead-in-2026' => 'debugging-is-dead',
+    ];
+
     #[Route(path: ['en' => '/blog', 'pl' => '/pl/blog'], name: 'blog_index', methods: ['GET'])]
     public function index(Request $request, BlogArticleRepository $articles): Response
     {
@@ -40,6 +45,14 @@ final class BlogController extends AbstractController
     public function article(string $slug, Request $request, BlogArticleRepository $articles): Response
     {
         $locale = $request->getLocale();
+        if (isset(self::MOVED_ARTICLES[$slug])) {
+            return $this->redirectToRoute(
+                'blog_article',
+                ['slug' => self::MOVED_ARTICLES[$slug], '_locale' => $locale],
+                Response::HTTP_MOVED_PERMANENTLY
+            );
+        }
+
         $article = $articles->findPublishedBySlug($slug, $locale);
 
         if ($article === null) {

@@ -10,6 +10,7 @@ parameters:
         - migrations/Version20260917233000.php
         - migrations/Version20260927120000.php
         - migrations/Version20261002210000.php
+        - migrations/Version20261013120000.php
     excludePaths:
         - tests/bootstrap.php
     reportUnmatchedIgnoredErrors: false

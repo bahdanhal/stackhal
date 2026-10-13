@@ -162,6 +162,33 @@ final class BlogControllerTest extends TestCase
         self::assertSame('/pl/blog/bledy-podpisu-pkpass', $response->getTargetUrl());
     }
 
+    public function testMovedArticleRedirectsPermanentlyToItsNewUrl(): void
+    {
+        $repo = $this->createMock(BlogArticleRepository::class);
+        $repo->expects(self::never())->method('findPublishedBySlug');
+
+        $router = $this->createMock(RouterInterface::class);
+        $router->expects(self::once())
+            ->method('generate')
+            ->with('blog_article', ['slug' => 'debugging-is-dead', '_locale' => 'en'])
+            ->willReturn('/blog/debugging-is-dead');
+
+        $container = new Container();
+        $container->set('router', $router);
+
+        $controller = new BlogController();
+        $controller->setContainer($container);
+
+        $request = new Request();
+        $request->setLocale('en');
+
+        $response = $controller->article('debugging-is-almost-dead-in-2026', $request, $repo);
+
+        self::assertInstanceOf(RedirectResponse::class, $response);
+        self::assertSame(Response::HTTP_MOVED_PERMANENTLY, $response->getStatusCode());
+        self::assertSame('/blog/debugging-is-dead', $response->getTargetUrl());
+    }
+
     public function testArticleThrows404WhenArticleDoesNotExistInAnyLocale(): void
     {
         $repo = $this->createMock(BlogArticleRepository::class);
