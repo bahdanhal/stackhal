@@ -10,11 +10,6 @@ final class ArticleIllustrations
 {
     /** @var array<string, array{file: string, alt: string, caption: string}> */
     private const ARTWORKS = [
-        'debugging-is-dead' => [
-            'file' => 'debugging-evidence',
-            'alt' => 'An inspection lens examining a stack of red and black evidence plates.',
-            'caption' => 'Follow the evidence.',
-        ],
         'ai-coding-agents-deprecated-dependencies-census' => [
             'file' => 'dependency-census',
             'alt' => 'A mechanical sorter inspecting old and new dependency cartridges.',
