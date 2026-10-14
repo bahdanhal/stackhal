@@ -23,7 +23,7 @@ final class ArticleIllustrations
         'bmad-vs-gsd-ai-agent-frameworks-benchmark' => [
             'file' => 'agent-workflows',
             'alt' => 'An engineering balance weighing connected role modules against a blueprint and assembled machine.',
-            'caption' => 'Weigh the tradeoffs.',
+            'caption' => 'Same task, three setups.',
         ],
         'retired-azure-sdk-for-php-migration' => [
             'file' => 'retired-sdk',
