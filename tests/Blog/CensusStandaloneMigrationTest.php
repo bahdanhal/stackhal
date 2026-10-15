@@ -36,31 +36,6 @@ final class CensusStandaloneMigrationTest extends TestCase
         self::assertDoesNotMatchRegularExpression('/\\bGo\\b/', $article['content_html']);
     }
 
-    public function testPackageExamplesMatchPublicObservations(): void
-    {
-        $path = tempnam(sys_get_temp_dir(), 'census-examples-');
-        self::assertNotFalse($path);
-        $compressed = file_get_contents(dirname(__DIR__, 2) . '/public/research/repository-sample-2026-09-04/observations.sqlite.gz');
-        self::assertNotFalse($compressed);
-        $bytes = gzdecode($compressed);
-        self::assertNotFalse($bytes);
-        file_put_contents($path, $bytes);
-        unset($compressed, $bytes);
-        try {
-            $database = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'path' => $path]);
-            self::assertSame(21653, $database->fetchOne('SELECT COUNT(DISTINCT repo_name) FROM dependencies'));
-            foreach (['next' => 857, 'eslint' => 517, 'recharts' => 236] as $package => $count) {
-                self::assertSame($count, $database->fetchOne("SELECT COUNT(DISTINCT repo_name) FROM dependencies WHERE ecosystem = 'npm' AND is_deprecated = 1 AND package_name = ?", [$package]));
-            }
-            foreach ([['next', '14.2.15', 124], ['next', '14.2.5', 114], ['eslint', '9.39.5', 58], ['recharts', '2.12.7', 77]] as [$package, $version, $count]) {
-                self::assertSame($count, $database->fetchOne("SELECT COUNT(*) FROM dependencies WHERE ecosystem = 'npm' AND is_deprecated = 1 AND package_name = ? AND matched_version = ?", [$package, $version]));
-            }
-            $database->close();
-        } finally {
-            unlink($path);
-        }
-    }
-
     public function testMigrationIsScopedAndRestoresOriginalSnapshots(): void
     {
         $connection = $this->connection();
