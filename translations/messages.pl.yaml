@@ -103,10 +103,10 @@ home:
         title: "StackHal · Darmowe narzędzia dla programistów, SEO i infrastruktury"
         description: "Konkretne narzędzia do technicznego SEO, GEO, Apple Wallet, Caddy, bezpieczeństwa e-mail i analizy CIDR. Bez rejestracji."
     eyebrow: "Poważne narzędzia. Podejrzany nadzór."
-    heading_start: "Internet"
-    heading_emphasis: "lupą."
-    lede: "Sprawdź domeny. Rozplącz konfiguracje. Znajdź błąd. Darmowe narzędzia do infrastruktury, na której działa internet."
-    heading_middle: "pod"
+    heading_start: "Narzędzia dla programistów,"
+    heading_emphasis: "infrastruktury"
+    lede: "Darmowe narzędzia do sprawdzania stron, DNS i konfiguracji poczty, konwersji konfiguracji serwerów oraz analizy kart Wallet."
+    heading_middle: "SEO i"
     deploy_cat: "Wypuść kota"
     detonate: "Nie naciskaj"
     cta_primary: "Sprawdź stronę"
@@ -170,14 +170,14 @@ home:
         text: "Otwarte rozszerzenie Chrome do pakowania kontekstu repozytorium, przeglądania diffów wygenerowanych przez AI i synchronizacji zatwierdzonych zmian z lokalnym projektem."
     principles:
         private:
-            title: "Prywatność domyślnie"
+            title: "Obliczenia w przeglądarce i buforowanie raportów"
             text: "Obliczenia pozostają w przeglądarce. Raporty ze skanowania są buforowane, aby nie obciążać wielokrotnie badanej strony."
         clear:
-            title: "Widoczne uzasadnienie"
-            text: "Wzory, dowody, daty i ograniczenia są obok wyniku, a nie ukryte za samą punktacją."
+            title: "Szczegóły wyników"
+            text: "Wyniki zawierają wzory, dowody, daty i ograniczenia."
         fast:
-            title: "Jedno zadanie na raz"
-            text: "Każde narzędzie rozwiązuje jedno konkretne zadanie bez paywalli, rejestracji ani sztucznych opóźnień."
+            title: "Dostęp"
+            text: "Narzędzia są darmowe i dostępne bez rejestracji."
     faq:
         title: "Często zadawane pytania"
         q1: "Jakie narzędzia dla programistów oferuje StackHal?"
@@ -194,8 +194,8 @@ ai_studio_extension:
         title: "AI Studio Local File Sync & Codebase Context · Rozszerzenie Chrome"
         description: "Otwarte rozszerzenie Chrome do używania Google AI Studio z lokalnym repozytorium: pakowanie kontekstu, przeglądanie diffów, synchronizacja plików i cofanie zmian."
     eyebrow: "OTWARTE ROZSZERZENIE CHROME · AI STUDIO WORKFLOW"
-    heading: "Eksperymentujesz z Google AI Studio?"
-    lede: "Masz dość przenoszenia kodu tam i z powrotem przez Ctrl+C/Ctrl+V, jakby nadal był 2024? To mały projekt open source, który testuje bardziej zautomatyzowany sposób pracy z kodem w AI Studio."
+    heading: "AI Studio Local File Sync"
+    lede: "Otwarte rozszerzenie Chrome do przekazywania lokalnych plików projektu do AI Studio, przeglądania proponowanych zmian i zapisywania wybranych plików na dysku."
     status: "Dostępne w Chrome Web Store"
     store_cta: "Zainstaluj z Chrome Web Store"
     guide_cta: "Szczegóły instalacji"
@@ -209,7 +209,7 @@ ai_studio_extension:
         private: "Bez telemetrii i backendu"
     problem:
         label: "PO CO TO POWSTAŁO"
-        title: "AI Studio ma kontekst. Projekt ma pliki."
+        title: "Połącz lokalny projekt z AI Studio"
         text: "Rozszerzenie łączy wybrany lokalny projekt z interfejsem AI Studio w przeglądarce. Nie próbuje zastępować pełnego IDE ani uruchamiać hostowanego agenta programistycznego."
     features:
         context:
@@ -369,8 +369,8 @@ audit:
         title: "Darmowy techniczny audyt SEO · Analizator indeksowalności i crawlerów"
         description: "Szybki audyt technicznego SEO: wykrywanie pętli przekierowań, błędów canonical, pułapek crawlerów, parametrów URL, robots.txt, map witryny i indeksowalności."
     eyebrow: "SZYBKI TECHNICZNY AUDYT SEO"
-    heading_start: "Znajdź miejsce, w którym Googlebot"
-    heading_emphasis: "gubi wątek."
+    heading_start: "Techniczny audyt"
+    heading_emphasis: "SEO"
     lede: "Sprawdź przekierowania, canonical, pułapki skanowania, parametry, paginację, robots.txt i mapy witryny. Wyniki opierają się bezpośrednio na danych HTTP."
     form:
         label: "Adres witryny"
@@ -500,8 +500,8 @@ geo:
         title: "Darmowy audyt GEO · Analizator optymalizacji pod silniki AI"
         description: "Sprawdź gotowość strony dla silników AI i odpowiedzi generatywnych (GEO): bezpośrednie odpowiedzi, strukturę semantyczną, schema.org, cytowania i kontrolę crawlerów."
     eyebrow: "GENERATIVE ENGINE OPTIMIZATION"
-    heading_start: "Czy silniki odpowiedzi"
-    heading_emphasis: "zrozumieją i zacytują stronę?"
+    heading_start: "Audyt gotowości"
+    heading_emphasis: "GEO"
     lede: "Sprawdź jedną stronę pod kątem sygnałów technicznych i redakcyjnych, które ułatwiają odnalezienie, interpretację, przypisanie i cytowanie treści. Każdy punkt wynika z widocznych dowodów - nie z obietnicy widoczności w AI."
     form:
         label: "Adres strony"
@@ -609,7 +609,7 @@ caddy_transpiler:
         description: "Darmowy konwerter Nginx i Apache do Caddyfile online. Błyskawiczne narzędzie w przeglądarce przekształca konfiguracje Nginx i Apache .htaccess w przejrzysty plik Caddyfile."
     eyebrow: "DARMOWY KONWERTER KONFIGURACJI SERWERÓW"
     heading: "Nginx i Apache ➔ konwerter Caddyfile"
-    lede: "Przekształcaj bloki Nginx oraz konfiguracje Apache (.htaccess / VirtualHost) w przejrzysty plik Caddyfile w czasie rzeczywistym. Narzędzie działa w 100% w przeglądarce."
+    lede: "Konwertuj obsługiwane bloki Nginx i dyrektywy Apache (.htaccess / VirtualHost) na składnię Caddyfile w przeglądarce. Przed wdrożeniem sprawdź wskazówki migracyjne i wygenerowaną konfigurację."
     source_label: "Serwer źródłowy"
     server_nginx: "Nginx (nginx.conf / server)"
     server_apache: "Apache (.htaccess / VirtualHost)"
@@ -629,21 +629,21 @@ caddy_transpiler:
     omitted_title: "Uproszczone lub automatyczne dyrektywy"
     features_title: "Wykryte funkcje i routing"
     why_caddy_title: "Dlaczego warto przejść z Nginx lub Apache na Caddy?"
-    why_caddy_intro: "Caddy zastępuje dziesiątki linijek powtarzalnej konfiguracji prostymi, bezpiecznymi domyślnymi ustawieniami dla nowoczesnych środowisk produkcyjnych."
+    why_caddy_intro: "Caddy udostępnia dyrektywy do automatycznego HTTPS, reverse proxy i routingu PHP-FPM."
     benefits:
         https:
-            title: "Automatyczny HTTPS bez certbota"
-            text: "Caddy sam pozyskuje, odnawia i konfiguruje certyfikaty Let's Encrypt oraz ZeroSSL. Brak awarii odnawiania certyfikatów i zadań cron."
+            title: "Automatyczny HTTPS"
+            text: "Caddy zarządza wydawaniem i odnawianiem certyfikatów. Błędy tych operacji należy sprawdzać w logach."
         syntax:
-            title: "O 80% krótsza konfiguracja"
-            text: "Czytelna składnia zastępuje zawiłe bloki. HTTP/2, HTTP/3 oraz nowoczesny TLS 1.3 są włączone domyślnie bez dodatkowego tuningu."
+            title: "Składnia Caddyfile"
+            text: "Dyrektywy takie jak reverse_proxy i php_fastcgi grupują powiązane ustawienia serwera. Długość pliku zależy od konfiguracji źródłowej."
         proxy:
             title: "Wbudowane Reverse Proxy i PHP"
             text: "Automatyczna obsługa WebSocket, nagłówków X-Forwarded i puli połączeń. Pojedyncza dyrektywa php_fastcgi bezpiecznie obsługuje aplikacje PHP."
         private:
-            title: "100% prywatności w przeglądarce"
+            title: "Konwersja w przeglądarce"
             text: "Całe parsowanie i konwersja odbywają się lokalnie w Twojej przeglądarce. Żadne domeny, porty ani adresy IP nie są przesyłane na serwer."
-    mapping_cheatsheet_title: "Inteligentne mapowanie - dlaczego Caddy jest prostszy"
+    mapping_cheatsheet_title: "Mapowanie dyrektyw"
     cheatsheet_proxy_title: "Reverse Proxy i nagłówki"
     cheatsheet_proxy_desc: "proxy_pass i 5 linii proxy_set_header zamieniają się w pojedyncze reverse_proxy. Host, X-Forwarded-For i WebSockets działają automatycznie."
     cheatsheet_ssl_title: "Automatyczny HTTPS"
@@ -651,7 +651,7 @@ caddy_transpiler:
     cheatsheet_php_title: "Router PHP-FPM"
     cheatsheet_php_desc: "try_files + fastcgi_pass i parametry skryptów są zastępowane przez php_fastcgi i file_server."
     cheatsheet_rewrite_title: "Przejrzyste przekierowania"
-    cheatsheet_rewrite_desc: "Skomplikowane wyrażenia regularne RewriteRule tłumaczą się bezpośrednio na czytelne dyrektywy redir."
+    cheatsheet_rewrite_desc: "Obsługiwane wzorce RewriteRule są konwertowane na dyrektywy Caddy. Sprawdź ostrzeżenia dotyczące reguł, których nie można przekonwertować."
     faq:
         title: "Często zadawane pytania"
         q1: "Jak przekonwertować konfigurację Nginx na Caddyfile?"
