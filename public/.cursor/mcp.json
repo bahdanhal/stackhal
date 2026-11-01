@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "stackhal": {
+      "url": "https://stackhal.com/mcp"
+    }
+  }
+}
