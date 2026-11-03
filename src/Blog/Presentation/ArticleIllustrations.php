@@ -10,6 +10,16 @@ final class ArticleIllustrations
 {
     /** @var array<string, array{file: string, alt: string, caption: string}> */
     private const ARTWORKS = [
+        'what-talks-to-my-mcp-servers' => [
+            'file' => 'mcp-servers',
+            'alt' => 'Four compact server modules connected through mechanical counter blocks to a single operator terminal and probe bank.',
+            'caption' => 'Four servers, one chat window.',
+        ],
+        'ai-model-reads-my-citroen-c2' => [
+            'file' => 'citroen-diagnostics',
+            'alt' => 'An engine control unit connected by an OBD-II diagnostic cable to a handheld reader, beside an oxygen sensor and thermostat valve.',
+            'caption' => 'Read the engine unit.',
+        ],
         'bmad-vs-gsd-ai-agent-frameworks-benchmark' => [
             'file' => 'agent-workflows',
             'alt' => 'An engineering balance weighing connected role modules against a blueprint and assembled machine.',

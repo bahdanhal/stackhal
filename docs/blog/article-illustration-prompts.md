@@ -64,3 +64,21 @@ Saved asset: `public/images/atelier/email-authentication.webp`
 Create an editorial illustration for StackHal's Atelier series. Subject: A beautiful envelope authentication apparatus: a white geometric mail envelope passes through a black mechanical verification gate with three aligned small rollers; a red circular identity seal is pressed onto the envelope, and a second verified envelope emerges toward a red receiving tray. Fine connectors and bolts suggest DNS, policy enforcement, and verified brand identity. No letters, logos, or shield clichés.
 Art direction: crisp FLAT 2D black ink technical line illustration, white opaque material planes and vermilion red (#da3c1a) accents. Three-quarter isometric drawing, not a glossy 3D render. Economical bold black contours, precise thin technical lines, flat solid fills, elegant expensive design-studio composition. Match an illustrated industrial inspection machine. One sculptural object group fully visible with generous margins, landscape 3:2. Truly transparent empty background. No ground plane, no cast shadow, no gray halo, no glow, no gradients, no shiny surfaces, no photo lighting, no beige or paper textures, no pencil marks, no words or logos. Conceptual art, not an exact technical diagram.
 ```
+
+## mcp-servers
+
+Saved asset: `public/images/atelier/mcp-servers.webp`
+
+```text
+Use case: stylized-concept. Asset type: editorial illustration for a StackHal engineering essay, one artwork in an established Atelier series. Subject: A compact mechanical switchboard and telemetry manifold: four distinct small black machined server modules arranged in a neat row on one side, linked by a continuous vermilion red cable (#da3c1a) through a white machined junction block with small mechanical counter drums to a single clean operator terminal, while several small probe plugs tap the outer port bank.
+Style: expensive design-studio editorial object illustration, precise three-quarter isometric perspective, crisp black ink contours, disciplined flat white surfaces, solid near-black machinery, vermilion red accents (#da3c1a). Match the visual language of a finely drawn mechanical inspection apparatus. Minimal fine parallel linework only where necessary; clean polished shapes, no pencil shading. A single coherent sculptural object group with a distinctive silhouette, fully visible with generous clear margins. Landscape 3:2 composition. Background genuinely transparent, with opaque white material surfaces and fine antialiased edges. No ground plane or colored backdrop.
+```
+
+## citroen-diagnostics
+
+Saved asset: `public/images/atelier/citroen-diagnostics.webp`
+
+```text
+Use case: stylized-concept. Asset type: editorial illustration for a StackHal engineering essay, one artwork in an established Atelier series. Subject: A compact automotive diagnostic apparatus: a machined engine control unit box with multi-pin harness socket connected via a 16-pin OBD-II diagnostic plug and a continuous vermilion red cable (#da3c1a) to a white mechanical inspection reader, alongside an exhaust oxygen sensor probe and a mechanical thermostat valve assembly resting on an inspection tray.
+Style: expensive design-studio editorial object illustration, precise three-quarter isometric perspective, crisp black ink contours, disciplined flat white surfaces, solid near-black machinery, vermilion red accents (#da3c1a). Match the visual language of a finely drawn mechanical inspection apparatus. Minimal fine parallel linework only where necessary; clean polished shapes, no pencil shading. A single coherent sculptural object group with a distinctive silhouette, fully visible with generous clear margins. Landscape 3:2 composition. Background genuinely transparent, with opaque white material surfaces and fine antialiased edges. No ground plane or colored backdrop.
+```

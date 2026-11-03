@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 390" role="img" aria-labelledby="mcp-tools-title mcp-tools-desc">
+  <title id="mcp-tools-title">Portfolio weekly calls before and after MCP Registry listing, and OBD Vault tool calls by tool name</title>
+  <desc id="mcp-tools-desc">Left: bahdanhal.pl weekly calls rose from 6 and 2 before listing on 4 October to 56, 59, 52, and 55 in the four weeks after; 216 real calls led by get_cv_and_skills (97). Right: OBD Vault logged 495 tool calls across 13 accounts, led by aggregate_observations (99) and get_latest_status (71).</desc>
+  <rect width="920" height="390" fill="#fafafa" stroke="#e5e5e5" stroke-width="1"/>
+  <line x1="450" y1="28" x2="450" y2="362" stroke="#e0e0e0" stroke-width="1"/>
+
+  <!-- Left panel: Portfolio -->
+  <g font-family="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" fill="#202020">
+    <text x="32" y="36" font-size="16.5" font-weight="600" letter-spacing="-0.02em">bahdanhal.pl · weekly calls &amp; tools</text>
+    <text x="32" y="56" font-size="12.5" fill="#666666">Listed in official MCP Registry on 4 Oct (W40)</text>
+
+    <!-- Weekly bars -->
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" fill="#555555" text-anchor="middle">
+      <!-- W36: 6 -->
+      <rect x="42" y="181" width="38" height="11" fill="#888888"/>
+      <text x="61" y="175" font-weight="600" fill="#202020">6</text>
+      <text x="61" y="210">W36</text>
+
+      <!-- W39: 2 -->
+      <rect x="96" y="188" width="38" height="4" fill="#888888"/>
+      <text x="115" y="182" font-weight="600" fill="#202020">2</text>
+      <text x="115" y="210">W39</text>
+
+      <!-- Registry marker -->
+      <line x1="158" y1="74" x2="158" y2="214" stroke="#da3c1a" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <text x="152" y="128" text-anchor="end" font-size="10.5" fill="#a3261b">4 Oct</text>
+      <text x="152" y="142" text-anchor="end" font-size="10.5" fill="#a3261b">registry</text>
+
+      <!-- W41: 56 -->
+      <rect x="180" y="92" width="38" height="100" fill="#da3c1a"/>
+      <text x="199" y="85" font-weight="600" fill="#a3261b">56</text>
+      <text x="199" y="210">W41</text>
+
+      <!-- W42: 59 -->
+      <rect x="236" y="86" width="38" height="106" fill="#da3c1a"/>
+      <text x="255" y="79" font-weight="600" fill="#a3261b">59</text>
+      <text x="255" y="210">W42</text>
+
+      <!-- W43: 52 -->
+      <rect x="292" y="99" width="38" height="93" fill="#da3c1a"/>
+      <text x="311" y="92" font-weight="600" fill="#a3261b">52</text>
+      <text x="311" y="210">W43</text>
+
+      <!-- W44: 55 -->
+      <rect x="348" y="93" width="38" height="99" fill="#da3c1a"/>
+      <text x="367" y="86" font-weight="600" fill="#a3261b">55</text>
+      <text x="367" y="210">W44</text>
+    </g>
+    <line x1="32" y1="192" x2="416" y2="192" stroke="#cccccc" stroke-width="1"/>
+
+    <!-- Tool breakdown -->
+    <text x="32" y="246" font-size="13.5" font-weight="600">216 real tool calls since 5 September:</text>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#202020">
+      <text x="32" y="274">get_cv_and_skills</text>
+      <rect x="236" y="261" width="145" height="16" fill="#202020"/>
+      <text x="389" y="274" font-weight="600">97</text>
+
+      <text x="32" y="302">get_portfolio_overview</text>
+      <rect x="236" y="289" width="124" height="16" fill="#202020"/>
+      <text x="368" y="302" font-weight="600">83</text>
+
+      <text x="32" y="330">get_services_and_pricing</text>
+      <rect x="236" y="317" width="54" height="16" fill="#202020"/>
+      <text x="298" y="330" font-weight="600">36</text>
+
+      <text x="32" y="358" fill="#666666">Fake auth probes rejected</text>
+      <rect x="236" y="345" width="46" height="16" fill="#999999"/>
+      <text x="290" y="358" fill="#666666">31</text>
+    </g>
+  </g>
+
+  <!-- Right panel: OBD Vault -->
+  <g font-family="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" fill="#202020">
+    <text x="480" y="36" font-size="16.5" font-weight="600" letter-spacing="-0.02em">OBD Vault · 495 tool calls (13 accounts)</text>
+    <text x="480" y="56" font-size="12.5" fill="#666666">Audit log since 2 Sep · 48 calls from Claude on 3 Nov (100% ok)</text>
+
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" fill="#202020">
+      <text x="480" y="96">aggregate_observations</text>
+      <rect x="688" y="82" width="174" height="18" fill="#da3c1a"/>
+      <text x="870" y="96" font-weight="600" fill="#a3261b">99</text>
+
+      <text x="480" y="130">get_latest_status</text>
+      <rect x="688" y="116" width="125" height="18" fill="#202020"/>
+      <text x="821" y="130" font-weight="600">71</text>
+
+      <text x="480" y="164">list_vehicles</text>
+      <rect x="688" y="150" width="102" height="18" fill="#202020"/>
+      <text x="798" y="164" font-weight="600">58</text>
+
+      <text x="480" y="198">get_observations</text>
+      <rect x="688" y="184" width="100" height="18" fill="#202020"/>
+      <text x="796" y="198" font-weight="600">57</text>
+
+      <text x="480" y="232">list_scan_sessions</text>
+      <rect x="688" y="218" width="95" height="18" fill="#202020"/>
+      <text x="791" y="232" font-weight="600">54</text>
+
+      <text x="480" y="266">get_scan_session</text>
+      <rect x="688" y="252" width="90" height="18" fill="#202020"/>
+      <text x="786" y="266" font-weight="600">51</text>
+
+      <text x="480" y="300">get_data_quality</text>
+      <rect x="688" y="286" width="42" height="18" fill="#555555"/>
+      <text x="738" y="300" fill="#555555">24</text>
+
+      <text x="480" y="334">get_dtc_context &amp; history</text>
+      <rect x="688" y="320" width="70" height="18" fill="#555555"/>
+      <text x="766" y="334" fill="#555555">40</text>
+
+      <text x="480" y="364" fill="#666666">other 4 tools</text>
+      <rect x="688" y="350" width="72" height="18" fill="#888888"/>
+      <text x="768" y="364" fill="#666666">41</text>
+    </g>
+  </g>
+</svg>
