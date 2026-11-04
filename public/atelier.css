@@ -217,7 +217,7 @@ th { background: #f2f2f2; }
 .inspector-example-pills > span { color: var(--muted); }
 .example-domain-btn { background: #fff; color: var(--ink); border-color: var(--line); }
 .example-domain-btn:hover { color: #a3261b; background: #fff3ef; border-color: #a3261b; }
-.tool-faq h3, .tool-faq summary, .tool-faq p { color: var(--ink) !important; }
+.tool-faq:not(.pkpass-guide-section) h3, .tool-faq:not(.pkpass-guide-section) summary, .tool-faq:not(.pkpass-guide-section) p { color: var(--ink) !important; }
 .score-meta p { color: var(--muted); }
 .protocol-summary { color: var(--ink); }
 .pill-ready, .status-pass { color: #17643d; }
