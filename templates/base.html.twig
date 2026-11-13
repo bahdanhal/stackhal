@@ -135,23 +135,6 @@
   <main id="main">{% block body %}{% endblock %}</main>
   <footer>{{ 'base.footer'|trans }} · <a class="footer-contact" href="mailto:bahdan.hal@hotmail.com">{{ 'base.contact'|trans }}</a><br><span class="copyright">© {{ "now"|date("Y") }} StackHal · <a class="copyright-link" href="https://bahdanhal.pl/">Bahdan Hal</a> · <a class="copyright-link" href="https://ileza.pl/" target="_blank" rel="noopener">IleZa ↗</a></span></footer>
   {% block scripts %}{% endblock %}
-  <script>
-    (function(){
-      var menu=document.querySelector('.tool-menu');
-      if(!menu)return;
-      document.addEventListener('keydown',function(event){
-        if(event.key==='Escape'&&menu.open){menu.open=false;menu.querySelector('summary').focus();}
-      });
-      document.addEventListener('click',function(event){
-        if(menu.open&&!menu.contains(event.target)){menu.open=false;}
-      });
-    })();
-    (function(){
-      if(location.pathname.startsWith('/admin')||navigator.doNotTrack==='1'||window.doNotTrack==='1'||navigator.globalPrivacyControl)return;
-      var d=JSON.stringify({p:location.pathname,r:document.referrer||null,s:new URLSearchParams(location.search).get('utm_source')});
-      if(navigator.sendBeacon){navigator.sendBeacon('/api/pa/hit',new Blob([d],{type:'application/json'}));}
-      else{fetch('/api/pa/hit',{method:'POST',body:d,headers:{'Content-Type':'application/json'},keepalive:true});}
-    })();
-  </script>
+  <script src="/api/pa/beacon.js" defer></script>
 </body>
 </html>
