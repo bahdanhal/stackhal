@@ -142,3 +142,5 @@ body.journal-page .blog-index-shell, body.journal-page .article-shell { max-widt
 .article-content .article-cta { background: #fafafa; color: #202020; border: 1px solid var(--line); padding: 24px; }
 .article-sidebar { max-height: calc(100vh - 140px); overflow-y: auto; }
 @media (max-width: 650px) { .article-sidebar { max-height: none; overflow: visible; } }
+/* Preserve copied code while making long lines readable without horizontal scrolling. */
+.article-content pre, .article-content pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
