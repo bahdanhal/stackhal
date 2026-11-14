@@ -90,6 +90,12 @@
     if (!dropZone || !fileInput) return;
 
     dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        fileInput.click();
+      }
+    });
     dropZone.addEventListener('dragover', (e) => {
       e.preventDefault();
       dropZone.classList.add('dragover');

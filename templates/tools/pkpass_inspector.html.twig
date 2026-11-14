@@ -100,8 +100,8 @@
       <div class="drop-icon">PKPASS</div>
       <strong class="drop-prompt">{{ 'pkpass.upload.drop_prompt'|trans }}</strong>
       <span class="drop-hint" id="pkpass-drop-hint">{{ 'pkpass.upload.formats'|trans }}</span>
-      <input type="file" id="pkpass-file-input" accept=".pkpass,.zip,.json" class="visually-hidden-file-input" tabindex="-1">
     </div>
+    <input type="file" id="pkpass-file-input" accept=".pkpass,.zip,.json" class="visually-hidden-file-input" tabindex="-1" aria-label="{{ 'pkpass.upload.drop_prompt'|trans }}">
 
     <!-- Preset Toolbar -->
     <div class="pkpass-toolbar">
@@ -326,7 +326,7 @@
           </div>
 
           <!-- Panes -->
-          <div class="inspector-tab-pane" id="pane-manifest" style="display: block;">
+          <div class="inspector-tab-pane" id="pane-manifest" tabindex="0" style="display: block;">
             <table class="diag-table">
               <thead>
                 <tr>
@@ -501,5 +501,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="/pkpass-inspector.js"></script>
+  <script src="/pkpass-inspector.js?v=20261114-a11y"></script>
 {% endblock %}

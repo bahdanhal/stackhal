@@ -61,12 +61,12 @@
         <h3>{{ 'bimi.upload.title'|trans }}</h3>
         <p class="studio-subtext">{{ 'bimi.upload.text'|trans }}</p>
 
-        <div id="drop-zone" class="drop-zone">
+        <div id="drop-zone" class="drop-zone" role="button" tabindex="0" aria-controls="file-input">
           <span class="drop-zone-icon">📥</span>
           <strong>{{ 'bimi.upload.drop_prompt'|trans }}</strong>
           <div class="drop-zone-hint">{{ 'bimi.upload.formats'|trans }}</div>
-          <input type="file" id="file-input" accept=".svg,.png,.jpg,.jpeg,.webp" style="display: none;">
         </div>
+        <input type="file" id="file-input" accept=".svg,.png,.jpg,.jpeg,.webp" style="display: none;" aria-label="{{ 'bimi.upload.drop_prompt'|trans }}">
 
         <div class="studio-controls">
           <div class="control-row">
@@ -92,7 +92,7 @@
             </label>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
               <input type="range" id="offset-x-slider" min="-180" max="180" value="0" style="flex-grow: 1;">
-              <input type="number" id="offset-x-num" min="-180" max="180" value="0" class="mini-number-input">
+              <input type="number" id="offset-x-num" aria-label="{{ 'bimi.controls.offset_x'|trans }}" min="-180" max="180" value="0" class="mini-number-input">
             </div>
           </div>
 
@@ -103,7 +103,7 @@
             </label>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
               <input type="range" id="offset-y-slider" min="-180" max="180" value="0" style="flex-grow: 1;">
-              <input type="number" id="offset-y-num" min="-180" max="180" value="0" class="mini-number-input">
+              <input type="number" id="offset-y-num" aria-label="{{ 'bimi.controls.offset_y'|trans }}" min="-180" max="180" value="0" class="mini-number-input">
             </div>
           </div>
 
@@ -199,11 +199,11 @@
 
       <div class="sim-customizer-bar">
         <div>
-          <label class="control-row"><small>{{ 'bimi.sim.sender_label'|trans }}</small></label>
+          <label for="sim-sender-input" class="control-row"><small>{{ 'bimi.sim.sender_label'|trans }}</small></label>
           <input type="text" id="sim-sender-input" value="Acme Corp" placeholder="Acme Security">
         </div>
         <div>
-          <label class="control-row"><small>{{ 'bimi.sim.subject_label'|trans }}</small></label>
+          <label for="sim-subject-input" class="control-row"><small>{{ 'bimi.sim.subject_label'|trans }}</small></label>
           <input type="text" id="sim-subject-input" value="Your Security Verification Code" placeholder="Monthly Statement">
         </div>
       </div>
@@ -289,17 +289,17 @@
         <p class="studio-subtext">{{ 'bimi.dns.text'|trans }}</p>
 
         <div class="control-row" style="margin-bottom: 0.75rem;">
-          <label><small>{{ 'bimi.dns.domain_label'|trans }}</small></label>
+          <label for="dns-domain-input"><small>{{ 'bimi.dns.domain_label'|trans }}</small></label>
           <input type="text" id="dns-domain-input" value="yourcompany.com" placeholder="example.com" class="inspector-domain-input" style="padding: 0.5rem 0.75rem; font-size: 0.9rem;">
         </div>
 
         <div class="control-row" style="margin-bottom: 0.75rem;">
-          <label><small>{{ 'bimi.dns.svg_label'|trans }}</small></label>
+          <label for="dns-svg-url-input"><small>{{ 'bimi.dns.svg_label'|trans }}</small></label>
           <input type="text" id="dns-svg-url-input" value="https://yourcompany.com/logo-bimi.svg" placeholder="https://..." class="inspector-domain-input" style="padding: 0.5rem 0.75rem; font-size: 0.9rem;">
         </div>
 
         <div class="control-row" style="margin-bottom: 1rem;">
-          <label><small>{{ 'bimi.dns.vmc_label'|trans }}</small></label>
+          <label for="dns-vmc-url-input"><small>{{ 'bimi.dns.vmc_label'|trans }}</small></label>
           <input type="text" id="dns-vmc-url-input" value="" placeholder="https://yourcompany.com/bimi.pem (Optional)" class="inspector-domain-input" style="padding: 0.5rem 0.75rem; font-size: 0.9rem;">
         </div>
 
@@ -311,7 +311,7 @@
 
       <div class="studio-panel">
         <h3>{{ 'bimi.requirements.title'|trans }}</h3>
-        <ul style="padding-left: 1.25rem; font-size: 0.9rem; line-height: 1.6; color: #d1d5db;">
+        <ul style="padding-left: 1.25rem; font-size: 0.9rem; line-height: 1.6; color: var(--ink);">
           <li><strong>SVG Tiny 1.2 PS:</strong> {{ 'bimi.requirements.svg'|trans }}</li>
           <li><strong>1:1 Aspect Ratio:</strong> {{ 'bimi.requirements.ratio'|trans }}</li>
           <li><strong>DMARC Alignment:</strong> {{ 'bimi.requirements.dmarc'|trans }}</li>
@@ -344,5 +344,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="/bimi-studio.js"></script>
+  <script src="/bimi-studio.js?v=20261114-a11y"></script>
 {% endblock %}

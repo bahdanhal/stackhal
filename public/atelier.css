@@ -249,3 +249,27 @@ th { background: #f2f2f2; }
   .ai-extension-install { grid-template-columns: minmax(0, 1fr); }
   .favicon-assets-table { max-width: 100%; }
 }
+
+/* Accessible contrast for tools adapted from the dark workspace theme. */
+.feature-grid b { color: #a3261b; }
+.privacy-badge { color: #17643d; }
+.regex-transpiler-shell .section-header-wrap h3,
+.regex-transpiler-shell .faq-question { color: var(--ink); }
+.regex-transpiler-shell .tag-support { color: #17643d; }
+.regex-transpiler-shell .cheatsheet-table th { color: #202020; background: #ededed; }
+.regex-transpiler-shell .cheatsheet-table code { color: #254c72; background: #e8eef5; }
+.bimi-hero .btn-align-preset { color: #202020; }
+.ai-extension-note { color: #646464; }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 3px solid #a3261b; outline-offset: 3px; }
+
+
+.bimi-hero .badge-warning { background: #fff1ce; color: #795309; }
+.bimi-hero .badge-success { background: #e1f0e8; color: #17643d; }
+.bimi-hero .contrast-note { color: var(--muted); }
+/* Controls and advisory prose reflow within a 320 CSS-pixel viewport. */
+.bimi-hero .sim-nav-tabs { flex-wrap: wrap; }
+.caddy-hero .advisories-grid, .transpiler-insights .advisories-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+.tool-page-shell { overflow-wrap: anywhere; }
+
+.pkpass-guide-section .guide-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+.occurrence > summary b { color: #a3261b; }

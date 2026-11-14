@@ -2392,7 +2392,7 @@
           <div class="barcode-svg-wrap ${b.format === 'PKBarcodeFormatPDF417' ? 'format-pdf417' : (b.format === 'PKBarcodeFormatCode128' ? 'format-code128' : 'format-qr')}">
             ${svg}
           </div>
-          <small class="barcode-alt-text" style="color: ${labelColor}">${escapeHtml(b.altText || b.message || '')}</small>
+          <small class="barcode-alt-text" style="color: #475569">${escapeHtml(b.altText || b.message || '')}</small>
         </div>
       `;
     }

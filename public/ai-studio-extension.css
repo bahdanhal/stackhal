@@ -289,10 +289,10 @@
 .ai-extension-command code {
   display: block;
   padding: 16px 14px;
-  overflow-x: auto;
+  overflow-wrap: anywhere;
   color: #c8f5ff;
   font-size: 11px;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .ai-extension-steps {
