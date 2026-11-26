@@ -1,7 +1,7 @@
 {% set tool_context %}{% block tool_name %}{% endblock %}{% endset %}
 {% set current_route = app.request.attributes.get('_route')|default('') %}
 <!doctype html>
-<html lang="{{ app.request ? app.request.getLocale() : 'en' }}">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,8 +13,7 @@
   <title>{% block title %}{{ 'base.default_title'|trans }}{% endblock %}</title>
   {% block opengraph %}
     <meta property="og:title" content="{{ block('title')|striptags|trim|raw }}">
-    <meta property="og:locale" content="{{ app.request ? (app.request.locale == 'pl' ? 'pl_PL' : 'en_US') : 'en_US' }}">
-    <meta property="og:locale:alternate" content="{{ app.request ? (app.request.locale == 'pl' ? 'en_US' : 'pl_PL') : 'pl_PL' }}">
+    <meta property="og:locale" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ block('title')|striptags|trim|raw }}">
     {% set og_description = block('description') is defined and block('description')|trim is not empty ? block('description')|split('content="')|last|split('"')|first : '' %}
@@ -54,7 +53,7 @@
   {% endif %}
   <script src="/contact.js" defer></script>
   <script src="/psa-space-background.js" defer></script>
-  <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'Organization','@id':'https://stackhal.com/#stackhal','name':'StackHal','url':'https://stackhal.com/','logo':'https://stackhal.com/favicon.svg','founder':{'@type':'Person','name':'Bahdan Hal','url':'https://bahdanhal.pl/'}},{'@type':'WebSite','@id':'https://stackhal.com/#website','url':'https://stackhal.com/','name':'StackHal','inLanguage':['en', 'pl'],'publisher':{'@id':'https://stackhal.com/#stackhal'},'author':{'@id':'https://stackhal.com/#stackhal'},'dateModified':'2026-08-29'}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+  <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'Organization','@id':'https://stackhal.com/#stackhal','name':'StackHal','url':'https://stackhal.com/','logo':'https://stackhal.com/favicon.svg','founder':{'@type':'Person','name':'Bahdan Hal','url':'https://bahdanhal.pl/'}},{'@type':'WebSite','@id':'https://stackhal.com/#website','url':'https://stackhal.com/','name':'StackHal','inLanguage':'en','publisher':{'@id':'https://stackhal.com/#stackhal'},'author':{'@id':'https://stackhal.com/#stackhal'},'dateModified':'2026-08-29'}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
   {% block head_scripts %}{% endblock %}
 </head>
 <body class="stackhal-site page-{{ current_route|replace({'_': '-'}) }} {% block body_class %}{% endblock %}">
@@ -63,65 +62,47 @@
     <div class="topbar">
       <div class="brand-lockup">
         {% block brand_lockup %}
-        <a class="brand" href="{{ path('landing', {_locale: app.request.locale}) }}" aria-label="{{ 'base.home_label'|trans }}">
+        <a class="brand" href="{{ path('landing') }}" aria-label="{{ 'base.home_label'|trans }}">
           <span class="brand-wordmark">stackhal<span aria-hidden="true">.</span></span>
         </a>
         {% endblock %}
       </div>
       <div class="topbar-actions">
         <nav class="primary-nav" aria-label="{{ 'base.navigation'|trans }}">
-          <a href="{{ path('landing', {_locale: app.request.locale}) }}">{{ 'common.all_tools'|trans }}</a>
-          <a href="{{ path('blog_index', {_locale: app.request.locale}) }}">{{ 'base.nav.blog'|trans }}</a>
-          <a href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">{{ 'agent_digest.nav'|trans }}</a>
-          <a href="{{ path('geo_home', {_locale: app.request.locale}) }}">{{ 'base.nav.geo'|trans }}</a>
-          <a href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">{{ 'base.nav.seo'|trans }}</a>
+          <a href="{{ path('landing') }}">{{ 'common.all_tools'|trans }}</a>
+          <a href="{{ path('blog_index') }}">{{ 'base.nav.blog'|trans }}</a>
+          <a href="{{ path('agent_conversations') }}">{{ 'agent_digest.nav'|trans }}</a>
+          <a href="{{ path('geo_home') }}">{{ 'base.nav.geo'|trans }}</a>
+          <a href="{{ path('seo_audit_home') }}">{{ 'base.nav.seo'|trans }}</a>
         </nav>
         <details class="tool-menu">
           <summary>{{ 'base.nav.more'|trans }}</summary>
           <nav class="tool-menu-panel" aria-label="{{ 'base.nav.more'|trans }}">
             <div class="tool-menu-group">
               <span class="tool-menu-label">{{ 'home.categories.web'|trans }}</span>
-              <a href="{{ path('geo_home', {_locale: app.request.locale}) }}">{{ 'base.nav.geo'|trans }}</a>
-              <a href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">{{ 'base.nav.seo'|trans }}</a>
-              <a href="{{ path('favicon_suite', {_locale: app.request.locale}) }}">{{ 'base.nav.favicon_suite'|trans }}</a>
-              <a href="{{ path('cors_sandbox', {_locale: app.request.locale}) }}">{{ 'base.nav.cors_sandbox'|trans }}</a>
-            </div>
-            <div class="tool-menu-group">
-              <span class="tool-menu-label">{{ 'home.categories.email'|trans }}</span>
-              <a href="{{ path('bimi_studio', {_locale: app.request.locale}) }}">{{ 'base.nav.bimi'|trans }}</a>
-              <a href="{{ path('domain_inspector_home', {_locale: app.request.locale}) }}">{{ 'base.nav.domain_inspector'|trans }}</a>
-            </div>
-            <div class="tool-menu-group">
-              <span class="tool-menu-label">{{ 'home.categories.infrastructure'|trans }}</span>
-              <a href="{{ path('caddy_transpiler', {_locale: app.request.locale}) }}">{{ 'base.nav.caddy_transpiler'|trans }}</a>
-              <a href="{{ path('cidr_matrix', {_locale: app.request.locale}) }}">{{ 'base.nav.cidr_matrix'|trans }}</a>
-              <a href="{{ path('regex_transpiler', {_locale: app.request.locale}) }}">{{ 'base.nav.regex_transpiler'|trans }}</a>
-              <a href="{{ path('dns_dag_tracer', {_locale: app.request.locale}) }}">{{ 'base.nav.dns_dag_tracer'|trans }}</a>
+              <a href="{{ path('geo_home') }}">{{ 'base.nav.geo'|trans }}</a>
+              <a href="{{ path('seo_audit_home') }}">{{ 'base.nav.seo'|trans }}</a>
             </div>
             <div class="tool-menu-group">
               <span class="tool-menu-label">{{ 'home.categories.mobile'|trans }}</span>
-              <a href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">{{ 'base.nav.pkpass'|trans }}</a>
-              <a href="{{ path('app_links_validator', {_locale: app.request.locale}) }}">{{ 'base.nav.app_links'|trans }}</a>
+              <a href="{{ path('pkpass_inspector') }}">{{ 'base.nav.pkpass'|trans }}</a>
             </div>
             <div class="tool-menu-group">
               <span class="tool-menu-label">{{ 'home.categories.ai_coding'|trans }}</span>
-              <a href="{{ path('ai_studio_extension', {_locale: app.request.locale}) }}">{{ 'base.nav.ai_studio_extension'|trans }}</a>
+              <a href="{{ path('ai_studio_extension') }}">{{ 'base.nav.ai_studio_extension'|trans }}</a>
             </div>
             <div class="tool-menu-group">
               <span class="tool-menu-label">{{ 'base.nav.reading'|trans }}</span>
-              <a href="{{ path('blog_index', {_locale: app.request.locale}) }}">{{ 'base.nav.blog'|trans }}</a>
-              <a href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">{{ 'agent_digest.nav'|trans }}</a>
+              <a href="{{ path('blog_index') }}">{{ 'base.nav.blog'|trans }}</a>
+              <a href="{{ path('agent_conversations') }}">{{ 'agent_digest.nav'|trans }}</a>
             </div>
           </nav>
         </details>
-        {% block language_switch %}
-          <a class="language-switch" href="{{ path('landing', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
-        {% endblock %}
       </div>
     </div>
     {% if tool_context|trim is not empty %}
       <div class="tool-context-bar">
-        <a href="{{ path('landing', {_locale: app.request.locale}) }}">{{ 'common.all_tools'|trans }}</a>
+        <a href="{{ path('landing') }}">{{ 'common.all_tools'|trans }}</a>
         <span aria-hidden="true">/</span>
         <strong>{{ tool_context|trim }}</strong>
       </div>

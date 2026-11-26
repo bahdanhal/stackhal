@@ -4,10 +4,7 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'ai_studio_extension.meta.description'|trans }}">{% endblock %}
 {% block canonical %}
-  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/synchronizacja-plikow-ai-studio' : 'https://stackhal.com/ai-studio-local-file-sync' }}">
-  <link rel="alternate" hreflang="en" href="https://stackhal.com/ai-studio-local-file-sync">
-  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/synchronizacja-plikow-ai-studio">
-  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/ai-studio-local-file-sync">
+  <link rel="canonical" href="https://stackhal.com/ai-studio-local-file-sync">
 {% endblock %}
 {% block og_image %}
   <meta property="og:image" content="https://stackhal.com/ai-studio-extension/marquee-promo-1400x560.png">
@@ -18,9 +15,6 @@
   <meta name="twitter:image" content="https://stackhal.com/ai-studio-extension/marquee-promo-1400x560.png">
 {% endblock %}
 {% block stylesheets %}<link rel="stylesheet" href="/ai-studio-extension.css?v=20261114-a11y">{% endblock %}
-{% block language_switch %}
-  <a class="language-switch" href="{{ path('ai_studio_extension', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
-{% endblock %}
 {% block head_scripts %}
   <script type="application/ld+json">{{ {
     '@context': 'https://schema.org',
@@ -28,7 +22,7 @@
     'name': 'AI Studio Local File Sync & Codebase Context',
     'applicationCategory': 'DeveloperApplication',
     'operatingSystem': 'Chrome, Chromium',
-    'url': app.request.locale == 'pl' ? 'https://stackhal.com/pl/synchronizacja-plikow-ai-studio' : 'https://stackhal.com/ai-studio-local-file-sync',
+    'url': 'https://stackhal.com/ai-studio-local-file-sync',
     'downloadUrl': 'https://chromewebstore.google.com/detail/ai-studio-local-file-sync/hjldknihkaokdkfaifcjgklojjngaike',
     'codeRepository': 'https://github.com/bahdanhal/gemini-ai-studio-sync-extension',
     'license': 'https://opensource.org/license/mit',

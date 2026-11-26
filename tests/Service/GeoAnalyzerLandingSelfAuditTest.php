@@ -58,22 +58,6 @@ final class GeoAnalyzerLandingSelfAuditTest extends TestCase
         $requestStack->pop();
     }
 
-    public function testLandingPagePlScores100OnSelfGeoAudit(): void
-    {
-        /** @var RequestStack $requestStack */
-        $requestStack = $this->container->get('request_stack');
-        $request = Request::create('https://stackhal.com/pl/');
-        $request->setLocale('pl');
-        $requestStack->push($request);
-
-        $html = $this->twig->render('toolbox/home.html.twig');
-        $report = $this->runGeoAudit('https://stackhal.com/pl/', $html);
-
-        self::assertGreaterThanOrEqual(70, $report['score']);
-
-        $requestStack->pop();
-    }
-
     public function testMcpToolReturnsCompletedGeoAnalysisForLanding(): void
     {
         /** @var RequestStack $requestStack */

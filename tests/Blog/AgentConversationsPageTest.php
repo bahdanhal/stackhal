@@ -21,63 +21,59 @@ final class AgentConversationsPageTest extends KernelTestCase
 
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testLocalizedArchiveEditionAndFeedRenderThroughRealRoutes(): void
+    public function testArchiveEditionAndFeedRenderThroughRealRoutes(): void
     {
         $kernel = self::bootKernel();
         self::getContainer()->set('logger', new NullLogger());
-        $articles = ['en' => $this->edition('en'), 'pl' => $this->edition('pl')];
+        $article = $this->edition();
         $repository = $this->createMock(BlogArticleRepository::class);
-        $repository->expects(self::exactly(4))->method('findPublished')->willReturnCallback(
-            static function (?string $locale, ?string $category) use ($articles): array {
+        $repository->expects(self::exactly(2))->method('findPublished')->willReturnCallback(
+            static function (?string $locale, ?string $category) use ($article): array {
                 self::assertSame(BlogArticle::AGENT_CONVERSATIONS_CATEGORY, $category);
-                self::assertNotNull($locale);
-                self::assertArrayHasKey($locale, $articles);
-                return [$articles[$locale]];
+                self::assertSame('en', $locale);
+                return [$article];
             }
         );
-        $repository->expects(self::exactly(4))->method('findPublishedBySlug')->willReturnCallback(
+        $repository->expects(self::once())->method('findPublishedBySlug')->willReturnCallback(
             static fn (string $slug, string $locale): ?BlogArticle =>
-                $articles[$locale]->getSlug() === $slug ? $articles[$locale] : null
+                $locale === 'en' && $article->getSlug() === $slug ? $article : null
         );
         self::getContainer()->set(BlogArticleRepository::class, $repository);
 
-        foreach (['en' => '/agent-conversations', 'pl' => '/pl/rozmowy-agentow'] as $locale => $archive) {
-            $response = $kernel->handle(Request::create('https://stackhal.com' . $archive));
-            self::assertSame(200, $response->getStatusCode());
-            $html = (string) $response->getContent();
-            self::assertStringContainsString('href="https://stackhal.com' . $archive . '"', $html);
-            self::assertStringContainsString('hreflang="en"', $html);
-            self::assertStringContainsString('hreflang="pl"', $html);
-            self::assertStringNotContainsString('agent_digest.', $html);
-            self::assertStringContainsString($locale === 'pl' ? 'O czym rozmawiają agenci' : 'What agents are talking about', $html);
+        $response = $kernel->handle(Request::create('https://stackhal.com/agent-conversations'));
+        self::assertSame(200, $response->getStatusCode());
+        $html = (string) $response->getContent();
+        self::assertStringContainsString('href="https://stackhal.com/agent-conversations"', $html);
+        self::assertStringNotContainsString('hreflang="pl"', $html);
+        self::assertStringNotContainsString('agent_digest.', $html);
+        self::assertStringContainsString('What agents are talking about', $html);
 
-            $feed = $kernel->handle(Request::create('https://stackhal.com' . $archive . '/feed.xml'));
-            self::assertSame(200, $feed->getStatusCode());
-            self::assertSame('application/rss+xml; charset=UTF-8', $feed->headers->get('Content-Type'));
-            $document = new \DOMDocument();
-            self::assertTrue($document->loadXML((string) $feed->getContent()));
-            $xpath = new \DOMXPath($document);
-            self::assertSame($locale, $xpath->evaluate('string(/rss/channel/language)'));
-            self::assertSame('Pigeons & paintings <today>', $xpath->evaluate('string(/rss/channel/item/title)'));
-            self::assertSame(1.0, $xpath->evaluate('count(/rss/channel/item)'));
+        $feed = $kernel->handle(Request::create('https://stackhal.com/agent-conversations/feed.xml'));
+        self::assertSame(200, $feed->getStatusCode());
+        self::assertSame('application/rss+xml; charset=UTF-8', $feed->headers->get('Content-Type'));
+        $document = new \DOMDocument();
+        self::assertTrue($document->loadXML((string) $feed->getContent()));
+        $xpath = new \DOMXPath($document);
+        self::assertSame('en', $xpath->evaluate('string(/rss/channel/language)'));
+        self::assertSame('Pigeons & paintings <today>', $xpath->evaluate('string(/rss/channel/item/title)'));
+        self::assertSame(1.0, $xpath->evaluate('count(/rss/channel/item)'));
 
-            $editionPath = ($locale === 'pl' ? '/pl/blog/' : '/blog/') . $articles[$locale]->getSlug();
-            $edition = $kernel->handle(Request::create('https://stackhal.com' . $editionPath));
-            self::assertSame(200, $edition->getStatusCode());
-            $editionHtml = (string) $edition->getContent();
-            self::assertStringContainsString('digest-edition', $editionHtml);
-            self::assertStringContainsString('href="https://stackhal.com' . $editionPath . '"', $editionHtml);
-            self::assertStringContainsString('hreflang="' . ($locale === 'pl' ? 'en' : 'pl') . '"', $editionHtml);
-            self::assertStringNotContainsString('Related tool', $editionHtml);
-            self::assertStringNotContainsString('agent_digest.', $editionHtml);
-        }
+        $editionPath = '/blog/' . $article->getSlug();
+        $edition = $kernel->handle(Request::create('https://stackhal.com' . $editionPath));
+        self::assertSame(200, $edition->getStatusCode());
+        $editionHtml = (string) $edition->getContent();
+        self::assertStringContainsString('digest-edition', $editionHtml);
+        self::assertStringContainsString('href="https://stackhal.com' . $editionPath . '"', $editionHtml);
+        self::assertStringNotContainsString('hreflang="pl"', $editionHtml);
+        self::assertStringNotContainsString('Related tool', $editionHtml);
+        self::assertStringNotContainsString('agent_digest.', $editionHtml);
     }
 
-    private function edition(string $locale): BlogArticle
+    private function edition(): BlogArticle
     {
         $date = new \DateTimeImmutable('2026-10-02T16:00:00Z');
         return new BlogArticle(
-            'edition-' . $locale,
+            'edition-en',
             'Pigeons & paintings <today>',
             'Art & identity',
             BlogArticle::AGENT_CONVERSATIONS_CATEGORY,
@@ -90,8 +86,8 @@ final class AgentConversationsPageTest extends KernelTestCase
             '',
             [],
             [],
-            $locale,
-            'edition-' . ($locale === 'pl' ? 'en' : 'pl')
+            'en',
+            ''
         );
     }
 }

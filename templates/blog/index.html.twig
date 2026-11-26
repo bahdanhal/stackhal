@@ -3,31 +3,7 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'blog_index.description'|trans }}">{% endblock %}
 {% block canonical %}
-  {% set isPolish = app.request.locale == 'pl' %}
-  {% set currentUrl = isPolish ? 'https://stackhal.com/pl/blog' : 'https://stackhal.com/blog' %}
-  {% set currentLocale = isPolish ? 'pl' : 'en' %}
-  <link rel="canonical" href="{{ currentUrl }}">
-  <link rel="alternate" hreflang="{{ currentLocale }}" href="{{ currentUrl }}">
-  {% if hasAlternateLocale %}
-    {% if app.request.locale == 'pl' %}
-      <link rel="alternate" hreflang="en" href="https://stackhal.com/blog">
-      <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog">
-    {% else %}
-      <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog">
-      <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog">
-    {% endif %}
-  {% else %}
-    <link rel="alternate" hreflang="x-default" href="{{ currentUrl }}">
-  {% endif %}
-{% endblock %}
-{% block language_switch %}
-  {% if hasAlternateLocale and app.request.locale == 'pl' %}
-    <a class="language-switch" href="{{ path('blog_index', {_locale: 'en'}) }}" hreflang="en">EN</a>
-  {% elseif hasAlternateLocale %}
-    <a class="language-switch" href="{{ path('blog_index', {_locale: 'pl'}) }}" hreflang="pl">PL</a>
-  {% else %}
-    <a class="language-switch" href="{{ path('landing', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
-  {% endif %}
+  <link rel="canonical" href="https://stackhal.com/blog">
 {% endblock %}
 {% block body %}
 <section class="blog-index-shell">
@@ -39,7 +15,7 @@
     <p class="journal-intro">{{ 'blog_index.intro'|trans }}</p>
   </header>
 
-  <a class="digest-journal-link" href="{{ path('agent_conversations', {_locale: app.request.locale}) }}">
+  <a class="digest-journal-link" href="{{ path('agent_conversations') }}">
     <span>{{ 'agent_digest.title'|trans }}</span>
     <span>{{ 'agent_digest.short_description'|trans }} ↗</span>
   </a>
@@ -50,15 +26,15 @@
     <section class="journal-feature{% if illustration or featured.visualLines is not empty %} has-visual{% endif %}" aria-labelledby="featured-title">
       <div class="journal-feature-copy">
         <p class="journal-label"><span class="journal-dot" aria-hidden="true"></span> {{ 'blog_index.latest'|trans }} <span>/ {{ featured.category }}</span></p>
-        <h2 id="featured-title"><a href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ featured.title }}</a></h2>
+        <h2 id="featured-title"><a href="{{ path('blog_article', {slug: featured.slug}) }}">{{ featured.title }}</a></h2>
         <p class="journal-feature-dek">{{ featured.description }}</p>
         <div class="journal-feature-footer">
-          <a class="journal-read" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ 'blog_index.read'|trans }} <span aria-hidden="true">↗</span></a>
-          <span>{{ featured.readTimeMinutes }} {{ 'blog_index.minutes'|trans }} · <time datetime="{{ featured.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ featured.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time></span>
+          <a class="journal-read" href="{{ path('blog_article', {slug: featured.slug}) }}">{{ 'blog_index.read'|trans }} <span aria-hidden="true">↗</span></a>
+          <span>{{ featured.readTimeMinutes }} {{ 'blog_index.minutes'|trans }} · <time datetime="{{ featured.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ featured.publishedAt|date('d M Y', 'Europe/Warsaw') }}</time></span>
         </div>
       </div>
       {% if illustration %}
-      <a class="journal-feature-illustration" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}" tabindex="-1" aria-hidden="true">
+      <a class="journal-feature-illustration" href="{{ path('blog_article', {slug: featured.slug}) }}" tabindex="-1" aria-hidden="true">
         <img src="{{ illustration.path }}" width="1000" height="667" alt="" fetchpriority="high" decoding="async">
       </a>
       {% elseif featured.visualLines is not empty %}
@@ -84,23 +60,23 @@
         {% set illustration = article_illustrations.forArticle(article) %}
         <article class="journal-entry{% if illustration %} has-illustration{% endif %}" data-blog-entry>
           <div class="journal-entry-meta">
-            <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time>
+            <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date('d M Y', 'Europe/Warsaw') }}</time>
             <span>{{ article.readTimeMinutes }} {{ 'blog_index.minutes'|trans }}</span>
           </div>
           {% if illustration %}
-          <a class="journal-entry-illustration" href="{{ path('blog_article', {slug: article.slug, _locale: app.request.locale}) }}" tabindex="-1" aria-hidden="true">
+          <a class="journal-entry-illustration" href="{{ path('blog_article', {slug: article.slug}) }}" tabindex="-1" aria-hidden="true">
             <img src="{{ illustration.path }}" width="1000" height="667" alt="" loading="lazy" decoding="async">
           </a>
           {% endif %}
           <div class="journal-entry-copy">
             <p class="journal-label">{{ article.category }}</p>
-            <h3><a href="{{ path('blog_article', {slug: article.slug, _locale: app.request.locale}) }}">{{ article.title }}</a></h3>
+            <h3><a href="{{ path('blog_article', {slug: article.slug}) }}">{{ article.title }}</a></h3>
             <p class="journal-entry-description">{{ article.description }}</p>
           </div>
           <span class="journal-entry-arrow" aria-hidden="true">↗</span>
         </article>
       {% else %}
-        <p class="journal-empty">{{ 'blog_index.empty'|trans }} <a href="{{ path('landing', {_locale: app.request.locale}) }}">{{ 'blog_index.empty_link'|trans }}</a></p>
+        <p class="journal-empty">{{ 'blog_index.empty'|trans }} <a href="{{ path('landing') }}">{{ 'blog_index.empty_link'|trans }}</a></p>
       {% endfor %}
     </div>
     <p class="journal-empty" data-blog-empty hidden>{{ 'blog_index.no_match'|trans }}</p>
@@ -108,7 +84,7 @@
   </section>
   <div class="journal-colophon">
     <span>{{ 'blog_index.written_by'|trans }} <a href="https://bahdanhal.pl/">Bahdan Hal</a>.</span>
-    <a href="{{ path('landing', {_locale: app.request.locale}) }}">{{ 'blog_index.tools_link'|trans }} <span aria-hidden="true">↗</span></a>
+    <a href="{{ path('landing') }}">{{ 'blog_index.tools_link'|trans }} <span aria-hidden="true">↗</span></a>
   </div>
 </section>
 {% endblock %}

@@ -1,22 +1,15 @@
 # StackHal.com — Developer Tools & Infrastructure Diagnostics
 
-> Free online developer tools and diagnostics by backend engineer Bahdan Hal: Caddyfile transpiler, Apple PKPass inspector, CIDR overlap matrix, DMARC/BIMI domain inspector, technical SEO & GEO audits.
+> Free online developer tools and engineering field notes by backend engineer Bahdan Hal: Apple PKPass Inspector, Technical SEO Audit, GEO Readiness Analyzer, and AI Studio Local File Sync.
 
-## Primary developer tools
+## Public pages
 
+- [Apple Wallet (.pkpass) Inspector](https://stackhal.com/apple-pkpass-inspector): debug Apple Wallet passes, examine manifest hashes, JSON schemas, and preview passes
+- [Technical SEO Audit](https://stackhal.com/seo-audit): deterministic crawling, redirect loops, canonical integrity, robots.txt, and sitemap audits
+- [GEO Readiness Analyzer](https://stackhal.com/geo-audit): deterministic answer-engine crawlability and AI readiness analysis
 - [AI Studio Local File Sync & Codebase Context](https://stackhal.com/ai-studio-local-file-sync): open-source Chrome extension for packing repository context, reviewing AI-generated diffs, and syncing approved files to a local workspace
-- [Nginx & Apache to Caddyfile Converter](https://stackhal.com/tools/caddy-transpiler): real-time transpiler converting Nginx server blocks and Apache .htaccess to clean Caddyfiles
-- [Apple Wallet (.pkpass) Inspector](https://stackhal.com/tools/pkpass-inspector): debug Apple Wallet passes, examine manifest hashes, JSON schemas, and preview passes
-- [CIDR Subnet Overlap Matrix](https://stackhal.com/tools/cidr-matrix): visual IPv4/IPv6 subnet calculator, collision detector, and available IP range planner
-- [Domain Email Security Inspector](https://stackhal.com/tools/domain-inspector): 1-click verification for DMARC, BIMI, MTA-STS, TLS-RPT, and SPF
-- [BIMI Studio & SVG Tiny 1.2 PS](https://stackhal.com/tools/bimi-studio): BIMI logo sanitizer, safe-zone validator, and live email inbox simulator
-- [Technical SEO Audit](https://stackhal.com/tools/seo-audit): deterministic crawling, redirect loops, canonical integrity, robots.txt, and sitemap audits
-- [GEO Readiness Analyzer](https://stackhal.com/tools/geo-audit): deterministic answer-engine crawlability and AI readiness analysis
-- [Favicon Suite Generator](https://stackhal.com/tools/favicon-suite): multi-size ICO, PNG, and SVG manifest builder
-- [Regex Engine Transpiler](https://stackhal.com/tools/regex-transpiler): dialect converter for PCRE, JavaScript, Python, and Go regex
-- [DNS Delegation & Propagation DAG Tracer](https://stackhal.com/tools/dns-dag): visual DNS resolution hierarchy and nameserver health tracer
-- [Apple Universal Links & Android App Links Validator](https://stackhal.com/tools/app-links): assetlinks.json and apple-app-site-association checker
-- [CORS & Preflight Sandbox](https://stackhal.com/tools/cors-sandbox): interactive CORS header and preflight diagnostics
+- [Engineering Blog](https://stackhal.com/blog): technical investigations and field notes
+- [Agent Conversations](https://stackhal.com/agent-conversations): periodic digests of notable agent discussions
 
 ## Ecosystem applications
 

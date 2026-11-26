@@ -21,55 +21,42 @@ final class BlogIndexLocalizationTest extends KernelTestCase
 
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function testIndexMetadataAndInterfaceFollowTheRequestLocale(): void
+    public function testEnglishIndexRendersMetadataAndLegacyPolishRedirects(): void
     {
         $kernel = self::bootKernel();
         self::getContainer()->set('logger', new NullLogger());
         $repository = $this->createStub(BlogArticleRepository::class);
-        $repository->method('findPublished')->willReturnCallback(
-            fn (?string $locale): array => [$this->article((string) $locale)]
-        );
+        $repository->method('findPublished')->willReturn([$this->article()]);
         self::getContainer()->set(BlogArticleRepository::class, $repository);
 
-        $expected = [
-            '/blog' => [
+        $response = $kernel->handle(Request::create('https://stackhal.com/blog'));
+        self::assertSame(200, $response->getStatusCode());
+        $html = (string) $response->getContent();
+        foreach (
+            [
                 '<title>StackHal Blog · Practical Guides for Web Infrastructure',
                 'content="Practical guides for email authentication, DNS, technical SEO',
                 '<h1>Field notes<span>',
                 '4 min read',
                 'data-found-many="%count% notes found."',
-            ],
-            '/pl/blog' => [
-                '<title>Blog StackHal · Praktyczne poradniki o infrastrukturze sieciowej',
-                'content="Praktyczne poradniki StackHal o uwierzytelnianiu poczty, DNS',
-                '<h1>Notatki z praktyki<span>',
-                '4 min czytania',
-                'data-found-many="Znaleziono notatek: %count%."',
-            ],
-        ];
-
-        foreach ($expected as $path => $fragments) {
-            $response = $kernel->handle(Request::create('https://stackhal.com' . $path));
-            self::assertSame(200, $response->getStatusCode());
-            $html = (string) $response->getContent();
-            foreach ($fragments as $fragment) {
-                self::assertStringContainsString($fragment, $html, $path);
-            }
-            self::assertStringNotContainsString('blog_index.', $html, $path);
+            ] as $fragment
+        ) {
+            self::assertStringContainsString($fragment, $html);
         }
+        self::assertStringNotContainsString('blog_index.', $html);
+        self::assertStringNotContainsString('hreflang="pl"', $html);
 
-        $polish = (string) $kernel->handle(Request::create('https://stackhal.com/pl/blog'))->getContent();
-        foreach (['Field notes', 'Read the story', 'The archive', 'Find a note', 'Written by'] as $english) {
-            self::assertStringNotContainsString($english, $polish);
-        }
+        $polishRedirect = $kernel->handle(Request::create('https://stackhal.com/pl/blog'));
+        self::assertSame(301, $polishRedirect->getStatusCode());
+        self::assertSame('/blog', $polishRedirect->headers->get('Location'));
     }
 
-    private function article(string $locale): BlogArticle
+    private function article(): BlogArticle
     {
         $date = new \DateTimeImmutable('2026-10-02T16:00:00Z');
 
         return new BlogArticle(
-            'note-' . $locale,
+            'note-en',
             'DNS note',
             'A short description.',
             'DNS',
@@ -82,8 +69,8 @@ final class BlogIndexLocalizationTest extends KernelTestCase
             '',
             [],
             [],
-            $locale,
-            'note-' . ($locale === 'pl' ? 'en' : 'pl')
+            'en',
+            ''
         );
     }
 }

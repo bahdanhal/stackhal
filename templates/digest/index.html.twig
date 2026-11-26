@@ -3,18 +3,11 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'agent_digest.description'|trans }}">{% endblock %}
 {% block canonical %}
-  <link rel="canonical" href="https://stackhal.com{{ path('agent_conversations', {_locale: app.request.locale}) }}">
-  <link rel="alternate" hreflang="en" href="https://stackhal.com{{ path('agent_conversations', {_locale: 'en'}) }}">
-  <link rel="alternate" hreflang="pl" href="https://stackhal.com{{ path('agent_conversations', {_locale: 'pl'}) }}">
-  <link rel="alternate" hreflang="x-default" href="https://stackhal.com{{ path('agent_conversations', {_locale: 'en'}) }}">
+  <link rel="canonical" href="https://stackhal.com{{ path('agent_conversations') }}">
 {% endblock %}
 {% block head_scripts %}
   {{ parent() }}
-  <link rel="alternate" type="application/rss+xml" title="{{ 'agent_digest.title'|trans }}" href="{{ path('agent_conversations_feed', {_locale: app.request.locale}) }}">
-{% endblock %}
-{% block language_switch %}
-  {% set alternate = app.request.locale == 'pl' ? 'en' : 'pl' %}
-  <a class="language-switch" href="{{ path('agent_conversations', {_locale: alternate}) }}" hreflang="{{ alternate }}">{{ alternate|upper }}</a>
+  <link rel="alternate" type="application/rss+xml" title="{{ 'agent_digest.title'|trans }}" href="{{ path('agent_conversations_feed') }}">
 {% endblock %}
 {% block body %}
 <section class="blog-index-shell digest-index">
@@ -35,11 +28,11 @@
     <section class="journal-feature" aria-labelledby="digest-latest-title">
       <div class="journal-feature-copy">
         <p class="journal-label"><span class="journal-dot" aria-hidden="true"></span> {{ 'agent_digest.latest'|trans }}</p>
-        <h2 id="digest-latest-title"><a href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ featured.title }}</a></h2>
+        <h2 id="digest-latest-title"><a href="{{ path('blog_article', {slug: featured.slug}) }}">{{ featured.title }}</a></h2>
         <p class="journal-feature-dek">{{ featured.description }}</p>
         <div class="journal-feature-footer">
-          <a class="journal-read" href="{{ path('blog_article', {slug: featured.slug, _locale: app.request.locale}) }}">{{ 'agent_digest.read'|trans }} ↗</a>
-          <span>{{ featured.readTimeMinutes }} {{ 'agent_digest.minutes'|trans }} · <time datetime="{{ featured.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ featured.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time></span>
+          <a class="journal-read" href="{{ path('blog_article', {slug: featured.slug}) }}">{{ 'agent_digest.read'|trans }} ↗</a>
+          <span>{{ featured.readTimeMinutes }} {{ 'agent_digest.minutes'|trans }} · <time datetime="{{ featured.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ featured.publishedAt|date('d M Y', 'Europe/Warsaw') }}</time></span>
         </div>
       </div>
     </section>
@@ -47,17 +40,17 @@
   <section class="journal-archive" aria-labelledby="digest-archive-title">
     <div class="journal-archive-header">
       <h2 id="digest-archive-title">{{ 'agent_digest.archive'|trans }} <span>{{ articles|length }}</span></h2>
-      <a class="journal-read" href="{{ path('agent_conversations_feed', {_locale: app.request.locale}) }}">RSS ↗</a>
+      <a class="journal-read" href="{{ path('agent_conversations_feed') }}">RSS ↗</a>
     </div>
     <div class="journal-entries">
       {% for article in articles %}
         <article class="journal-entry">
           <div class="journal-entry-meta">
-            <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'd M Y', 'Europe/Warsaw') }}</time>
+            <time datetime="{{ article.publishedAt|date('Y-m-d', 'Europe/Warsaw') }}">{{ article.publishedAt|date('d M Y', 'Europe/Warsaw') }}</time>
             <span>{{ article.readTimeMinutes }} {{ 'agent_digest.minutes'|trans }}</span>
           </div>
           <div class="journal-entry-copy">
-            <h3><a href="{{ path('blog_article', {slug: article.slug, _locale: app.request.locale}) }}">{{ article.title }}</a></h3>
+            <h3><a href="{{ path('blog_article', {slug: article.slug}) }}">{{ article.title }}</a></h3>
             <p class="journal-entry-description">{{ article.description }}</p>
           </div>
           <span class="journal-entry-arrow" aria-hidden="true">↗</span>

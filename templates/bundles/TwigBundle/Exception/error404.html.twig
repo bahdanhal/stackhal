@@ -37,11 +37,11 @@
     <p class="error-p-stackhal">{{ 'error404.description'|trans }}</p>
 
     <div class="error-actions-stackhal">
-      <a href="{{ path('landing', {_locale: app.request ? app.request.locale : 'en'}) }}" class="btn-terminal-primary">
+      <a href="{{ path('landing') }}" class="btn-terminal-primary">
         {{ 'common.all_tools'|trans }} <span aria-hidden="true">→</span>
       </a>
-      <a href="{{ path('domain_inspector_home', {_locale: app.request ? app.request.locale : 'en'}) }}" class="btn-terminal-secondary">
-        {{ 'error404.diagnostic_button'|trans }}
+      <a href="{{ path('seo_audit_home') }}" class="btn-terminal-secondary">
+        {{ 'base.nav.seo'|trans }}
       </a>
     </div>
   </div>
@@ -49,29 +49,25 @@
   <div class="tools-catalog">
     <span class="tools-catalog-title">{{ 'error404.explore_heading'|trans }}</span>
     <div class="tools-grid">
-      <a href="{{ path('caddy_transpiler', {_locale: app.request ? app.request.locale : 'en'}) }}" class="tool-tile">
-        <strong>{{ 'base.nav.caddy_transpiler'|trans }}</strong>
-        <span>{{ 'base.context.caddy_transpiler'|trans }}</span>
-      </a>
-      <a href="{{ path('cidr_matrix', {_locale: app.request ? app.request.locale : 'en'}) }}" class="tool-tile">
-        <strong>{{ 'base.nav.cidr_matrix'|trans }}</strong>
-        <span>{{ 'base.context.cidr_matrix'|trans }}</span>
-      </a>
-      <a href="{{ path('pkpass_inspector', {_locale: app.request ? app.request.locale : 'en'}) }}" class="tool-tile">
+      <a href="{{ path('pkpass_inspector') }}" class="tool-tile">
         <strong>{{ 'base.nav.pkpass'|trans }}</strong>
         <span>{{ 'base.context.pkpass'|trans }}</span>
       </a>
-      <a href="{{ path('seo_audit_home', {_locale: app.request ? app.request.locale : 'en'}) }}" class="tool-tile">
+      <a href="{{ path('seo_audit_home') }}" class="tool-tile">
         <strong>{{ 'base.nav.seo'|trans }}</strong>
         <span>{{ 'base.context.seo'|trans }}</span>
       </a>
-      <a href="{{ path('bimi_studio', {_locale: app.request ? app.request.locale : 'en'}) }}" class="tool-tile">
-        <strong>{{ 'base.nav.bimi'|trans }}</strong>
-        <span>{{ 'base.context.bimi'|trans }}</span>
+      <a href="{{ path('geo_home') }}" class="tool-tile">
+        <strong>{{ 'base.nav.geo'|trans }}</strong>
+        <span>{{ 'base.context.geo'|trans }}</span>
       </a>
-      <a href="{{ path('cors_sandbox', {_locale: app.request ? app.request.locale : 'en'}) }}" class="tool-tile">
-        <strong>{{ 'base.nav.cors_sandbox'|trans }}</strong>
-        <span>{{ 'base.context.cors_sandbox'|trans }}</span>
+      <a href="{{ path('ai_studio_extension') }}" class="tool-tile">
+        <strong>{{ 'base.nav.ai_studio_extension'|trans }}</strong>
+        <span>{{ 'home.ai_studio_extension.title'|trans }}</span>
+      </a>
+      <a href="{{ path('blog_index') }}" class="tool-tile">
+        <strong>{{ 'base.nav.blog'|trans }}</strong>
+        <span>{{ 'blog_index.heading'|trans }}</span>
       </a>
     </div>
   </div>

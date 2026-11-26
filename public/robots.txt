@@ -3,8 +3,6 @@ Allow: /
 Disallow: /api/
 Disallow: /audit$
 Disallow: /contact$
-Disallow: /pl/audyt$
-Disallow: /pl/kontakt$
 Disallow: /healthz
 Disallow: /mcp
 Disallow: /admin/
@@ -18,8 +16,6 @@ Allow: /
 Disallow: /api/
 Disallow: /audit$
 Disallow: /contact$
-Disallow: /pl/audyt$
-Disallow: /pl/kontakt$
 Disallow: /healthz
 Disallow: /mcp
 Disallow: /admin/

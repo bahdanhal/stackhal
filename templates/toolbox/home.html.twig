@@ -3,10 +3,7 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'home.meta.description'|trans }}">{% endblock %}
 {% block canonical %}
-  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://stackhal.com/pl/' : 'https://stackhal.com/' }}">
-  <link rel="alternate" hreflang="en" href="https://stackhal.com/">
-  <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/">
-  <link rel="alternate" hreflang="x-default" href="https://stackhal.com/">
+  <link rel="canonical" href="https://stackhal.com/">
 {% endblock %}
 {% block stylesheets %}
   <link rel="stylesheet" href="/hero-explosion.css?v=20261006-1">
@@ -29,7 +26,7 @@
       <h1 data-catops-heading><span>{{ 'home.heading_start'|trans }}</span> <span>{{ 'home.heading_middle'|trans }}</span> <em>{{ 'home.heading_emphasis'|trans }}</em></h1>
       <p class="lede">{{ 'home.lede'|trans }}</p>
       <div class="atelier-home-actions">
-        <a class="atelier-cta" href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">{{ 'home.cta_primary'|trans }} <span aria-hidden="true">→</span></a>
+        <a class="atelier-cta" href="{{ path('seo_audit_home') }}">{{ 'home.cta_primary'|trans }} <span aria-hidden="true">→</span></a>
         <a class="atelier-cta atelier-cta-quiet" href="#tools">{{ 'home.cta_tools'|trans }} <span aria-hidden="true">↓</span></a>
       </div>
       <div class="atelier-incident-controls">
@@ -55,57 +52,13 @@
     <section class="tool-category" aria-labelledby="category-web">
       <header class="tool-category-header"><h2 id="category-web">{{ 'home.categories.web'|trans }}</h2></header>
       <div class="tool-grid">
-        <a class="tool-card" href="{{ path('geo_home', {_locale: app.request.locale}) }}">
+        <a class="tool-card" href="{{ path('geo_home') }}">
           <span class="tool-number">01</span>
           <h3>{{ 'home.geo.title'|trans }}</h3><p>{{ 'home.geo.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
-        <a class="tool-card" href="{{ path('seo_audit_home', {_locale: app.request.locale}) }}">
+        <a class="tool-card" href="{{ path('seo_audit_home') }}">
           <span class="tool-number">02</span>
           <h3>{{ 'home.seo.title'|trans }}</h3><p>{{ 'home.seo.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
-        </a>
-        <a class="tool-card" href="{{ path('favicon_suite', {_locale: app.request.locale}) }}">
-          <span class="tool-number">03</span>
-          <h3>{{ 'home.favicon_suite.title'|trans }}</h3><p>{{ 'home.favicon_suite.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
-        </a>
-        <a class="tool-card" href="{{ path('cors_sandbox', {_locale: app.request.locale}) }}">
-          <span class="tool-number">04</span>
-          <h3>{{ 'home.cors_sandbox.title'|trans }}</h3><p>{{ 'home.cors_sandbox.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
-        </a>
-      </div>
-    </section>
-
-    <section class="tool-category" aria-labelledby="category-email">
-      <header class="tool-category-header"><h2 id="category-email">{{ 'home.categories.email'|trans }}</h2></header>
-      <div class="tool-grid">
-        <a class="tool-card" href="{{ path('bimi_studio', {_locale: app.request.locale}) }}">
-          <span class="tool-number">05</span>
-          <h3>{{ 'home.bimi.title'|trans }}</h3><p>{{ 'home.bimi.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
-        </a>
-        <a class="tool-card" href="{{ path('domain_inspector_home', {_locale: app.request.locale}) }}">
-          <span class="tool-number">06</span>
-          <h3>{{ 'home.domain_inspector.title'|trans }}</h3><p>{{ 'home.domain_inspector.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
-        </a>
-      </div>
-    </section>
-
-    <section class="tool-category" aria-labelledby="category-infrastructure">
-      <header class="tool-category-header"><h2 id="category-infrastructure">{{ 'home.categories.infrastructure'|trans }}</h2></header>
-      <div class="tool-grid">
-        <a class="tool-card" href="{{ path('caddy_transpiler', {_locale: app.request.locale}) }}">
-          <span class="tool-number">07</span>
-          <h3>{{ 'home.caddy_transpiler.title'|trans }}</h3><p>{{ 'home.caddy_transpiler.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
-        </a>
-        <a class="tool-card" href="{{ path('cidr_matrix', {_locale: app.request.locale}) }}">
-          <span class="tool-number">08</span>
-          <h3>{{ 'home.cidr_matrix.title'|trans }}</h3><p>{{ 'home.cidr_matrix.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
-        </a>
-        <a class="tool-card" href="{{ path('regex_transpiler', {_locale: app.request.locale}) }}">
-          <span class="tool-number">09</span>
-          <h3>{{ 'home.regex_transpiler.title'|trans }}</h3><p>{{ 'home.regex_transpiler.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
-        </a>
-        <a class="tool-card" href="{{ path('dns_dag_tracer', {_locale: app.request.locale}) }}">
-          <span class="tool-number">10</span>
-          <h3>{{ 'home.dns_dag_tracer.title'|trans }}</h3><p>{{ 'home.dns_dag_tracer.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>
     </section>
@@ -113,13 +66,9 @@
     <section class="tool-category" aria-labelledby="category-mobile">
       <header class="tool-category-header"><h2 id="category-mobile">{{ 'home.categories.mobile'|trans }}</h2></header>
       <div class="tool-grid">
-        <a class="tool-card" href="{{ path('pkpass_inspector', {_locale: app.request.locale}) }}">
-          <span class="tool-number">11</span>
+        <a class="tool-card tool-card-wide" href="{{ path('pkpass_inspector') }}">
+          <span class="tool-number">03</span>
           <h3>{{ 'home.pkpass.title'|trans }}</h3><p>{{ 'home.pkpass.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
-        </a>
-        <a class="tool-card" href="{{ path('app_links_validator', {_locale: app.request.locale}) }}">
-          <span class="tool-number">12</span>
-          <h3>{{ 'home.app_links.title'|trans }}</h3><p>{{ 'home.app_links.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>
     </section>
@@ -127,8 +76,8 @@
     <section class="tool-category" aria-labelledby="category-ai-coding">
       <header class="tool-category-header"><h2 id="category-ai-coding">{{ 'home.categories.ai_coding'|trans }}</h2></header>
       <div class="tool-grid">
-        <a class="tool-card tool-card-wide" href="{{ path('ai_studio_extension', {_locale: app.request.locale}) }}">
-          <span class="tool-number">13</span>
+        <a class="tool-card tool-card-wide" href="{{ path('ai_studio_extension') }}">
+          <span class="tool-number">04</span>
           <h3>{{ 'home.ai_studio_extension.title'|trans }}</h3><p>{{ 'home.ai_studio_extension.text'|trans }}</p><strong>{{ 'home.open'|trans }} →</strong>
         </a>
       </div>

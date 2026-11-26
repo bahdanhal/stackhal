@@ -40,23 +40,24 @@ final class AuditSampleTest extends KernelTestCase
         ], $storage);
         $container->set('limiter.audit', $limiter);
 
-        foreach (['en' => '/seo-audit', 'pl' => '/pl/audyt-seo'] as $locale => $path) {
-            $response = $kernel->handle(Request::create('https://stackhal.com' . $path));
-            self::assertSame(200, $response->getStatusCode());
-            $html = (string) $response->getContent();
-            self::assertStringContainsString('https://example.test/old-guide', $html);
-            self::assertStringContainsString('robots-missing', $html);
-            self::assertStringContainsString('canonical-mismatch', $html);
-            self::assertStringContainsString('content="index,follow"', $html);
-            self::assertStringContainsString('href="https://stackhal.com' . $path . '"', $html);
-            self::assertStringContainsString('hreflang="en"', $html);
-            self::assertStringContainsString('hreflang="pl"', $html);
-            self::assertStringContainsString('method="post" action="' . ($locale === 'pl' ? '/pl/audyt' : '/audit'), $html);
-            self::assertStringContainsString($locale === 'pl' ? 'fikcyjna demonstracja' : 'fictional demonstration', $html);
-            self::assertStringNotContainsString('duplicate content penalties', $html);
-            self::assertStringNotContainsString('audit.sample.', $html);
-            self::assertLessThan(strpos($html, 'seo-sample-title'), strpos($html, 'class="audit-form"'));
-        }
+        $response = $kernel->handle(Request::create('https://stackhal.com/seo-audit'));
+        self::assertSame(200, $response->getStatusCode());
+        $html = (string) $response->getContent();
+        self::assertStringContainsString('https://example.test/old-guide', $html);
+        self::assertStringContainsString('robots-missing', $html);
+        self::assertStringContainsString('canonical-mismatch', $html);
+        self::assertStringContainsString('content="index,follow"', $html);
+        self::assertStringContainsString('href="https://stackhal.com/seo-audit"', $html);
+        self::assertStringNotContainsString('hreflang="pl"', $html);
+        self::assertStringContainsString('method="post" action="/audit"', $html);
+        self::assertStringContainsString('fictional demonstration', $html);
+        self::assertStringNotContainsString('duplicate content penalties', $html);
+        self::assertStringNotContainsString('audit.sample.', $html);
+        self::assertLessThan(strpos($html, 'seo-sample-title'), strpos($html, 'class="audit-form"'));
+
+        $legacyPolish = $kernel->handle(Request::create('https://stackhal.com/pl/audyt-seo'));
+        self::assertSame(301, $legacyPolish->getStatusCode());
+        self::assertSame('/seo-audit', $legacyPolish->headers->get('Location'));
     }
 
     public function testSharedRendererPreservesRealFindingEvidenceAndEmptyState(): void

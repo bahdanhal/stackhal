@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block tool_name %}{{ 'base.context.seo'|trans }}{% endblock %}
 {% block title %}{{ 'audit.report.title'|trans }} · {{ report.origin }}{% endblock %}
-{% block language_switch %}<a class="language-switch" href="{{ path('seo_audit_home', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>{% endblock %}
 
 {% block body %}
 <section class="report-shell">
@@ -10,7 +9,7 @@
       <a class="back" href="{{ path('seo_audit_home') }}">← {{ 'audit.report.new'|trans }}</a>
       <div class="eyebrow">{{ report.cache.hit ? 'audit.report.cached'|trans : 'audit.report.complete'|trans }} · {{ report.duration_ms }} MS</div>
       <h1>{{ report.origin }}</h1>
-      <p>{{ 'audit.report.generated'|trans }} {{ report.generated_at|date(app.request.locale == 'pl' ? 'd.m.Y H:i' : 'M j, Y H:i') }} UTC</p>
+      <p>{{ 'audit.report.generated'|trans }} {{ report.generated_at|date'M j, Y H:i' }} UTC</p>
       <form class="refresh-form" method="post" action="{{ path('audit') }}">
         <input type="hidden" name="url" value="{{ report.target }}">
         <input type="hidden" name="refresh" value="1">
@@ -32,7 +31,7 @@
 
   {% if report.summary.crawl_truncated %}<div class="notice">{{ 'audit.report.truncated'|trans }}</div>{% endif %}
 
-  {% if report.ai_summary and app.request.locale == 'en' %}
+  {% if report.ai_summary %}
   <section class="section ai-summary">
     <div class="section-title"><h2>{{ 'audit.report.executive'|trans }}</h2><span>{{ 'audit.report.ai_note'|trans }}</span></div>
     <p class="ai-overview">{{ report.ai_summary.overview }}</p>

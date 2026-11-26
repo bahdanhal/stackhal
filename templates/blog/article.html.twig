@@ -3,27 +3,12 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ article.description }}">{% endblock %}
 {% block canonical %}
-  {% set isPolish = app.request.locale == 'pl' %}
-  {% set currentUrl = isPolish ? ('https://stackhal.com/pl/blog/' ~ article.slug) : ('https://stackhal.com/blog/' ~ article.slug) %}
-  {% set currentLocale = isPolish ? 'pl' : 'en' %}
-  <link rel="canonical" href="{{ currentUrl }}">
-  <link rel="alternate" hreflang="{{ currentLocale }}" href="{{ currentUrl }}">
-  {% if alternateAvailable %}
-    {% if isPolish %}
-      <link rel="alternate" hreflang="en" href="https://stackhal.com/blog/{{ article.alternateSlug }}">
-      <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.alternateSlug }}">
-    {% else %}
-      <link rel="alternate" hreflang="pl" href="https://stackhal.com/pl/blog/{{ article.alternateSlug }}">
-      <link rel="alternate" hreflang="x-default" href="https://stackhal.com/blog/{{ article.slug }}">
-    {% endif %}
-  {% else %}
-    <link rel="alternate" hreflang="x-default" href="{{ currentUrl }}">
-  {% endif %}
+  <link rel="canonical" href="https://stackhal.com/blog/{{ article.slug }}">
 {% endblock %}
 {% block head_scripts %}
   {{ parent() }}
-  {% set article_url = app.request.locale == 'pl' ? ('https://stackhal.com/pl/blog/' ~ article.slug) : ('https://stackhal.com/blog/' ~ article.slug) %}
-  {% set article_schema = {'@type': 'Article', '@id': article_url ~ '#article', 'headline': article.title, 'description': article.description, 'datePublished': article.publishedAt|date('Y-m-d'), 'dateModified': article.updatedAt|date('Y-m-d'), 'author': {'@id': 'https://stackhal.com/#stackhal'}, 'publisher': {'@id': 'https://stackhal.com/#stackhal'}, 'mainEntityOfPage': article_url, 'inLanguage': app.request.locale} %}
+  {% set article_url = 'https://stackhal.com/blog/' ~ article.slug %}
+  {% set article_schema = {'@type': 'Article', '@id': article_url ~ '#article', 'headline': article.title, 'description': article.description, 'datePublished': article.publishedAt|date('Y-m-d'), 'dateModified': article.updatedAt|date('Y-m-d'), 'author': {'@id': 'https://stackhal.com/#stackhal'}, 'publisher': {'@id': 'https://stackhal.com/#stackhal'}, 'mainEntityOfPage': article_url, 'inLanguage': 'en'} %}
   {% set illustration = article_illustrations.forArticle(article) %}
   {% if illustration %}
     {% set article_schema = article_schema|merge({'image': 'https://stackhal.com' ~ illustration.path}) %}
@@ -34,21 +19,10 @@
   {% endif %}
   <script type="application/ld+json">{{ {'@context': 'https://schema.org', '@graph': graph}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
 {% endblock %}
-{% block language_switch %}
-  {% if alternateAvailable %}
-    {% if app.request.locale == 'pl' %}
-      <a class="language-switch" href="{{ path('blog_article', {'slug': article.alternateSlug, '_locale': 'en'}) }}" hreflang="en">EN</a>
-    {% else %}
-      <a class="language-switch" href="{{ path('blog_article', {'slug': article.alternateSlug, '_locale': 'pl'}) }}" hreflang="pl">PL</a>
-    {% endif %}
-  {% else %}
-    <a class="language-switch" href="{{ path('landing', {'_locale': app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
-  {% endif %}
-{% endblock %}
 {% block body %}
 <article class="article-shell">
   <nav class="journal-breadcrumb" aria-label="Breadcrumb">
-    <a href="{{ path('blog_index', {_locale: app.request.locale}) }}">← All field notes</a>
+    <a href="{{ path('blog_index') }}">← All field notes</a>
     <span>StackHal / Blog</span>
   </nav>
   <header class="article-header">
@@ -93,7 +67,7 @@
     </aside>
   </div>
   <div class="journal-colophon">
-    <a href="{{ path('blog_index', {_locale: app.request.locale}) }}">← Back to the archive</a>
+    <a href="{{ path('blog_index') }}">← Back to the archive</a>
     <span>StackHal / Field notes</span>
   </div>
 </article>

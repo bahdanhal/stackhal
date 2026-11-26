@@ -22,31 +22,19 @@ final class GeoController extends AbstractController
     ) {
     }
 
-    #[Route(
-        path: ['en' => '/geo-audit', 'pl' => '/pl/audyt-geo'],
-        name: 'geo_home',
-        methods: ['GET']
-    )]
+    #[Route('/geo-audit', name: 'geo_home', methods: ['GET'])]
     public function home(): Response
     {
         return $this->render('geo/home.html.twig');
     }
 
-    #[Route(
-        path: ['en' => '/tools/geo-audit', 'pl' => '/pl/narzedzia/audyt-geo'],
-        name: 'legacy_geo_home',
-        methods: ['GET']
-    )]
-    public function legacyHome(Request $request): Response
+    #[Route('/tools/geo-audit', name: 'legacy_geo_home', methods: ['GET'])]
+    public function legacyHome(): Response
     {
-        return $this->redirectToRoute('geo_home', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
+        return $this->redirectToRoute('geo_home', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
-    #[Route(
-        path: ['en' => '/geo-audit', 'pl' => '/pl/audyt-geo'],
-        name: 'geo_audit',
-        methods: ['POST']
-    )]
+    #[Route('/geo-audit', name: 'geo_audit', methods: ['POST'])]
     public function audit(Request $request): Response
     {
         $decision = $this->auditQuota->consume($request->getClientIp() ?? 'unknown');

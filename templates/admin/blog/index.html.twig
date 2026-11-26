@@ -62,7 +62,7 @@
             <td>{{ article.publishedAt|date('Y-m-d H:i') }}</td>
             <td class="admin-actions-cell">
               <a href="{{ path('stackhal_admin_blog_edit', {id: article.id}) }}" class="admin-action-link">Edit</a>
-              <a href="{{ path('blog_article', {slug: article.slug, _locale: article.locale}) }}" target="_blank" class="admin-action-link">View ↗</a>
+              <a href="{{ path('blog_article', {slug: article.slug}) }}" target="_blank" class="admin-action-link">View ↗</a>
               <form action="{{ path('stackhal_admin_blog_delete', {id: article.id}) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this article?');" style="display:inline;">
                 <input type="hidden" name="_token" value="{{ admin_csrf_token('delete_blog_article_' ~ article.id) }}">
                 <button type="submit" class="admin-action-delete">Delete</button>

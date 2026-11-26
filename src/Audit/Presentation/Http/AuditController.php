@@ -29,27 +29,19 @@ final class AuditController extends AbstractController
     ) {
     }
 
-    #[Route(
-        path: ['en' => '/seo-audit', 'pl' => '/pl/audyt-seo'],
-        name: 'seo_audit_home',
-        methods: ['GET']
-    )]
+    #[Route('/seo-audit', name: 'seo_audit_home', methods: ['GET'])]
     public function home(): Response
     {
         return $this->render('audit/home.html.twig');
     }
 
-    #[Route(
-        path: ['en' => '/tools/seo-audit', 'pl' => '/pl/narzedzia/audyt-seo'],
-        name: 'legacy_seo_audit_home',
-        methods: ['GET']
-    )]
-    public function legacyHome(Request $request): Response
+    #[Route('/tools/seo-audit', name: 'legacy_seo_audit_home', methods: ['GET'])]
+    public function legacyHome(): Response
     {
-        return $this->redirectToRoute('seo_audit_home', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
+        return $this->redirectToRoute('seo_audit_home', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
-    #[Route(path: ['en' => '/audit', 'pl' => '/pl/audyt'], name: 'audit', methods: ['POST'])]
+    #[Route('/audit', name: 'audit', methods: ['POST'])]
     public function audit(Request $request): Response
     {
         if (($limited = $this->limitExceeded($request)) !== null) {
@@ -93,7 +85,7 @@ final class AuditController extends AbstractController
         return $this->json(['status' => 'ok']);
     }
 
-    #[Route(path: ['en' => '/contact', 'pl' => '/pl/kontakt'], name: 'contact', methods: ['POST'])]
+    #[Route('/contact', name: 'contact', methods: ['POST'])]
     public function contact(Request $request): JsonResponse
     {
         $origin = $request->headers->get('Origin');
