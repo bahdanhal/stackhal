@@ -10,7 +10,7 @@
                 <a class="back" href="{{ path('geo_home') }}">← {{ 'geo.report.new'|trans }}</a>
                 <div class="eyebrow">{{ report.cache.hit ? 'geo.report.cached'|trans : 'geo.report.complete'|trans }} · {{ report.duration_ms }} MS</div>
                 <h1>{{ report.final_url }}</h1>
-                <p>{{ 'geo.report.generated'|trans }} {{ report.generated_at|date'M j, Y H:i' }} UTC</p>
+                <p>{{ 'geo.report.generated'|trans }} {{ report.generated_at|date('M j, Y H:i') }} UTC</p>
                 <form class="refresh-form" method="post" action="{{ path('geo_audit') }}"><input type="hidden" name="url" value="{{ report.target }}"><input type="hidden" name="refresh" value="1"><button type="submit">{{ 'geo.report.refresh'|trans }}</button></form>
             </div>
             <div class="score score-{{ report.score >= 80 ? 'good' : (report.score >= 55 ? 'fair' : 'poor') }}"><strong>{{ report.score }}</strong><span>/100</span><small>{{ 'geo.report.score'|trans }}</small></div>

@@ -9,7 +9,7 @@
       <a class="back" href="{{ path('seo_audit_home') }}">← {{ 'audit.report.new'|trans }}</a>
       <div class="eyebrow">{{ report.cache.hit ? 'audit.report.cached'|trans : 'audit.report.complete'|trans }} · {{ report.duration_ms }} MS</div>
       <h1>{{ report.origin }}</h1>
-      <p>{{ 'audit.report.generated'|trans }} {{ report.generated_at|date'M j, Y H:i' }} UTC</p>
+      <p>{{ 'audit.report.generated'|trans }} {{ report.generated_at|date('M j, Y H:i') }} UTC</p>
       <form class="refresh-form" method="post" action="{{ path('audit') }}">
         <input type="hidden" name="url" value="{{ report.target }}">
         <input type="hidden" name="refresh" value="1">
